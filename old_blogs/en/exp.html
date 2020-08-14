@@ -17,7 +17,7 @@
     <title>Sheauhaw&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="theme-color" content="#ffa6c1">
+    <meta name="theme-color" content="#df698c">
     
     
     <meta name="keywords" content="">
@@ -27,6 +27,7 @@
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;old_blogs&#x2F;en&#x2F;exp.html">
 <meta property="og:site_name" content="Sheauhaw&#39;s Blog">
 <meta property="og:description" content="Experiences and Products 		 			a:link              {                 text-decoration: none;             }              a:visited              {                 text-decoration: none;">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;old_blogs&#x2F;image&#x2F;building.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;old_blogs&#x2F;image&#x2F;usedhead.jpg">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;old_blogs&#x2F;image&#x2F;en.jpg">
@@ -49,8 +50,8 @@
     
         <link rel="alternate" type="application/atom+xml" title="Sheauhaw&#39;s Blog" href="/atom.xml">
     
-    <link rel="shortcut icon" href="/head.ico">
-    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <link rel="shortcut icon" href="/img/head.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
     <script>window.lazyScripts=[]</script>
 
     <!-- custom head -->
@@ -66,7 +67,7 @@
     <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
         <i class="icon icon-lg icon-close"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+    <div class="brand-wrap" style="background-image:url(/img/sakura.jpg)">
       <div class="brand">
         <a href="/" class="avatar waves-effect waves-circle waves-light">
           <img src="/img/usedhead.jpg">
@@ -117,7 +118,7 @@
         
             <li class="waves-block waves-effect">
               <a href="/old_blogs/index.html" target="_blank" >
-                <i class="icon icon-lg icon-scroll-old"></i>
+                <i class="icon icon-lg icon-link"></i>
                 旧站
               </a>
             </li>
@@ -139,7 +140,7 @@
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
                 <i class="icon icon-lg icon-chevron-left"></i>
             </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
                 <i class="icon icon-lg icon-search"></i>
             </a>
@@ -446,11 +447,11 @@
             
                 <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
             
-            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
         </p>
     </div>
     <div class="bottom">
-        <p><span>Sheauhaw Jang &copy; 2015 - 2020</span>
+        <p><span>Sheauhaw Jang &copy; 2019 - 2020</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
@@ -517,7 +518,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 </script>
 
-<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+<script src="/js/main.min.js?v=1.7.2"></script>
 
 
 <div class="search-panel" id="search-panel">
@@ -537,7 +538,7 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 </li>
 </template>
 
-<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+<script src="/js/search.min.js?v=1.7.2" async></script>
 
 
 
@@ -547,23 +548,6 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
-
-<script>
-(function() {
-    var OriginTitile = document.title, titleTime;
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            document.title = '死鬼去哪里了！';
-            clearTimeout(titleTime);
-        } else {
-            document.title = '(つェ⊂)咦!又好了!';
-            titleTime = setTimeout(function() {
-                document.title = OriginTitile;
-            },2000);
-        }
-    });
-})();
-</script>
 
 
 

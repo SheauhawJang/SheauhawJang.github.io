@@ -132,7 +132,7 @@
 
     <main id="main">
         <header class="top-header" id="header">
-    <div class="flex-row">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="flex-row">
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
@@ -175,7 +175,7 @@
         <div class="post-content page-content" id="page-content" itemprop="pageContent">
             <html>
 	<head>
-		<meta charset="utf-8">
+		<!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
 		<link rel="SHORTCUT ICON" href="../image/head.ico"/>
 		<title>张晓昊的个人主页</title>
 		<style type="text/css">
@@ -190,10 +190,10 @@
 			.mopoemlino{color: #5C5C5C; margin: 10px}
 			.mopoem{margin: 0px}
 		</style>
-	<meta name="generator" content="Hexo 4.1.0"><link rel="alternate" href="/atom.xml" title="孤星捧月" type="application/atom+xml">
+	<meta name="generator" content="Hexo 4.1.0"><link rel="alternate" href="/atom.xml" title="孤星捧月" type="application/atom+xml"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </head>
 	<body>
-		<p class="mogen">张晓昊的个人主页</p>
+		<!-- hexo-inject:begin --><!-- hexo-inject:end --><p class="mogen">张晓昊的个人主页</p>
 		<hr color="#14E5C2" size="5">
 		<table width="100%">
 			<tr height="80">
@@ -332,7 +332,7 @@
 				</td>
 				<td width="4%"></td>
 			</tr>
-		</table>
+		</table><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 	</body>
 </html>
         </div>
@@ -537,6 +537,27 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 <script src="/js/search.min.js?v=1.7.2" async></script>
 
 
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
 
 
 

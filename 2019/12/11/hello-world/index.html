@@ -9,7 +9,7 @@
 
 
 
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     
     
     
@@ -42,10 +42,10 @@
     <!-- custom head -->
     
 
-<meta name="generator" content="Hexo 4.1.0"></head>
+<meta name="generator" content="Hexo 4.1.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 <body>
-    <div id="loading" class="active"></div>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
 
     <aside id="menu" class="hide" >
   <div class="inner flex-row-vertical">
@@ -145,7 +145,7 @@
         <h5 class="subtitle">
             
                 <time datetime="2019-12-11T13:11:47.000Z" itemprop="datePublished" class="page-time">
-  2019-12-11 21:11:47
+  2019-12-11
 </time>
 
 
@@ -175,7 +175,7 @@
     <div class="post-card">
         <h1 class="post-card-title">Hello World</h1>
         <div class="post-meta">
-            <time class="post-time" title="2019-12-11 21:11:47 2019-12-11T21:11:47+08:00" datetime="2019-12-11T13:11:47.000Z"  itemprop="datePublished">2019-12-11 21:11:47</time>
+            <time class="post-time" title="2019-12-11 21:11:47" datetime="2019-12-11T13:11:47.000Z"  itemprop="datePublished">2019-12-11</time>
 
             
 
@@ -209,7 +209,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2019-12-11T13:11:47.000Z" itemprop="dateUpdated">2019-12-11 21:11:47 2019-12-11T21:11:47+08:00</time>
+    最后更新时间：<time datetime="2019-12-11T13:11:47.000Z" itemprop="dateUpdated">2019-12-11 21:11:47</time>
 </span><br>
 
 
@@ -438,10 +438,31 @@ var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
 
 
 
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 

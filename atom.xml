@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-11T13:11:47.000Z</updated>
+  <updated>2020-08-14T13:00:23.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>post</title>
+    <link href="http://yoursite.com/2020/08/14/post/"/>
+    <id>http://yoursite.com/2020/08/14/post/</id>
+    <published>2020-08-14T13:00:23.000Z</published>
+    <updated>2020-08-14T13:00:23.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="模-p-同余类模板"><a href="#模-p-同余类模板" class="headerlink" title="模 $p$ 同余类模板"></a>模 $p$ 同余类模板</h1><h3 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入"></a>问题引入</h3><blockquote><p>请输出对 $p$ 取模后的结果.</p></blockquote><blockquote><p>请输出模 $p$ 意义下的结果.</p></blockquote><blockquote><p>最终答案可以表示为 $a/b$, 请输出 $a\cdot b^{-1}\bmod p$, 其中 $b^{-1}$ 是 $b$ 对模 $p$ 的乘法逆元.</p></blockquote><p>在我们做题的时候, 经常会遇到输出在模 $p$ 意义下的结果的题目. 上面三种是经典的这种要求的说法.</p><h3 id="传统做法"><a href="#传统做法" class="headerlink" title="传统做法"></a>传统做法</h3><p>这种题目在计算的过程中, 需要用到大量的取模运算. 原则上, 每进行一次加减乘除的运算, 都需要进行至少一次取模. 在读入一个变量后, 也应该立即进行至少一次取模. 如果结果产生了负数, 则可能需要再进行一次取模来避免这种情况的发生. 例如:</p><blockquote><p>计算 $(a+b)\bmod p$.</p><p>$-2^{63}&lt;a,b&lt;2^{63}$</p><p>$1&lt;p&lt;2^{62}$</p></blockquote><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll a, b, p;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld%lld%lld"</span>, &amp;a, &amp;b, &amp;p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld"</span>, ((a % p + b % p) % p + p) % p);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意到, 这个简单的程序进行了 4 次了取模. 这样产生了一些问题:</p><p>在这个程序中, 每一步取模都是缺一不可的. 对 $a,b$ 的取模是防止 $a+b$ 过大; 对和取模是题目要求; 最后对取模后的结果在加上一个 $p$ 后取模是为了防止直接取模得到负数. 上述四个取模缺少任意一个没有替代品的取模, 都会导致答案的错误. 而在做题的过程中, 上述的取模运算或替代品都是机械化而重复的, 有代码复用的可能; 同时, 这些运算缺一不可, 而在赛场考场上做题时, 在大面积的取模过程中, 可能一时疏忽漏掉某个取模, 导致算法正确的程序出现 <strong><font color=#ff0000#>Wrong Answer</font></strong> 的情况, 这种错误又很难查验, 因此高效便捷的代码复用很有必要.</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;模-p-同余类模板&quot;&gt;&lt;a href=&quot;#模-p-同余类模板&quot; class=&quot;headerlink&quot; title=&quot;模 $p$ 同余类模板&quot;&gt;&lt;/a&gt;模 $p$ 同余类模板&lt;/h1&gt;&lt;h3 id=&quot;问题引入&quot;&gt;&lt;a href=&quot;#问题引入&quot; class=&quot;head</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>

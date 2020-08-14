@@ -1,6 +1,6 @@
 # 博客说明
 
-这是我的[个人博客](SheauhawJang.github.io). 
+这是我的[个人博客](https://SheauhawJang.github.io). 
 
 ### 旧网站说明
 
@@ -10,7 +10,7 @@
 
 在 2019 年, 笔者开始学习算法竞赛的知识, 并跟随各算法大佬的脚步学习算法, 有建立博客的想法. 通过 github 建立博客只能建立一个, 于是旧网站的访问计划被无限期推迟.
 
-现在笔者在这个博客中整合了旧网站的资源, 直接访问  [链接](SheauhawJang.github.io/old_blogs) 即可. 资源随缘更新.
+现在笔者在这个博客中整合了旧网站的资源, 直接访问  [链接](https://SheauhawJang.github.io/old_blogs) 即可. 资源随缘更新.
 
 ### 关于博客
 

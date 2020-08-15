@@ -287,7 +287,7 @@
 <li><a href="https://github.com/temp-impl" target="_blank" rel="noopener">Taisuke Fujimoto</a> contributed very convoluted rules for raw and<br>interpolated strings in C#.</li>
 <li><a href="https://github.com/BooneJS" target="_blank" rel="noopener">Boone Severson</a> updated Verilog to comply with IEEE 1800-2012<br>SystemVerilog.</li>
 <li><a href="https://github.com/OiCMudkips" target="_blank" rel="noopener">Victor Zhou</a> improved rules for comments and strings in PowerShell files.</li>
-<li><a href="https://github.com/jvoigtlaender" target="_blank" rel="noopener">Janis Voigtländer</a> updated the definition of Elm to version 0.17 of the<br>languages. Elm is now featured on the front page of <a href="https://highlightjs.org" target="_blank" rel="noopener">https://highlightjs.org</a>.</li>
+<li><a href="https://github.com/jvoigtlaender" target="_blank" rel="noopener">Janis Voigtländer</a> updated the definition of Elm to version 0.17 of the<br>languages. Elm is now featured on the front page of <a href="https://highlightjs.org/" target="_blank" rel="noopener">https://highlightjs.org</a>.</li>
 <li>Special variable <code>$this</code> is highlighted as a keyword in PHP.</li>
 <li><code>usize</code> and <code>isize</code> are now highlighted in Rust.</li>
 <li>Fixed labels and directives in x86 assembler.</li>
@@ -336,7 +336,7 @@
 </ul>
 <h2 id="Version-9-1-0"><a href="#Version-9-1-0" class="headerlink" title="Version 9.1.0"></a>Version 9.1.0</h2><p>New languages:</p>
 <ul>
-<li><em>Stan</em> by <a href="http://brendanrocks.com" target="_blank" rel="noopener">Brendan Rocks</a></li>
+<li><em>Stan</em> by <a href="http://brendanrocks.com/" target="_blank" rel="noopener">Brendan Rocks</a></li>
 <li><em>BASIC</em> by <a href="https://github.com/raphnet" target="_blank" rel="noopener">Raphaël Assénat</a></li>
 <li><em>GAUSS</em> by <a href="https://github.com/matthewevans" target="_blank" rel="noopener">Matt Evans</a></li>
 <li><em>DTS</em> by <a href="https://github.com/mbr0wn" target="_blank" rel="noopener">Martin Braun</a></li>
@@ -504,7 +504,7 @@
 <ul>
 <li>ES6 features in JavaScript are better supported now by <a href="https://github.com/Justineo" target="_blank" rel="noopener">Gu Yiling</a>.</li>
 <li>Swift now recognizes body-less method definitions.</li>
-<li>Single expression functions <code>def foo, do: ...</code> now work in Elixir.</li>
+<li>Single expression functions <code>def foo, do: ... </code> now work in Elixir.</li>
 <li>More uniform detection of built-in classes in Objective C.</li>
 <li>Fixes for number literals and processor directives in Rust.</li>
 <li>HTML <code>&lt;script&gt;</code> tag now allows any language, not just JavaScript.</li>
@@ -583,7 +583,7 @@
 <li><em>TypeScript</em> by <a href="https://github.com/panuhorsmalahti" target="_blank" rel="noopener">Panu Horsmalahti</a></li>
 <li><em>Nimrod</em> by <a href="https://github.com/flaviut" target="_blank" rel="noopener">Flaviu Tamas</a></li>
 <li><em>Gradle</em> by <a href="https://github.com/chester1000" target="_blank" rel="noopener">Damian Mee</a></li>
-<li><em>Haxe</em> by <a href="http://christopher.kaster.ws" target="_blank" rel="noopener">Christopher Kaster</a></li>
+<li><em>Haxe</em> by <a href="http://christopher.kaster.ws/" target="_blank" rel="noopener">Christopher Kaster</a></li>
 <li><em>Swift</em> by <a href="https://github.com/chriseidhof" target="_blank" rel="noopener">Chris Eidhof</a> and <a href="https://github.com/natecook1000" target="_blank" rel="noopener">Nate Cook</a></li>
 </ul>
 <p>New styles:</p>
@@ -790,10 +790,11 @@
 </ul>
 <h3 id="For-developers"><a href="#For-developers" class="headerlink" title="For developers"></a>For developers</h3><p>The most significant change is the ability to include language submodes right<br>under <code>contains</code> instead of defining explicit named submodes in the main array:</p>
 <pre><code>contains: [
-  &apos;string&apos;,
-  &apos;number&apos;,
-  {begin: &apos;\\n&apos;, end: hljs.IMMEDIATE_RE}
-]</code></pre><p>This is useful for auxiliary modes needed only in one place to define parsing.<br>Note that such modes often don’t have <code>className</code> and hence won’t generate a<br>separate <code>&lt;span&gt;</code> in the resulting markup. This is similar in effect to<br><code>noMarkup: true</code>. All existing languages have been refactored accordingly.</p>
+  &#39;string&#39;,
+  &#39;number&#39;,
+  {begin: &#39;\\n&#39;, end: hljs.IMMEDIATE_RE}
+]</code></pre>
+<p>This is useful for auxiliary modes needed only in one place to define parsing.<br>Note that such modes often don’t have <code>className</code> and hence won’t generate a<br>separate <code>&lt;span&gt;</code> in the resulting markup. This is similar in effect to<br><code>noMarkup: true</code>. All existing languages have been refactored accordingly.</p>
 <p>Test file test.html has at last become a real test. Now it not only puts the<br>detected language name under the code snippet but also tests if it matches the<br>expected one. Test summary is displayed right above all language snippets.</p>
 <h2 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h2><p>Fine people at <a href="http://yandex.com/" target="_blank" rel="noopener">Yandex</a> agreed to host highlight.js on their big fast servers.<br><a href="http://softwaremaniacs.org/soft/highlight/en/download/" target="_blank" rel="noopener">Link up</a>!</p>
 <h2 id="Version-5-10-—-“Paris”"><a href="#Version-5-10-—-“Paris”" class="headerlink" title="Version 5.10 — “Paris”."></a>Version 5.10 — “Paris”.</h2><p>Though I’m on a vacation in Paris, I decided to release a new version with a<br>couple of small fixes:</p>
@@ -1165,7 +1166,24 @@ MathJax.Hub.Queue(function() {
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

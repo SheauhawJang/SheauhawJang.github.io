@@ -24,7 +24,7 @@
     <meta name="description" content="该模板为作者原创. 问题引入 请输出对 $p$ 取模后的结果.   请输出模 $p$ 意义下的结果.   最终答案可以表示为 $a&#x2F;b$, 请输出 $a\cdot b^{-1}\bmod p$, 其中 $b^{-1}$ 是 $b$ 对模 $p$ 的乘法逆元.  在我们做题的时候, 经常会遇到输出在模 $p$ 意义下的结果的题目. 上面三种是经典的这种要求的说法. 传统做法这种题目在计算的过程中,">
 <meta property="og:type" content="article">
 <meta property="og:title" content="模 $p$ 同余类模板">
-<meta property="og:url" content="https:&#x2F;&#x2F;sheauhawjang.github.io&#x2F;2020&#x2F;08&#x2F;14&#x2F;Modulo%20p%20Module&#x2F;index.html">
+<meta property="og:url" content="https://sheauhawjang.github.io/2020/08/14/Modulo%20p%20Module/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
 <meta property="og:description" content="该模板为作者原创. 问题引入 请输出对 $p$ 取模后的结果.   请输出模 $p$ 意义下的结果.   最终答案可以表示为 $a&#x2F;b$, 请输出 $a\cdot b^{-1}\bmod p$, 其中 $b^{-1}$ 是 $b$ 对模 $p$ 的乘法逆元.  在我们做题的时候, 经常会遇到输出在模 $p$ 意义下的结果的题目. 上面三种是经典的这种要求的说法. 传统做法这种题目在计算的过程中,">
 <meta property="og:locale" content="zh_CN">
@@ -479,7 +479,27 @@ MathJax.Hub.Queue(function() {
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -497,10 +517,5 @@ MathJax.Hub.Queue(function() {
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-
-
-
-
-
 </body>
 </html>

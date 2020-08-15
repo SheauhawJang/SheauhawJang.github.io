@@ -24,7 +24,7 @@
     <meta name="description" content="一个 ICPCer 的学习笔记">
 <meta property="og:type" content="website">
 <meta property="og:title" content="孤星捧月堂">
-<meta property="og:url" content="https:&#x2F;&#x2F;sheauhawjang.github.io&#x2F;categories&#x2F;%E6%A8%A1%E6%9D%BF&#x2F;index.html">
+<meta property="og:url" content="https://sheauhawjang.github.io/categories/%E6%A8%A1%E6%9D%BF/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
 <meta property="og:description" content="一个 ICPCer 的学习笔记">
 <meta property="og:locale" content="zh_CN">
@@ -346,7 +346,27 @@ MathJax.Hub.Queue(function() {
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
@@ -364,10 +384,5 @@ MathJax.Hub.Queue(function() {
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-
-
-
-
-
 </body>
 </html>

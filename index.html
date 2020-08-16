@@ -191,28 +191,31 @@
 
     
         <p>该模板为作者原创.</p>
-<h2 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入"></a>问题引入</h2><blockquote>
-<p>请输出对 $p$ 取模后的结果.</p>
+<h2 id="问题引入">问题引入</h2>
+<blockquote>
+<p>请输出对 <span class="math inline">\(p\)</span> 取模后的结果.</p>
 </blockquote>
 <blockquote>
-<p>请输出模 $p$ 意义下的结果.</p>
+<p>请输出模 <span class="math inline">\(p\)</span> 意义下的结果.</p>
 </blockquote>
 <blockquote>
-<p>最终答案可以表示为 $a/b$, 请输出 $a\cdot b^{-1}\bmod p$, 其中 $b^{-1}$ 是 $b$ 对模 $p$ 的乘法逆元.</p>
+<p>最终答案可以表示为 <span class="math inline">\(a/b\)</span>, 请输出 <span class="math inline">\(a\cdot b^{-1}\bmod p\)</span>, 其中 <span class="math inline">\(b^{-1}\)</span> 是 <span class="math inline">\(b\)</span> 对模 <span class="math inline">\(p\)</span> 的乘法逆元.</p>
 </blockquote>
-<p>在我们做题的时候, 经常会遇到输出在模 $p$ 意义下的结果的题目. 上面三种是经典的这种要求的说法.</p>
-<h2 id="传统做法"><a href="#传统做法" class="headerlink" title="传统做法"></a>传统做法</h2><p>这种题目在计算的过程中, 需要用到大量的取模运算. 原则上, 每进行一次加减乘除的运算, 都需要进行至少一次取模. 在读入一个变量后, 也应该立即进行至少一次取模. 如果结果产生了负数, 则可能需要再进行一次取模来避免这种情况的发生. 例如:</p>
+<p>在我们做题的时候, 经常会遇到输出在模 <span class="math inline">\(p\)</span> 意义下的结果的题目. 上面三种是经典的这种要求的说法.</p>
+<h2 id="传统做法">传统做法</h2>
+<p>这种题目在计算的过程中, 需要用到大量的取模运算. 原则上, 每进行一次加减乘除的运算, 都需要进行至少一次取模. 在读入一个变量后, 也应该立即进行至少一次取模. 如果结果产生了负数, 则可能需要再进行一次取模来避免这种情况的发生. 例如:</p>
 <blockquote>
-<p>计算 $(a+b)\bmod p$. $-2^{63}&lt;a,b&lt;2^{63}$, $1&lt;p&lt;2^{62}$.</p>
+<p>计算 <span class="math inline">\((a+b)\bmod p\)</span>. <span class="math inline">\(-2^{63}&lt;a,b&lt;2^{63}\)</span>, <span class="math inline">\(1&lt;p&lt;2^{62}\)</span>.</p>
 </blockquote>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll a, b, p;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld%lld%lld"</span>, &amp;a, &amp;b, &amp;p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld"</span>, ((a % p + b % p) % p + p) % p);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>注意到, 这个简单的程序进行了 4 次了取模. 这样产生了一些问题:</p>
-<p>在这个程序中, 每一步取模都是缺一不可的. 对 $a,b$ 的取模是防止 $a+b$ 过大; 对和取模是题目要求; 最后对取模后的结果在加上一个 $p$ 后取模是为了防止直接取模得到负数. 上述四个取模缺少任意一个没有替代品的取模, 都会导致答案的错误. 而在做题的过程中, 上述的取模运算或替代品都是机械化而重复的, 有代码复用的可能; 同时, 这些运算缺一不可, 而在赛场考场上做题时, 在大面积的取模过程中, 可能一时疏忽漏掉某个取模, 导致算法正确的程序出现 <strong><font color=#ff0000#>Wrong Answer</font></strong> 的情况, 这种错误又很难查验, 因此高效便捷的代码复用很有必要.</p>
+<p>在这个程序中, 每一步取模都是缺一不可的. 对 <span class="math inline">\(a,b\)</span> 的取模是防止 <span class="math inline">\(a+b\)</span> 过大; 对和取模是题目要求; 最后对取模后的结果在加上一个 <span class="math inline">\(p\)</span> 后取模是为了防止直接取模得到负数. 上述四个取模缺少任意一个没有替代品的取模, 都会导致答案的错误. 而在做题的过程中, 上述的取模运算或替代品都是机械化而重复的, 有代码复用的可能; 同时, 这些运算缺一不可, 而在赛场考场上做题时, 在大面积的取模过程中, 可能一时疏忽漏掉某个取模, 导致算法正确的程序出现 <strong><font color=#ff0000#>Wrong Answer</font></strong> 的情况, 这种错误又很难查验, 因此高效便捷的代码复用很有必要.</p>
 <p>而且, 取模运算速度较慢, 应该减少模运算的使用: 在某些情况下利用 if-else 结构或三目运算符 <code>?:</code> 来作为直接偷懒使用取模符号的替代品. 然而, 这些替代品虽然增加了效率, 但是却让代码更加反直觉, 编写更为复杂, 大量重复出现不利于赛场考场的应用. 代码复用就可以令这些问题迎刃而解.</p>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>题面固定模数 $p$ 情况的实现, 这也是最常见的一种情况.</p>
-<p>如果 $p$ 是通过键盘输入, 且对于一组数据, 输入后不再改变, 则只需将类声明中的 <code>static const int</code> 类型的常量的声明作为全程序的全局变量即可. 但是对变量取模会显著地比对常量取模更慢.</p>
+<h2 id="代码实现">代码实现</h2>
+<p>题面固定模数 <span class="math inline">\(p\)</span> 情况的实现, 这也是最常见的一种情况.</p>
+<p>如果 <span class="math inline">\(p\)</span> 是通过键盘输入, 且对于一组数据, 输入后不再改变, 则只需将类声明中的 <code>static const int</code> 类型的常量的声明作为全程序的全局变量即可. 但是对变量取模会显著地比对常量取模更慢.</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> rep(i, n) for (int i = 0; i &lt; n; ++i)</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">llp</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> v;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">llp</span>(<span class="title">T</span> <span class="title">a</span>, <span class="title">int</span>) &#123;</span> v = a; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> p = <span class="number">998244353</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> phi = p - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> invp = phi - <span class="number">1</span>;</span><br><span class="line">    llp() &#123; v = <span class="number">0</span>; &#125;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">static</span> <span class="title">T</span> <span class="title">mod</span>(<span class="title">T</span> <span class="title">a</span>) &#123;</span> <span class="keyword">return</span> a %= p, a &gt;= <span class="number">0</span> ? a : a + p; &#125;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">static</span> <span class="title">T</span> &amp;<span class="title">opmod</span>(<span class="title">T</span> &amp;<span class="title">a</span>) &#123;</span> <span class="keyword">return</span> a = mod(a); &#125;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">llp</span>(<span class="title">T</span> <span class="title">a</span>) &#123;</span> v = mod(a); &#125;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">operator</span> <span class="title">T</span>() <span class="title">const</span> &#123;</span> <span class="keyword">return</span> v; &#125;</span><br><span class="line">    <span class="keyword">int</span> <span class="keyword">operator</span>*() <span class="keyword">const</span> &#123; <span class="keyword">return</span> v; &#125;</span><br><span class="line">    <span class="keyword">int</span> *<span class="keyword">operator</span>&amp;() <span class="keyword">const</span> &#123; <span class="keyword">return</span> (<span class="keyword">int</span> *)&amp;v; &#125;</span><br><span class="line">    <span class="keyword">friend</span> istream &amp;<span class="keyword">operator</span>&gt;&gt;(istream &amp;ipt, llp &amp;x) &#123; <span class="keyword">return</span> ipt &gt;&gt; x.v, opmod(x.v), ipt; &#125;</span><br><span class="line">    <span class="keyword">friend</span> ostream &amp;<span class="keyword">operator</span>&lt;&lt;(ostream &amp;opt, llp x) &#123; <span class="keyword">return</span> opt &lt;&lt; x.v; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>+(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v + b.v &gt;= p ? llp(v + b.v - p, <span class="number">0</span>) : llp(v + b.v, <span class="number">0</span>); &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>+(ll a, llp b) &#123; <span class="keyword">return</span> b + a; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>+=(llp b) &#123; <span class="keyword">return</span> v += b.v, v = v &gt;= p ? v - p : v, *<span class="keyword">this</span>; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>++() &#123; <span class="keyword">return</span> *<span class="keyword">this</span> += <span class="number">1</span>; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>++(<span class="keyword">int</span>) &#123; <span class="keyword">return</span> ++*<span class="keyword">this</span>, *<span class="keyword">this</span> - <span class="number">1</span>; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>-() <span class="keyword">const</span> &#123; <span class="keyword">return</span> v ? llp(p - v, <span class="number">0</span>) : llp(); &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>-(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> *<span class="keyword">this</span> + (-b); &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>-(ll a, llp b) &#123; <span class="keyword">return</span> -b + a; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>-=(llp b) &#123; <span class="keyword">return</span> *<span class="keyword">this</span> += -b; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>--() &#123; <span class="keyword">return</span> *<span class="keyword">this</span> -= <span class="number">1</span>; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>--(<span class="keyword">int</span>) &#123; <span class="keyword">return</span> --*<span class="keyword">this</span>, *<span class="keyword">this</span> + <span class="number">1</span>; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>*(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> ll(v) * b.v; &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>*(ll a, llp b) &#123; <span class="keyword">return</span> b * a; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>*=(llp b) &#123; <span class="keyword">return</span> *<span class="keyword">this</span> = *<span class="keyword">this</span> * b; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>[](ll b) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        llp ans = <span class="number">1</span>, a = *<span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">while</span> (b)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">                ans *= a;</span><br><span class="line">            a *= a, b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>^(ll b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> (*<span class="keyword">this</span>)[b]; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>^=(ll b) &#123; <span class="keyword">return</span> *<span class="keyword">this</span> = *<span class="keyword">this</span> ^ b; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>~() <span class="keyword">const</span> &#123; <span class="keyword">return</span> *<span class="keyword">this</span> ^ invp; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>/(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> *<span class="keyword">this</span> * ~b; &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>/(ll a, llp b) &#123; <span class="keyword">return</span> (~b) * a; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>/=(llp b) &#123; <span class="keyword">return</span> *<span class="keyword">this</span> = *<span class="keyword">this</span> / b; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>&lt;&lt;(<span class="keyword">int</span> b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> *<span class="keyword">this</span> * llp(<span class="number">2</span>)[b]; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>&lt;&lt;=(<span class="keyword">int</span> b) &#123; <span class="keyword">return</span> *<span class="keyword">this</span> = *<span class="keyword">this</span> &lt;&lt; b; &#125;</span><br><span class="line">    llp <span class="keyword">operator</span>&gt;&gt;(<span class="keyword">int</span> b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> *<span class="keyword">this</span> / llp(<span class="number">2</span>)[b]; &#125;</span><br><span class="line">    llp &amp;<span class="keyword">operator</span>&gt;&gt;=(<span class="keyword">int</span> b) &#123; <span class="keyword">return</span> *<span class="keyword">this</span> = *<span class="keyword">this</span> &gt;&gt; b; &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>==(ll b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> mod(b) == v; &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>==(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v == b.v; &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>!=(ll b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> !(*<span class="keyword">this</span> == b); &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>!=(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> !(*<span class="keyword">this</span> == b); &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>&lt;(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v &lt; b.v; &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>&lt;=(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v &lt;= b.v; &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>&gt;(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v &gt; b.v; &#125;</span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span>&gt;=(llp b) <span class="keyword">const</span> &#123; <span class="keyword">return</span> v &gt;= b.v; &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>&lt;(ll a, llp b) &#123; <span class="keyword">return</span> b &gt; a; &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>&lt;=(ll a, llp b) &#123; <span class="keyword">return</span> b &gt;= a; &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>&gt;(ll a, llp b) &#123; <span class="keyword">return</span> b &lt; a; &#125;</span><br><span class="line">    <span class="keyword">friend</span> llp <span class="keyword">operator</span>&gt;=(ll a, llp b) &#123; <span class="keyword">return</span> b &lt;= a; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">var</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> v; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">mod</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> p; &#125;</span><br><span class="line">    <span class="function">llp <span class="title">sqd</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> *<span class="keyword">this</span> * *<span class="keyword">this</span>; &#125;</span><br><span class="line">    <span class="function">llp <span class="title">inv</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> ~*<span class="keyword">this</span>; &#125;</span><br><span class="line">    <span class="function">llp <span class="title">pow</span><span class="params">(ll b)</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> *<span class="keyword">this</span> ^ b; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
     
 
         <a href="/2020/08/14/Modulo%20p%20Module/" class="post-more waves-effect waves-button">
@@ -231,7 +234,7 @@
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-数学分析读书报告2020春"
+            <article id="post-Mathematical Analysis Reading Report 2020 Spring"
   class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
@@ -247,7 +250,7 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2020/04/29/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E6%8A%A5%E5%91%8A2020%E6%98%A5/">数学分析读书报告(2020年春)</a>
+      <a class="post-title-link" href="/2020/04/29/Mathematical%20Analysis%20Reading%20Report%202020%20Spring/">数学分析读书报告(2020年春)</a>
     </h3>
   
 
@@ -257,157 +260,265 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        <p>$<br>\newcommand{\isum}[2]{\sum\limits_{ #2 = #1 }^{\infty}}<br>\newcommand{\iprod}[2]{\prod\limits_{ #2 = #1 }^{\infty}}<br>\newcommand{\lsum}[3]{\sum\limits_{ #2 = #1 }^{ #3 }}<br>\newcommand{\lprod}[3]{\prod\limits_{ #2 = #1 }^{ #3 }}<br>\newcommand{\llim}[2]{\lim\limits_{ #1 \rightarrow #2 }}<br>\newcommand{\brac}[1]{\left( #1 \right)}<br>\newcommand{\lrac}[1]{\left\{ #1 \right\}}<br>\newcommand{\flor}[1]{\left\lfloor #1 \right\rfloor}<br>\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}<br>\newcommand{\agle}[1]{\left\langle #1 \right\rangle}<br>\newcommand{\abs}[1]{\left| #1 \right|}<br>\newcommand{\abss}[1]{\left| #1 \right|}<br>\newcommand{\id}[1]{\text{( #1 ) }}<br>\newcommand{\mathbs}[1]{\boldsymbol{ #1 }}<br>\newcommand{\mvec}[1]{\overrightarrow{ #1 }}<br>\newcommand{\mbar}[1]{\overline{ #1 }}<br>\newcommand{\bigf}{\displaystyle}<br>\newcommand{\dif}{\mathrm{d}}<br>\newcommand{\ddif}[1]{\frac{\dif}{\dif #1 }}<br>\newcommand{\cddif}[1]{\cfrac{\dif}{\dif #1 }}<br>\newcommand{\eset}{\varnothing}<br>\newcommand{\sh}{\mathrm{sh\ }}<br>\newcommand{\ch}{\mathrm{ch\ }}<br>\newcommand{\Imm}{\mathrm{Im\ }}<br>\newcommand{\Ker}{\mathrm{Ker\ }}<br>\newcommand{\rank}{\mathrm{rank\ }}<br>\newcommand{\diag}{\mathrm{diag\ }}<br>\newcommand{\sgn}{\mathrm{sgn\ }}<br>\newcommand{\simeqq}{\cong}<br>\newcommand{\tdeg}{^\circ}<br>\newcommand{\roku}{\partial}<br>\newcommand{\bksl}{\backslash}<br>\newcommand{\mrm}{\mathrm}<br>\newcommand{\mbb}{\mathbb}<br>\newcommand{\mbf}{\mathbf}<br>\newcommand{\mbs}{\mathbs}<br>\newcommand{\mscr}{\mathscr}<br>\newcommand{\kaz}[1]{\begin{cases} #1 \end{cases}}<br>\newcommand{\pmat}[1]{\begin{pmatrix} #1 \end{pmatrix}}<br>$在第一学期的数学分析课程中, 我们定义了一整套实数系统. 当时我们先用皮亚诺公理和集合论两种方式定义了自然数集, 然后再用自然数对的商集定义了整数集, 用整数对的集定义了有理数集, 最后又用戴德金分割定义了实数. 然而最近读到了卓里奇的《数学分析》, 在这本书里, 作者用了另一种方式定义了这一套系统: 先给出实数集的公理系统, 之后在逐步导出自然数集, 整数集和有理数集.</p>
+        <p><span class="math display">\[
+\newcommand{\isum}[2]{\sum\limits_{ #2 = #1 }^{\infty}}
+\newcommand{\iprod}[2]{\prod\limits_{ #2 = #1 }^{\infty}}
+\newcommand{\lsum}[3]{\sum\limits_{ #2 = #1 }^{ #3 }}
+\newcommand{\lprod}[3]{\prod\limits_{ #2 = #1 }^{ #3 }}
+\newcommand{\llim}[2]{\lim\limits_{ #1 \rightarrow #2 }}
+\newcommand{\brac}[1]{\left( #1 \right)}
+\newcommand{\lrac}[1]{\left\{ #1 \right\}}
+\newcommand{\flor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\agle}[1]{\left\langle #1 \right\rangle}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\abss}[1]{\left\| #1 \right\|}
+\newcommand{\id}[1]{\text{( #1 ) }}
+\newcommand{\mathbs}[1]{\boldsymbol{ #1 }}
+\newcommand{\mvec}[1]{\overrightarrow{ #1 }}
+\newcommand{\mbar}[1]{\overline{ #1 }}
+\newcommand{\bigf}{\displaystyle}
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\ddif}[1]{\frac{\dif}{\dif #1 }}
+\newcommand{\cddif}[1]{\cfrac{\dif}{\dif #1 }}
+\newcommand{\eset}{\varnothing}
+\newcommand{\sh}{\mathrm{sh\ }}
+\newcommand{\ch}{\mathrm{ch\ }}
+\newcommand{\Imm}{\mathrm{Im\ }}
+\newcommand{\Ker}{\mathrm{Ker\ }}
+\newcommand{\rank}{\mathrm{rank\ }}
+\newcommand{\diag}{\mathrm{diag\ }}
+\newcommand{\sgn}{\mathrm{sgn\ }}
+\newcommand{\simeqq}{\cong}
+\newcommand{\tdeg}{^\circ}
+\newcommand{\roku}{\partial}
+\newcommand{\bksl}{\backslash}
+\newcommand{\mrm}{\mathrm}
+\newcommand{\mbb}{\mathbb}
+\newcommand{\mbf}{\mathbf}
+\newcommand{\mscr}{\mathscr}
+\newcommand{\mbs}[1]{\boldsymbol{ #1 }}
+\newcommand{\kaz}[1]{\begin{cases} #1 \end{cases}}
+\newcommand{\pmat}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\text{数学分析读书报告(2020年春)}
+\]</span></p>
+<p>在第一学期的数学分析课程中, 我们定义了一整套实数系统. 当时我们先用皮亚诺公理和集合论两种方式定义了自然数集, 然后再用自然数对的商集定义了整数集, 用整数对的集定义了有理数集, 最后又用戴德金分割定义了实数. 然而最近读到了卓里奇的《数学分析》, 在这本书里, 作者用了另一种方式定义了这一套系统: 先给出实数集的公理系统, 之后在逐步导出自然数集, 整数集和有理数集.</p>
 <p>既然是从实数集开始, 那么作者是如何定义实数集的呢? 下面就是实数集的定义:</p>
-<h3 id="实数集"><a href="#实数集" class="headerlink" title="实数集"></a>实数集</h3><p>满足以下四组条件的集合 $\mbb R$ 叫做<strong>实数集</strong>, 其中的元素叫做<strong>实数</strong>, 这些条件构成了实数集的公理系统:</p>
-<h4 id="1-加法公理"><a href="#1-加法公理" class="headerlink" title="1. 加法公理"></a>1. 加法公理</h4><p>确定了一个映射(<strong>加法</strong>)<br>$$<br>+:\mbb R\times\mbb R\rightarrow\mbb R<br>$$<br>s.t. $\mbb R$ 中任意二元 $x,y$ 之有序对 $(x,y)$ 都有某元素 $x+y\in\mbb R$ 与之对应, 称 $x+y$ 为 $x,y$ 之和. 该映射亦满足以下条件:</p>
-<p>$1_+$. 存在<strong>加法零元</strong> $0$ s.t. $\forall x\in\mbb R$ 都有<br>$$<br>x+0=0+x=x<br>$$</p>
-<p>$2_+$. $\forall x\in\mbb R$, 存在<strong>负元</strong> $-x\in\mbb R$ s.t.<br>$$<br>x+(-x)=(-x)+x=0<br>$$</p>
-<p>$3_+$. 运算 $+$ 是<strong>结合的</strong>, 即 $\forall x,y,z\in\mbb R$ 满足<br>$$<br>x+(y+z)=(x+y)+z<br>$$</p>
-<p>$4_+$. 运算 $+$ 是<strong>交换的</strong>, 即 $\forall x,y\in\mbb R$ 满足<br>$$<br>x+y=y+x<br>$$</p>
+<h3 id="实数集">实数集</h3>
+<p>满足以下四组条件的集合 <span class="math inline">\(\mbb R\)</span> 叫做<strong>实数集</strong>, 其中的元素叫做<strong>实数</strong>, 这些条件构成了实数集的公理系统:</p>
+<h4 id="加法公理">1. 加法公理</h4>
+<p>确定了一个映射(<strong>加法</strong>) <span class="math display">\[
++:\mbb R\times\mbb R\rightarrow\mbb R
+\]</span> s.t. <span class="math inline">\(\mbb R\)</span> 中任意二元 <span class="math inline">\(x,y\)</span> 之有序对 <span class="math inline">\((x,y)\)</span> 都有某元素 <span class="math inline">\(x+y\in\mbb R\)</span> 与之对应, 称 <span class="math inline">\(x+y\)</span> 为 <span class="math inline">\(x,y\)</span> 之和. 该映射亦满足以下条件:</p>
+<p><span class="math inline">\(1_+\)</span>. 存在<strong>加法零元</strong> <span class="math inline">\(0\)</span> s.t. <span class="math inline">\(\forall x\in\mbb R\)</span> 都有 <span class="math display">\[
+x+0=0+x=x
+\]</span></p>
+<p><span class="math inline">\(2_+\)</span>. <span class="math inline">\(\forall x\in\mbb R\)</span>, 存在<strong>负元</strong> <span class="math inline">\(-x\in\mbb R\)</span> s.t. <span class="math display">\[
+x+(-x)=(-x)+x=0
+\]</span></p>
+<p><span class="math inline">\(3_+\)</span>. 运算 <span class="math inline">\(+\)</span> 是<strong>结合的</strong>, 即 <span class="math inline">\(\forall x,y,z\in\mbb R\)</span> 满足 <span class="math display">\[
+x+(y+z)=(x+y)+z
+\]</span></p>
+<p><span class="math inline">\(4_+\)</span>. 运算 <span class="math inline">\(+\)</span> 是<strong>交换的</strong>, 即 <span class="math inline">\(\forall x,y\in\mbb R\)</span> 满足 <span class="math display">\[
+x+y=y+x
+\]</span></p>
 <blockquote>
 <p><strong>群</strong></p>
-<p>装备了满足上述 $1_+,2_+,3_+$ 条件的运算的集合称为<strong>群</strong>. </p>
+<p>装备了满足上述 <span class="math inline">\(1_+,2_+,3_+\)</span> 条件的运算的集合称为<strong>群</strong>.</p>
 <p>如果这个运算叫加法, 那么这个群称为加群.</p>
-<p>如果这个运算是交换的, 即满足条件 $4_+$, 那么这个群称为<strong>交换群</strong>或 Abel 群.</p>
+<p>如果这个运算是交换的, 即满足条件 <span class="math inline">\(4_+\)</span>, 那么这个群称为<strong>交换群</strong>或 Abel 群.</p>
 </blockquote>
 <blockquote>
-<p>$\mbb R$ 关于加法运算是 Abel 群.</p>
+<p><span class="math inline">\(\mbb R\)</span> 关于加法运算是 Abel 群.</p>
 </blockquote>
-<h4 id="2-乘法公理"><a href="#2-乘法公理" class="headerlink" title="2. 乘法公理"></a>2. 乘法公理</h4><p>确定了一个映射(<strong>乘法</strong>)<br>$$<br>\bullet:\mbb R\times\mbb R\rightarrow\mbb R<br>$$<br>s.t. $\mbb R$ 中任意二元 $x,y$ 之有序对 $(x,y)$ 都有某元素 $x\cdot y\in\mbb R$ 与之对应, 称 $x\cdot y$ 为 $x,y$ 之积. 该映射亦满足以下条件:</p>
-<p>$1_\bullet$. 存在<strong>单位元</strong> $1$ s.t. $\forall x\in\mbb R\bksl0$ 都有<br>$$<br>x\cdot1=1\cdot x=x<br>$$</p>
-<p>$2_\bullet$. $\forall x\in\mbb R\bksl0$, 存在<strong>逆元</strong> $x^{-1}\in\mbb R\bksl0$ s.t.<br>$$<br>x\cdot x^{-1}=x^{-1}\cdot x=0<br>$$</p>
-<p>$3_\bullet$. 运算 $\bullet$ 是<strong>结合的</strong>, 即 $\forall x,y,z\in\mbb R$ 满足<br>$$<br>x\cdot(y\cdot z)=(x\cdot y)\cdot z<br>$$</p>
-<p>$4_\bullet$. 运算 $\bullet$ 是<strong>交换的</strong>, 即 $\forall x,y\in\mbb R$ 满足<br>$$<br>x\cdot y=y\cdot x<br>$$</p>
+<h4 id="乘法公理">2. 乘法公理</h4>
+<p>确定了一个映射(<strong>乘法</strong>) <span class="math display">\[
+\bullet:\mbb R\times\mbb R\rightarrow\mbb R
+\]</span> s.t. <span class="math inline">\(\mbb R\)</span> 中任意二元 <span class="math inline">\(x,y\)</span> 之有序对 <span class="math inline">\((x,y)\)</span> 都有某元素 <span class="math inline">\(x\cdot y\in\mbb R\)</span> 与之对应, 称 <span class="math inline">\(x\cdot y\)</span> 为 <span class="math inline">\(x,y\)</span> 之积. 该映射亦满足以下条件:</p>
+<p><span class="math inline">\(1_\bullet\)</span>. 存在<strong>单位元</strong> <span class="math inline">\(1\)</span> s.t. <span class="math inline">\(\forall x\in\mbb R\bksl0\)</span> 都有 <span class="math display">\[
+x\cdot1=1\cdot x=x
+\]</span></p>
+<p><span class="math inline">\(2_\bullet\)</span>. <span class="math inline">\(\forall x\in\mbb R\bksl0\)</span>, 存在<strong>逆元</strong> <span class="math inline">\(x^{-1}\in\mbb R\bksl0\)</span> s.t. <span class="math display">\[
+x\cdot x^{-1}=x^{-1}\cdot x=0
+\]</span></p>
+<p><span class="math inline">\(3_\bullet\)</span>. 运算 <span class="math inline">\(\bullet\)</span> 是<strong>结合的</strong>, 即 <span class="math inline">\(\forall x,y,z\in\mbb R\)</span> 满足 <span class="math display">\[
+x\cdot(y\cdot z)=(x\cdot y)\cdot z
+\]</span></p>
+<p><span class="math inline">\(4_\bullet\)</span>. 运算 <span class="math inline">\(\bullet\)</span> 是<strong>交换的</strong>, 即 <span class="math inline">\(\forall x,y\in\mbb R\)</span> 满足 <span class="math display">\[
+x\cdot y=y\cdot x
+\]</span></p>
 <blockquote>
-<p>$\mbb R\bksl0$ 关于乘法运算是 Abel 群.</p>
+<p><span class="math inline">\(\mbb R\bksl0\)</span> 关于乘法运算是 Abel 群.</p>
 </blockquote>
-<h4 id="1-2-加法与乘法"><a href="#1-2-加法与乘法" class="headerlink" title="1-2. 加法与乘法"></a>1-2. 加法与乘法</h4><p>乘法对加法有分配性: $\forall x,y,z\in\mbb R$,<br>$$<br>(x+y)\cdot z=x\cdot z+y\cdot z<br>$$<br>由于乘法是交换的, 左分配律亦成立.</p>
+<h4 id="加法与乘法">1-2. 加法与乘法</h4>
+<p>乘法对加法有分配性: <span class="math inline">\(\forall x,y,z\in\mbb R\)</span>, <span class="math display">\[
+(x+y)\cdot z=x\cdot z+y\cdot z
+\]</span> 由于乘法是交换的, 左分配律亦成立.</p>
 <blockquote>
 <p><strong>域</strong></p>
 <p>若一个集合上定义了两种运算, 它们满足上述的所有公理, 就称这个集合为一个<strong>代数域</strong>, 简称<strong>域</strong>.</p>
 </blockquote>
-<h4 id="3-序公理"><a href="#3-序公理" class="headerlink" title="3. 序公理"></a>3. 序公理</h4><p>$\mbb R$ 的元素间有<strong>不等关系</strong> $\le$, 对 $\mbb R$ 的元素 $x,y$, 或满足 $x\le y$, 或不满足 $x\le y$. 同时还满足以下条件:</p>
-<p>$0_\le$. $\forall x\in\mbb R$, $x\le x$. (反身性)</p>
-<p>$1_\le$. 若 $x\le y$ 且 $y\le x$, 则 $x=y$. (反对称性)</p>
-<p>$2_\le$. 若 $x\le y$ 且 $y\le z$, 则 $x\le z$. (传递性)</p>
-<p>$3_\le$. $\forall x,y\in\mbb R$, $x\le y$ 或 $y\le x$.</p>
+<h4 id="序公理">3. 序公理</h4>
+<p><span class="math inline">\(\mbb R\)</span> 的元素间有<strong>不等关系</strong> <span class="math inline">\(\le\)</span>, 对 <span class="math inline">\(\mbb R\)</span> 的元素 <span class="math inline">\(x,y\)</span>, 或满足 <span class="math inline">\(x\le y\)</span>, 或不满足 <span class="math inline">\(x\le y\)</span>. 同时还满足以下条件:</p>
+<p><span class="math inline">\(0_\le\)</span>. <span class="math inline">\(\forall x\in\mbb R\)</span>, <span class="math inline">\(x\le x\)</span>. (反身性)</p>
+<p><span class="math inline">\(1_\le\)</span>. 若 <span class="math inline">\(x\le y\)</span> 且 <span class="math inline">\(y\le x\)</span>, 则 <span class="math inline">\(x=y\)</span>. (反对称性)</p>
+<p><span class="math inline">\(2_\le\)</span>. 若 <span class="math inline">\(x\le y\)</span> 且 <span class="math inline">\(y\le z\)</span>, 则 <span class="math inline">\(x\le z\)</span>. (传递性)</p>
+<p><span class="math inline">\(3_\le\)</span>. <span class="math inline">\(\forall x,y\in\mbb R\)</span>, <span class="math inline">\(x\le y\)</span> 或 <span class="math inline">\(y\le x\)</span>.</p>
 <blockquote>
 <p><strong>序</strong></p>
-<p>如果某个集合的某些元素间有满足公理 $0_\le,1_\le,2_\le$ 的二元关系, 就称该集合为<strong>偏序集</strong>. </p>
-<p>若偏序集满足 $3_\le$, 即任意两个元素间均有这种关系, 就称此集合为<strong>线性序集</strong>.<em>（个人更喜欢<strong>全序集</strong> <sup>[2]</sup>这个名字）</em></p>
+<p>如果某个集合的某些元素间有满足公理 <span class="math inline">\(0_\le,1_\le,2_\le\)</span> 的二元关系, 就称该集合为<strong>偏序集</strong>.</p>
+<p>若偏序集满足 <span class="math inline">\(3_\le\)</span>, 即任意两个元素间均有这种关系, 就称此集合为<strong>线性序集</strong>.<em>（个人更喜欢<strong>全序集</strong> <sup>[2]</sup>这个名字）</em></p>
 </blockquote>
 <blockquote>
-<p>$\mbb R$ 关于不等关系是全序集.</p>
+<p><span class="math inline">\(\mbb R\)</span> 关于不等关系是全序集.</p>
 </blockquote>
-<h4 id="1-3-加法与序"><a href="#1-3-加法与序" class="headerlink" title="1-3. 加法与序"></a>1-3. 加法与序</h4><p>$\forall x,y,z\in\mbb R$, 若 $x\le y$, 则 $x+z\le y+z$.</p>
-<h4 id="2-3-乘法与序"><a href="#2-3-乘法与序" class="headerlink" title="2-3. 乘法与序"></a>2-3. 乘法与序</h4><p>$\forall x,y\in\mbb R$,若 $0\le x$ 且 $0\le y$, 则 $0\le x\cdot y$.</p>
-<h4 id="4-完备公理"><a href="#4-完备公理" class="headerlink" title="4. 完备公理"></a>4. 完备公理</h4><p>若 $X,Y$ 是 $\mbb R$ 的非空子集, 且有性质: 若 $\forall x\in X,y\in Y$, 都有 $x\le y$; 那么 $\exists c\in\mbb R$,  s.t. $\forall x\in X,y\in Y$ 都有 $x\le c\le y$.</p>
+<h4 id="加法与序">1-3. 加法与序</h4>
+<p><span class="math inline">\(\forall x,y,z\in\mbb R\)</span>, 若 <span class="math inline">\(x\le y\)</span>, 则 <span class="math inline">\(x+z\le y+z\)</span>.</p>
+<h4 id="乘法与序">2-3. 乘法与序</h4>
+<p><span class="math inline">\(\forall x,y\in\mbb R\)</span>,若 <span class="math inline">\(0\le x\)</span> 且 <span class="math inline">\(0\le y\)</span>, 则 <span class="math inline">\(0\le x\cdot y\)</span>.</p>
+<h4 id="完备公理">4. 完备公理</h4>
+<p>若 <span class="math inline">\(X,Y\)</span> 是 <span class="math inline">\(\mbb R\)</span> 的非空子集, 且有性质: 若 <span class="math inline">\(\forall x\in X,y\in Y\)</span>, 都有 <span class="math inline">\(x\le y\)</span>; 那么 <span class="math inline">\(\exists c\in\mbb R\)</span>, s.t. <span class="math inline">\(\forall x\in X,y\in Y\)</span> 都有 <span class="math inline">\(x\le c\le y\)</span>.</p>
 <p>以上便是实数集的公理系统了. 有了这套公理系统, 就构造出了一个抽象系统. 但是, 类似皮亚诺公理存在的问题一样, 书中也提出了两个问题:</p>
 <p>无矛盾性: 这套公理是否相容? 是否真的存在满足上述公理系统的集合?</p>
 <p>范畴性: 这组公理确定的数学对象是否唯一? 任意两个不同的实现是否同构?</p>
-<p>关于无矛盾性的问题, 书中用集合论公理系统出发建立自然数集, 然后是有理数集, 最后是是实数集的描述来证明的. 感觉起来像是我们之前学习的那一种方式. 范畴性的问题似乎是构造两个实数模型 $\mbb R$ 到 $\mbb R’$ 的同构映射, 但是我想不到比较合适的方法定义这个映射.</p>
-<p>下面是实数的一些代数性质. 书中对部分定理进行了证明. 由于证明很简单, 这里不做赘述. </p>
-<h3 id="加法公理的推论"><a href="#加法公理的推论" class="headerlink" title="加法公理的推论"></a>加法公理的推论</h3><p>$1\tdeg$ 实数集中有唯一的零元.</p>
-<p>$2\tdeg$ 实数集中每个元素有唯一的负元.</p>
-<p>$3\tdeg$ 方程 $a+x=b$ 在 $\mbb R$ 中有唯一解 $x=b+(-a)$ (通常表示为 $b-a$).</p>
-<h3 id="乘法公理的推论"><a href="#乘法公理的推论" class="headerlink" title="乘法公理的推论"></a>乘法公理的推论</h3><p>$1\tdeg$ 实数集中有唯一的单位元.</p>
-<p>$2\tdeg$ 实数集中每个 $x\ne0$, 有唯一的逆元 $x^{-1}$.</p>
-<p>$3\tdeg$ 方程 $a\cdot x=b$, 当 $a\in\mbb R\bksl0$ 时, 有唯一解 $x=b\cdot a^{-1}$.</p>
-<h3 id="加法与乘法的推论"><a href="#加法与乘法的推论" class="headerlink" title="加法与乘法的推论"></a>加法与乘法的推论</h3><p>$1\tdeg$ $\forall x\in\mbb R$, $x\cdot0=0\cdot x=0$.</p>
-<p>$2\tdeg$ 若 $x\cdot y=0$, 则 $x=0$ 或 $y=0$.</p>
-<p>$3\tdeg$ $\forall x\in\mbb R$, $-x=(-1)\cdot x$.</p>
-<p>$4\tdeg$ $\forall x\in\mbb R$, $(-1)\cdot(-x)=x$.</p>
-<p>$3\tdeg$ $\forall x\in\mbb R$, $(-x)\cdot(-x)=x\cdot x$.</p>
-<h3 id="序公理的推论"><a href="#序公理的推论" class="headerlink" title="序公理的推论"></a>序公理的推论</h3><blockquote>
+<p>关于无矛盾性的问题, 书中用集合论公理系统出发建立自然数集, 然后是有理数集, 最后是是实数集的描述来证明的. 感觉起来像是我们之前学习的那一种方式. 范畴性的问题似乎是构造两个实数模型 <span class="math inline">\(\mbb R\)</span> 到 <span class="math inline">\(\mbb R&#39;\)</span> 的同构映射, 但是我想不到比较合适的方法定义这个映射.</p>
+<p>下面是实数的一些代数性质. 书中对部分定理进行了证明. 由于证明很简单, 这里不做赘述.</p>
+<h3 id="加法公理的推论">加法公理的推论</h3>
+<p><span class="math inline">\(1\tdeg\)</span> 实数集中有唯一的零元.</p>
+<p><span class="math inline">\(2\tdeg\)</span> 实数集中每个元素有唯一的负元.</p>
+<p><span class="math inline">\(3\tdeg\)</span> 方程 <span class="math inline">\(a+x=b\)</span> 在 <span class="math inline">\(\mbb R\)</span> 中有唯一解 <span class="math inline">\(x=b+(-a)\)</span> (通常表示为 <span class="math inline">\(b-a\)</span>).</p>
+<h3 id="乘法公理的推论">乘法公理的推论</h3>
+<p><span class="math inline">\(1\tdeg\)</span> 实数集中有唯一的单位元.</p>
+<p><span class="math inline">\(2\tdeg\)</span> 实数集中每个 <span class="math inline">\(x\ne0\)</span>, 有唯一的逆元 <span class="math inline">\(x^{-1}\)</span>.</p>
+<p><span class="math inline">\(3\tdeg\)</span> 方程 <span class="math inline">\(a\cdot x=b\)</span>, 当 <span class="math inline">\(a\in\mbb R\bksl0\)</span> 时, 有唯一解 <span class="math inline">\(x=b\cdot a^{-1}\)</span>.</p>
+<h3 id="加法与乘法的推论">加法与乘法的推论</h3>
+<p><span class="math inline">\(1\tdeg\)</span> <span class="math inline">\(\forall x\in\mbb R\)</span>, <span class="math inline">\(x\cdot0=0\cdot x=0\)</span>.</p>
+<p><span class="math inline">\(2\tdeg\)</span> 若 <span class="math inline">\(x\cdot y=0\)</span>, 则 <span class="math inline">\(x=0\)</span> 或 <span class="math inline">\(y=0\)</span>.</p>
+<p><span class="math inline">\(3\tdeg\)</span> <span class="math inline">\(\forall x\in\mbb R\)</span>, <span class="math inline">\(-x=(-1)\cdot x\)</span>.</p>
+<p><span class="math inline">\(4\tdeg\)</span> <span class="math inline">\(\forall x\in\mbb R\)</span>, <span class="math inline">\((-1)\cdot(-x)=x\)</span>.</p>
+<p><span class="math inline">\(3\tdeg\)</span> <span class="math inline">\(\forall x\in\mbb R\)</span>, <span class="math inline">\((-x)\cdot(-x)=x\cdot x\)</span>.</p>
+<h3 id="序公理的推论">序公理的推论</h3>
+<blockquote>
 <p><strong>定义</strong></p>
-<p>$x\le y$ 可以写作 $y\ge x$.</p>
-<p>$x\ne y$ 时, $x\le y$ 可以写成 $x&lt;y$ 或 $y&gt;x$, 此时称之为<strong>严格不等式</strong>.</p>
+<p><span class="math inline">\(x\le y\)</span> 可以写作 <span class="math inline">\(y\ge x\)</span>.</p>
+<p><span class="math inline">\(x\ne y\)</span> 时, <span class="math inline">\(x\le y\)</span> 可以写成 <span class="math inline">\(x&lt;y\)</span> 或 <span class="math inline">\(y&gt;x\)</span>, 此时称之为<strong>严格不等式</strong>.</p>
 </blockquote>
-<p>$1\tdeg$ $\forall x,y\in\mbb R$,<br>$$<br>x&lt;y,x=y,x&gt;y<br>$$<br>恰有一种关系成立.</p>
-<p>$2\tdeg$ $\forall x,y,z\in\mbb R$: 若 $x&lt;y$ 且 $y\le z$, 则 $x&lt;z$; 若 $x\le y$ 且 $y&lt;z$, 则 $x&lt;z$.</p>
-<h3 id="序与加法及减法"><a href="#序与加法及减法" class="headerlink" title="序与加法及减法"></a>序与加法及减法</h3><p>$1\tdeg$ $0&lt;1$.</p>
-<p>$2\tdeg$ 若 $0&lt;x$ 则 $0&lt;x^{-1}$. 若 $0&lt;x$, $x&lt;y$, 则 $0&lt;y^{-1}$, $y^{-1}&lt;x^{-1}$.</p>
+<p><span class="math inline">\(1\tdeg\)</span> <span class="math inline">\(\forall x,y\in\mbb R\)</span>, <span class="math display">\[
+x&lt;y,x=y,x&gt;y
+\]</span> 恰有一种关系成立.</p>
+<p><span class="math inline">\(2\tdeg\)</span> <span class="math inline">\(\forall x,y,z\in\mbb R\)</span>: 若 <span class="math inline">\(x&lt;y\)</span> 且 <span class="math inline">\(y\le z\)</span>, 则 <span class="math inline">\(x&lt;z\)</span>; 若 <span class="math inline">\(x\le y\)</span> 且 <span class="math inline">\(y&lt;z\)</span>, 则 <span class="math inline">\(x&lt;z\)</span>.</p>
+<h3 id="序与加法及减法">序与加法及减法</h3>
+<p><span class="math inline">\(1\tdeg\)</span> <span class="math inline">\(0&lt;1\)</span>.</p>
+<p><span class="math inline">\(2\tdeg\)</span> 若 <span class="math inline">\(0&lt;x\)</span> 则 <span class="math inline">\(0&lt;x^{-1}\)</span>. 若 <span class="math inline">\(0&lt;x\)</span>, <span class="math inline">\(x&lt;y\)</span>, 则 <span class="math inline">\(0&lt;y^{-1}\)</span>, <span class="math inline">\(y^{-1}&lt;x^{-1}\)</span>.</p>
 <p>由完备定理, 我们可以得到关于上下界的一些比较好的性质. 首先有一些关于上下界的定义:</p>
-<h3 id="上界与下界"><a href="#上界与下界" class="headerlink" title="上界与下界"></a>上界与下界</h3><p>设 $X\subseteq\mbb R$, 若 $\exists c\in\mbb R$, s.t. $\forall x\in X$ 都有 $x\le c$, 就称 $X$ 是<strong>上有界集</strong>, $c$ 是 $X$ 的的一个<strong>上界</strong>. </p>
-<p>将上述定义中的 $\le$ 改为 $\ge$, 就得到了<strong>下有界集</strong>和<strong>下界</strong>的定义.</p>
+<h3 id="上界与下界">上界与下界</h3>
+<p>设 <span class="math inline">\(X\subseteq\mbb R\)</span>, 若 <span class="math inline">\(\exists c\in\mbb R\)</span>, s.t. <span class="math inline">\(\forall x\in X\)</span> 都有 <span class="math inline">\(x\le c\)</span>, 就称 <span class="math inline">\(X\)</span> 是<strong>上有界集</strong>, <span class="math inline">\(c\)</span> 是 <span class="math inline">\(X\)</span> 的的一个<strong>上界</strong>.</p>
+<p>将上述定义中的 <span class="math inline">\(\le\)</span> 改为 <span class="math inline">\(\ge\)</span>, 就得到了<strong>下有界集</strong>和<strong>下界</strong>的定义.</p>
 <p>既有上界又有下界的集合叫做<strong>有界集</strong>.</p>
-<h3 id="极大元与极小元"><a href="#极大元与极小元" class="headerlink" title="极大元与极小元"></a>极大元与极小元</h3><p>设 $X\subseteq\mbb R,a\in X$, 若 $\forall x\in X$, 都有 $x\le a$, 那么称 $a$ 为 $x$ 的<strong>最大元</strong>或<strong>极大元</strong>, 记做 $\max X$.</p>
-<p>将上述定义中的 $\le$ 改为 $\ge$, 就得到了<strong>极小元</strong>的定义, 记做 $\min X$.</p>
+<h3 id="极大元与极小元">极大元与极小元</h3>
+<p>设 <span class="math inline">\(X\subseteq\mbb R,a\in X\)</span>, 若 <span class="math inline">\(\forall x\in X\)</span>, 都有 <span class="math inline">\(x\le a\)</span>, 那么称 <span class="math inline">\(a\)</span> 为 <span class="math inline">\(x\)</span> 的<strong>最大元</strong>或<strong>极大元</strong>, 记做 <span class="math inline">\(\max X\)</span>.</p>
+<p>将上述定义中的 <span class="math inline">\(\le\)</span> 改为 <span class="math inline">\(\ge\)</span>, 就得到了<strong>极小元</strong>的定义, 记做 <span class="math inline">\(\min X\)</span>.</p>
 <blockquote>
 <p>一个集合不一定存在极大元或极小元. 极大元或极小元若存在, 则只能有一个.</p>
 </blockquote>
-<h3 id="上确界与下确界"><a href="#上确界与下确界" class="headerlink" title="上确界与下确界"></a>上确界与下确界</h3><p>设 $X\subseteq\mbb R$: $X$ 的上界中的最小者称为 $X$ 的<strong>上确界</strong>, 记做 $\sup X$. $X$ 的下界中的最大者称为 $X$ 的<strong>下确界</strong>, 记做 $\inf X$. 即<br>$$<br>\begin{aligned}<br>\sup X&amp;:=\min\lrac{c\in\mbb R|\forall x\in X,x\le c}\\<br>\inf X&amp;:=\min\lrac{c\in\mbb R|\forall x\in X,c\le x}\\<br>\end{aligned}<br>$$</p>
+<h3 id="上确界与下确界">上确界与下确界</h3>
+<p>设 <span class="math inline">\(X\subseteq\mbb R\)</span>: <span class="math inline">\(X\)</span> 的上界中的最小者称为 <span class="math inline">\(X\)</span> 的<strong>上确界</strong>, 记做 <span class="math inline">\(\sup X\)</span>. <span class="math inline">\(X\)</span> 的下界中的最大者称为 <span class="math inline">\(X\)</span> 的<strong>下确界</strong>, 记做 <span class="math inline">\(\inf X\)</span>. 即 <span class="math display">\[
+\begin{aligned}
+\sup X&amp;:=\min\lrac{c\in\mbb R|\forall x\in X,x\le c}\\
+\inf X&amp;:=\min\lrac{c\in\mbb R|\forall x\in X,c\le x}\\
+\end{aligned}
+\]</span></p>
 <p>通过这种定义得到的上确界和下确界的存在性是未知的. 但是我们由下面的定理可知上下确界是一定存在的.</p>
-<h4 id="上确界原理"><a href="#上确界原理" class="headerlink" title="上确界原理"></a>上确界原理</h4><p>实数集的任何非空有上界的子集有唯一的上确界.</p>
-<p><strong>证明:</strong> 设 $X$ 是给定的集合, $Y=\lrac{y\in\mbb R|\forall x\in X,x\le y}$ 是上界构成的集合. 由定义可知, $\forall x\in X,y\in Y$, $x\le y$. 由题意知, $x\ne\eset,y\ne\eset$. 由完备公理, $\exists c\in\mbb R$ s.t. $\forall x\in X,y\in Y$,  $x\le c\le y$. 于是 $c$ 是 $x$ 的上界, $c\in Y$. 于是 $c$ 是 $Y$ 的极小元, $c=\min Y=\sup X$. 证毕.</p>
+<h4 id="上确界原理">上确界原理</h4>
+<p>实数集的任何非空有上界的子集有唯一的上确界.</p>
+<p><strong>证明:</strong> 设 <span class="math inline">\(X\)</span> 是给定的集合, <span class="math inline">\(Y=\lrac{y\in\mbb R|\forall x\in X,x\le y}\)</span> 是上界构成的集合. 由定义可知, <span class="math inline">\(\forall x\in X,y\in Y\)</span>, <span class="math inline">\(x\le y\)</span>. 由题意知, <span class="math inline">\(x\ne\eset,y\ne\eset\)</span>. 由完备公理, <span class="math inline">\(\exists c\in\mbb R\)</span> s.t. <span class="math inline">\(\forall x\in X,y\in Y\)</span>, <span class="math inline">\(x\le c\le y\)</span>. 于是 <span class="math inline">\(c\)</span> 是 <span class="math inline">\(x\)</span> 的上界, <span class="math inline">\(c\in Y\)</span>. 于是 <span class="math inline">\(c\)</span> 是 <span class="math inline">\(Y\)</span> 的极小元, <span class="math inline">\(c=\min Y=\sup X\)</span>. 证毕.</p>
 <p>类似的, 可以有下确界原理: 实数集的任何非空有下界的子集有唯一的下确界.</p>
 <p>至此, 我们定义了实数集的公理系统, 似乎这篇报告到这里就可以结束了. 但是我们回顾一下之前我们定义实数集的过程: 自然数集, 整数集, 有理数集, 实数集. 但是现在按上述定义, 我们只定义了实数集! 前面的自然数集, 整数集和有理数集都还没有定义! 也就是说, 我们的工作还没有完成! 下面就开始定义其他的那些集合.</p>
 <p>在定义自然数集之前, 先定义<strong>归纳集</strong>:</p>
-<h3 id="归纳集"><a href="#归纳集" class="headerlink" title="归纳集"></a>归纳集</h3><p>设 $X\subseteq\mbb R$, 若 $\forall x0\in X$, 有 $x+1\in X$, 就称 $X$ 为一个<strong>归纳集</strong>.</p>
+<h3 id="归纳集">归纳集</h3>
+<p>设 <span class="math inline">\(X\subseteq\mbb R\)</span>, 若 <span class="math inline">\(\forall x0\in X\)</span>, 有 <span class="math inline">\(x+1\in X\)</span>, 就称 <span class="math inline">\(X\)</span> 为一个<strong>归纳集</strong>.</p>
 <blockquote>
-<p>例如: $\mbb R$ 和 $\mbb R_+$ 都是归纳集.</p>
+<p>例如: <span class="math inline">\(\mbb R\)</span> 和 <span class="math inline">\(\mbb R_+\)</span> 都是归纳集.</p>
 </blockquote>
-<h4 id="命题"><a href="#命题" class="headerlink" title="命题"></a>命题</h4><p>任意多个归纳集 $X_\alpha$ 之交集 $\bigf X=\bigcap_{\alpha\in A}X_\alpha$ 若非空, 则 $X$ 也是归纳集.</p>
-<p><strong>证明:</strong> $\forall x\in X$: $\forall\alpha\in A$, $x\in X_\alpha$. 于是 $\forall\alpha\in A$, $x+1\in X_\alpha$. 于是 $x+1\in X$. $X$ 是归纳集. 证毕.</p>
-<h3 id="自然数集"><a href="#自然数集" class="headerlink" title="自然数集"></a>自然数集</h3><p>包含数 $1$ 的最小归纳集叫<strong>自然数集</strong>, 用 $\mbb N$ 表示, 其元素叫<strong>自然数</strong>.</p>
+<h4 id="命题">命题</h4>
+<p>任意多个归纳集 <span class="math inline">\(X_\alpha\)</span> 之交集 <span class="math inline">\(\bigf X=\bigcap_{\alpha\in A}X_\alpha\)</span> 若非空, 则 <span class="math inline">\(X\)</span> 也是归纳集.</p>
+<p><strong>证明:</strong> <span class="math inline">\(\forall x\in X\)</span>: <span class="math inline">\(\forall\alpha\in A\)</span>, <span class="math inline">\(x\in X_\alpha\)</span>. 于是 <span class="math inline">\(\forall\alpha\in A\)</span>, <span class="math inline">\(x+1\in X_\alpha\)</span>. 于是 <span class="math inline">\(x+1\in X\)</span>. <span class="math inline">\(X\)</span> 是归纳集. 证毕.</p>
+<h3 id="自然数集">自然数集</h3>
+<p>包含数 <span class="math inline">\(1\)</span> 的最小归纳集叫<strong>自然数集</strong>, 用 <span class="math inline">\(\mbb N\)</span> 表示, 其元素叫<strong>自然数</strong>.</p>
 <blockquote>
-<p>容易发现, 自然数集就是由 $1$, $1+1$, $(1+1)+1$ 组成的集合. </p>
+<p>容易发现, 自然数集就是由 <span class="math inline">\(1\)</span>, <span class="math inline">\(1+1\)</span>, <span class="math inline">\((1+1)+1\)</span> 组成的集合.</p>
 </blockquote>
-<h4 id="数学归纳原理"><a href="#数学归纳原理" class="headerlink" title="数学归纳原理"></a>数学归纳原理</h4><p>若 $E\subseteq\mbb N$, $1\in E$, 且 $\forall x\in E$, $x+1\in E$. 则 $E=\mbb N$.</p>
-<p><strong>证明:</strong> 由归纳集定义, $E$ 是归纳集. 又 $1\in E$, 由自然数集定义, $\mbb N\subseteq E$. 又 $E\subseteq\mbb N$, 于是 $E=\mbb N$. 证毕.</p>
-<h3 id="自然数集的部分性质"><a href="#自然数集的部分性质" class="headerlink" title="自然数集的部分性质"></a>自然数集的部分性质</h3><p>$1\tdeg$ 自然数的和与积是自然数.</p>
-<p><strong>证明:</strong><br>$$<br>A:=\lrac{n\in\mbb N|\forall m\in\mbb N,m+n\in\mbb N}\subseteq\mbb N<br>$$<br>由自然数定义, $1\in A$. $\forall n\in A$, $\forall m\in\mbb N$, $m+n\in\mbb N$, $m+(n+1)=(m+n)+1\in\mbb N$. 于是 $n+1\in A$. 于是由数学归纳原理 $A=\mbb N$. 于是自然数的和是自然数.<br>$$<br>B:=\lrac{n\in\mbb N|\forall m\in\mbb N,m\cdot n\in\mbb N}\subseteq\mbb N<br>$$<br>由 $1$ 的定义, $1\in B$. $\forall n\in B$, $\forall m\in\mbb N$, $m\cdot n\in\mbb N$, $m\cdot(n+1)=m\cdot n+m\in\mbb N$. 于是 $n+1\in B$. 于是由数学归纳原理 $B=\mbb N$. 于是自然数的积是自然数. 证毕.</p>
-<p><em>用类似的方法可以证明 $2\tdeg-5\tdeg$：</em></p>
-<p>$2\tdeg$ 若 $n\in\mbb N$, $n\ne1$, 则 $n-1\in\mbb N$.</p>
-<p>$3\tdeg$ $\forall n\in\mbb N$, $\lrac{x\in\mbb N|n&lt;x}$ 有极小元 $n+1$. </p>
-<p>$4\tdeg$ $\forall m,n\in\mbb N$, 若 $n&lt;m$, 则 $n+1\le m$.</p>
-<p>$5\tdeg$ 若 $n\in\mbb N$, 则没有 $x\in\mbb N$ 能满足 $n&lt;x&lt;n+1$.</p>
-<p>$6\tdeg$ 自然数集的任何非空子集都有最小元.</p>
-<p><strong>证明:</strong> 设 $M\subseteq\mbb N$, $M\ne\eset$. 若 $1\in M$, 则 $\min M=1$. 否则, 设 $E=\mbb N\bksl M$, $1\in E$. 在 $E$ 中必能找到自然数 $n\in E$ s.t. 不超过 $n$ 的自然数都在 $E$ 中而 $n+1\in M$. 否则 $1\in E\subseteq\mbb N$, 当 $n\in E$ 时, $n+1\in E$, 于是 $E=\mbb N$, $M=\eset$, 矛盾. $n+1\in M$ 即 $M$ 的最小元, 因为 $n$ 与 $n+1$ 之间没有自然数.</p>
+<h4 id="数学归纳原理">数学归纳原理</h4>
+<p>若 <span class="math inline">\(E\subseteq\mbb N\)</span>, <span class="math inline">\(1\in E\)</span>, 且 <span class="math inline">\(\forall x\in E\)</span>, <span class="math inline">\(x+1\in E\)</span>. 则 <span class="math inline">\(E=\mbb N\)</span>.</p>
+<p><strong>证明:</strong> 由归纳集定义, <span class="math inline">\(E\)</span> 是归纳集. 又 <span class="math inline">\(1\in E\)</span>, 由自然数集定义, <span class="math inline">\(\mbb N\subseteq E\)</span>. 又 <span class="math inline">\(E\subseteq\mbb N\)</span>, 于是 <span class="math inline">\(E=\mbb N\)</span>. 证毕.</p>
+<h3 id="自然数集的部分性质">自然数集的部分性质</h3>
+<p><span class="math inline">\(1\tdeg\)</span> 自然数的和与积是自然数.</p>
+<p><strong>证明:</strong> <span class="math display">\[
+A:=\lrac{n\in\mbb N|\forall m\in\mbb N,m+n\in\mbb N}\subseteq\mbb N
+\]</span> 由自然数定义, <span class="math inline">\(1\in A\)</span>. <span class="math inline">\(\forall n\in A\)</span>, <span class="math inline">\(\forall m\in\mbb N\)</span>, <span class="math inline">\(m+n\in\mbb N\)</span>, <span class="math inline">\(m+(n+1)=(m+n)+1\in\mbb N\)</span>. 于是 <span class="math inline">\(n+1\in A\)</span>. 于是由数学归纳原理 <span class="math inline">\(A=\mbb N\)</span>. 于是自然数的和是自然数. <span class="math display">\[
+B:=\lrac{n\in\mbb N|\forall m\in\mbb N,m\cdot n\in\mbb N}\subseteq\mbb N
+\]</span> 由 <span class="math inline">\(1\)</span> 的定义, <span class="math inline">\(1\in B\)</span>. <span class="math inline">\(\forall n\in B\)</span>, <span class="math inline">\(\forall m\in\mbb N\)</span>, <span class="math inline">\(m\cdot n\in\mbb N\)</span>, <span class="math inline">\(m\cdot(n+1)=m\cdot n+m\in\mbb N\)</span>. 于是 <span class="math inline">\(n+1\in B\)</span>. 于是由数学归纳原理 <span class="math inline">\(B=\mbb N\)</span>. 于是自然数的积是自然数. 证毕.</p>
+<p><em>用类似的方法可以证明 <span class="math inline">\(2\tdeg-5\tdeg\)</span>：</em></p>
+<p><span class="math inline">\(2\tdeg\)</span> 若 <span class="math inline">\(n\in\mbb N\)</span>, <span class="math inline">\(n\ne1\)</span>, 则 <span class="math inline">\(n-1\in\mbb N\)</span>.</p>
+<p><span class="math inline">\(3\tdeg\)</span> <span class="math inline">\(\forall n\in\mbb N\)</span>, <span class="math inline">\(\lrac{x\in\mbb N|n&lt;x}\)</span> 有极小元 <span class="math inline">\(n+1\)</span>.</p>
+<p><span class="math inline">\(4\tdeg\)</span> <span class="math inline">\(\forall m,n\in\mbb N\)</span>, 若 <span class="math inline">\(n&lt;m\)</span>, 则 <span class="math inline">\(n+1\le m\)</span>.</p>
+<p><span class="math inline">\(5\tdeg\)</span> 若 <span class="math inline">\(n\in\mbb N\)</span>, 则没有 <span class="math inline">\(x\in\mbb N\)</span> 能满足 <span class="math inline">\(n&lt;x&lt;n+1\)</span>.</p>
+<p><span class="math inline">\(6\tdeg\)</span> 自然数集的任何非空子集都有最小元.</p>
+<p><strong>证明:</strong> 设 <span class="math inline">\(M\subseteq\mbb N\)</span>, <span class="math inline">\(M\ne\eset\)</span>. 若 <span class="math inline">\(1\in M\)</span>, 则 <span class="math inline">\(\min M=1\)</span>. 否则, 设 <span class="math inline">\(E=\mbb N\bksl M\)</span>, <span class="math inline">\(1\in E\)</span>. 在 <span class="math inline">\(E\)</span> 中必能找到自然数 <span class="math inline">\(n\in E\)</span> s.t. 不超过 <span class="math inline">\(n\)</span> 的自然数都在 <span class="math inline">\(E\)</span> 中而 <span class="math inline">\(n+1\in M\)</span>. 否则 <span class="math inline">\(1\in E\subseteq\mbb N\)</span>, 当 <span class="math inline">\(n\in E\)</span> 时, <span class="math inline">\(n+1\in E\)</span>, 于是 <span class="math inline">\(E=\mbb N\)</span>, <span class="math inline">\(M=\eset\)</span>, 矛盾. <span class="math inline">\(n+1\in M\)</span> 即 <span class="math inline">\(M\)</span> 的最小元, 因为 <span class="math inline">\(n\)</span> 与 <span class="math inline">\(n+1\)</span> 之间没有自然数.</p>
 <blockquote>
 <p><del>其实我不是很能理解这个证明, 有点循环论证的感觉.</del></p>
 </blockquote>
-<h3 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h3><p>自然数集, 自然数的相反数的集合, 以及 $\lrac0$ 的并集叫做<strong>整数集</strong>, 记做 $\mbb Z$.</p>
-<p>整数对加法和乘法运算封闭. $\mbb Z$ 关于加法运算构成 Abel 群.</p>
+<h3 id="整数">整数</h3>
+<p>自然数集, 自然数的相反数的集合, 以及 <span class="math inline">\(\lrac0\)</span> 的并集叫做<strong>整数集</strong>, 记做 <span class="math inline">\(\mbb Z\)</span>.</p>
+<p>整数对加法和乘法运算封闭. <span class="math inline">\(\mbb Z\)</span> 关于加法运算构成 Abel 群.</p>
 <p>有了整数的定义, 就能得到初等数论中的关于整数的一些性质, 这里不做赘述.</p>
-<p>对比之前我们由自然数得到整数的过程, 我们使用的是 $\mbb N\times\mbb N$ 的商集得到的 $\mbb Z$ 的. 但是现在我们先定义了 $\mbb R$, 于是就有了相反数, 在定义 $\mbb Z$ 时就简洁了许多.</p>
-<h3 id="有理数"><a href="#有理数" class="headerlink" title="有理数"></a>有理数</h3><p>形如 $m\cdot n^{-1}$ 的数叫<strong>有理数</strong>, 其中 $m,n\in\mbb Z$. 有理数构成的集合叫<strong>有理数集</strong>, 用 $\mbb Q$ 表示. </p>
-<p>有理数 $q=m\cdot n^{-1}$ 也可以写成有理分数 $\bigf\frac{m}n$ 的形式. </p>
-<p>“小学生都知道”, $\forall k\in\mbb Z$, 若 $k\ne0$, 则 $\bigf\frac{m}{n}=\frac{mk}{nk}$. 下面简单地证明这件事: 由结合性, $(nk)(k^{-1}n^{-1})=1$, $k^{-1}n^{-1}=(nk)^{-1}$. 于是 $(mk)(nk)^{-1}=mk(k^{-1}n^{-1})=m\cdot n^{-1}$. 于是 $\forall m\cdot n^{-1}$, $k:=\gcd(m,n)$, 于是 $m=m’k,n=n’k$, 其中 $m’,n’\in\mbb Z$, $\gcd(m,n)=1$. 由小学生都知道的结论, $m\cdot n^{-1}=m’\cdot n’^{-1}$. 于是每个有理数经过约分后, 都能用互素的整数有序对给出.</p>
-<h3 id="无理数"><a href="#无理数" class="headerlink" title="无理数"></a>无理数</h3><p>不是有理数的实数叫<strong>无理数</strong>. </p>
-<p>下面构造一个无理数 $\sqrt2$ 以证明无理数是存在的. </p>
-<p>构造集合 $X=\lrac{x|x^2&lt;2}$, $Y=\lrac{y|2&lt;y^2}$. 显然, $1\in X,2\in Y$, 且 $\forall x\in X,y\in Y$, $x\le y$. 于是由完备公理, $\exists t\in\mbb R$ s.t. $\forall x\in X,y\in Y$, $x\le t\le y$. 记 $p=2-t^2$, $a=t+\cfrac{p}{3t}$. 由于 $1\in x,2\in y$, 于是 $1\le t\le2$, 于是 $-2\le p\le1$. $1\le t\le t^2$, $p^2\le p$.</p>
-<p>若 $t^2&lt;2$, 则 $p&gt;0$, $a&gt;t$.<br>$$<br>a^2=t^2+\frac23p+\frac{p^2}{9t^2}\le t^2+\frac23p+\frac19p&lt;t^2+p=2<br>$$</p>
-<p>于是 $a^2\in X$, $a^2&gt;t^2$, 矛盾.</p>
-<p>若 $t^2&gt;2$, 则 $p&lt;0$, $a&lt;t$.<br>$$<br>a^2=t^2+\frac23p+\frac{p^2}{9t^2}\ge t^2+\frac23p&gt;t^2+p=2<br>$$<br>于是 $a^2\in Y$, $a^2&lt;t^2$, 矛盾.</p>
-<p>于是 $t^2=2$, 也就是所谓的 $\sqrt2:=t$ 是存在的.下面证明 $\sqrt2$ 是无理数. 若 $\sqrt2$ 是有理数, 设 $\sqrt2=\cfrac{m}n$, $m,n\in\mbb Z$, $\gcd(m,n)=1$. 于是 $m^2=2n^2$. 由 $2\mid m^2$, $2\mid m$. 于是设 $m=2k$, $(2k)^2=2n^2$, $2k^2=n^2$, $2\mid n$, 于是 $\gcd(m,n)\ge2$, 矛盾. 于是 $\sqrt2$ 是无理数. </p>
-<h3 id="代数数与超越数"><a href="#代数数与超越数" class="headerlink" title="代数数与超越数"></a>代数数与超越数</h3><p>一个实数若是某个整系数多项式代数方程的根, 那么这个实数叫做<strong>代数数</strong>, 否则叫做<strong>超越数</strong>. $\sqrt2$ 是方程 $x^2=2$ 的根, 是代数数. $e$<sup>[3]</sup> 和 $\pi$<sup>[4]</sup> 都是超越数, 结论是广为人知的, 但是证明很复杂, 在参考资料中有证明. 总之, 代数数和超越数都是存在的.</p>
-<h3 id="完备公理的应用"><a href="#完备公理的应用" class="headerlink" title="完备公理的应用"></a>完备公理的应用</h3><p>前面的结论的证明中, 只有证明上下确界原理和 $\sqrt2$ 的存在性中使用到了完备公理. 关于完备公理有下述结论:</p>
-<p>$1\tdeg$ 自然数集的任何非空有界子集有极大元.</p>
-<p><strong>证明:</strong> 设 $E\subseteq\mbb N$ 是一不空有界集, 记 $s:=\sup E\in\mbb R$. 由于 $s$ 是上确界, 于是 $s-1$ 不是 $E$ 的上界, 于是一定 $\exists n\in E$, s.t. $s-1&lt;n$. 于是 $s&lt;n+1$. $\forall x\in E$, $x\le s&lt;n+1$. 就是 $\forall x\in E$, $x\le n$. 于是 $n=\max E$.</p>
-<p><em>用类似的方法可以证明 $2\tdeg-5\tdeg$：</em></p>
-<p>$2\tdeg$ 自然数集的任何非空有界子集有极小元.</p>
-<p>$3\tdeg$ 自然数集没有上界.</p>
-<p>$4\tdeg$ 整数集的任何上有界非空子集有极大元和极小元.</p>
-<p>$5\tdeg$ 整数集没有上下界.</p>
-<h4 id="6-circ-阿基米德原理"><a href="#6-circ-阿基米德原理" class="headerlink" title="$6^\circ$ 阿基米德原理"></a>$6^\circ$ 阿基米德原理</h4><p>若 $h&gt;0$, 则 $\forall x\in\mbb R$, 有唯一地整数 $k$ s.t. $(k-1)h\le x&lt;kh$.</p>
-<p><strong>证明:</strong> $\mbb Z$ 无上界, 于是 $\lrac{n\in\mbb Z\bigg|\cfrac{x}h&lt;n}$ 是 $\mbb Z$ 的非空下有界子集, 于是有极小元 $k$. 于是 $k-1\le\cfrac{x}h&lt;k$. 于是 $(k-1)h\le x&lt;kh$.</p>
+<p>对比之前我们由自然数得到整数的过程, 我们使用的是 <span class="math inline">\(\mbb N\times\mbb N\)</span> 的商集得到的 <span class="math inline">\(\mbb Z\)</span> 的. 但是现在我们先定义了 <span class="math inline">\(\mbb R\)</span>, 于是就有了相反数, 在定义 <span class="math inline">\(\mbb Z\)</span> 时就简洁了许多.</p>
+<h3 id="有理数">有理数</h3>
+<p>形如 <span class="math inline">\(m\cdot n^{-1}\)</span> 的数叫<strong>有理数</strong>, 其中 <span class="math inline">\(m,n\in\mbb Z\)</span>. 有理数构成的集合叫<strong>有理数集</strong>, 用 <span class="math inline">\(\mbb Q\)</span> 表示.</p>
+<p>有理数 <span class="math inline">\(q=m\cdot n^{-1}\)</span> 也可以写成有理分数 <span class="math inline">\(\bigf\frac{m}n\)</span> 的形式.</p>
+<p>“小学生都知道”, <span class="math inline">\(\forall k\in\mbb Z\)</span>, 若 <span class="math inline">\(k\ne0\)</span>, 则 <span class="math inline">\(\bigf\frac{m}{n}=\frac{mk}{nk}\)</span>. 下面简单地证明这件事: 由结合性, <span class="math inline">\((nk)(k^{-1}n^{-1})=1\)</span>, <span class="math inline">\(k^{-1}n^{-1}=(nk)^{-1}\)</span>. 于是 <span class="math inline">\((mk)(nk)^{-1}=mk(k^{-1}n^{-1})=m\cdot n^{-1}\)</span>. 于是 <span class="math inline">\(\forall m\cdot n^{-1}\)</span>, <span class="math inline">\(k:=\gcd(m,n)\)</span>, 于是 <span class="math inline">\(m=m&#39;k,n=n&#39;k\)</span>, 其中 <span class="math inline">\(m&#39;,n&#39;\in\mbb Z\)</span>, <span class="math inline">\(\gcd(m,n)=1\)</span>. 由小学生都知道的结论, <span class="math inline">\(m\cdot n^{-1}=m&#39;\cdot n&#39;^{-1}\)</span>. 于是每个有理数经过约分后, 都能用互素的整数有序对给出.</p>
+<h3 id="无理数">无理数</h3>
+<p>不是有理数的实数叫<strong>无理数</strong>.</p>
+<p>下面构造一个无理数 <span class="math inline">\(\sqrt2\)</span> 以证明无理数是存在的.</p>
+<p>构造集合 <span class="math inline">\(X=\lrac{x|x^2&lt;2}\)</span>, <span class="math inline">\(Y=\lrac{y|2&lt;y^2}\)</span>. 显然, <span class="math inline">\(1\in X,2\in Y\)</span>, 且 <span class="math inline">\(\forall x\in X,y\in Y\)</span>, <span class="math inline">\(x\le y\)</span>. 于是由完备公理, <span class="math inline">\(\exists t\in\mbb R\)</span> s.t. <span class="math inline">\(\forall x\in X,y\in Y\)</span>, <span class="math inline">\(x\le t\le y\)</span>. 记 <span class="math inline">\(p=2-t^2\)</span>, <span class="math inline">\(a=t+\cfrac{p}{3t}\)</span>. 由于 <span class="math inline">\(1\in x,2\in y\)</span>, 于是 <span class="math inline">\(1\le t\le2\)</span>, 于是 <span class="math inline">\(-2\le p\le1\)</span>. <span class="math inline">\(1\le t\le t^2\)</span>, <span class="math inline">\(p^2\le p\)</span>.</p>
+<p>若 <span class="math inline">\(t^2&lt;2\)</span>, 则 <span class="math inline">\(p&gt;0\)</span>, <span class="math inline">\(a&gt;t\)</span>. <span class="math display">\[
+a^2=t^2+\frac23p+\frac{p^2}{9t^2}\le t^2+\frac23p+\frac19p&lt;t^2+p=2
+\]</span></p>
+<p>于是 <span class="math inline">\(a^2\in X\)</span>, <span class="math inline">\(a^2&gt;t^2\)</span>, 矛盾.</p>
+<p>若 <span class="math inline">\(t^2&gt;2\)</span>, 则 <span class="math inline">\(p&lt;0\)</span>, <span class="math inline">\(a&lt;t\)</span>. <span class="math display">\[
+a^2=t^2+\frac23p+\frac{p^2}{9t^2}\ge t^2+\frac23p&gt;t^2+p=2
+\]</span> 于是 <span class="math inline">\(a^2\in Y\)</span>, <span class="math inline">\(a^2&lt;t^2\)</span>, 矛盾.</p>
+<p>于是 <span class="math inline">\(t^2=2\)</span>, 也就是所谓的 <span class="math inline">\(\sqrt2:=t\)</span> 是存在的.下面证明 <span class="math inline">\(\sqrt2\)</span> 是无理数. 若 <span class="math inline">\(\sqrt2\)</span> 是有理数, 设 <span class="math inline">\(\sqrt2=\cfrac{m}n\)</span>, <span class="math inline">\(m,n\in\mbb Z\)</span>, <span class="math inline">\(\gcd(m,n)=1\)</span>. 于是 <span class="math inline">\(m^2=2n^2\)</span>. 由 <span class="math inline">\(2\mid m^2\)</span>, <span class="math inline">\(2\mid m\)</span>. 于是设 <span class="math inline">\(m=2k\)</span>, <span class="math inline">\((2k)^2=2n^2\)</span>, <span class="math inline">\(2k^2=n^2\)</span>, <span class="math inline">\(2\mid n\)</span>, 于是 <span class="math inline">\(\gcd(m,n)\ge2\)</span>, 矛盾. 于是 <span class="math inline">\(\sqrt2\)</span> 是无理数.</p>
+<h3 id="代数数与超越数">代数数与超越数</h3>
+<p>一个实数若是某个整系数多项式代数方程的根, 那么这个实数叫做<strong>代数数</strong>, 否则叫做<strong>超越数</strong>. <span class="math inline">\(\sqrt2\)</span> 是方程 <span class="math inline">\(x^2=2\)</span> 的根, 是代数数. <span class="math inline">\(e\)</span><sup>[3]</sup> 和 <span class="math inline">\(\pi\)</span><sup>[4]</sup> 都是超越数, 结论是广为人知的, 但是证明很复杂, 在参考资料中有证明. 总之, 代数数和超越数都是存在的.</p>
+<h3 id="完备公理的应用">完备公理的应用</h3>
+<p>前面的结论的证明中, 只有证明上下确界原理和 <span class="math inline">\(\sqrt2\)</span> 的存在性中使用到了完备公理. 关于完备公理有下述结论:</p>
+<p><span class="math inline">\(1\tdeg\)</span> 自然数集的任何非空有界子集有极大元.</p>
+<p><strong>证明:</strong> 设 <span class="math inline">\(E\subseteq\mbb N\)</span> 是一不空有界集, 记 <span class="math inline">\(s:=\sup E\in\mbb R\)</span>. 由于 <span class="math inline">\(s\)</span> 是上确界, 于是 <span class="math inline">\(s-1\)</span> 不是 <span class="math inline">\(E\)</span> 的上界, 于是一定 <span class="math inline">\(\exists n\in E\)</span>, s.t. <span class="math inline">\(s-1&lt;n\)</span>. 于是 <span class="math inline">\(s&lt;n+1\)</span>. <span class="math inline">\(\forall x\in E\)</span>, <span class="math inline">\(x\le s&lt;n+1\)</span>. 就是 <span class="math inline">\(\forall x\in E\)</span>, <span class="math inline">\(x\le n\)</span>. 于是 <span class="math inline">\(n=\max E\)</span>.</p>
+<p><em>用类似的方法可以证明 <span class="math inline">\(2\tdeg-5\tdeg\)</span>：</em></p>
+<p><span class="math inline">\(2\tdeg\)</span> 自然数集的任何非空有界子集有极小元.</p>
+<p><span class="math inline">\(3\tdeg\)</span> 自然数集没有上界.</p>
+<p><span class="math inline">\(4\tdeg\)</span> 整数集的任何上有界非空子集有极大元和极小元.</p>
+<p><span class="math inline">\(5\tdeg\)</span> 整数集没有上下界.</p>
+<h4 id="circ-阿基米德原理"><span class="math inline">\(6^\circ\)</span> 阿基米德原理</h4>
+<p>若 <span class="math inline">\(h&gt;0\)</span>, 则 <span class="math inline">\(\forall x\in\mbb R\)</span>, 有唯一地整数 <span class="math inline">\(k\)</span> s.t. <span class="math inline">\((k-1)h\le x&lt;kh\)</span>.</p>
+<p><strong>证明:</strong> <span class="math inline">\(\mbb Z\)</span> 无上界, 于是 <span class="math inline">\(\lrac{n\in\mbb Z\bigg|\cfrac{x}h&lt;n}\)</span> 是 <span class="math inline">\(\mbb Z\)</span> 的非空下有界子集, 于是有极小元 <span class="math inline">\(k\)</span>. 于是 <span class="math inline">\(k-1\le\cfrac{x}h&lt;k\)</span>. 于是 <span class="math inline">\((k-1)h\le x&lt;kh\)</span>.</p>
 <p><em>阿基米德原理有以下推论：</em></p>
-<p>$7\tdeg$ $\forall\varepsilon&gt;0$, $\exists n\in\mbb N$, s.t. $0&lt;\cfrac1n&lt;\varepsilon$.</p>
-<p>$8\tdeg$ 若 $x\in\mbb R$, $x\ge0$, 且 $\forall n\in\mbb N$ 都有 $x&lt;\cfrac1n$, 则 $x=0$.</p>
-<p>$9\tdeg$ $\forall a,b\in\mbb R$, 若 $a&lt;b$ 则 $\exists q\in\mbb Q$ s.t. $a&lt;q&lt;b$.</p>
-<p><strong>证明:</strong> $\exists n\in\mbb N$, s.t. $0&lt;\cfrac1n&lt;b-a$. 又 $\exists m\in\mbb N$, s.t. $\cfrac{m-1}n\le a&lt;\cfrac{m}n$. 于是 $\cfrac{m}n\le a+\cfrac1n&lt;b$. 于是 $a&lt;\cfrac{m}n&lt;b$.</p>
-<p>至此, 我们就构建了一个完整的实数域系统, 并给出了一些结论. 这样就可以得到我们在数学分析课程中得到的一些结论. </p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>[1] B.A.卓里奇 数学分析(第一卷)(第4版)[M]. 北京: 高等教育出版社, 2006.</p>
-<p>[2] 全序关系, 维基百科, <a href="https://zh.wikipedia.org/zh-hans/%E5%85%A8%E5%BA%8F%E5%85%B3%E7%B3%BB" target="_blank" rel="noopener">https://zh.wikipedia.org/zh-hans/%E5%85%A8%E5%BA%8F%E5%85%B3%E7%B3%BB</a></p>
-<p>[3] 如何证明 $e$ 是超越数, 知乎, <a href="https://zhuanlan.zhihu.com/p/47709039" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/47709039</a></p>
-<p>[4] 如何证明 $\pi$ 是超越数, 知乎, <a href="https://zhuanlan.zhihu.com/p/56607777" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/56607777</a></p>
-<p>[5] 数学分析笔记（二）——实数理论, 知乎, <a href="https://zhuanlan.zhihu.com/p/38393931" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/38393931</a></p>
+<p><span class="math inline">\(7\tdeg\)</span> <span class="math inline">\(\forall\varepsilon&gt;0\)</span>, <span class="math inline">\(\exists n\in\mbb N\)</span>, s.t. <span class="math inline">\(0&lt;\cfrac1n&lt;\varepsilon\)</span>.</p>
+<p><span class="math inline">\(8\tdeg\)</span> 若 <span class="math inline">\(x\in\mbb R\)</span>, <span class="math inline">\(x\ge0\)</span>, 且 <span class="math inline">\(\forall n\in\mbb N\)</span> 都有 <span class="math inline">\(x&lt;\cfrac1n\)</span>, 则 <span class="math inline">\(x=0\)</span>.</p>
+<p><span class="math inline">\(9\tdeg\)</span> <span class="math inline">\(\forall a,b\in\mbb R\)</span>, 若 <span class="math inline">\(a&lt;b\)</span> 则 <span class="math inline">\(\exists q\in\mbb Q\)</span> s.t. <span class="math inline">\(a&lt;q&lt;b\)</span>.</p>
+<p><strong>证明:</strong> <span class="math inline">\(\exists n\in\mbb N\)</span>, s.t. <span class="math inline">\(0&lt;\cfrac1n&lt;b-a\)</span>. 又 <span class="math inline">\(\exists m\in\mbb N\)</span>, s.t. <span class="math inline">\(\cfrac{m-1}n\le a&lt;\cfrac{m}n\)</span>. 于是 <span class="math inline">\(\cfrac{m}n\le a+\cfrac1n&lt;b\)</span>. 于是 <span class="math inline">\(a&lt;\cfrac{m}n&lt;b\)</span>.</p>
+<p>至此, 我们就构建了一个完整的实数域系统, 并给出了一些结论. 这样就可以得到我们在数学分析课程中得到的一些结论.</p>
+<h3 id="参考资料">参考资料</h3>
+<p>[1] B.A.卓里奇 数学分析(第一卷)(第4版)[M]. 北京: 高等教育出版社, 2006.</p>
+<p>[2] 全序关系, 维基百科, https://zh.wikipedia.org/zh-hans/%E5%85%A8%E5%BA%8F%E5%85%B3%E7%B3%BB</p>
+<p>[3] 如何证明 <span class="math inline">\(e\)</span> 是超越数, 知乎, https://zhuanlan.zhihu.com/p/47709039</p>
+<p>[4] 如何证明 <span class="math inline">\(\pi\)</span> 是超越数, 知乎, https://zhuanlan.zhihu.com/p/56607777</p>
+<p>[5] 数学分析笔记（二）——实数理论, 知乎, https://zhuanlan.zhihu.com/p/38393931</p>
 
     
 
-        <a href="/2020/04/29/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E6%8A%A5%E5%91%8A2020%E6%98%A5/" class="post-more waves-effect waves-button">
+        <a href="/2020/04/29/Mathematical%20Analysis%20Reading%20Report%202020%20Spring/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -423,14 +534,14 @@
         </li>
     
         <li class="post-list-item fade">
-            <article id="post-Qinhuangdao 2020 Winter 2H"
+            <article id="post-Wannafly 2020 Winter 2H"
   class="article-card article-type-post" itemprop="blogPost">
 
     <div class="post-meta">
         <time class="post-time" title="2020-01-13 15:12:54" datetime="2020-01-13T07:12:54.000Z"  itemprop="datePublished">2020-01-13</time>
 
         
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2020-WannaFly-Winter-Camp/">2020 WannaFly Winter Camp</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/">2020 CCPC WannaFly 冬令营</a></li></ul>
 
 
 
@@ -441,7 +552,7 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2020/01/13/Qinhuangdao%202020%20Winter%202H/">Day2H 题解</a>
+      <a class="post-title-link" href="/2020/01/13/Wannafly%202020%20Winter%202H/">2020 CCPC WannaFly 冬令营 Day2H 题解</a>
     </h3>
   
 
@@ -451,40 +562,59 @@
     <div class="post-content" id="post-content" itemprop="postContent">
 
     
-        <h2 id="题面简述"><a href="#题面简述" class="headerlink" title="题面简述"></a>题面简述</h2><p>现有一个整数 $m$, 构造了一个长度为 $n$ 的序列 $A$, 满足: </p>
-<ol>
-<li>$<br>\forall a \in A,, a\in[1,m]\cap\mathbb Z<br>$</li>
-<li>$\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exists p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}=\{x,y\}$</li>
-</ol>
-<p>其中 $A[p]$ 表示 $A$ 中的第 $p$ 个元素的值. </p>
-<p>给定一个 $n$, 求 $m$ 可能的最大值. 若 $n\leq N=2\cdot10^6$, 则再输出 $m$ 取得最大值时可能的一个序列 $A$.</p>
-<h3 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h3><p>$$<br>1\leq n\leq10^{18}<br>$$</p>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>构造一个 $m$ 个顶点的无向图 $\boldsymbol G$, $\forall p\in [1,n)$, 在 $A[p]$ 和 $A[p+1]$ 之间连一条边, 记作第一类边. 则 $A$ 的条件 $(2)$ 就转化成了 $\boldsymbol G$ 中任意两个不同点都要有边直接连接, 最多有 $n-1$ 条边. 这样, 我们就得到了 $n$ 的一个下界:<br>$$<br>n\geq\frac{1}{2}m(m-1)+1 \tag{3}<br>$$<br>等号成立当且仅当任意两个不同点之间直接连接的边有且仅有 $1$ 条. </p>
-<p>另一方面, 观察这些连接的边:<br>$$<br>A[1]\rightarrow A[2]\rightarrow A[3]\rightarrow…\rightarrow A[n]<br>$$<br>考虑从 $A[1]$ 号点出发, 按照上述顺序遍历整个图, 发现每条边经过且只经过了一次, 这对应了一个欧拉回路, 于是 $\boldsymbol G$ 中至多两个点的度数为奇数. 反过来, 如果 $\boldsymbol G$ 中至多两个点的度数为奇数, 那么可以构造出这样一个欧拉回路以及对应的序列. </p>
-<p>考虑以上两个要素: 任意两个不同点之间直接连接的边有且仅有一条时, 每个点的度数是 $m-1$.</p>
-<p>如果 $m$ 是奇数, 那么每个点的度数全部都是偶数, 故可以构造出一个序列 $A$. $(3)$ 式等号可以成立. </p>
-<p>如果 $m$ 是偶数, 那么每个点的度数全部都是奇数, $m&gt;2$ 时不能构造出一个欧拉回路. 这时, 我们可以任取 $m-2$ 个度数为奇数的点, 配对连边, 记作第二类边. 于是这 $m-2$ 个点度数均加 $1$, 变为了偶数. 这样 $G$ 中只有 $2$ 个点度数为奇数, 可以构造欧拉回路. 此时有: </p>
-<p>$$<br>n\geq\frac{1}{2}m(m-1)+1+\frac{1}{2}(m-2)=\frac{1}{2}m^2<br>$$<br>综上所述, 定义:<br>$$<br>f(m):=\left\{ \begin{align}<br>\frac{1}{2}m(&amp;m-1)+1 &amp; m\equiv 0\pmod 2\\<br>\frac{1}{2}&amp;m^2 &amp; m\equiv 1\pmod 2<br>\end{align}\right.<br>$$</p>
-<p>条件便可以总结为:<br>$$<br>n\geq f(m) \tag4<br>$$</p>
-<p>我们可以从 $1$ 到 $n$ 枚举所有可能的 $m$, 取其中满足 $n\geq f(m)$ 的最大值. 复杂度为 $O(n)$, 不能接受. </p>
-<p>注意到:  $\forall m\equiv 0\pmod 2$, $\displaystyle \frac{1}{2}(m-1)(m-2)+1&lt;\frac{1}{2}m^2&lt;\frac{1}{2}m(m+1)+1$. 即: $\forall m\in\mathbb N_+$, $f(m)&lt;f(m+1)$. $f$ 严格单调增, 故可以使用二分查找, 复杂度为 $O(\log n)$, 可以接受. </p>
-<p>也可以分别解不等式:<br>$$<br>\begin{align}<br>\frac{1}{2}x(x-1)+1&amp;\le n \tag5\\<br>\frac{1}{2}x^2&amp;\le n \tag6<br>\end{align}<br>$$<br>取不等式 $(4)$ 解中最大的奇数和不等式 $(5)$ 解中最大的偶数的较大者, 复杂度为 $O(1)$. 很好. </p>
-<p>现在思考一种 $\forall m\in\mathbb N_+$ 都能构造欧拉回路以及对应的序列 $A$ 的方法. 先考虑 $n=f(m)$ 的情况, 这种情况构造的序列记作 $A_m$, 此时 $A=A_m$.</p>
-<p>对于 $m$ 是奇数的情况, 考虑数学归纳法: </p>
-<p>一、$m=1$ 时, 由于没有边, 欧拉环路显然存在, $A_1=[1]$.</p>
-<p>二、设我们构造出了 $m=k$ 时的图的欧拉环路以及对应的序列 $A_k$. 显然, 欧拉环路可以从任意一个点出发, 遍历一遍图后回到起点. $A[1]$ 可以是任意一个数, $A[n]=A[1]$. 不妨令 $A[1]=A[n]=1$. 现在我们加入两个点 $k+1,k+2$. 考虑序列 $B=[2,3,…,k]$, 在 $B$ 中所有的奇数前面插入 $k+1$, 后面插入 $k+2$, 则 $B=[2,k+1,3,k+2,…,k+1,k,k+2]$. 令 $A_{k+2}=[A_k,k+1,k+2,B,1]$. 这样, $m=k+2$ 时的序列以及对应的欧拉回路就构造好了. </p>
-<p>对于 $m$ 时偶数的情况, 考虑数学归纳法: </p>
-<p>一、$m=2$ 时, 由于只有一条边, 欧拉环路显然存在, $A_2=[1,2]$.</p>
-<p>二、设我们构造出了 $m=k$ 时的图的欧拉环路以及对应的序列 $A_k$. 显然, 欧拉环路应该从一个度数为奇数的点出发, 遍历一遍图后回到另一个度数为奇数的点. $A[1],A[n]$ 可以是任意两个不同的数, 不妨令 $A[1]=1,A[n]=k$. 现在我们加入两个点 $k+1,k+2$. 将 $k,k+1$ 配对连接第二类边. 考虑序列 $B=[2,3,…,k]$, 在 $B$ 中所有的奇数前面插入 $k+1$, 后面插入 $k+2$, 则 $B=[2,k+1,3,k+2,…,k+1,k,k+2]$. 令 $A_{k+2}=[A_k,k+1,k+2,B]$. 这样, $m=k+2$ 时的序列以及对应的欧拉回路就构造好了. </p>
-<p>当然, 这个构造只是一种构造. 其他的任何满足题意的构造均可行. </p>
-<p>现在考虑 $n&gt;f(m)$ 的情况. 很显然, 令 $A=[A_m,\underbrace{1,1,…,1}_{n-f(m)}]$ 即可. </p>
-<p>构造复杂度为 $O(N)$. 可以接受. </p>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="function">ll <span class="title">get</span><span class="params">(ll m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m &amp; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> (m * (m - <span class="number">1</span>) &gt;&gt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> m * m &gt;&gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(ll m, ll n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">get</span>(m) &lt;= n;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">rget</span><span class="params">(ll n, ll l, ll r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l + <span class="number">1</span> == r)</span><br><span class="line">        <span class="keyword">return</span> l;</span><br><span class="line">    ll mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (check(mid, n))</span><br><span class="line">        <span class="keyword">return</span> rget(n, mid, r);</span><br><span class="line">    <span class="keyword">return</span> rget(n, l, mid);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">opt</span><span class="params">(ll m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m &amp; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1"</span>);</span><br><span class="line">        <span class="keyword">int</span> o = <span class="number">1</span>, n = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; m; i += <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, i);</span><br><span class="line">            n = i;</span><br><span class="line">            <span class="keyword">do</span></span><br><span class="line">            &#123;</span><br><span class="line">                o = o % (i - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">                n = n == i ? i + <span class="number">1</span> : i;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">" %d %d"</span>, n, o);</span><br><span class="line">            &#125; <span class="keyword">while</span> (o != <span class="number">1</span> || n != i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1 2"</span>);</span><br><span class="line">        <span class="keyword">int</span> o = <span class="number">2</span>, n = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt; m; i += <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, i);</span><br><span class="line">            n = i;</span><br><span class="line">            <span class="keyword">do</span></span><br><span class="line">            &#123;</span><br><span class="line">                o = o % (i - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">                n = n == i ? i + <span class="number">1</span> : i;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">" %d %d"</span>, n, o);</span><br><span class="line">            &#125; <span class="keyword">while</span> (o != i - <span class="number">1</span> || n != i);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, o = i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld"</span>, &amp;n);</span><br><span class="line">    ll m = rget(n, <span class="number">0</span>, <span class="number">2e9</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, m);</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">2e6</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        opt(m);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="built_in">get</span>(m); i &lt; n; ++i)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" 1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+        <h2 id="题面简述">题面简述</h2>
+<p>现有一个整数 <span class="math inline">\(m\)</span>, 构造了一个长度为 <span class="math inline">\(n\)</span> 的序列 <span class="math inline">\(A\)</span>, 满足: 1. $ a A,, aZ $ 2. <span class="math inline">\(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\)</span>, <span class="math inline">\(\exists p\in[1,n)\cap\mathbb Z\)</span>, s.t. <span class="math inline">\(\{A[p],A[p+1]\}=\{x,y\}\)</span></p>
+<p>其中 <span class="math inline">\(A[p]\)</span> 表示 <span class="math inline">\(A\)</span> 中的第 <span class="math inline">\(p\)</span> 个元素的值.</p>
+<p>给定一个 <span class="math inline">\(n\)</span>, 求 <span class="math inline">\(m\)</span> 可能的最大值. 若 <span class="math inline">\(n\leq N=2\cdot10^6\)</span>, 则再输出 <span class="math inline">\(m\)</span> 取得最大值时可能的一个序列 <span class="math inline">\(A\)</span>.</p>
+<h3 id="数据范围">数据范围</h3>
+<p><span class="math display">\[
+1\leq n\leq10^{18}
+\]</span></p>
+<h2 id="题解">题解</h2>
+<p>构造一个 <span class="math inline">\(m\)</span> 个顶点的无向图 <span class="math inline">\(\boldsymbol G\)</span>, <span class="math inline">\(\forall p\in [1,n)\)</span>, 在 <span class="math inline">\(A[p]\)</span> 和 <span class="math inline">\(A[p+1]\)</span> 之间连一条边, 记作第一类边. 则 <span class="math inline">\(A\)</span> 的条件 <span class="math inline">\((2)\)</span> 就转化成了 <span class="math inline">\(\boldsymbol G\)</span> 中任意两个不同点都要有边直接连接, 最多有 <span class="math inline">\(n-1\)</span> 条边. 这样, 我们就得到了 <span class="math inline">\(n\)</span> 的一个下界: <span class="math display">\[
+n\geq\frac{1}{2}m(m-1)+1 \tag{3}
+\]</span> 等号成立当且仅当任意两个不同点之间直接连接的边有且仅有 <span class="math inline">\(1\)</span> 条.</p>
+<p>另一方面, 观察这些连接的边: <span class="math display">\[
+A[1]\rightarrow A[2]\rightarrow A[3]\rightarrow...\rightarrow A[n]
+\]</span> 考虑从 <span class="math inline">\(A[1]\)</span> 号点出发, 按照上述顺序遍历整个图, 发现每条边经过且只经过了一次, 这对应了一个欧拉回路, 于是 <span class="math inline">\(\boldsymbol G\)</span> 中至多两个点的度数为奇数. 反过来, 如果 <span class="math inline">\(\boldsymbol G\)</span> 中至多两个点的度数为奇数, 那么可以构造出这样一个欧拉回路以及对应的序列.</p>
+<p>考虑以上两个要素: 任意两个不同点之间直接连接的边有且仅有一条时, 每个点的度数是 <span class="math inline">\(m-1\)</span>.</p>
+<p>如果 <span class="math inline">\(m\)</span> 是奇数, 那么每个点的度数全部都是偶数, 故可以构造出一个序列 <span class="math inline">\(A\)</span>. <span class="math inline">\((3)\)</span> 式等号可以成立.</p>
+<p>如果 <span class="math inline">\(m\)</span> 是偶数, 那么每个点的度数全部都是奇数, <span class="math inline">\(m&gt;2\)</span> 时不能构造出一个欧拉回路. 这时, 我们可以任取 <span class="math inline">\(m-2\)</span> 个度数为奇数的点, 配对连边, 记作第二类边. 于是这 <span class="math inline">\(m-2\)</span> 个点度数均加 <span class="math inline">\(1\)</span>, 变为了偶数. 这样 <span class="math inline">\(G\)</span> 中只有 <span class="math inline">\(2\)</span> 个点度数为奇数, 可以构造欧拉回路. 此时有:</p>
+<p><span class="math display">\[
+n\geq\frac{1}{2}m(m-1)+1+\frac{1}{2}(m-2)=\frac{1}{2}m^2
+\]</span> 综上所述, 定义: <span class="math display">\[
+f(m):=\left\{ \begin{align} 
+\frac{1}{2}m(&amp;m-1)+1 &amp; m\equiv 0\pmod 2\\
+\frac{1}{2}&amp;m^2 &amp; m\equiv 1\pmod 2
+\end{align}\right.
+\]</span></p>
+<p>条件便可以总结为: <span class="math display">\[
+n\geq f(m) \tag4
+\]</span></p>
+<p>我们可以从 <span class="math inline">\(1\)</span> 到 <span class="math inline">\(n\)</span> 枚举所有可能的 <span class="math inline">\(m\)</span>, 取其中满足 <span class="math inline">\(n\geq f(m)\)</span> 的最大值. 复杂度为 <span class="math inline">\(O(n)\)</span>, 不能接受.</p>
+<p>注意到: <span class="math inline">\(\forall m\equiv 0\pmod 2\)</span>, <span class="math inline">\(\displaystyle \frac{1}{2}(m-1)(m-2)+1&lt;\frac{1}{2}m^2&lt;\frac{1}{2}m(m+1)+1\)</span>. 即: <span class="math inline">\(\forall m\in\mathbb N_+\)</span>, <span class="math inline">\(f(m)&lt;f(m+1)\)</span>. <span class="math inline">\(f\)</span> 严格单调增, 故可以使用二分查找, 复杂度为 <span class="math inline">\(O(\log n)\)</span>, 可以接受.</p>
+<p>也可以分别解不等式: <span class="math display">\[
+\begin{align}
+\frac{1}{2}x(x-1)+1&amp;\le n \tag5\\
+\frac{1}{2}x^2&amp;\le n \tag6
+\end{align}
+\]</span> 取不等式 <span class="math inline">\((4)\)</span> 解中最大的奇数和不等式 <span class="math inline">\((5)\)</span> 解中最大的偶数的较大者, 复杂度为 <span class="math inline">\(O(1)\)</span>. 很好.</p>
+<p>现在思考一种 <span class="math inline">\(\forall m\in\mathbb N_+\)</span> 都能构造欧拉回路以及对应的序列 <span class="math inline">\(A\)</span> 的方法. 先考虑 <span class="math inline">\(n=f(m)\)</span> 的情况, 这种情况构造的序列记作 <span class="math inline">\(A_m\)</span>, 此时 <span class="math inline">\(A=A_m\)</span>.</p>
+<p>对于 <span class="math inline">\(m\)</span> 是奇数的情况, 考虑数学归纳法:</p>
+<p>一、<span class="math inline">\(m=1\)</span> 时, 由于没有边, 欧拉环路显然存在, <span class="math inline">\(A_1=[1]\)</span>.</p>
+<p>二、设我们构造出了 <span class="math inline">\(m=k\)</span> 时的图的欧拉环路以及对应的序列 <span class="math inline">\(A_k\)</span>. 显然, 欧拉环路可以从任意一个点出发, 遍历一遍图后回到起点. <span class="math inline">\(A[1]\)</span> 可以是任意一个数, <span class="math inline">\(A[n]=A[1]\)</span>. 不妨令 <span class="math inline">\(A[1]=A[n]=1\)</span>. 现在我们加入两个点 <span class="math inline">\(k+1,k+2\)</span>. 考虑序列 <span class="math inline">\(B=[2,3,...,k]\)</span>, 在 <span class="math inline">\(B\)</span> 中所有的奇数前面插入 <span class="math inline">\(k+1\)</span>, 后面插入 <span class="math inline">\(k+2\)</span>, 则 <span class="math inline">\(B=[2,k+1,3,k+2,...,k+1,k,k+2]\)</span>. 令 <span class="math inline">\(A_{k+2}=[A_k,k+1,k+2,B,1]\)</span>. 这样, <span class="math inline">\(m=k+2\)</span> 时的序列以及对应的欧拉回路就构造好了.</p>
+<p>对于 <span class="math inline">\(m\)</span> 时偶数的情况, 考虑数学归纳法:</p>
+<p>一、<span class="math inline">\(m=2\)</span> 时, 由于只有一条边, 欧拉环路显然存在, <span class="math inline">\(A_2=[1,2]\)</span>.</p>
+<p>二、设我们构造出了 <span class="math inline">\(m=k\)</span> 时的图的欧拉环路以及对应的序列 <span class="math inline">\(A_k\)</span>. 显然, 欧拉环路应该从一个度数为奇数的点出发, 遍历一遍图后回到另一个度数为奇数的点. <span class="math inline">\(A[1],A[n]\)</span> 可以是任意两个不同的数, 不妨令 <span class="math inline">\(A[1]=1,A[n]=k\)</span>. 现在我们加入两个点 <span class="math inline">\(k+1,k+2\)</span>. 将 <span class="math inline">\(k,k+1\)</span> 配对连接第二类边. 考虑序列 <span class="math inline">\(B=[2,3,...,k]\)</span>, 在 <span class="math inline">\(B\)</span> 中所有的奇数前面插入 <span class="math inline">\(k+1\)</span>, 后面插入 <span class="math inline">\(k+2\)</span>, 则 <span class="math inline">\(B=[2,k+1,3,k+2,...,k+1,k,k+2]\)</span>. 令 <span class="math inline">\(A_{k+2}=[A_k,k+1,k+2,B]\)</span>. 这样, <span class="math inline">\(m=k+2\)</span> 时的序列以及对应的欧拉回路就构造好了.</p>
+<p>当然, 这个构造只是一种构造. 其他的任何满足题意的构造均可行.</p>
+<p>现在考虑 <span class="math inline">\(n&gt;f(m)\)</span> 的情况. 很显然, 令 <span class="math inline">\(A=[A_m,\underbrace{1,1,...,1}_{n-f(m)}]\)</span> 即可.</p>
+<p>构造复杂度为 <span class="math inline">\(O(N)\)</span>. 可以接受.</p>
+<h2 id="代码实现">代码实现</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="function">ll <span class="title">get</span><span class="params">(ll m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m &amp; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> (m * (m - <span class="number">1</span>) &gt;&gt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> m * m &gt;&gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(ll m, ll n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">get</span>(m) &lt;= n;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">rget</span><span class="params">(ll n, ll l, ll r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l + <span class="number">1</span> == r)</span><br><span class="line">        <span class="keyword">return</span> l;</span><br><span class="line">    ll mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (check(mid, n))</span><br><span class="line">        <span class="keyword">return</span> rget(n, mid, r);</span><br><span class="line">    <span class="keyword">return</span> rget(n, l, mid);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">opt</span><span class="params">(ll m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m &amp; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1"</span>);</span><br><span class="line">        <span class="keyword">int</span> o = <span class="number">1</span>, n = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; m; i += <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, i);</span><br><span class="line">            n = i;</span><br><span class="line">            <span class="keyword">do</span></span><br><span class="line">            &#123;</span><br><span class="line">                o = o % (i - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">                n = n == i ? i + <span class="number">1</span> : i;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">" %d %d"</span>, n, o);</span><br><span class="line">            &#125; <span class="keyword">while</span> (o != <span class="number">1</span> || n != i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1 2"</span>);</span><br><span class="line">        <span class="keyword">int</span> o = <span class="number">2</span>, n = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt; m; i += <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, i);</span><br><span class="line">            n = i;</span><br><span class="line">            <span class="keyword">do</span></span><br><span class="line">            &#123;</span><br><span class="line">                o = o % (i - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">                n = n == i ? i + <span class="number">1</span> : i;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">" %d %d"</span>, n, o);</span><br><span class="line">            &#125; <span class="keyword">while</span> (o != i - <span class="number">1</span> || n != i);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, o = i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld"</span>, &amp;n);</span><br><span class="line">    ll m = rget(n, <span class="number">0</span>, <span class="number">2e9</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, m);</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">2e6</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        opt(m);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="built_in">get</span>(m); i &lt; n; ++i)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" 1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
     
 
-        <a href="/2020/01/13/Qinhuangdao%202020%20Winter%202H/" class="post-more waves-effect waves-button">
+        <a href="/2020/01/13/Wannafly%202020%20Winter%202H/" class="post-more waves-effect waves-button">
             阅读全文…
         </a>
     </div>
@@ -492,6 +622,92 @@
     <div class="post-footer">
         
 	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICPC/" rel="tag">ICPC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E8%AE%BA/" rel="tag">数论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%84%E9%80%A0/" rel="tag">构造</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-Wannafly 2020 Winter 5J"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2020-01-16 17:42:59" datetime="2020-01-16T09:42:59.000Z"  itemprop="datePublished">2020-01-16</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/">2020 CCPC WannaFly 冬令营</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2020/01/16/Wannafly%202020%20Winter%205J/">2020 CCPC WannaFly 冬令营 Day5J 题解</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        <h2 id="题面">题面</h2>
+<p>给定一个整数 <span class="math inline">\(k\)</span> 以及一个 <span class="math inline">\(2^k\times2^k\)</span> 矩阵 <span class="math inline">\(\boldsymbol A\)</span> , <span class="math inline">\(\boldsymbol A\)</span> 中任一元素 <span class="math inline">\(a_{ij}\)</span> 都有 <span class="math inline">\(a_{ij}\in\{0,1\}\)</span>.</p>
+<p>定义平移 <span class="math inline">\(m\times n\)</span> 矩阵 <span class="math inline">\(\boldsymbol X\)</span> 操作如下: <span class="math display">\[
+\boldsymbol X=\left[\begin{array} {cc} 
+    \boldsymbol A &amp; \boldsymbol B\\
+    \boldsymbol C &amp; \boldsymbol D 
+\end{array} \right] :\Longrightarrow \boldsymbol X \rightarrow \left[\begin{array} {cc} 
+    \boldsymbol D &amp; \boldsymbol C\\
+    \boldsymbol B &amp; \boldsymbol A 
+\end{array} \right]
+\]</span> 其中 <span class="math inline">\(\boldsymbol A\)</span> 是 <span class="math inline">\(a\times b\)</span> 矩阵, <span class="math inline">\(a\in[0,m]\cap\mathbb Z,b\in[0,n]\cap\mathbb Z\)</span>.</p>
+<p>定义用矩阵 <span class="math inline">\(\boldsymbol B\)</span> 覆盖矩阵 <span class="math inline">\(\boldsymbol A\)</span> 操作如下: <span class="math display">\[
+\boldsymbol B(b_{ij})\sim \boldsymbol A(a_{ij}) :\Longrightarrow \boldsymbol A\rightarrow (a_{ij}\,\mathrm{xor}\,b_{ij})
+\]</span> 你可以选择任意多个经过任意平移操作后的 <span class="math inline">\(\boldsymbol A\)</span> 依次覆盖一个 <span class="math inline">\(\boldsymbol{0}\)</span> 矩阵, 求最终可以得到多少种不同的矩阵.</p>
+<h3 id="数据范围">数据范围</h3>
+<p><span class="math display">\[
+1\leq k\leq5
+\]</span></p>
+<h2 id="题解">题解</h2>
+<p>定义数域 <span class="math inline">\(B=\{0,1\}\)</span> 上的加法和数量乘法运算: <span class="math display">\[
+\begin{align}
+\forall a, b\in B, \quad&amp;a\oplus b =a \,\mathrm{xor}\, b\\
+&amp;a\odot b = a \cdot b
+\end{align}
+\]</span> 考虑 <span class="math inline">\(m\times n\)</span> 的矩阵 $ A M_{mn}(B)$, 对 <span class="math inline">\(\boldsymbol A(1; 1)\)</span> 做一个标记, 则对这个矩阵进行平移操作后, 标记可能在任意一个位置, 有 <span class="math inline">\(m\times n\)</span> 种取值. 故最多有 $ m n$ 个操作算子 <span class="math inline">\(\boldsymbol F\)</span>.</p>
+<p>定义数域 <span class="math inline">\(B\)</span> 上矩阵的加法和数量乘法运算: <span class="math display">\[
+\begin{aligned}
+&amp; \forall \boldsymbol X(x_{ij}), \boldsymbol Y(y_{ij})\in M_{m\times n}(B), &amp; \boldsymbol X\oplus \boldsymbol Y&amp;=(x_{ij}\oplus y_{ij})\\
+&amp; \forall a\in B, \boldsymbol X(x_{ij})\in M_{m\times n}(B), &amp; a\odot \boldsymbol X&amp;=(a\odot x_{ij})
+\end{aligned}
+\]</span> 这样, $ M_{mn}(B) $ 构成了数域 <span class="math inline">\(B\)</span> 上的线性空间.</p>
+<p>显然, <span class="math inline">\(\langle\boldsymbol F \rangle\)</span> 是 <span class="math inline">\(M_{m\times n}(B)\)</span> 的一个线性子空间. 我们需要求的就是 <span class="math inline">\(|\langle\boldsymbol F\rangle|\)</span>.</p>
+<p>考虑 <span class="math inline">\(\langle\boldsymbol F \rangle\)</span> 的一个基 <span class="math inline">\(\mathfrak B=\{\lambda_i;i\in[1, \mathrm{rank}\langle\boldsymbol F\rangle]\cap\mathbb Z\}\)</span>, 则 <span class="math inline">\(\forall \boldsymbol X \in \langle \boldsymbol F\rangle\)</span>, <span class="math inline">\(\boldsymbol X\)</span> 可以被 <span class="math inline">\(\mathfrak B\)</span> 惟一地线性表出, 即存在唯一的一组 <span class="math inline">\(k_i\in B,i\in[1, |\mathfrak B|]\cap\mathbb Z\)</span>, s.t. <span class="math display">\[
+\boldsymbol X=\sum_{i=1}^{|\mathfrak B|}k_i\lambda_i
+\]</span> <span class="math inline">\(\forall i\in[1,|\mathfrak B|]\cap \mathbb Z,k_i\)</span> 一共有 <span class="math inline">\(0,1\)</span> 两个取值, 故 <span class="math inline">\(\boldsymbol X\)</span> 共有 <span class="math inline">\(2^{|\mathfrak B|}\)</span> 种不同的取值.</p>
+<p>线性空间 <span class="math inline">\(M_{m\times n}(B)\)</span> 与 <span class="math inline">\(B^{m\times n}\)</span> 同构. 将所有的 <span class="math inline">\(m\times n\)</span> 个 <span class="math inline">\(\boldsymbol F\)</span> 转化成 <span class="math inline">\(m\times n\)</span> 个 <span class="math inline">\(m\times n\)</span> 维向量, 放入矩阵中高斯消元求秩即可. 复杂度为 <span class="math inline">\(O(m^3n^3)=O(2^{6k})\)</span>. 位运算与高斯消元的常数极小, 可以接受.</p>
+<p>算出矩阵的秩后, 答案即 <span class="math display">\[
+2^{|\mathfrak B|}=2^{\mathrm{rank}\langle\boldsymbol  F\rangle}
+\]</span> 在 <span class="math inline">\(\bmod p\)</span> 意义下进行快速幂即可.</p>
+
+    
+
+        <a href="/2020/01/16/Wannafly%202020%20Winter%205J/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICPC/" rel="tag">ICPC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%AB%98%E6%96%AF%E6%B6%88%E5%85%83/" rel="tag">高斯消元</a></li></ul>
 
     </div>
     
@@ -527,17 +743,18 @@
 
     
         <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
     

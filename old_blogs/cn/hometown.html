@@ -115,6 +115,13 @@
             </li>
         
             <li class="waves-block waves-effect">
+              <a href="/old_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
               <a href="https://github.com/SheauhawJang" target="_blank" >
                 <i class="icon icon-lg icon-github"></i>
                 Github
@@ -122,9 +129,9 @@
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="/old_blogs/index.html" target="_blank" >
-                <i class="icon icon-lg icon-link"></i>
-                旧站
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
               </a>
             </li>
         
@@ -638,5 +645,20 @@ MathJax.Hub.Queue(function() {
 
 
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

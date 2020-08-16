@@ -95,6 +95,13 @@
             </li>
         
             <li class="waves-block waves-effect">
+              <a href="/old_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
               <a href="https://github.com/SheauhawJang" target="_blank" >
                 <i class="icon icon-lg icon-github"></i>
                 Github
@@ -102,9 +109,9 @@
             </li>
         
             <li class="waves-block waves-effect">
-              <a href="/old_blogs/index.html" target="_blank" >
-                <i class="icon icon-lg icon-link"></i>
-                旧站
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
               </a>
             </li>
         
@@ -287,9 +294,9 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2020/08/14/Modulo%20p%20Module/" id="post-prev" class="post-nav-link">
+      <a href="/2020/04/29/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90%E8%AF%BB%E4%B9%A6%E6%8A%A5%E5%91%8A2020%E6%98%A5/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">模 $p$ 同余类模板</h4>
+        <h4 class="title">数学分析读书报告(2020年春)</h4>
       </a>
     </div>
   
@@ -462,7 +469,27 @@ MathJax.Hub.Queue(function() {
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -480,10 +507,5 @@ MathJax.Hub.Queue(function() {
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-
-
-
-
-
 </body>
 </html>

@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="ICPC,数论,图论,构造">
-    <meta name="description" content="题面简述现有一个整数 $m$, 构造了一个长度为 $n$ 的序列 $A$, 满足:   $\forall a \in A,, a\in[1,m]\cap\mathbb Z$ $\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exist p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}&#x3D;\{x,y\}$  其中 $">
+    <meta name="description" content="题面简述现有一个整数 $m$, 构造了一个长度为 $n$ 的序列 $A$, 满足:   $\forall a \in A,, a\in[1,m]\cap\mathbb Z$ $\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exists p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}&#x3D;\{x,y\}$  其中">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Day2H 题解">
 <meta property="og:url" content="https://sheauhawjang.github.io/2020/01/13/Qinhuangdao%202020%20Winter%202H/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
-<meta property="og:description" content="题面简述现有一个整数 $m$, 构造了一个长度为 $n$ 的序列 $A$, 满足:   $\forall a \in A,, a\in[1,m]\cap\mathbb Z$ $\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exist p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}&#x3D;\{x,y\}$  其中 $">
+<meta property="og:description" content="题面简述现有一个整数 $m$, 构造了一个长度为 $n$ 的序列 $A$, 满足:   $\forall a \in A,, a\in[1,m]\cap\mathbb Z$ $\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exists p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}&#x3D;\{x,y\}$  其中">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-13T07:12:54.000Z">
 <meta property="article:modified_time" content="2020-01-18T14:01:51.000Z">
@@ -206,7 +206,7 @@
             <h2 id="题面简述"><a href="#题面简述" class="headerlink" title="题面简述"></a>题面简述</h2><p>现有一个整数 $m$, 构造了一个长度为 $n$ 的序列 $A$, 满足: </p>
 <ol>
 <li>$<br>\forall a \in A,, a\in[1,m]\cap\mathbb Z<br>$</li>
-<li>$\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exist p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}=\{x,y\}$</li>
+<li>$\forall x,y\in[1,m]\cap\mathbb Z,,x\ne y$, $\exists p\in[1,n)\cap\mathbb Z$, s.t. $\{A[p],A[p+1]\}=\{x,y\}$</li>
 </ol>
 <p>其中 $A[p]$ 表示 $A$ 中的第 $p$ 个元素的值. </p>
 <p>给定一个 $n$, 求 $m$ 可能的最大值. 若 $n\leq N=2\cdot10^6$, 则再输出 $m$ 取得最大值时可能的一个序列 $A$.</p>

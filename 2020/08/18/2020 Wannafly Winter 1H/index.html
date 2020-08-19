@@ -29,7 +29,7 @@
 <meta property="og:description" content="题面 一共 \(T\) 组数据. 现有一个未知的整数 \(k\), 满足 \(1\le k\le n\). 现在你被宣称 \(k\) 的值等于 \(x\), 但是你不知道真假. 你现在可以提交一个任意大的正整数 \(y\), 之后获得返回值 \(\gcd(k,y)\). 你需要输出一个合适的 \(y\), 使得你可以通过返回值来查验 \(x\) 和 \(k\) 是否相等. 如果有很多满足条">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-08-18T12:11:01.000Z">
-<meta property="article:modified_time" content="2020-08-19T02:35:26.000Z">
+<meta property="article:modified_time" content="2020-08-19T15:50:44.000Z">
 <meta property="article:author" content="Sheauhaw Jang">
 <meta property="article:tag" content="ICPC">
 <meta property="article:tag" content="数论">
@@ -219,7 +219,7 @@
 \]</span></p>
 <h2 id="题解">题解</h2>
 <p>注意到 <span class="math inline">\(\gcd(x,y)=\gcd(\gcd(x,y),y)\)</span>, 于是应满足 <span class="math inline">\(\gcd(x,y)=x\)</span>, 即 <span class="math inline">\(x\mid y\)</span>. 设 <span class="math inline">\(y=xy&#39;\)</span>.</p>
-<p>若 <span class="math inline">\(x\nmid a\)</span>, 则显然 <span class="math inline">\(\gcd(a,y)\ne x\)</span>. <span class="math inline">\(\forall a&#39;\in(1,n/x]\)</span>, 都有 <span class="math inline">\(\gcd(a&#39;x,y)=x\gcd(a&#39;,y&#39;)\)</span>, 于是此时 <span class="math inline">\(\gcd(a&#39;,y&#39;)\ne 1\)</span>. 对于任意 <span class="math inline">\((1,n/x]\)</span> 中的素数 <span class="math inline">\(p\)</span>, 都应该有 <span class="math inline">\(\gcd(p,y&#39;)\ne 1\)</span>, 即 <span class="math inline">\(\gcd(p,y&#39;)=p\)</span>, <span class="math inline">\(p\mid y&#39;\)</span>. 于是这些素数的乘积 <span class="math inline">\(P\)</span> 满足 <span class="math inline">\(P\mid y&#39;\)</span>. <span class="math inline">\(P\le y&#39;\)</span>.</p>
+<p>若 <span class="math inline">\(x\nmid a\)</span>, 则显然 <span class="math inline">\(\gcd(a,y)\ne x\)</span>. <span class="math inline">\(\forall a&#39;\in(1,n/x]\)</span>, 都有 <span class="math inline">\(\gcd(a&#39;x,y)=x\gcd(a&#39;,y&#39;)\)</span>, 于是此时 <span class="math inline">\(\gcd(a&#39;,y&#39;)\ne 1\)</span>. 考虑到: 对于任意 <span class="math inline">\((1,n/x]\)</span> 中的素数 <span class="math inline">\(p\)</span>, 亦都应该有 <span class="math inline">\(\gcd(p,y&#39;)\ne 1\)</span>, 此时有 <span class="math inline">\(\gcd(p,y&#39;)=p\)</span>, <span class="math inline">\(p\mid y&#39;\)</span>. 于是这些素数的乘积 <span class="math inline">\(P\)</span> 满足 <span class="math inline">\(P\mid y&#39;\)</span>. <span class="math inline">\(P\le y&#39;\)</span>.</p>
 <p>若 <span class="math inline">\(P=y&#39;\)</span>, 则 <span class="math inline">\(\forall a&#39;\in (1,n/x]\)</span>, <span class="math inline">\(a&#39;\)</span> 的任意素因子 <span class="math inline">\(p\)</span> 一定满足 <span class="math inline">\(1&lt;p\le a&#39;\le n/x\)</span>, <span class="math inline">\(p\mid y\)</span>, 于是 <span class="math inline">\(\gcd(a&#39;,y&#39;)\ne 1\)</span>, <span class="math inline">\(\gcd(a&#39;x,y)\ne x\)</span>.</p>
 <p>于是取 <span class="math inline">\(P=y&#39;\)</span> 是可行的, 而且是最小的解.</p>
 <p>预处理 <span class="math inline">\([1,500]\)</span> 中的所有素数, 解就是 <span class="math display">\[
@@ -236,7 +236,7 @@ y=x\prod_{p\le n/x}p
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2020-08-19T02:35:26.000Z" itemprop="dateUpdated">2020-08-19 10:35:26</time>
+    最后更新时间：<time datetime="2020-08-19T15:50:44.000Z" itemprop="dateUpdated">2020-08-19 23:50:44</time>
 </span><br>
 
 

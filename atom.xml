@@ -23,7 +23,7 @@
     <published>2020-08-31T15:09:52.000Z</published>
     <updated>2020-08-31T15:29:34.000Z</updated>
     
-    <content type="html"><![CDATA[<p>题目来源: 2019-2020 XX Opencup GP of Tokyo</p><p>题目链接: http://codeforces.com/gym/102586/problem/E</p><h2 id="题面">题面</h2><p>一共 <span class="math inline">\(T\)</span> 组数据.</p><p>现有 <span class="math inline">\(k\)</span> 个 <strong>两两不同</strong> 的数字 <span class="math inline">\(A_1,A_2,\cdots,A_k\)</span>. 给定正整数 <span class="math inline">\(n,S\)</span>, 构造数列 <span class="math inline">\(a_1,a_2,\cdots,a_N\)</span>, 满足下列条件:</p><ol type="1"><li><span class="math inline">\(\displaystyle\sum_{i=1}^na_i=S\)</span>.</li><li><span class="math inline">\(\forall i\in[1,n]\)</span>, <span class="math inline">\(a_i\in\{A_1,A_2,\cdots,A_k\}\)</span>.</li></ol><p>求构造的方案数在模 <span class="math inline">\(\mathbf 2\)</span> 意义下的结果.</p><h3 id="数据范围">数据范围</h3><p><span class="math display">\[1\le T\le 5\]</span></p><p><span class="math display">\[1\le n\le10^{18}\]</span></p><p><span class="math display">\[0\le S\le 10^{18}\]</span></p><p><span class="math display">\[1\le k\le 200\]</span></p><p><span class="math display">\[0\le A_1&lt;A_2&lt;\cdots&lt;A_k\le10^5\]</span></p><h2 id="题解">题解</h2>]]></content>
+    <content type="html"><![CDATA[<p>题目来源: 2019-2020 XX Opencup GP of Tokyo</p><p>题目链接: http://codeforces.com/gym/102586/problem/E</p><h2 id="题面">题面</h2><p>一共 <span class="math inline">\(T\)</span> 组数据.</p><p>现有 <span class="math inline">\(k\)</span> 个 <strong>两两不同</strong> 的数字 <span class="math inline">\(A_1,A_2,\cdots,A_k\)</span>. 给定正整数 <span class="math inline">\(N,S\)</span>, 构造数列 <span class="math inline">\(a_1,a_2,\cdots,a_N\)</span>, 满足下列条件:</p><ol type="1"><li><span class="math inline">\(\displaystyle\sum_{i=1}^Na_i=S\)</span>.</li><li><span class="math inline">\(\forall i\in[1,N]\)</span>, <span class="math inline">\(a_i\in\{A_1,A_2,\cdots,A_k\}\)</span>.</li></ol><p>求构造的方案数在模 <span class="math inline">\(\mathbf 2\)</span> 意义下的结果.</p><h3 id="数据范围">数据范围</h3><p><span class="math display">\[1\le T\le 5\]</span></p><p><span class="math display">\[1\le N\le10^{18}\]</span></p><p><span class="math display">\[0\le S\le 10^{18}\]</span></p><p><span class="math display">\[1\le k\le 200\]</span></p><p><span class="math display">\[0\le A_1&lt;A_2&lt;\cdots&lt;A_k\le10^5\]</span></p><h2 id="题解">题解</h2><p>若数列 <span class="math inline">\(a\)</span> 满足题设条件, 则 <span class="math inline">\(a\)</span> 由若干个 <span class="math inline">\(A_1,A_2,\cdots,A_k\)</span> 组成. 设 <span class="math inline">\(a\)</span> 由 <span class="math inline">\(t_i\)</span> 个 <span class="math inline">\(A_i\)</span> (<span class="math inline">\(i=1,2,\cdots,k\)</span>) 组成, 则由题意有: <span class="math display">\[\begin{aligned}t_1A_1+t_2A_2+\cdots+t_kA_k&amp;=S\\t_1+t_2+\cdots+t_k&amp;=N\end{aligned}\tag1\]</span> 由于数列中的元素顺序任意交换后仍满足条件. 于是将命题 <span class="math inline">\((1)\)</span> 对应的数列归为一类, 则这样的一类中的数列数量, 依组合数学, 可知: <span class="math display">\[C=\frac{N!}{t_1!t_2!\cdots t_k!}\tag 2\]</span> 注意到只考虑模 <span class="math inline">\(2\)</span> 意义下的结果, 于是只考虑 <span class="math inline">\(C\bmod 2\ne0\)</span> 的情况即可.</p>]]></content>
     
     
       
@@ -198,9 +198,9 @@
     
     
     
-    <category term="数学分析" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/"/>
-    
     <category term="原创" scheme="https://sheauhawjang.github.io/tags/%E5%8E%9F%E5%88%9B/"/>
+    
+    <category term="数学分析" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/"/>
     
     <category term="读书报告" scheme="https://sheauhawjang.github.io/tags/%E8%AF%BB%E4%B9%A6%E6%8A%A5%E5%91%8A/"/>
     
@@ -285,9 +285,9 @@
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
-    
     <category term="图论" scheme="https://sheauhawjang.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    
+    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
     <category term="二分查找" scheme="https://sheauhawjang.github.io/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     

@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="ICPC,数论,图论,构造,二分查找">
-    <meta name="description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. $ a A,, aZ $ 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p],A[p+1]\}&#x3D;\{x,y\}\) 其中 \(A[p]\) 表示 \">
+    <meta name="description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. \(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\) 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p],A[p">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2020 CCPC WannaFly 冬令营 Day2H 题解">
 <meta property="og:url" content="https://sheauhawjang.github.io/2020/01/18/2020%20Wannafly%20Winter%202H/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
-<meta property="og:description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. $ a A,, aZ $ 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p],A[p+1]\}&#x3D;\{x,y\}\) 其中 \(A[p]\) 表示 \">
+<meta property="og:description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. \(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\) 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p],A[p">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-18T14:01:51.000Z">
 <meta property="article:modified_time" content="2020-01-18T14:01:51.000Z">
@@ -205,7 +205,7 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="题面">题面</h2>
-<p>现有一个整数 <span class="math inline">\(m\)</span>, 构造了一个长度为 <span class="math inline">\(n\)</span> 的序列 <span class="math inline">\(A\)</span>, 满足: 1. $ a A,, aZ $ 2. <span class="math inline">\(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\)</span>, <span class="math inline">\(\exists p\in[1,n)\cap\mathbb Z\)</span>, s.t. <span class="math inline">\(\{A[p],A[p+1]\}=\{x,y\}\)</span></p>
+<p>现有一个整数 <span class="math inline">\(m\)</span>, 构造了一个长度为 <span class="math inline">\(n\)</span> 的序列 <span class="math inline">\(A\)</span>, 满足: 1. <span class="math inline">\(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\)</span> 2. <span class="math inline">\(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\)</span>, <span class="math inline">\(\exists p\in[1,n)\cap\mathbb Z\)</span>, s.t. <span class="math inline">\(\{A[p],A[p+1]\}=\{x,y\}\)</span></p>
 <p>其中 <span class="math inline">\(A[p]\)</span> 表示 <span class="math inline">\(A\)</span> 中的第 <span class="math inline">\(p\)</span> 个元素的值.</p>
 <p>给定一个 <span class="math inline">\(n\)</span>, 求 <span class="math inline">\(m\)</span> 可能的最大值. 若 <span class="math inline">\(n\leq N=2\cdot10^6\)</span>, 则再输出 <span class="math inline">\(m\)</span> 取得最大值时可能的一个序列 <span class="math inline">\(A\)</span>.</p>
 <h3 id="数据范围">数据范围</h3>

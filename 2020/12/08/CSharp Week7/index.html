@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>C#程序设计 第7周题解 | 孤星捧月堂 | Sheauhaw Jang&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#df698c">
+    
+    
+    <meta name="keywords" content="C#">
+    <meta name="description" content="A. Circle类的继承  定义圆类Circle，包含半径r，属性R能判断半径r的合理性（r&gt;0），计算圆面积的方法double Area()。 从Circle类派生出圆柱体类Cylinder类。该类新增圆柱体的高h，属性H能判断高h的合理性（h&gt;0），新增计算圆柱体体积的方法double Volume()。 如果半径、高不合法，就设置其值为0。 在Main方法中，创建一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C#程序设计 第7周题解">
+<meta property="og:url" content="https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/index.html">
+<meta property="og:site_name" content="孤星捧月堂">
+<meta property="og:description" content="A. Circle类的继承  定义圆类Circle，包含半径r，属性R能判断半径r的合理性（r&gt;0），计算圆面积的方法double Area()。 从Circle类派生出圆柱体类Cylinder类。该类新增圆柱体的高h，属性H能判断高h的合理性（h&gt;0），新增计算圆柱体体积的方法double Volume()。 如果半径、高不合法，就设置其值为0。 在Main方法中，创建一个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-08T08:26:20.000Z">
+<meta property="article:modified_time" content="2020-12-08T08:26:22.000Z">
+<meta property="article:author" content="Sheauhaw Jang">
+<meta property="article:tag" content="C#">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="孤星捧月堂" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/head.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.1.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/sakura.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/usedhead.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sheauhaw Jang</h5>
+          <a href="mailto:www.zhangxiaohao.cn@foxmail.com" title="www.zhangxiaohao.cn@foxmail.com" class="mail">www.zhangxiaohao.cn@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/old_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/SheauhawJang" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">C#程序设计 第7周题解</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">C#程序设计 第7周题解</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-12-08T08:26:20.000Z" itemprop="datePublished" class="page-time">
+  2020-12-08
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/">C#</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#a.-circle类的继承"><span class="post-toc-number">1.</span> <span class="post-toc-text">A. Circle类的继承</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#b.-circle类的继承带参构造方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">B. Circle类的继承——带参构造方法</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#c.-点线类练习"><span class="post-toc-number">3.</span> <span class="post-toc-text">C. 点线类练习</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#d.-student类的继承练习"><span class="post-toc-number">4.</span> <span class="post-toc-text">D. Student类的继承练习</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-CSharp Week7"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">C#程序设计 第7周题解</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-12-08 16:26:20" datetime="2020-12-08T08:26:20.000Z"  itemprop="datePublished">2020-12-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/">C#</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="a.-circle类的继承">A. Circle类的继承</h1>
+<blockquote>
+<p>定义圆类Circle，包含半径r，属性R能判断半径r的合理性（r&gt;0），计算圆面积的方法double Area()。</p>
+<p>从Circle类派生出圆柱体类Cylinder类。该类新增圆柱体的高h，属性H能判断高h的合理性（h&gt;0），新增计算圆柱体体积的方法double Volume()。</p>
+<p>如果半径、高不合法，就设置其值为0。</p>
+<p>在Main方法中，创建一个Cylinder对象，输入半径和高（两行输入），并输出该对象的底面半径，高，底面积以及体积（面积和体积用double Math.round(doulbe b, int digit) digit取1。</p>
+<p>（要求：不使用构造方法，并且类中的字段为私有，方法为公有）</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-11-03 10:10:09</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week6_A</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Circle</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> r;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> R</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">get</span> &#123; <span class="keyword">return</span> r; &#125;</span><br><span class="line">            <span class="keyword">set</span> &#123; r = <span class="keyword">value</span> &gt; <span class="number">0</span> ? <span class="keyword">value</span> : <span class="number">0</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> Math.PI * R * R; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Cylinder</span> : <span class="title">Circle</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> h;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> H</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">get</span> &#123; <span class="keyword">return</span> h; &#125;</span><br><span class="line">            <span class="keyword">set</span> &#123; h = <span class="keyword">value</span> &gt; <span class="number">0</span> ? <span class="keyword">value</span> : <span class="number">0</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Volume</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> Area() * H; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">OutputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OutputString</span>(<span class="params"><span class="keyword">string</span> sop, <span class="keyword">params</span> <span class="keyword">double</span>[] opv</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] ops = <span class="keyword">new</span> <span class="keyword">string</span>[<span class="number">4</span>];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                opv[i] = Math.Round(opv[i], <span class="number">1</span>);</span><br><span class="line">                ops[i] = Convert.ToString(opv[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            Console.WriteLine(<span class="keyword">string</span>.Join(<span class="string">" "</span>, ops));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Cylinder ans = <span class="keyword">new</span> Cylinder();</span><br><span class="line">            ans.R = Convert.ToDouble(Console.ReadLine());</span><br><span class="line">            ans.H = Convert.ToDouble(Console.ReadLine());</span><br><span class="line">            OutputConvert.OutputString(<span class="string">" "</span>, ans.R, ans.H, ans.Area(), ans.Volume());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="b.-circle类的继承带参构造方法">B. Circle类的继承——带参构造方法</h1>
+<blockquote>
+<p>定义圆类Circle，包含半径r，属性R能判断半径r的合理性（r&gt;0），计算圆面积的方法double Area()。</p>
+<p>从Circle类派生出圆柱体类Cylinder类。该类新增圆柱体的高h，属性H能判断高h的合理性（h&gt;0），新增计算圆柱体体积的方法double Volume()。</p>
+<p>如果半径、高不合法，就设置其值为0。</p>
+<p>在Main方法中，创建一个Cylinder对象，输入半径和高（两行输入），并输出该对象的底面积、体积。</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-11-03 10:27:06</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week6_B</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Circle</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> r;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> R</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">get</span> &#123; <span class="keyword">return</span> r; &#125;</span><br><span class="line">            <span class="keyword">set</span> &#123; r = <span class="keyword">value</span> &gt; <span class="number">0</span> ? <span class="keyword">value</span> : <span class="number">0</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> Math.PI * R * R; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Cylinder</span> : <span class="title">Circle</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> h;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">double</span> H</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">get</span> &#123; <span class="keyword">return</span> h; &#125;</span><br><span class="line">            <span class="keyword">set</span> &#123; h = <span class="keyword">value</span> &gt; <span class="number">0</span> ? <span class="keyword">value</span> : <span class="number">0</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Volume</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> Area() * H; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">OutputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OutputString</span>(<span class="params"><span class="keyword">string</span> sop, <span class="keyword">params</span> <span class="keyword">double</span>[] opv</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] ops = <span class="keyword">new</span> <span class="keyword">string</span>[opv.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; opv.Length; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                opv[i] = Math.Round(opv[i], <span class="number">1</span>);</span><br><span class="line">                ops[i] = Convert.ToString(opv[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            Console.WriteLine(<span class="keyword">string</span>.Join(<span class="string">" "</span>, ops));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Cylinder ans = <span class="keyword">new</span> Cylinder();</span><br><span class="line">            ans.R = Convert.ToDouble(Console.ReadLine());</span><br><span class="line">            ans.H = Convert.ToDouble(Console.ReadLine());</span><br><span class="line">            OutputConvert.OutputString(<span class="string">" "</span>, ans.Area(), ans.Volume());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="c.-点线类练习">C. 点线类练习</h1>
+<blockquote>
+<p>从点类（Point）：包含：带可选参数的构造方法Point（int x=0, int y=0)，</p>
+<p>输出坐标点的方法ShowPoint以及读写坐标x、y的属性方法。</p>
+<p>派生类（Line）：计算线段的长度。Line类中新增表示线段终点的字段EndPoint，起点字段StartPoint。</p>
+<p>计算线段距离的方法Distance以及输出线段起点和终点的方法ShowLine。</p>
+<p>在主函数中，创建两个点对象，输出线段的距离。</p>
+<p>【注：】本题编译通过即可。</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-11-03 11:09:15</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week6_C</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Point</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">const</span> <span class="keyword">int</span> dim = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span>[] xs = <span class="keyword">new</span> <span class="keyword">int</span>[dim];</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> X</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">get</span> &#123; <span class="keyword">return</span> xs[<span class="number">0</span>]; &#125;</span><br><span class="line">            <span class="keyword">set</span> &#123; xs[<span class="number">0</span>] = <span class="keyword">value</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Y</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">get</span> &#123; <span class="keyword">return</span> xs[<span class="number">1</span>]; &#125;</span><br><span class="line">            <span class="keyword">set</span> &#123; xs[<span class="number">1</span>] = <span class="keyword">value</span>; &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">At</span>(<span class="params"><span class="keyword">int</span> x</span>)</span> &#123; <span class="keyword">return</span> x &lt; dim ? xs[x] : <span class="number">0</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Point</span>(<span class="params"><span class="keyword">int</span> x = <span class="number">0</span>, <span class="keyword">int</span> y = <span class="number">0</span></span>)</span> &#123; X = x; Y = y; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShowPoint</span>(<span class="params"></span>)</span> &#123; Console.WriteLine(<span class="string">"(&#123;0&#125;, &#123;1&#125;)"</span>, X, Y); &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Line</span></span><br><span class="line">    &#123;</span><br><span class="line">        Point StartPoint, EndPoint;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Line</span>(<span class="params">Point sp, Point ep</span>)</span> &#123; StartPoint = sp; EndPoint = ep; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShowLine</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Console.Write(<span class="string">"StartPoint:"</span>);</span><br><span class="line">            StartPoint.ShowPoint();</span><br><span class="line">            Console.Write(<span class="string">"EndPoint:"</span>);</span><br><span class="line">            EndPoint.ShowPoint();</span><br><span class="line">        &#125;</span><br><span class="line">        Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; sq = x =&gt; x * x; </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Distance</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span> sqd = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Point.dim; ++i)</span><br><span class="line">                sqd += sq(StartPoint.At(i) - EndPoint.At(i));</span><br><span class="line">            <span class="keyword">return</span> Math.Sqrt(sqd);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShowDistance</span>(<span class="params"></span>)</span> &#123; Console.WriteLine(Distance()); &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Point a = <span class="keyword">new</span> Point(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">            Point b = <span class="keyword">new</span> Point(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            Line ab = <span class="keyword">new</span> Line(a, b);</span><br><span class="line">            ab.ShowDistance();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="d.-student类的继承练习">D. Student类的继承练习</h1>
+<blockquote>
+<p>实现两个类。</p>
+<p>StuGrade类。该类的作用是成绩相关的操作。包括：</p>
+<p>私有字段 int[] gra（学生成绩）；</p>
+<p>构造函数 StuGrade(params int[] stusgra)；用于初始化私有字段gra；</p>
+<p>公有方法 public double AvgGrade()；返回学生成绩的平均值。</p>
+<p>Student类。包含：</p>
+<p>2个public 自实现属性string Name（学生姓名）、string StuNum（学号）；</p>
+<p>1个private字段 string stuClass（学生班级）；</p>
+<p>1个StuGrade对象 stuG；</p>
+<p>1个公有方法public bool IsStuNo(string s,out int res)。检测学号是否合法。其中s是待检查的学号。学号必须是8位数字，21开头。不是8位数字res置1，非21开头res置2。合法res=学号。</p>
+<p>1个公有方法public bool AddStu(string name, string sno, StuGrade stug, string stuclass= &quot;数学&quot;)。如果学号合法的对象，将姓名、学号、成绩、班级（默认是数学）赋值，返回true。否则，不赋值，返回false。</p>
+<p>在Main函数中，新建Student类对象stu，并接收控制台输入的信息.</p>
+<p>【样例输入】</p>
+<p>姓名,学号</p>
+<p>成绩</p>
+<p>如果输入学号合法，输出 学号:Success!AverageGrade:平均分</p>
+<p>如果输入学号非法，输出 学号:Invalid!Error Code:res的值</p>
+<p>例如：</p>
+<p>新建对象Student stu1，尝试对stu1设置信息Alex,20812000, 成绩是：1, 2, 3, 4, 5。将按照如下格式输出</p>
+<p>20812000:Invalid!Error Code:2</p>
+<p>新建Student类对象stu2 ，尝试对stu2设置信息Bob,21812000, 成绩是：1, 2, 3。将按照如下格式输出</p>
+<p>21812000:Success!AverageGrade:2</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-11-03 10:30:01</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week6_D</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">StuGrade</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span>[] gra;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">StuGrade</span>(<span class="params"><span class="keyword">params</span> <span class="keyword">int</span>[] stusgra</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            gra = stusgra;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">AvgGrade</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">double</span> ans = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">int</span> sig <span class="keyword">in</span> gra)</span><br><span class="line">                ans += sig;</span><br><span class="line">            ans /= gra.Length;</span><br><span class="line">            <span class="keyword">return</span> ans;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> StuNum &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">string</span> stuClass;</span><br><span class="line">        StuGrade stuG;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> vlen = <span class="number">8</span>;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">string</span> chpre = <span class="string">"21"</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">IsStuNo</span>(<span class="params"><span class="keyword">string</span> s, <span class="keyword">out</span> <span class="keyword">int</span> res</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (s.Length != vlen) &#123; res = <span class="number">1</span>; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; chpre.Length; ++i)</span><br><span class="line">                <span class="keyword">if</span> (s[i] != chpre[i])</span><br><span class="line">                &#123;</span><br><span class="line">                    res = <span class="number">2</span>;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            res = Convert.ToInt32(s);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">AddStu</span>(<span class="params"><span class="keyword">string</span> name, <span class="keyword">string</span> sno, StuGrade stug, <span class="keyword">string</span> stuclass = <span class="string">"数学"</span></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span> nov;</span><br><span class="line">            <span class="keyword">if</span> (!IsStuNo(sno, <span class="keyword">out</span> nov))</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            Name = name;</span><br><span class="line">            StuNum = sno;</span><br><span class="line">            stuG = stug;</span><br><span class="line">            stuClass = stuclass;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">InputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] <span class="title">GetInputArray</span>(<span class="params"><span class="keyword">char</span> SplitOperator</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] instr = Console.ReadLine().Split(SplitOperator);</span><br><span class="line">            <span class="keyword">int</span>[] invar = <span class="keyword">new</span> <span class="keyword">int</span>[instr.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; invar.Length; ++i)</span><br><span class="line">                invar[i] = Convert.ToInt32(instr[i]);</span><br><span class="line">            <span class="keyword">return</span> invar;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] nameid = Console.ReadLine().Split(<span class="string">','</span>);</span><br><span class="line">            <span class="keyword">int</span> res;</span><br><span class="line">            <span class="keyword">if</span> (!Student.IsStuNo(nameid[<span class="number">1</span>], <span class="keyword">out</span> res))</span><br><span class="line">                Console.WriteLine(<span class="string">"&#123;0&#125;:Invalid!Error Code:&#123;1&#125;"</span>, nameid[<span class="number">1</span>], res);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                StuGrade sg = <span class="keyword">new</span> StuGrade(InputConvert.GetInputArray(<span class="string">','</span>));</span><br><span class="line">                Console.WriteLine(<span class="string">"&#123;0&#125;:Success!AverageGrade:&#123;1&#125;"</span>, nameid[<span class="number">1</span>], sg.AvgGrade());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-12-08T08:26:22.000Z" itemprop="dateUpdated">2020-12-08 16:26:22</time>
+</span><br>
+
+
+        
+        纰漏之处, 还望海涵, 请您联系作者, 我会尽快改正错误!
+        
+    </div>
+    
+    <footer>
+        <a href="https://SheauhawJang.github.io">
+            <img src="/img/usedhead.jpg" alt="Sheauhaw Jang">
+            Sheauhaw Jang
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C#</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/&title=《C#程序设计 第7周题解》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/&title=《C#程序设计 第7周题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《C#程序设计 第7周题解》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/12/08/CSharp%20Week8/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">C#程序设计 第7周题解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Sheauhaw Jang &copy; 2019 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/&title=《C#程序设计 第7周题解》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/&title=《C#程序设计 第7周题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《C#程序设计 第7周题解》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week7/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>C#程序设计 第3周题解 | 孤星捧月堂 | Sheauhaw Jang&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#df698c">
+    
+    
+    <meta name="keywords" content="C#">
+    <meta name="description" content="A. 输入输出练习  在一行内输入5个整数，空格分隔。输出5个整数，逗号分隔。英文符号。（输入的接收请参考课本例题1-5,注意Split()的用法）  1234567891011121314151617181920212223242526272829using System;&#x2F;&#x2F; Written by Sheauhaw Jang&#x2F;&#x2F; 2020-10-14 13:10:22namespace">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C#程序设计 第3周题解">
+<meta property="og:url" content="https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/index.html">
+<meta property="og:site_name" content="孤星捧月堂">
+<meta property="og:description" content="A. 输入输出练习  在一行内输入5个整数，空格分隔。输出5个整数，逗号分隔。英文符号。（输入的接收请参考课本例题1-5,注意Split()的用法）  1234567891011121314151617181920212223242526272829using System;&#x2F;&#x2F; Written by Sheauhaw Jang&#x2F;&#x2F; 2020-10-14 13:10:22namespace">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-08T08:10:47.000Z">
+<meta property="article:modified_time" content="2020-12-08T08:10:49.000Z">
+<meta property="article:author" content="Sheauhaw Jang">
+<meta property="article:tag" content="C#">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="孤星捧月堂" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/head.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.1.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/sakura.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/usedhead.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sheauhaw Jang</h5>
+          <a href="mailto:www.zhangxiaohao.cn@foxmail.com" title="www.zhangxiaohao.cn@foxmail.com" class="mail">www.zhangxiaohao.cn@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/old_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/SheauhawJang" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">C#程序设计 第3周题解</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">C#程序设计 第3周题解</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-12-08T08:10:47.000Z" itemprop="datePublished" class="page-time">
+  2020-12-08
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/">C#</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#a.-输入输出练习"><span class="post-toc-number">1.</span> <span class="post-toc-text">A. 输入输出练习</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#b.-三角形的类和方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">B. 三角形的类和方法</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#c.-日期date类"><span class="post-toc-number">3.</span> <span class="post-toc-text">C. 日期Date类</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#d.-心率检查"><span class="post-toc-number">4.</span> <span class="post-toc-text">D. 心率检查</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-CSharp Week3"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">C#程序设计 第3周题解</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-12-08 16:10:47" datetime="2020-12-08T08:10:47.000Z"  itemprop="datePublished">2020-12-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/C/">C#</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="a.-输入输出练习">A. 输入输出练习</h1>
+<blockquote>
+<p>在一行内输入5个整数，空格分隔。输出5个整数，逗号分隔。英文符号。（输入的接收请参考课本例题1-5,注意Split()的用法）</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-10-14 13:10:22</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week2_A</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">InputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span>[] <span class="title">GetInputStrings</span>(<span class="params"><span class="keyword">char</span> SplitOperator</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">return</span> Console.ReadLine().Split(SplitOperator);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] <span class="title">GetInputArray</span>(<span class="params"><span class="keyword">char</span> SplitOperator</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] instr = GetInputStrings(SplitOperator);</span><br><span class="line">            <span class="keyword">int</span>[] invar = <span class="keyword">new</span> <span class="keyword">int</span>[instr.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; invar.Length; ++i)</span><br><span class="line">                invar[i] = Convert.ToInt32(instr[i]);</span><br><span class="line">            <span class="keyword">return</span> invar;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] numstr = InputConvert.GetInputStrings(<span class="string">' '</span>);</span><br><span class="line">            Console.WriteLine(<span class="keyword">string</span>.Join(<span class="string">","</span>, numstr));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="b.-三角形的类和方法">B. 三角形的类和方法</h1>
+<blockquote>
+<p>定义一个三角型类，具有3个public的字段（double）为三角形的3边的长度。提供2个public的方法：</p>
+<p>bool IsTriAngle（）判断这3边能否构成一个三角形； double Area（） 求三角形的面积（如果不能构成三角形，返回值为-1）</p>
+<p>输入三角形的3条边，用空格分隔。如果能构成三角形，直接输出三角形面积；否则输出-1</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-10-14 13:19:31</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week2_B</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">TriAngle</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">int</span> sidenumber = <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">double</span>[] sides = <span class="keyword">new</span> <span class="keyword">double</span>[sidenumber];</span><br><span class="line">        <span class="keyword">bool</span> vaild;</span><br><span class="line">        <span class="keyword">double</span> totlen, area;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">TriAngleVaildCheck</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sidenumber; ++i)</span><br><span class="line">                <span class="keyword">if</span> (totlen &lt;= <span class="number">2</span> * sides[i])</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">AreaCalculate</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">double</span> barlen = totlen / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">double</span> ans = barlen;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sidenumber; ++i)</span><br><span class="line">                ans *= barlen - sides[i];</span><br><span class="line">            <span class="keyword">return</span> Math.Sqrt(ans);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">update</span>(<span class="params"><span class="keyword">double</span>[] x</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            totlen = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; x.Length &amp;&amp; i &lt; sidenumber; ++i)</span><br><span class="line">                sides[i] = x[i];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sidenumber; ++i)</span><br><span class="line">                totlen += sides[i];</span><br><span class="line">            vaild = TriAngleVaildCheck();</span><br><span class="line">            area = vaild ? AreaCalculate() : <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">TriAngle</span>(<span class="params"><span class="keyword">double</span>[] x</span>)</span> &#123; update(x); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">TriAngle</span>(<span class="params"><span class="keyword">double</span> a, <span class="keyword">double</span> b, <span class="keyword">double</span> c</span>)</span> &#123; update(<span class="keyword">new</span> <span class="keyword">double</span>[]&#123; a, b, c &#125;); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsTriAngle</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> vaild; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> area; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">InputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span>[] <span class="title">GetInputArray</span>(<span class="params"><span class="keyword">char</span> SplitOperator</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] instr = Console.ReadLine().Split(SplitOperator);</span><br><span class="line">            <span class="keyword">double</span>[] invar = <span class="keyword">new</span> <span class="keyword">double</span>[instr.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; invar.Length; ++i)</span><br><span class="line">                invar[i] = Convert.ToDouble(instr[i]);</span><br><span class="line">            <span class="keyword">return</span> invar;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            TriAngle tri = <span class="keyword">new</span> TriAngle(InputConvert.GetInputArray(<span class="string">' '</span>));</span><br><span class="line">            <span class="keyword">if</span> (tri.IsTriAngle())</span><br><span class="line">                Console.WriteLine(tri.Area());</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                Console.WriteLine(<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="c.-日期date类">C. 日期Date类</h1>
+<blockquote>
+<p>创建一个Date类，要求能输入以下格式的日期： 第一种：MM/YYYY 构造函数接收2个整数 第二种：June,1992 构造函数接收一个字符串和一个整数</p>
+<p>当用户输入其出生年月日时，能够计算出用户的年龄（到年即可。向下取整）。当用户输入的日期无意义或未来时间，输出invalid。（当前时间取系统时间，请查C#自带的取时间的函数）</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-10-19 11:36:13</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week2_C</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Date</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">string</span>[] engname = <span class="keyword">new</span> <span class="keyword">string</span>[]</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">""</span>,</span><br><span class="line">            <span class="string">"January"</span>,</span><br><span class="line">            <span class="string">"February"</span>,</span><br><span class="line">            <span class="string">"March"</span>,</span><br><span class="line">            <span class="string">"April"</span>,</span><br><span class="line">            <span class="string">"May"</span>,</span><br><span class="line">            <span class="string">"June"</span>,</span><br><span class="line">            <span class="string">"July"</span>,</span><br><span class="line">            <span class="string">"August"</span>,</span><br><span class="line">            <span class="string">"September"</span>,</span><br><span class="line">            <span class="string">"October"</span>,</span><br><span class="line">            <span class="string">"November"</span>,</span><br><span class="line">            <span class="string">"December"</span></span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Year &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Month &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">NowYear</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> DateTime.Now.Year; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">NowMonth</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> DateTime.Now.Month; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">SetTypeNum</span>(<span class="params"><span class="keyword">string</span> date</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] spdate = date.Split(<span class="string">'/'</span>);</span><br><span class="line">            <span class="keyword">if</span> (spdate.Length != <span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">            Year = Convert.ToInt32(spdate[<span class="number">1</span>]);</span><br><span class="line">            Month = Convert.ToInt32(spdate[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">SetTypeEng</span>(<span class="params"><span class="keyword">string</span> date</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] spdate = date.Split(<span class="string">','</span>);</span><br><span class="line">            <span class="keyword">if</span> (spdate.Length != <span class="number">2</span>) <span class="keyword">return</span>;</span><br><span class="line">            Year = Convert.ToInt32(spdate[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">12</span>; ++i)</span><br><span class="line">                <span class="keyword">if</span> (spdate[<span class="number">0</span>] == engname[i])</span><br><span class="line">                    Month = i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">SetDefault</span>(<span class="params"></span>)</span> &#123; Year = Month = <span class="number">0</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Date</span>(<span class="params"></span>)</span> &#123; SetDefault(); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Date</span>(<span class="params"><span class="keyword">string</span> date</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            SetDefault();</span><br><span class="line">            <span class="keyword">if</span> (date[<span class="number">2</span>] == <span class="string">'/'</span>)</span><br><span class="line">                SetTypeNum(date);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                SetTypeEng(date);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">Vaild</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (Month &lt; <span class="number">1</span> || Month &gt; <span class="number">12</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span> (Year &gt; NowYear())</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span> (Year == NowYear() &amp;&amp; Month &gt; NowMonth())</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">GetAge</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> NowYear() - Year; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span> date = Console.ReadLine();</span><br><span class="line">            Date birth = <span class="keyword">new</span> Date(date);</span><br><span class="line">            <span class="keyword">if</span> (birth.Vaild())</span><br><span class="line">                Console.WriteLine(<span class="string">"&#123;0&#125;岁"</span>, birth.GetAge());</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                Console.WriteLine(<span class="string">"invalid"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="d.-心率检查">D. 心率检查</h1>
+<blockquote>
+<p>运动时，可以利用心率监测仪来查看心率是否处于安全范围内。其中最高心率=220-年龄；目标心率是最高心率的50%-85%（向下取整）；</p>
+<p>创建一个名称为HeartRates的类。这个类的的属性应该包含人的姓名、出生年份和当前年份。</p>
+<p>类中还包含一个计算并返回年龄（以整年计算）的属性；一个计算并返回最高心率分方法；以及2个分别计算最低和最高目标心率的方法；</p>
+<p>编写程序，实例化HeartRates类，输入个人姓名，出生年月日（空格分隔）。并输出对象的信息，包括姓名，出生年份；年龄；最高心率，最低目标心率，最高目标心率（空格分隔）</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-10-19 11:55:43</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week2_D</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">InputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] <span class="title">GetInputArray</span>(<span class="params"><span class="keyword">char</span> SplitOperator</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] instr = Console.ReadLine().Split(SplitOperator);</span><br><span class="line">            <span class="keyword">int</span>[] invar = <span class="keyword">new</span> <span class="keyword">int</span>[instr.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; invar.Length; ++i)</span><br><span class="line">                invar[i] = Convert.ToInt32(instr[i]);</span><br><span class="line">            <span class="keyword">return</span> invar;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">HeartRates</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Year &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Month &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Days &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">NowYear</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> DateTime.Now.Year; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">SetTypeNum</span>(<span class="params"><span class="keyword">string</span> date</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] spdate = date.Split(<span class="string">'/'</span>);</span><br><span class="line">            Year = Convert.ToInt32(spdate[<span class="number">0</span>]);</span><br><span class="line">            Month = Convert.ToInt32(spdate[<span class="number">1</span>]);</span><br><span class="line">            Days = Convert.ToInt32(spdate[<span class="number">2</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">SetDefault</span>(<span class="params"></span>)</span> &#123; Year = Month = Days = <span class="number">0</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">HeartRates</span>(<span class="params"></span>)</span> &#123; SetDefault(); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">HeartRates</span>(<span class="params"><span class="keyword">string</span>[] info</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            SetDefault();</span><br><span class="line">            Name = info[<span class="number">0</span>];</span><br><span class="line">            SetTypeNum(info[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">GetAge</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> NowYear() - Year; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">MaxRates</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> <span class="number">220</span> - GetAge(); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">MinGoalRates</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> (<span class="keyword">int</span>)(MaxRates() * <span class="number">0.5</span>); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">MaxGoalRates</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span> (<span class="keyword">int</span>)(MaxRates() * <span class="number">0.85</span>); &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">string</span> <span class="title">GetInfoLine</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] info = <span class="keyword">new</span> <span class="keyword">string</span>[<span class="number">6</span>];</span><br><span class="line">            info[<span class="number">0</span>] = Name;</span><br><span class="line">            info[<span class="number">1</span>] = Convert.ToString(Year) + <span class="string">"年"</span>;</span><br><span class="line">            info[<span class="number">2</span>] = Convert.ToString(GetAge()) + <span class="string">"岁"</span>;</span><br><span class="line">            info[<span class="number">3</span>] = <span class="string">"最高心率"</span> + Convert.ToString(MaxRates());</span><br><span class="line">            info[<span class="number">4</span>] = <span class="string">"最低目标心率"</span> + Convert.ToString(MinGoalRates());</span><br><span class="line">            info[<span class="number">5</span>] = <span class="string">"最高目标心率"</span> + Convert.ToString(MaxGoalRates());</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">string</span>.Join(<span class="string">" "</span>, info);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">WriteInfoLine</span>(<span class="params"></span>)</span> &#123; Console.WriteLine(GetInfoLine()); &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] infos = Console.ReadLine().Split(<span class="string">' '</span>);</span><br><span class="line">            HeartRates peo = <span class="keyword">new</span> HeartRates(infos);</span><br><span class="line">            peo.WriteInfoLine();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-12-08T08:10:49.000Z" itemprop="dateUpdated">2020-12-08 16:10:49</time>
+</span><br>
+
+
+        
+        纰漏之处, 还望海涵, 请您联系作者, 我会尽快改正错误!
+        
+    </div>
+    
+    <footer>
+        <a href="https://SheauhawJang.github.io">
+            <img src="/img/usedhead.jpg" alt="Sheauhaw Jang">
+            Sheauhaw Jang
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C#</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/&title=《C#程序设计 第3周题解》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/&title=《C#程序设计 第3周题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《C#程序设计 第3周题解》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/12/08/CSharp%20Week4/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">C#程序设计 第4周题解</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/09/23/CSharp%20Week2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">C#程序设计 第2周题解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Sheauhaw Jang &copy; 2019 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/&title=《C#程序设计 第3周题解》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/&title=《C#程序设计 第3周题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《C#程序设计 第3周题解》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://sheauhawjang.github.io/2020/12/08/CSharp%20Week3/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>

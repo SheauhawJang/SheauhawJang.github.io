@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="ICPC,数论,图论,构造,二分查找">
-    <meta name="description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. \(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\) 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p],A[p">
+    <meta name="description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. \(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\) 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p]">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2020 CCPC WannaFly 冬令营 Day2H 题解">
 <meta property="og:url" content="https://sheauhawjang.github.io/2020/01/18/2020%20Wannafly%20Winter%202H/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
-<meta property="og:description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. \(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\) 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p],A[p">
+<meta property="og:description" content="题面 现有一个整数 \(m\), 构造了一个长度为 \(n\) 的序列 \(A\), 满足: 1. \(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\) 2. \(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\), \(\exists p\in[1,n)\cap\mathbb Z\), s.t. \(\{A[p]">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-18T14:01:51.000Z">
 <meta property="article:modified_time" content="2020-01-18T14:01:51.000Z">
@@ -47,7 +47,7 @@
     <!-- custom head -->
     
 
-<meta name="generator" content="Hexo 4.1.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
@@ -205,27 +205,69 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="题面">题面</h2>
-<p>现有一个整数 <span class="math inline">\(m\)</span>, 构造了一个长度为 <span class="math inline">\(n\)</span> 的序列 <span class="math inline">\(A\)</span>, 满足: 1. <span class="math inline">\(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\)</span> 2. <span class="math inline">\(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne y\)</span>, <span class="math inline">\(\exists p\in[1,n)\cap\mathbb Z\)</span>, s.t. <span class="math inline">\(\{A[p],A[p+1]\}=\{x,y\}\)</span></p>
-<p>其中 <span class="math inline">\(A[p]\)</span> 表示 <span class="math inline">\(A\)</span> 中的第 <span class="math inline">\(p\)</span> 个元素的值.</p>
-<p>给定一个 <span class="math inline">\(n\)</span>, 求 <span class="math inline">\(m\)</span> 可能的最大值. 若 <span class="math inline">\(n\leq N=2\cdot10^6\)</span>, 则再输出 <span class="math inline">\(m\)</span> 取得最大值时可能的一个序列 <span class="math inline">\(A\)</span>.</p>
+<p>现有一个整数 <span class="math inline">\(m\)</span>, 构造了一个长度为
+<span class="math inline">\(n\)</span> 的序列 <span
+class="math inline">\(A\)</span>, 满足: 1. <span
+class="math inline">\(\forall a \in A,\, a\in[1,m]\cap\mathbb Z\)</span>
+2. <span class="math inline">\(\forall x,y\in[1,m]\cap\mathbb Z,\,x\ne
+y\)</span>, <span class="math inline">\(\exists p\in[1,n)\cap\mathbb
+Z\)</span>, s.t. <span
+class="math inline">\(\{A[p],A[p+1]\}=\{x,y\}\)</span></p>
+<p>其中 <span class="math inline">\(A[p]\)</span> 表示 <span
+class="math inline">\(A\)</span> 中的第 <span
+class="math inline">\(p\)</span> 个元素的值.</p>
+<p>给定一个 <span class="math inline">\(n\)</span>, 求 <span
+class="math inline">\(m\)</span> 可能的最大值. 若 <span
+class="math inline">\(n\leq N=2\cdot10^6\)</span>, 则再输出 <span
+class="math inline">\(m\)</span> 取得最大值时可能的一个序列 <span
+class="math inline">\(A\)</span>.</p>
 <h3 id="数据范围">数据范围</h3>
 <p><span class="math display">\[
 1\leq n\leq10^{18}
 \]</span></p>
 <h2 id="题解">题解</h2>
-<p>构造一个 <span class="math inline">\(m\)</span> 个顶点的无向图 <span class="math inline">\(\boldsymbol G\)</span>, <span class="math inline">\(\forall p\in [1,n)\)</span>, 在 <span class="math inline">\(A[p]\)</span> 和 <span class="math inline">\(A[p+1]\)</span> 之间连一条边, 记作第一类边. 则 <span class="math inline">\(A\)</span> 的条件 <span class="math inline">\((2)\)</span> 就转化成了 <span class="math inline">\(\boldsymbol G\)</span> 中任意两个不同点都要有边直接连接, 最多有 <span class="math inline">\(n-1\)</span> 条边. 这样, 我们就得到了 <span class="math inline">\(n\)</span> 的一个下界: <span class="math display">\[
+<p>构造一个 <span class="math inline">\(m\)</span> 个顶点的无向图 <span
+class="math inline">\(\boldsymbol G\)</span>, <span
+class="math inline">\(\forall p\in [1,n)\)</span>, 在 <span
+class="math inline">\(A[p]\)</span> 和 <span
+class="math inline">\(A[p+1]\)</span> 之间连一条边, 记作第一类边. 则
+<span class="math inline">\(A\)</span> 的条件 <span
+class="math inline">\((2)\)</span> 就转化成了 <span
+class="math inline">\(\boldsymbol G\)</span>
+中任意两个不同点都要有边直接连接, 最多有 <span
+class="math inline">\(n-1\)</span> 条边. 这样, 我们就得到了 <span
+class="math inline">\(n\)</span> 的一个下界: <span
+class="math display">\[
 n\geq\frac{1}{2}m(m-1)+1 \tag{3}
-\]</span> 等号成立当且仅当任意两个不同点之间直接连接的边有且仅有 <span class="math inline">\(1\)</span> 条.</p>
+\]</span> 等号成立当且仅当任意两个不同点之间直接连接的边有且仅有 <span
+class="math inline">\(1\)</span> 条.</p>
 <p>另一方面, 观察这些连接的边: <span class="math display">\[
 A[1]\rightarrow A[2]\rightarrow A[3]\rightarrow...\rightarrow A[n]
-\]</span> 考虑从 <span class="math inline">\(A[1]\)</span> 号点出发, 按照上述顺序遍历整个图, 发现每条边经过且只经过了一次, 这对应了一个欧拉回路, 于是 <span class="math inline">\(\boldsymbol G\)</span> 中至多两个点的度数为奇数. 反过来, 如果 <span class="math inline">\(\boldsymbol G\)</span> 中至多两个点的度数为奇数, 那么可以构造出这样一个欧拉回路以及对应的序列.</p>
-<p>考虑以上两个要素: 任意两个不同点之间直接连接的边有且仅有一条时, 每个点的度数是 <span class="math inline">\(m-1\)</span>.</p>
-<p>如果 <span class="math inline">\(m\)</span> 是奇数, 那么每个点的度数全部都是偶数, 故可以构造出一个序列 <span class="math inline">\(A\)</span>. <span class="math inline">\((3)\)</span> 式等号可以成立.</p>
-<p>如果 <span class="math inline">\(m\)</span> 是偶数, 那么每个点的度数全部都是奇数, <span class="math inline">\(m&gt;2\)</span> 时不能构造出一个欧拉回路. 这时, 我们可以任取 <span class="math inline">\(m-2\)</span> 个度数为奇数的点, 配对连边, 记作第二类边. 于是这 <span class="math inline">\(m-2\)</span> 个点度数均加 <span class="math inline">\(1\)</span>, 变为了偶数. 这样 <span class="math inline">\(G\)</span> 中只有 <span class="math inline">\(2\)</span> 个点度数为奇数, 可以构造欧拉回路. 此时有:</p>
+\]</span> 考虑从 <span class="math inline">\(A[1]\)</span> 号点出发,
+按照上述顺序遍历整个图, 发现每条边经过且只经过了一次,
+这对应了一个欧拉回路, 于是 <span class="math inline">\(\boldsymbol
+G\)</span> 中至多两个点的度数为奇数. 反过来, 如果 <span
+class="math inline">\(\boldsymbol G\)</span> 中至多两个点的度数为奇数,
+那么可以构造出这样一个欧拉回路以及对应的序列.</p>
+<p>考虑以上两个要素: 任意两个不同点之间直接连接的边有且仅有一条时,
+每个点的度数是 <span class="math inline">\(m-1\)</span>.</p>
+<p>如果 <span class="math inline">\(m\)</span> 是奇数,
+那么每个点的度数全部都是偶数, 故可以构造出一个序列 <span
+class="math inline">\(A\)</span>. <span
+class="math inline">\((3)\)</span> 式等号可以成立.</p>
+<p>如果 <span class="math inline">\(m\)</span> 是偶数,
+那么每个点的度数全部都是奇数, <span
+class="math inline">\(m&gt;2\)</span> 时不能构造出一个欧拉回路. 这时,
+我们可以任取 <span class="math inline">\(m-2\)</span> 个度数为奇数的点,
+配对连边, 记作第二类边. 于是这 <span class="math inline">\(m-2\)</span>
+个点度数均加 <span class="math inline">\(1\)</span>, 变为了偶数. 这样
+<span class="math inline">\(G\)</span> 中只有 <span
+class="math inline">\(2\)</span> 个点度数为奇数, 可以构造欧拉回路.
+此时有:</p>
 <p><span class="math display">\[
 n\geq\frac{1}{2}m(m-1)+1+\frac{1}{2}(m-2)=\frac{1}{2}m^2
 \]</span> 综上所述, 定义: <span class="math display">\[
-f(m):=\left\{ \begin{align} 
+f(m):=\left\{ \begin{align}
 \frac{1}{2}m(&amp;m-1)+1 &amp; m\equiv 0\pmod 2\\
 \frac{1}{2}&amp;m^2 &amp; m\equiv 1\pmod 2
 \end{align}\right.
@@ -233,23 +275,77 @@ f(m):=\left\{ \begin{align}
 <p>条件便可以总结为: <span class="math display">\[
 n\geq f(m) \tag4
 \]</span></p>
-<p>我们可以从 <span class="math inline">\(1\)</span> 到 <span class="math inline">\(n\)</span> 枚举所有可能的 <span class="math inline">\(m\)</span>, 取其中满足 <span class="math inline">\(n\geq f(m)\)</span> 的最大值. 复杂度为 <span class="math inline">\(O(n)\)</span>, 不能接受.</p>
-<p>注意到: <span class="math inline">\(\forall m\equiv 0\pmod 2\)</span>, <span class="math inline">\(\displaystyle \frac{1}{2}(m-1)(m-2)+1&lt;\frac{1}{2}m^2&lt;\frac{1}{2}m(m+1)+1\)</span>. 即: <span class="math inline">\(\forall m\in\mathbb N_+\)</span>, <span class="math inline">\(f(m)&lt;f(m+1)\)</span>. <span class="math inline">\(f\)</span> 严格单调增, 故可以使用二分查找, 复杂度为 <span class="math inline">\(O(\log n)\)</span>, 可以接受.</p>
+<p>我们可以从 <span class="math inline">\(1\)</span> 到 <span
+class="math inline">\(n\)</span> 枚举所有可能的 <span
+class="math inline">\(m\)</span>, 取其中满足 <span
+class="math inline">\(n\geq f(m)\)</span> 的最大值. 复杂度为 <span
+class="math inline">\(O(n)\)</span>, 不能接受.</p>
+<p>注意到: <span class="math inline">\(\forall m\equiv 0\pmod
+2\)</span>, <span class="math inline">\(\displaystyle
+\frac{1}{2}(m-1)(m-2)+1&lt;\frac{1}{2}m^2&lt;\frac{1}{2}m(m+1)+1\)</span>.
+即: <span class="math inline">\(\forall m\in\mathbb N_+\)</span>, <span
+class="math inline">\(f(m)&lt;f(m+1)\)</span>. <span
+class="math inline">\(f\)</span> 严格单调增, 故可以使用二分查找,
+复杂度为 <span class="math inline">\(O(\log n)\)</span>, 可以接受.</p>
 <p>也可以分别解不等式: <span class="math display">\[
 \begin{align}
 \frac{1}{2}x(x-1)+1&amp;\le n \tag5\\
 \frac{1}{2}x^2&amp;\le n \tag6
 \end{align}
-\]</span> 取不等式 <span class="math inline">\((4)\)</span> 解中最大的奇数和不等式 <span class="math inline">\((5)\)</span> 解中最大的偶数的较大者, 复杂度为 <span class="math inline">\(O(1)\)</span>. 很好.</p>
-<p>现在思考一种 <span class="math inline">\(\forall m\in\mathbb N_+\)</span> 都能构造欧拉回路以及对应的序列 <span class="math inline">\(A\)</span> 的方法. 先考虑 <span class="math inline">\(n=f(m)\)</span> 的情况, 这种情况构造的序列记作 <span class="math inline">\(A_m\)</span>, 此时 <span class="math inline">\(A=A_m\)</span>.</p>
-<p>对于 <span class="math inline">\(m\)</span> 是奇数的情况, 考虑数学归纳法:</p>
-<p>一、<span class="math inline">\(m=1\)</span> 时, 由于没有边, 欧拉环路显然存在, <span class="math inline">\(A_1=[1]\)</span>.</p>
-<p>二、设我们构造出了 <span class="math inline">\(m=k\)</span> 时的图的欧拉环路以及对应的序列 <span class="math inline">\(A_k\)</span>. 显然, 欧拉环路可以从任意一个点出发, 遍历一遍图后回到起点. <span class="math inline">\(A[1]\)</span> 可以是任意一个数, <span class="math inline">\(A[n]=A[1]\)</span>. 不妨令 <span class="math inline">\(A[1]=A[n]=1\)</span>. 现在我们加入两个点 <span class="math inline">\(k+1,k+2\)</span>. 考虑序列 <span class="math inline">\(B=[2,3,...,k]\)</span>, 在 <span class="math inline">\(B\)</span> 中所有的奇数前面插入 <span class="math inline">\(k+1\)</span>, 后面插入 <span class="math inline">\(k+2\)</span>, 则 <span class="math inline">\(B=[2,k+1,3,k+2,...,k+1,k,k+2]\)</span>. 令 <span class="math inline">\(A_{k+2}=[A_k,k+1,k+2,B,1]\)</span>. 这样, <span class="math inline">\(m=k+2\)</span> 时的序列以及对应的欧拉回路就构造好了.</p>
-<p>对于 <span class="math inline">\(m\)</span> 时偶数的情况, 考虑数学归纳法:</p>
-<p>一、<span class="math inline">\(m=2\)</span> 时, 由于只有一条边, 欧拉环路显然存在, <span class="math inline">\(A_2=[1,2]\)</span>.</p>
-<p>二、设我们构造出了 <span class="math inline">\(m=k\)</span> 时的图的欧拉环路以及对应的序列 <span class="math inline">\(A_k\)</span>. 显然, 欧拉环路应该从一个度数为奇数的点出发, 遍历一遍图后回到另一个度数为奇数的点. <span class="math inline">\(A[1],A[n]\)</span> 可以是任意两个不同的数, 不妨令 <span class="math inline">\(A[1]=1,A[n]=k\)</span>. 现在我们加入两个点 <span class="math inline">\(k+1,k+2\)</span>. 将 <span class="math inline">\(k,k+1\)</span> 配对连接第二类边. 考虑序列 <span class="math inline">\(B=[2,3,...,k]\)</span>, 在 <span class="math inline">\(B\)</span> 中所有的奇数前面插入 <span class="math inline">\(k+1\)</span>, 后面插入 <span class="math inline">\(k+2\)</span>, 则 <span class="math inline">\(B=[2,k+1,3,k+2,...,k+1,k,k+2]\)</span>. 令 <span class="math inline">\(A_{k+2}=[A_k,k+1,k+2,B]\)</span>. 这样, <span class="math inline">\(m=k+2\)</span> 时的序列以及对应的欧拉回路就构造好了.</p>
+\]</span> 取不等式 <span class="math inline">\((4)\)</span>
+解中最大的奇数和不等式 <span class="math inline">\((5)\)</span>
+解中最大的偶数的较大者, 复杂度为 <span
+class="math inline">\(O(1)\)</span>. 很好.</p>
+<p>现在思考一种 <span class="math inline">\(\forall m\in\mathbb
+N_+\)</span> 都能构造欧拉回路以及对应的序列 <span
+class="math inline">\(A\)</span> 的方法. 先考虑 <span
+class="math inline">\(n=f(m)\)</span> 的情况, 这种情况构造的序列记作
+<span class="math inline">\(A_m\)</span>, 此时 <span
+class="math inline">\(A=A_m\)</span>.</p>
+<p>对于 <span class="math inline">\(m\)</span> 是奇数的情况,
+考虑数学归纳法:</p>
+<p>一、<span class="math inline">\(m=1\)</span> 时, 由于没有边,
+欧拉环路显然存在, <span class="math inline">\(A_1=[1]\)</span>.</p>
+<p>二、设我们构造出了 <span class="math inline">\(m=k\)</span>
+时的图的欧拉环路以及对应的序列 <span class="math inline">\(A_k\)</span>.
+显然, 欧拉环路可以从任意一个点出发, 遍历一遍图后回到起点. <span
+class="math inline">\(A[1]\)</span> 可以是任意一个数, <span
+class="math inline">\(A[n]=A[1]\)</span>. 不妨令 <span
+class="math inline">\(A[1]=A[n]=1\)</span>. 现在我们加入两个点 <span
+class="math inline">\(k+1,k+2\)</span>. 考虑序列 <span
+class="math inline">\(B=[2,3,...,k]\)</span>, 在 <span
+class="math inline">\(B\)</span> 中所有的奇数前面插入 <span
+class="math inline">\(k+1\)</span>, 后面插入 <span
+class="math inline">\(k+2\)</span>, 则 <span
+class="math inline">\(B=[2,k+1,3,k+2,...,k+1,k,k+2]\)</span>. 令 <span
+class="math inline">\(A_{k+2}=[A_k,k+1,k+2,B,1]\)</span>. 这样, <span
+class="math inline">\(m=k+2\)</span>
+时的序列以及对应的欧拉回路就构造好了.</p>
+<p>对于 <span class="math inline">\(m\)</span> 时偶数的情况,
+考虑数学归纳法:</p>
+<p>一、<span class="math inline">\(m=2\)</span> 时, 由于只有一条边,
+欧拉环路显然存在, <span class="math inline">\(A_2=[1,2]\)</span>.</p>
+<p>二、设我们构造出了 <span class="math inline">\(m=k\)</span>
+时的图的欧拉环路以及对应的序列 <span class="math inline">\(A_k\)</span>.
+显然, 欧拉环路应该从一个度数为奇数的点出发,
+遍历一遍图后回到另一个度数为奇数的点. <span
+class="math inline">\(A[1],A[n]\)</span> 可以是任意两个不同的数, 不妨令
+<span class="math inline">\(A[1]=1,A[n]=k\)</span>. 现在我们加入两个点
+<span class="math inline">\(k+1,k+2\)</span>. 将 <span
+class="math inline">\(k,k+1\)</span> 配对连接第二类边. 考虑序列 <span
+class="math inline">\(B=[2,3,...,k]\)</span>, 在 <span
+class="math inline">\(B\)</span> 中所有的奇数前面插入 <span
+class="math inline">\(k+1\)</span>, 后面插入 <span
+class="math inline">\(k+2\)</span>, 则 <span
+class="math inline">\(B=[2,k+1,3,k+2,...,k+1,k,k+2]\)</span>. 令 <span
+class="math inline">\(A_{k+2}=[A_k,k+1,k+2,B]\)</span>. 这样, <span
+class="math inline">\(m=k+2\)</span>
+时的序列以及对应的欧拉回路就构造好了.</p>
 <p>当然, 这个构造只是一种构造. 其他的任何满足题意的构造均可行.</p>
-<p>现在考虑 <span class="math inline">\(n&gt;f(m)\)</span> 的情况. 很显然, 令 <span class="math inline">\(A=[A_m,\underbrace{1,1,...,1}_{n-f(m)}]\)</span> 即可.</p>
+<p>现在考虑 <span class="math inline">\(n&gt;f(m)\)</span> 的情况.
+很显然, 令 <span
+class="math inline">\(A=[A_m,\underbrace{1,1,...,1}_{n-f(m)}]\)</span>
+即可.</p>
 <p>构造复杂度为 <span class="math inline">\(O(N)\)</span>. 可以接受.</p>
 <h2 id="代码实现">代码实现</h2>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="function">ll <span class="title">get</span><span class="params">(ll m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m &amp; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> (m * (m - <span class="number">1</span>) &gt;&gt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> m * m &gt;&gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check</span><span class="params">(ll m, ll n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">get</span>(m) &lt;= n;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">ll <span class="title">rget</span><span class="params">(ll n, ll l, ll r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l + <span class="number">1</span> == r)</span><br><span class="line">        <span class="keyword">return</span> l;</span><br><span class="line">    ll mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (check(mid, n))</span><br><span class="line">        <span class="keyword">return</span> rget(n, mid, r);</span><br><span class="line">    <span class="keyword">return</span> rget(n, l, mid);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">opt</span><span class="params">(ll m)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m &amp; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1"</span>);</span><br><span class="line">        <span class="keyword">int</span> o = <span class="number">1</span>, n = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; m; i += <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, i);</span><br><span class="line">            n = i;</span><br><span class="line">            <span class="keyword">do</span></span><br><span class="line">            &#123;</span><br><span class="line">                o = o % (i - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">                n = n == i ? i + <span class="number">1</span> : i;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">" %d %d"</span>, n, o);</span><br><span class="line">            &#125; <span class="keyword">while</span> (o != <span class="number">1</span> || n != i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"1 2"</span>);</span><br><span class="line">        <span class="keyword">int</span> o = <span class="number">2</span>, n = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt; m; i += <span class="number">2</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, i);</span><br><span class="line">            n = i;</span><br><span class="line">            <span class="keyword">do</span></span><br><span class="line">            &#123;</span><br><span class="line">                o = o % (i - <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">                n = n == i ? i + <span class="number">1</span> : i;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">" %d %d"</span>, n, o);</span><br><span class="line">            &#125; <span class="keyword">while</span> (o != i - <span class="number">1</span> || n != i);</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d"</span>, o = i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ll n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%lld"</span>, &amp;n);</span><br><span class="line">    ll m = rget(n, <span class="number">0</span>, <span class="number">2e9</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>, m);</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= <span class="number">2e6</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        opt(m);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="built_in">get</span>(m); i &lt; n; ++i)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" 1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

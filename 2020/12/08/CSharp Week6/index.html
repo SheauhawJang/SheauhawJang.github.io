@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="C#">
-    <meta name="description" content="A. 重载方法的练习  在Main函数所在的类，实现两个方法用于计算成绩的平均值，小数点后1位。 public static double AvgGrade(int[] gra) &#x2F;&#x2F;数值型成绩的平均值。得分1~5之间。课程数无限制。 public static double AvgGrade(string[] sgra) &#x2F;&#x2F;成绩分为“good”和“ok”两个等级。good等价于4分，o">
+    <meta name="description" content="A. 重载方法的练习  在Main函数所在的类，实现两个方法用于计算成绩的平均值，小数点后1位。 public static double AvgGrade(int[] gra) &#x2F;&#x2F;数值型成绩的平均值。得分1~5之间。课程数无限制。 public static double AvgGrade(string[] sgra) &#x2F;&#x2F;成绩分为“good”和“ok”两个等级。good等价于4分">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C#程序设计 第6周题解">
 <meta property="og:url" content="https://sheauhawjang.github.io/2020/12/08/CSharp%20Week6/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
-<meta property="og:description" content="A. 重载方法的练习  在Main函数所在的类，实现两个方法用于计算成绩的平均值，小数点后1位。 public static double AvgGrade(int[] gra) &#x2F;&#x2F;数值型成绩的平均值。得分1~5之间。课程数无限制。 public static double AvgGrade(string[] sgra) &#x2F;&#x2F;成绩分为“good”和“ok”两个等级。good等价于4分，o">
+<meta property="og:description" content="A. 重载方法的练习  在Main函数所在的类，实现两个方法用于计算成绩的平均值，小数点后1位。 public static double AvgGrade(int[] gra) &#x2F;&#x2F;数值型成绩的平均值。得分1~5之间。课程数无限制。 public static double AvgGrade(string[] sgra) &#x2F;&#x2F;成绩分为“good”和“ok”两个等级。good等价于4分">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-12-08T08:20:08.000Z">
 <meta property="article:modified_time" content="2020-12-08T08:20:10.000Z">
@@ -43,7 +43,7 @@
     <!-- custom head -->
     
 
-<meta name="generator" content="Hexo 4.1.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
@@ -203,20 +203,25 @@
             <h1 id="a.-重载方法的练习">A. 重载方法的练习</h1>
 <blockquote>
 <p>在Main函数所在的类，实现两个方法用于计算成绩的平均值，小数点后1位。</p>
-<p>public static double AvgGrade(int[] gra) //数值型成绩的平均值。得分1~5之间。课程数无限制。</p>
-<p>public static double AvgGrade(string[] sgra) //成绩分为“good”和“ok”两个等级。good等价于4分，ok等价于1分。</p>
+<p>public static double AvgGrade(int[] gra)
+//数值型成绩的平均值。得分1~5之间。课程数无限制。</p>
+<p>public static double AvgGrade(string[] sgra)
+//成绩分为“good”和“ok”两个等级。good等价于4分，ok等价于1分。</p>
 <p>在Main方法中，分别调用两种方法，均能输出平均成绩。输入用空格分开。</p>
 <p>【注:】</p>
 <ol type="1">
-<li>四舍五入的区别请大家了解https://www.cnblogs.com/fanyong/archive/2013/05/30/chinese_round.html 大家选取“传统意义上的四舍五入”的定义方法。</li>
-<li>保留*位小数的方法请参考 https://blog.csdn.net/qq_40985921/article/details/85414484</li>
+<li>四舍五入的区别请大家了解https://www.cnblogs.com/fanyong/archive/2013/05/30/chinese_round.html
+大家选取“传统意义上的四舍五入”的定义方法。</li>
+<li>保留*位小数的方法请参考
+https://blog.csdn.net/qq_40985921/article/details/85414484</li>
 </ol>
 </blockquote>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-10-27 10:33:00</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week5_A</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">InputConvert</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] <span class="title">ToInputArray</span>(<span class="params"><span class="keyword">params</span> <span class="keyword">string</span>[] instr</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span>[] invar = <span class="keyword">new</span> <span class="keyword">int</span>[instr.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; invar.Length; ++i)</span><br><span class="line">                invar[i] = Convert.ToInt32(instr[i]);</span><br><span class="line">            <span class="keyword">return</span> invar;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">AvgGrade</span>(<span class="params"><span class="keyword">params</span> <span class="keyword">int</span>[] gra</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">double</span> ans = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">int</span> sg <span class="keyword">in</span> gra)</span><br><span class="line">                ans += sg;</span><br><span class="line">            ans /= gra.Length;</span><br><span class="line">            <span class="comment">//ans = Math.Round(ans, 1);</span></span><br><span class="line">            <span class="keyword">return</span> ans;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">AvgGrade</span>(<span class="params"><span class="keyword">params</span> <span class="keyword">string</span>[] sgra</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span>[] gra = <span class="keyword">new</span> <span class="keyword">int</span>[sgra.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sgra.Length; ++i)</span><br><span class="line">                gra[i] = sgra[i] == <span class="string">"good"</span> ? <span class="number">4</span> : <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">return</span> AvgGrade(gra);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span>[] ip = Console.ReadLine().Split(<span class="string">' '</span>);</span><br><span class="line">            <span class="keyword">double</span> ans;</span><br><span class="line">            <span class="keyword">if</span> (ip[<span class="number">0</span>][<span class="number">0</span>] &gt;= <span class="string">'0'</span> &amp;&amp; ip[<span class="number">0</span>][<span class="number">0</span>] &lt;= <span class="string">'9'</span>)</span><br><span class="line">                ans = AvgGrade(InputConvert.ToInputArray(ip));</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                ans = AvgGrade(ip);</span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0:0.0&#125;"</span>, ans);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="b.-时间类">B. 时间类</h1>
 <blockquote>
 <p>定义一个时间类。</p>
-<p>成员有3个属性（包括对应的私有字段）年、月、日。属性要判断 年&gt;0、12&gt;=月份&gt;0、日&gt;0并要在所在月份天数之内。</p>
+<p>成员有3个属性（包括对应的私有字段）年、月、日。属性要判断
+年&gt;0、12&gt;=月份&gt;0、日&gt;0并要在所在月份天数之内。</p>
 <p>一个构造方法，在构造方法中给属性赋值。</p>
 <p>在program类中,定义一个方法，方法的两个参数就是时间类的对象。</p>
 <p>方法的作用是，比较第一个参数（时间）和第二个参数（时间）的早晚，如果第一个时间早，返回1，相等返回0，小于返回-1。</p>
@@ -229,9 +234,12 @@
 <p>（1）程序开始时让用户选择“年级”为1或2。一年级使只用1位数乘法；二年级使用2位数乘法。</p>
 <p>（2）用Random对象产生两个1位或2位正整数，然后输出以下问题，例如：</p>
 <p>How much is 6 times 7?</p>
-<p>然后学生输入答案，程序检查学生的答案。如果正确，则打印“Very good!”，然后提出另一个乘法问题。如果不正确，则打印“No,Please try again.”，然后让学生重复回答这个问题，直到答对。</p>
+<p>然后学生输入答案，程序检查学生的答案。如果正确，则打印“Very
+good!”，然后提出另一个乘法问题。如果不正确，则打印“No,Please try
+again.”，然后让学生重复回答这个问题，直到答对。</p>
 <p>（3）答对3道题后程序结束。</p>
-<p>（4）每个新的问题要求使用一个单独方法产生， 这个方法在程序开始时和每次用户答对时调用。</p>
+<p>（4）每个新的问题要求使用一个单独方法产生，
+这个方法在程序开始时和每次用户答对时调用。</p>
 <p>【注：】此程序无测试用例，编译通过即可。</p>
 </blockquote>
 <p>偷懒了，没写。</p>

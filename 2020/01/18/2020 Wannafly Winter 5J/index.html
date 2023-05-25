@@ -44,7 +44,7 @@
     <!-- custom head -->
     
 
-<meta name="generator" content="Hexo 4.1.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 <body>
     <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
@@ -202,44 +202,94 @@
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
             <h2 id="题面">题面</h2>
-<p>给定一个整数 <span class="math inline">\(k\)</span> 以及一个 <span class="math inline">\(2^k\times2^k\)</span> 矩阵 <span class="math inline">\(\boldsymbol A\)</span> , <span class="math inline">\(\boldsymbol A\)</span> 中任一元素 <span class="math inline">\(a_{ij}\)</span> 都有 <span class="math inline">\(a_{ij}\in\{0,1\}\)</span>.</p>
-<p>定义平移 <span class="math inline">\(m\times n\)</span> 矩阵 <span class="math inline">\(\boldsymbol X\)</span> 操作如下: <span class="math display">\[
-\boldsymbol X=\left[\begin{array} {cc} 
+<p>给定一个整数 <span class="math inline">\(k\)</span> 以及一个 <span
+class="math inline">\(2^k\times2^k\)</span> 矩阵 <span
+class="math inline">\(\boldsymbol A\)</span> , <span
+class="math inline">\(\boldsymbol A\)</span> 中任一元素 <span
+class="math inline">\(a_{ij}\)</span> 都有 <span
+class="math inline">\(a_{ij}\in\{0,1\}\)</span>.</p>
+<p>定义平移 <span class="math inline">\(m\times n\)</span> 矩阵 <span
+class="math inline">\(\boldsymbol X\)</span> 操作如下: <span
+class="math display">\[
+\boldsymbol X=\left[\begin{array} {cc}
     \boldsymbol A &amp; \boldsymbol B\\
-    \boldsymbol C &amp; \boldsymbol D 
-\end{array} \right] :\Longrightarrow \boldsymbol X \rightarrow \left[\begin{array} {cc} 
+    \boldsymbol C &amp; \boldsymbol D
+\end{array} \right] :\Longrightarrow \boldsymbol X \rightarrow
+\left[\begin{array} {cc}
     \boldsymbol D &amp; \boldsymbol C\\
-    \boldsymbol B &amp; \boldsymbol A 
+    \boldsymbol B &amp; \boldsymbol A
 \end{array} \right]
-\]</span> 其中 <span class="math inline">\(\boldsymbol A\)</span> 是 <span class="math inline">\(a\times b\)</span> 矩阵, <span class="math inline">\(a\in[0,m]\cap\mathbb Z,b\in[0,n]\cap\mathbb Z\)</span>.</p>
-<p>定义用矩阵 <span class="math inline">\(\boldsymbol B\)</span> 覆盖矩阵 <span class="math inline">\(\boldsymbol A\)</span> 操作如下: <span class="math display">\[
-\boldsymbol B(b_{ij})\sim \boldsymbol A(a_{ij}) :\Longrightarrow \boldsymbol A\rightarrow (a_{ij}\,\mathrm{xor}\,b_{ij})
-\]</span> 你可以选择任意多个经过任意平移操作后的 <span class="math inline">\(\boldsymbol A\)</span> 依次覆盖一个 <span class="math inline">\(\boldsymbol{0}\)</span> 矩阵, 求最终可以得到多少种不同的矩阵.</p>
+\]</span> 其中 <span class="math inline">\(\boldsymbol A\)</span> 是
+<span class="math inline">\(a\times b\)</span> 矩阵, <span
+class="math inline">\(a\in[0,m]\cap\mathbb Z,b\in[0,n]\cap\mathbb
+Z\)</span>.</p>
+<p>定义用矩阵 <span class="math inline">\(\boldsymbol B\)</span>
+覆盖矩阵 <span class="math inline">\(\boldsymbol A\)</span> 操作如下:
+<span class="math display">\[
+\boldsymbol B(b_{ij})\sim \boldsymbol A(a_{ij}) :\Longrightarrow
+\boldsymbol A\rightarrow (a_{ij}\,\mathrm{xor}\,b_{ij})
+\]</span> 你可以选择任意多个经过任意平移操作后的 <span
+class="math inline">\(\boldsymbol A\)</span> 依次覆盖一个 <span
+class="math inline">\(\boldsymbol{0}\)</span> 矩阵,
+求最终可以得到多少种不同的矩阵.</p>
 <h3 id="数据范围">数据范围</h3>
 <p><span class="math display">\[
 1\leq k\leq5
 \]</span></p>
 <h2 id="题解">题解</h2>
-<p>定义数域 <span class="math inline">\(B=\{0,1\}\)</span> 上的加法和数量乘法运算: <span class="math display">\[
+<p>定义数域 <span class="math inline">\(B=\{0,1\}\)</span>
+上的加法和数量乘法运算: <span class="math display">\[
 \begin{align}
 \forall a, b\in B, \quad&amp;a\oplus b =a \,\mathrm{xor}\, b\\
 &amp;a\odot b = a \cdot b
 \end{align}
-\]</span> 考虑 <span class="math inline">\(m\times n\)</span> 的矩阵 $ A M_{mn}(B)$, 对 <span class="math inline">\(\boldsymbol A(1; 1)\)</span> 做一个标记, 则对这个矩阵进行平移操作后, 标记可能在任意一个位置, 有 <span class="math inline">\(m\times n\)</span> 种取值. 故最多有 $ m n$ 个操作算子 <span class="math inline">\(\boldsymbol F\)</span>.</p>
-<p>定义数域 <span class="math inline">\(B\)</span> 上矩阵的加法和数量乘法运算: <span class="math display">\[
+\]</span> 考虑 <span class="math inline">\(m\times n\)</span> 的矩阵 $ A
+M_{mn}(B)$, 对 <span class="math inline">\(\boldsymbol A(1; 1)\)</span>
+做一个标记, 则对这个矩阵进行平移操作后, 标记可能在任意一个位置, 有 <span
+class="math inline">\(m\times n\)</span> 种取值. 故最多有 $ m n$
+个操作算子 <span class="math inline">\(\boldsymbol F\)</span>.</p>
+<p>定义数域 <span class="math inline">\(B\)</span>
+上矩阵的加法和数量乘法运算: <span class="math display">\[
 \begin{aligned}
-&amp; \forall \boldsymbol X(x_{ij}), \boldsymbol Y(y_{ij})\in M_{m\times n}(B), &amp; \boldsymbol X\oplus \boldsymbol Y&amp;=(x_{ij}\oplus y_{ij})\\
-&amp; \forall a\in B, \boldsymbol X(x_{ij})\in M_{m\times n}(B), &amp; a\odot \boldsymbol X&amp;=(a\odot x_{ij})
+&amp; \forall \boldsymbol X(x_{ij}), \boldsymbol Y(y_{ij})\in M_{m\times
+n}(B), &amp; \boldsymbol X\oplus \boldsymbol Y&amp;=(x_{ij}\oplus
+y_{ij})\\
+&amp; \forall a\in B, \boldsymbol X(x_{ij})\in M_{m\times n}(B), &amp;
+a\odot \boldsymbol X&amp;=(a\odot x_{ij})
 \end{aligned}
-\]</span> 这样, $ M_{mn}(B) $ 构成了数域 <span class="math inline">\(B\)</span> 上的线性空间.</p>
-<p>显然, <span class="math inline">\(\langle\boldsymbol F \rangle\)</span> 是 <span class="math inline">\(M_{m\times n}(B)\)</span> 的一个线性子空间. 我们需要求的就是 <span class="math inline">\(|\langle\boldsymbol F\rangle|\)</span>.</p>
-<p>考虑 <span class="math inline">\(\langle\boldsymbol F \rangle\)</span> 的一个基 <span class="math inline">\(\mathfrak B=\{\lambda_i;i\in[1, \mathrm{rank}\langle\boldsymbol F\rangle]\cap\mathbb Z\}\)</span>, 则 <span class="math inline">\(\forall \boldsymbol X \in \langle \boldsymbol F\rangle\)</span>, <span class="math inline">\(\boldsymbol X\)</span> 可以被 <span class="math inline">\(\mathfrak B\)</span> 惟一地线性表出, 即存在唯一的一组 <span class="math inline">\(k_i\in B,i\in[1, |\mathfrak B|]\cap\mathbb Z\)</span>, s.t. <span class="math display">\[
+\]</span> 这样, $ M_{mn}(B) $ 构成了数域 <span
+class="math inline">\(B\)</span> 上的线性空间.</p>
+<p>显然, <span class="math inline">\(\langle\boldsymbol F
+\rangle\)</span> 是 <span class="math inline">\(M_{m\times
+n}(B)\)</span> 的一个线性子空间. 我们需要求的就是 <span
+class="math inline">\(|\langle\boldsymbol F\rangle|\)</span>.</p>
+<p>考虑 <span class="math inline">\(\langle\boldsymbol F
+\rangle\)</span> 的一个基 <span class="math inline">\(\mathfrak
+B=\{\lambda_i;i\in[1, \mathrm{rank}\langle\boldsymbol
+F\rangle]\cap\mathbb Z\}\)</span>, 则 <span
+class="math inline">\(\forall \boldsymbol X \in \langle \boldsymbol
+F\rangle\)</span>, <span class="math inline">\(\boldsymbol X\)</span>
+可以被 <span class="math inline">\(\mathfrak B\)</span> 惟一地线性表出,
+即存在唯一的一组 <span class="math inline">\(k_i\in B,i\in[1, |\mathfrak
+B|]\cap\mathbb Z\)</span>, s.t. <span class="math display">\[
 \boldsymbol X=\sum_{i=1}^{|\mathfrak B|}k_i\lambda_i
-\]</span> <span class="math inline">\(\forall i\in[1,|\mathfrak B|]\cap \mathbb Z,k_i\)</span> 一共有 <span class="math inline">\(0,1\)</span> 两个取值, 故 <span class="math inline">\(\boldsymbol X\)</span> 共有 <span class="math inline">\(2^{|\mathfrak B|}\)</span> 种不同的取值.</p>
-<p>线性空间 <span class="math inline">\(M_{m\times n}(B)\)</span> 与 <span class="math inline">\(B^{m\times n}\)</span> 同构. 将所有的 <span class="math inline">\(m\times n\)</span> 个 <span class="math inline">\(\boldsymbol F\)</span> 转化成 <span class="math inline">\(m\times n\)</span> 个 <span class="math inline">\(m\times n\)</span> 维向量, 放入矩阵中高斯消元求秩即可. 复杂度为 <span class="math inline">\(O(m^3n^3)=O(2^{6k})\)</span>. 位运算与高斯消元的常数极小, 可以接受.</p>
+\]</span> <span class="math inline">\(\forall i\in[1,|\mathfrak B|]\cap
+\mathbb Z,k_i\)</span> 一共有 <span class="math inline">\(0,1\)</span>
+两个取值, 故 <span class="math inline">\(\boldsymbol X\)</span> 共有
+<span class="math inline">\(2^{|\mathfrak B|}\)</span> 种不同的取值.</p>
+<p>线性空间 <span class="math inline">\(M_{m\times n}(B)\)</span> 与
+<span class="math inline">\(B^{m\times n}\)</span> 同构. 将所有的 <span
+class="math inline">\(m\times n\)</span> 个 <span
+class="math inline">\(\boldsymbol F\)</span> 转化成 <span
+class="math inline">\(m\times n\)</span> 个 <span
+class="math inline">\(m\times n\)</span> 维向量,
+放入矩阵中高斯消元求秩即可. 复杂度为 <span
+class="math inline">\(O(m^3n^3)=O(2^{6k})\)</span>.
+位运算与高斯消元的常数极小, 可以接受.</p>
 <p>算出矩阵的秩后, 答案即 <span class="math display">\[
 2^{|\mathfrak B|}=2^{\mathrm{rank}\langle\boldsymbol  F\rangle}
-\]</span> 在 <span class="math inline">\(\bmod p\)</span> 意义下进行快速幂即可.</p>
+\]</span> 在 <span class="math inline">\(\bmod p\)</span>
+意义下进行快速幂即可.</p>
 
         </div>
 

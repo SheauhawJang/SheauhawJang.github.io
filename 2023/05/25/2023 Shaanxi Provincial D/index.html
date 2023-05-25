@@ -242,26 +242,27 @@ g(y)=1+\sum_{k=2}^a g\left(\frac yk\right)
 \]</span> 此时, 根据该式直接进行记忆化搜索, 复杂度为 <span
 class="math inline">\(O(n^2)\)</span>, 显然不能满意.</p>
 <p>而对于 <span class="math inline">\(F(x,y)\)</span>, 当 <span
-class="math inline">\(x\)</span> 是正整数时, 有 $$</p>
-<p>F(x,y)=F(x,y) <span class="math display">\[
-故可以得到
-\]</span> g(y)=1+_{k=2}^a g() $$ 在这种情况下, 可以进行数论分块, <span
-class="math inline">\(\left\lfloor y/k\right\rfloor\)</span> 只有 <span
+class="math inline">\(x\)</span> 是正整数时, 有<span
+class="math inline">\(\newcommand{\flor}[1]{\left\lfloor#1\right\rfloor}\)</span>
+<span class="math display">\[
+F(x,y)=F(x,\flor y)\tag2
+\]</span> 故可以得到 <span class="math display">\[
+g(y)=1+\sum_{k=2}^a g\left(\flor{\frac yk}\right)
+\]</span> 在这种情况下, 可以进行数论分块, <span
+class="math inline">\(\flor{y/k}\)</span> 只有 <span
 class="math inline">\(O(\sqrt y)\)</span> 个取值.</p>
 <p>依托数论分块进行记忆化搜索求解 <span
 class="math inline">\(g(n)\)</span>:</p>
-<p>对于 <span class="math inline">\(\left\lfloor n/k\right\rfloor\le
-\sqrt n\)</span> 的情况, 将 <span
-class="math inline">\(g(1),g(2),\cdots,g(\sqrt n)\)</span>
-全部进行预处理, 共需求解 <span class="math inline">\(\sqrt n\)</span>
-个值, 在数论分块的情况下, 每个值有 <span
+<p>对于 <span class="math inline">\(\flor{n/k}\le \sqrt n\)</span>
+的情况, 将 <span class="math inline">\(g(1),g(2),\cdots,g(\sqrt
+n)\)</span> 全部进行预处理, 共需求解 <span class="math inline">\(\sqrt
+n\)</span> 个值, 在数论分块的情况下, 每个值有 <span
 class="math inline">\(O(\sqrt{\sqrt n})\)</span> 项相加,
 该情况下的总复杂度为 <span
 class="math inline">\(O(n^{3/4})\)</span>.</p>
-<p>对于 <span class="math inline">\(\left\lfloor
-n/k\right\rfloor&gt;\sqrt n\)</span> 的情况, 此时可知 <span
-class="math inline">\(k&lt;\sqrt n\)</span>, 此时记 <span
-class="math inline">\(h_n(k)=g(\left\lfloor n/k\right\rfloor)\)</span>,
+<p>对于 <span class="math inline">\(\flor{n/k}&gt;\sqrt n\)</span>
+的情况, 此时可知 <span class="math inline">\(k&lt;\sqrt n\)</span>,
+此时记 <span class="math inline">\(h_n(k)=g(\flor{n/k})\)</span>,
 则需求解 <span class="math inline">\(h_n(1),h_n(2),\cdots,h_n(\sqrt
 n)\)</span>. 其中 <span class="math inline">\(h_n(k)\)</span> 共有 <span
 class="math inline">\(O(\sqrt{n/k})\)</span>​ 项相加,
@@ -275,8 +276,7 @@ class="math inline">\(O(n^{3/4})\)</span>.</p>
 class="math inline">\(n/(n/k)\)</span>, 还要注意 <span
 class="math inline">\(k\le a\)</span>. 即分块区间为 <span
 class="math display">\[
-\left[k,\min\left(\left\lfloor\frac n{\left\lfloor
-n/k\right\rfloor}\right\rfloor,a\right)\right]
+\left[k,\min\left(\flor{\frac n{\flor{n/k}}},a\right)\right]
 \]</span></p>
 <h2 id="代码实现">代码实现</h2>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m = <span class="number">1e9</span>, ghn = <span class="built_in">sqrt</span>(m);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> p = <span class="number">998244353</span>;</span><br><span class="line"><span class="keyword">int</span> g[ghn + <span class="number">7</span>], h[ghn + <span class="number">7</span>], n;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">solve</span><span class="params">(<span class="keyword">int</span> hi)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> hn = n / hi;</span><br><span class="line">    <span class="keyword">if</span> (hn &lt;= ghn)</span><br><span class="line">        <span class="keyword">return</span> g[hn];</span><br><span class="line">    <span class="keyword">if</span> (h[hi])</span><br><span class="line">        <span class="keyword">return</span> h[hi];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">2</span>; j &lt;= hn &amp;&amp; j &lt;= <span class="number">20210926</span>; ++j)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> jp = <span class="built_in">min</span>(hn / (hn / j), <span class="number">20210926</span>);</span><br><span class="line">        <span class="keyword">if</span> (hn / j &lt;= ghn)</span><br><span class="line">            ans += <span class="number">1l</span>l * (jp - j + <span class="number">1</span>) % p * g[hn / j] % p, ans %= p, j = jp;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            ans += solve(hn / j), ans %= p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> h[hi] = ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= ghn; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        g[i] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">2</span>; j &lt;= i &amp;&amp; j &lt;= <span class="number">20210926</span>; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">int</span> jp = i / (i / j);</span><br><span class="line">            g[i] += <span class="number">1l</span>l * (jp - j + <span class="number">1</span>) % p * g[i / j] % p, g[i] %= p, j = jp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">    <span class="keyword">int</span> ans;</span><br><span class="line">    <span class="keyword">if</span> (n &lt;= ghn)</span><br><span class="line">        ans = g[n];</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        ans = solve(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

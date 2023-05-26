@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>2023 ICPC 陕西省赛 J 题题解 | 孤星捧月堂 | Sheauhaw Jang&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#df698c">
+    
+    
+    <meta name="keywords" content="ICPC,BFS">
+    <meta name="description" content="题目来源: 2023 ICPC 陕西省赛: J. Teleport 题目链接: 暂无 题面 在 \(n\times n\) 的网格中, 有些格点可以通过 (用.表示), 有些格点不可通过 (用*表示). 你需要从 \((1,1)\) 移动到 \((n,n)\). 保证 \((1,1)\) 和 \((n,n)\) 两个点是可以通过的. 当你在 \((x,y)\) 时, 你可以在一个单位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023 ICPC 陕西省赛 J 题题解">
+<meta property="og:url" content="https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/index.html">
+<meta property="og:site_name" content="孤星捧月堂">
+<meta property="og:description" content="题目来源: 2023 ICPC 陕西省赛: J. Teleport 题目链接: 暂无 题面 在 \(n\times n\) 的网格中, 有些格点可以通过 (用.表示), 有些格点不可通过 (用*表示). 你需要从 \((1,1)\) 移动到 \((n,n)\). 保证 \((1,1)\) 和 \((n,n)\) 两个点是可以通过的. 当你在 \((x,y)\) 时, 你可以在一个单位">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-26T08:32:06.000Z">
+<meta property="article:modified_time" content="2023-05-26T09:26:33.000Z">
+<meta property="article:author" content="Sheauhaw Jang">
+<meta property="article:tag" content="ICPC">
+<meta property="article:tag" content="BFS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="孤星捧月堂" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/head.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/sakura.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/usedhead.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sheauhaw Jang</h5>
+          <a href="mailto:www.zhangxiaohao.cn@foxmail.com" title="www.zhangxiaohao.cn@foxmail.com" class="mail">www.zhangxiaohao.cn@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/old_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/SheauhawJang" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">2023 ICPC 陕西省赛 J 题题解</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">2023 ICPC 陕西省赛 J 题题解</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2023-05-26T08:32:06.000Z" itemprop="datePublished" class="page-time">
+  2023-05-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2023-ICPC/">2023 ICPC</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题面"><span class="post-toc-number">1.</span> <span class="post-toc-text">题面</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#数据范围"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">数据范围</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题解"><span class="post-toc-number">2.</span> <span class="post-toc-text">题解</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码实现"><span class="post-toc-number">3.</span> <span class="post-toc-text">代码实现</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-2023 Shaanxi Provincial J"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">2023 ICPC 陕西省赛 J 题题解</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2023-05-26 16:32:06" datetime="2023-05-26T08:32:06.000Z"  itemprop="datePublished">2023-05-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2023-ICPC/">2023 ICPC</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>题目来源: 2023 ICPC 陕西省赛: J. Teleport</p>
+<p>题目链接: 暂无</p>
+<h2 id="题面">题面</h2>
+<p>在 <span class="math inline">\(n\times n\)</span> 的网格中,
+有些格点可以通过 (用<code>.</code>表示), 有些格点不可通过
+(用<code>*</code>表示). 你需要从 <span
+class="math inline">\((1,1)\)</span> 移动到 <span
+class="math inline">\((n,n)\)</span>. 保证 <span
+class="math inline">\((1,1)\)</span> 和 <span
+class="math inline">\((n,n)\)</span> 两个点是可以通过的.</p>
+<p>当你在 <span class="math inline">\((x,y)\)</span> 时,
+你可以在一个单位时间内移动到以下点中的一个:</p>
+<ol type="1">
+<li><p><span class="math inline">\((x+1,y)\)</span> 或 <span
+class="math inline">\((x-1,y)\)</span> 或 <span
+class="math inline">\((x,y+1)\)</span> 或 <span
+class="math inline">\((x,y-1)\)</span>;</p></li>
+<li><p><span class="math inline">\(f^i(x,y)\)</span>, 其中 <span
+class="math inline">\(i\)</span> 是任意的整数 <span
+class="math inline">\(i\le k\)</span>.</p></li>
+</ol>
+<p>不能移动到不可通过的点或者地图外的点. <span
+class="math inline">\(f^i(x,y)\)</span> 的定义为: <span
+class="math display">\[
+f^i(x,y)=\begin{cases}(x,y)&amp;i=0\\f^{i-1}(y+1,x)&amp;i&gt;0\end{cases}
+\]</span> 求从 <span class="math inline">\((1,1)\)</span> 移动到 <span
+class="math inline">\((n,n)\)</span> 的最短时间, 无解输出
+<code>-1</code>.</p>
+<h3 id="数据范围">数据范围</h3>
+<p><span class="math display">\[
+1\le n,k\le5000
+\]</span></p>
+<h2 id="题解">题解</h2>
+<p>对于题面给出的两种移动方式, 总共有 <span
+class="math inline">\(4+k\)</span> 种可能到达的点, 直接进行 BFS 复杂度为
+<span class="math inline">\(O(n^2k)\)</span>, 不能接受.</p>
+<p>现将两种移动方式分开处理, 移动方式 1 是普通移动, 移动方式 2
+是<del>白井黒子</del> Teleport <del>(テレポート)</del>. 其中普通移动有
+<span class="math inline">\(4\)</span> 条路可以走, Teleport 有 <span
+class="math inline">\(k\)</span> 条路可以走.</p>
+<p>注意到, 在 BFS 过程中, 如果 <span
+class="math inline">\(f^i(x,y)\)</span> 点已经因 Teleport 而被 BFS 过,
+则从 <span class="math inline">\(f^j(x,y)\)</span> 开始进行 BFS 时,
+<span
+class="math inline">\(f^{1}(x,y),f^2(x,y),\cdots,f^{i-j}(x,y)\)</span>
+均已经因 Teleport 而被 BFS 过, 不需要再考虑到这些点的 Teleport,
+只需要考虑 <span class="math inline">\(i-j\)</span> 阶之后的 Teleport
+即可. 根据这一特性, 每一个点至多被 Teleport 一次. 复杂度为 <span
+class="math inline">\(O(n^2)\)</span>.</p>
+<p>需要注意的是, 本题的空间上限为 256 MiB, 在进行 BFS 的过程中, 队列需要
+<span class="math inline">\(3n^2\)</span> 大小的数组, 如果采用
+<code>int</code> 数组, 则需要 286 MiB 的内存. 因此需要关注空间使用情况:
+使用 <code>short</code> 数组或使用 STL <code>std::queue</code>.</p>
+<h2 id="代码实现">代码实现</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; <span class="built_in">point</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n, k;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> bfsed[<span class="number">5003</span>][<span class="number">5003</span>];</span><br><span class="line"><span class="keyword">bool</span> teled[<span class="number">5003</span>][<span class="number">5003</span>];</span><br><span class="line"><span class="keyword">bool</span> pass[<span class="number">5003</span>][<span class="number">5003</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">point</span> <span class="title">teleport</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> k)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> hk = k &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (k &amp; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> &#123;y + hk + <span class="number">1</span>, x + hk&#125;;</span><br><span class="line">    <span class="keyword">return</span> &#123;x + hk, y + hk&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add_bfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> depth, <span class="built_in">queue</span>&lt;pair&lt;<span class="built_in">point</span>, <span class="keyword">int</span>&gt;&gt; &amp;bfs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!bfsed[x][y] &amp;&amp; pass[x][y])</span><br><span class="line">    &#123;</span><br><span class="line">        bfsed[x][y] = <span class="literal">true</span>;</span><br><span class="line">        bfs.push(&#123;&#123;x, y&#125;, depth&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; k;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= n; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">char</span> sym;</span><br><span class="line">            <span class="built_in">cin</span> &gt;&gt; sym;</span><br><span class="line">            <span class="keyword">if</span> (sym == <span class="string">'.'</span>)</span><br><span class="line">                pass[i][j] = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                pass[i][j] = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="built_in">queue</span>&lt;pair&lt;<span class="built_in">point</span>, <span class="keyword">int</span>&gt;&gt; bfs;</span><br><span class="line">    add_bfs(<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, bfs);</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">while</span> (!bfs.empty())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">point</span> np = bfs.front().first;</span><br><span class="line">        <span class="keyword">int</span> dep = bfs.front().second;</span><br><span class="line">        bfs.pop();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> x = np.first, y = np.second;</span><br><span class="line">        <span class="keyword">if</span> (x == n &amp;&amp; y == n)</span><br><span class="line">        &#123;</span><br><span class="line">            ans = dep;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> maxk = <span class="built_in">min</span>(<span class="built_in">min</span>(<span class="number">2</span> * (n - x) + <span class="number">1</span>, <span class="number">2</span> * (n - y)), <span class="built_in">min</span>(n + n - x - y, k));</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = maxk; i &gt; <span class="number">0</span>; --i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">point</span> tp = teleport(x, y, i);</span><br><span class="line">            <span class="keyword">int</span> tx = tp.first, ty = tp.second;</span><br><span class="line">            <span class="keyword">if</span> (teled[tx][ty])</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            teled[tx][ty] = <span class="literal">true</span>;</span><br><span class="line">            add_bfs(tx, ty, dep + <span class="number">1</span>, bfs);</span><br><span class="line">        &#125;</span><br><span class="line">        add_bfs(x + <span class="number">1</span>, y, dep + <span class="number">1</span>, bfs);</span><br><span class="line">        add_bfs(x - <span class="number">1</span>, y, dep + <span class="number">1</span>, bfs);</span><br><span class="line">        add_bfs(x, y + <span class="number">1</span>, dep + <span class="number">1</span>, bfs);</span><br><span class="line">        add_bfs(x, y - <span class="number">1</span>, dep + <span class="number">1</span>, bfs);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2023-05-26T09:26:33.000Z" itemprop="dateUpdated">2023-05-26 17:26:33</time>
+</span><br>
+
+
+        
+        纰漏之处, 还望海涵, 请您联系作者, 我会尽快改正错误!
+        
+    </div>
+    
+    <footer>
+        <a href="https://SheauhawJang.github.io">
+            <img src="/img/usedhead.jpg" alt="Sheauhaw Jang">
+            Sheauhaw Jang
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BFS/" rel="tag">BFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICPC/" rel="tag">ICPC</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/&title=《2023 ICPC 陕西省赛 J 题题解》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/&title=《2023 ICPC 陕西省赛 J 题题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《2023 ICPC 陕西省赛 J 题题解》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2023/05/25/2023%20Shaanxi%20Provincial%20D/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">2023 ICPC 陕西省赛 D 题题解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Sheauhaw Jang &copy; 2019 - 2023</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/&title=《2023 ICPC 陕西省赛 J 题题解》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/&title=《2023 ICPC 陕西省赛 J 题题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《2023 ICPC 陕西省赛 J 题题解》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://sheauhawjang.github.io/2023/05/26/2023%20Shaanxi%20Provincial%20J/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>

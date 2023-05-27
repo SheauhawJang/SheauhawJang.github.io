@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="C#">
-    <meta name="description" content="A. 计算两个数的和、差、商、积。  从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差 积 商。  12345678910111213141516171819202122232425262728293031323334using System;&#x2F;&#x2F; Written by Sheauhaw Jang&#x2F;&#x2F; 2020-09-22 10:50:57namespace CS">
+    <meta name="description" content="A. 计算两个数的和、差、商、积。  从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差 积 商。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C#程序设计 第2周题解">
 <meta property="og:url" content="https://sheauhawjang.github.io/2020/09/23/CSharp%20Week2/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
-<meta property="og:description" content="A. 计算两个数的和、差、商、积。  从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差 积 商。  12345678910111213141516171819202122232425262728293031323334using System;&#x2F;&#x2F; Written by Sheauhaw Jang&#x2F;&#x2F; 2020-09-22 10:50:57namespace CS">
+<meta property="og:description" content="A. 计算两个数的和、差、商、积。  从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差 积 商。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-09-23T04:23:27.000Z">
 <meta property="article:modified_time" content="2020-09-23T04:23:27.000Z">
@@ -205,6 +205,7 @@
 <p>从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差
 积 商。</p>
 </blockquote>
+<a id="more"></a>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="comment">// Written by Sheauhaw Jang</span></span><br><span class="line"><span class="comment">// 2020-09-22 10:50:57</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">CSharp_Week1_A</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculate</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">Get</span>(<span class="params"><span class="keyword">int</span> a, <span class="keyword">int</span> b, <span class="keyword">int</span> type</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">switch</span>(type)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">return</span> a + b;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">return</span> a - b;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">2</span>: <span class="keyword">return</span> a * b;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">3</span>: <span class="keyword">return</span> a / b;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span> a = Convert.ToInt32(Console.ReadLine());</span><br><span class="line">            <span class="keyword">int</span> b = Convert.ToInt32(Console.ReadLine());</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; ++i)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &gt; <span class="number">0</span>)</span><br><span class="line">                    Console.Write(<span class="string">' '</span>);</span><br><span class="line">                Console.Write(Calculate.Get(a, b, i));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="b.-时间转换">B. 时间转换</h1>
 <blockquote>
@@ -283,7 +284,11 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/09/23/CSharp%20Week2/&title=《C#程序设计 第2周题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/09/23/CSharp%20Week2/&title=《C#程序设计 第2周题解》 — 孤星捧月堂&source=A. 计算两个数的和、差、商、积。
+
+从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差
+积 商。
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
@@ -416,7 +421,11 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/09/23/CSharp%20Week2/&title=《C#程序设计 第2周题解》 — 孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2020/09/23/CSharp%20Week2/&title=《C#程序设计 第2周题解》 — 孤星捧月堂&source=A. 计算两个数的和、差、商、积。
+
+从键盘分别输入两个不为0的整数（前2行输入），分别输出这两个整数的和 差
+积 商。
+" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>

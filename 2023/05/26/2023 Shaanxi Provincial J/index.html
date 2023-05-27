@@ -29,7 +29,7 @@
 <meta property="og:description" content="题目来源: 2023 ICPC 陕西省赛: J. Teleport 题目链接: 暂无 题面 在 \(n\times n\) 的网格中, 有些格点可以通过 (用.表示), 有些格点不可通过 (用*表示). 你需要从 \((1,1)\) 移动到 \((n,n)\). 保证 \((1,1)\) 和 \((n,n)\) 两个点是可以通过的. 当你在 \((x,y)\) 时, 你可以在一个单位">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-26T08:32:06.000Z">
-<meta property="article:modified_time" content="2023-05-26T09:26:33.000Z">
+<meta property="article:modified_time" content="2023-05-27T12:36:36.000Z">
 <meta property="article:author" content="Sheauhaw Jang">
 <meta property="article:tag" content="ICPC">
 <meta property="article:tag" content="BFS">
@@ -238,17 +238,17 @@ class="math inline">\((n,n)\)</span> 的最短时间, 无解输出
 class="math inline">\(4+k\)</span> 种可能到达的点, 直接进行 BFS 复杂度为
 <span class="math inline">\(O(n^2k)\)</span>, 不能接受.</p>
 <p>现将两种移动方式分开处理, 移动方式 1 是普通移动, 移动方式 2
-是<del>白井黒子</del> Teleport <del>(テレポート)</del>. 其中普通移动有
-<span class="math inline">\(4\)</span> 条路可以走, Teleport 有 <span
+是<ruby>空間移動<rt>テレポート</rt></ruby>. 其中普通移动有 <span
+class="math inline">\(4\)</span> 条路可以走, 空间移动有 <span
 class="math inline">\(k\)</span> 条路可以走.</p>
 <p>注意到, 在 BFS 过程中, 如果 <span
-class="math inline">\(f^i(x,y)\)</span> 点已经因 Teleport 而被 BFS 过,
+class="math inline">\(f^i(x,y)\)</span> 点已经因空间移动而被 BFS 过,
 则从 <span class="math inline">\(f^j(x,y)\)</span> 开始进行 BFS 时,
 <span
 class="math inline">\(f^{1}(x,y),f^2(x,y),\cdots,f^{i-j}(x,y)\)</span>
-均已经因 Teleport 而被 BFS 过, 不需要再考虑到这些点的 Teleport,
-只需要考虑 <span class="math inline">\(i-j\)</span> 阶之后的 Teleport
-即可. 根据这一特性, 每一个点至多被 Teleport 一次. 复杂度为 <span
+均已经因空间移动而被 BFS 过, 不需要再考虑到这些点的空间移动, 只需要考虑
+<span class="math inline">\(i-j\)</span> 阶之后的 Teleport 即可.
+根据这一特性, 每一个点至多被空间移动到一次. 复杂度为 <span
 class="math inline">\(O(n^2)\)</span>.</p>
 <p>需要注意的是, 本题的空间上限为 256 MiB, 在进行 BFS 的过程中, 队列需要
 <span class="math inline">\(3n^2\)</span> 大小的数组, 如果采用
@@ -264,7 +264,7 @@ class="math inline">\(O(n^2)\)</span>.</p>
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2023-05-26T09:26:33.000Z" itemprop="dateUpdated">2023-05-26 17:26:33</time>
+    最后更新时间：<time datetime="2023-05-27T12:36:36.000Z" itemprop="dateUpdated">2023-05-27 20:36:36</time>
 </span><br>
 
 

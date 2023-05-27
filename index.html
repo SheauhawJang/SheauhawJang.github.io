@@ -164,6 +164,142 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-2020 Wannafly Winter 5H"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2020-01-19 02:58:24" datetime="2020-01-18T18:58:24.000Z"  itemprop="datePublished">2020-01-19</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/">2020 CCPC WannaFly 冬令营</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2020/01/19/2020%20Wannafly%20Winter%205H/">2020 CCPC WannaFly 冬令营 Day5H 题解</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        <h3 id="题面">题面</h3>
+<p>在以 <span class="math inline">\(O\)</span>
+为球心的单位球面上寻找三个点 <span class="math inline">\(A, B,
+C\)</span>, s.t.: <span class="math display">\[
+\min(|AB|,|BC|,|CA|)\geq1.7
+\]</span></p>
+<p><span class="math display">\[
+0&lt;d(O,ABC)\leq10^{-18}
+\]</span></p>
+<h4 id="输出格式">输出格式</h4>
+<p>每行输出三个整数 <span
+class="math inline">\(x,y,z\in[-10^{6},10^6]\cap\mathbb Z\)</span>,
+表示选取了点 <span class="math display">\[
+\left(\frac{x}{\sqrt{x^2+y^2+z^2}},\frac{y}{\sqrt{x^2+y^2+z^2}},\frac{z}{\sqrt{x^2+y^2+z^2}}\right)
+\]</span></p>
+<h3 id="题解">题解</h3>
+<p>设原点为 <span class="math inline">\(O\)</span>. <span
+class="math inline">\(A,B,C\)</span> 每个点选取的三个整数分别为 <span
+class="math inline">\(\boldsymbol A(A_x, A_y, A_z), \boldsymbol B(B_x,
+B_y, B_z), \boldsymbol C(C_x, C_y, C_z)\)</span>, 记： <span
+class="math display">\[
+\left|\boldsymbol P\right|:=\sqrt{P_x^2+P_y^2+P_z^2},\quad\forall
+\boldsymbol P\in\{\boldsymbol A,\boldsymbol B,\boldsymbol C\}
+\]</span></p>
+<p><span class="math display">\[
+D_0:=\overrightarrow{OA}\times\overrightarrow{OB}\cdot\overrightarrow{OC}=\left|
+\begin{array}{ccc} \frac{A_x}{|\boldsymbol A|} &amp;
+\frac{A_y}{|\boldsymbol A|} &amp; \frac{A_z}{|\boldsymbol
+A|}\\   \frac{B_x}{|\boldsymbol B|} &amp; \frac{B_y}{|\boldsymbol B|}
+&amp; \frac{B_z}{|\boldsymbol B|}\\   \frac{C_x}{|\boldsymbol C|} &amp;
+\frac{C_y}{|\boldsymbol C|} &amp; \frac{C_z}{|\boldsymbol
+C|}\\\end{array} \right|
+\]</span></p>
+<p><span class="math display">\[
+D:= {D_0}{|\boldsymbol A||\boldsymbol B||\boldsymbol C|} = \left|
+\begin{array} {ccc}
+    A_x &amp; A_y &amp; A_z \\
+    B_x &amp; B_y &amp; B_z \\
+    C_x &amp; C_y &amp; C_z
+\end{array} \right|
+\]</span></p>
+<p>由三棱锥体积公式，可得： <span class="math display">\[
+\begin{align}
+V:=V_{OABC}
+&amp;=\frac{1}{3}Sh\\
+&amp;=\frac{1}{6}|D_0|=\frac{|D|}{6|\boldsymbol A||\boldsymbol
+B||\boldsymbol C|}
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+h=\frac{|D|}{2S|\boldsymbol A||\boldsymbol B||\boldsymbol C|}
+\]</span></p>
+<p>注意到 <span class="math inline">\(\sqrt3\approx1.7\)</span>,
+故尽量选取等边三角形以达到最优。</p>
+<p>同时注意到： <span class="math display">\[
+D=
+\left| \begin{array} {ccc}
+    1 &amp; 1 &amp; 0 \\
+    0 &amp; -1 &amp; 1 \\
+    -1 &amp; 0 &amp; -1
+\end{array} \right|
+\]</span> 满足：<span class="math inline">\(D=0\)</span>, <span
+class="math inline">\(|AB|=|BC|=|CA|=\sqrt3\)</span>.</p>
+<p>同理， <span class="math display">\[
+D=
+\left| \begin{array} {ccc}
+    10^6 &amp; 10^6 &amp; 0 \\
+    0 &amp; -10^6 &amp; 10^6 \\
+    -10^6 &amp; 0 &amp; -10^6
+\end{array} \right|
+\]</span> 有同样的性质，此时： <span class="math display">\[
+|\boldsymbol A|=|\boldsymbol B|=|\boldsymbol C|=\sqrt2\cdot10^6
+\]</span></p>
+<p><span class="math display">\[
+h=\frac{|D|}{2S|\boldsymbol A||\boldsymbol B||\boldsymbol
+C|}=\frac{|D|}{3\sqrt6\cdot10^{18}}
+\]</span></p>
+<p>微调 <span class="math inline">\(\boldsymbol A,\boldsymbol
+B,\boldsymbol C\)</span> , s.t. <span
+class="math inline">\(|D|\leq7\)</span> 即可。</p>
+<p>打表发现：满足条件的一个 <span class="math inline">\(D\)</span> 是：
+<span class="math display">\[
+D=\left|\begin{array}{ccc}999999 &amp; 10^6 &amp; 0 \\0 &amp; -999999
+&amp; 999997 \\-999997 &amp; 0 &amp; -999996\end{array}\right|=-4
+\]</span></p>
+<p><span class="math display">\[
+h=\frac{|D|}{2S|\boldsymbol A||\boldsymbol B||\boldsymbol
+C|}\approx\frac{4}{3\sqrt6\cdot10^{18}}&lt;10^{-18}
+\]</span></p>
+
+    
+
+        <a href="/2020/01/19/2020%20Wannafly%20Winter%205H/" class="post-more waves-effect waves-button">
+            阅读全文…
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICPC/" rel="tag">ICPC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%89%93%E8%A1%A8/" rel="tag">打表</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E5%87%A0%E4%BD%95/" rel="tag">计算几何</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-2023 Shaanxi Provincial J"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -229,17 +365,17 @@ class="math inline">\((n,n)\)</span> 的最短时间, 无解输出
 class="math inline">\(4+k\)</span> 种可能到达的点, 直接进行 BFS 复杂度为
 <span class="math inline">\(O(n^2k)\)</span>, 不能接受.</p>
 <p>现将两种移动方式分开处理, 移动方式 1 是普通移动, 移动方式 2
-是<del>白井黒子</del> Teleport <del>(テレポート)</del>. 其中普通移动有
-<span class="math inline">\(4\)</span> 条路可以走, Teleport 有 <span
+是<ruby>空間移動<rt>テレポート</rt></ruby>. 其中普通移动有 <span
+class="math inline">\(4\)</span> 条路可以走, 空间移动有 <span
 class="math inline">\(k\)</span> 条路可以走.</p>
 <p>注意到, 在 BFS 过程中, 如果 <span
-class="math inline">\(f^i(x,y)\)</span> 点已经因 Teleport 而被 BFS 过,
+class="math inline">\(f^i(x,y)\)</span> 点已经因空间移动而被 BFS 过,
 则从 <span class="math inline">\(f^j(x,y)\)</span> 开始进行 BFS 时,
 <span
 class="math inline">\(f^{1}(x,y),f^2(x,y),\cdots,f^{i-j}(x,y)\)</span>
-均已经因 Teleport 而被 BFS 过, 不需要再考虑到这些点的 Teleport,
-只需要考虑 <span class="math inline">\(i-j\)</span> 阶之后的 Teleport
-即可. 根据这一特性, 每一个点至多被 Teleport 一次. 复杂度为 <span
+均已经因空间移动而被 BFS 过, 不需要再考虑到这些点的空间移动, 只需要考虑
+<span class="math inline">\(i-j\)</span> 阶之后的 Teleport 即可.
+根据这一特性, 每一个点至多被空间移动到一次. 复杂度为 <span
 class="math inline">\(O(n^2)\)</span>.</p>
 <p>需要注意的是, 本题的空间上限为 256 MiB, 在进行 BFS 的过程中, 队列需要
 <span class="math inline">\(3n^2\)</span> 大小的数组, 如果采用
@@ -2557,142 +2693,6 @@ href="https://zhuanlan.zhihu.com/p/38393931">https://zhuanlan.zhihu.com/p/383939
     <div class="post-footer">
         
 	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8E%9F%E5%88%9B/" rel="tag">原创</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/" rel="tag">数学分析</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%BB%E4%B9%A6%E6%8A%A5%E5%91%8A/" rel="tag">读书报告</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
-        <li class="post-list-item fade">
-            <article id="post-2020 Wannafly Winter 5H"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2020-01-19 02:58:24" datetime="2020-01-18T18:58:24.000Z"  itemprop="datePublished">2020-01-19</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/">2020 CCPC WannaFly 冬令营</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2020/01/19/2020%20Wannafly%20Winter%205H/">2020 CCPC WannaFly 冬令营 Day5H 题解</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        <h3 id="题面">题面</h3>
-<p>在以 <span class="math inline">\(O\)</span>
-为球心的单位球面上寻找三个点 <span class="math inline">\(A, B,
-C\)</span>, s.t.: <span class="math display">\[
-\min(|AB|,|BC|,|CA|)\geq1.7
-\]</span></p>
-<p><span class="math display">\[
-0&lt;d(O,ABC)\leq10^{-18}
-\]</span></p>
-<h4 id="输出格式">输出格式</h4>
-<p>每行输出三个整数 <span
-class="math inline">\(x,y,z\in[-10^{6},10^6]\cap\mathbb Z\)</span>,
-表示选取了点 <span class="math display">\[
-(\frac{x}{\sqrt{x^2+y^2+z^2}},\frac{y}{\sqrt{x^2+y^2+z^2}},\frac{z}{\sqrt{x^2+y^2+z^2}})
-\]</span></p>
-<h3 id="题解">题解</h3>
-<p>设原点为 <span class="math inline">\(O\)</span>. <span
-class="math inline">\(A,B,C\)</span> 每个点选取的三个整数分别为 <span
-class="math inline">\(\boldsymbol A(A_x, A_y, A_z), \boldsymbol B(B_x,
-B_y, B_z), \boldsymbol C(C_x, C_y, C_z)\)</span>, 记： <span
-class="math display">\[
-\left|\boldsymbol P\right|:=\sqrt{P_x^2+P_y^2+P_z^2},\quad\forall
-\boldsymbol P\in\{\boldsymbol A,\boldsymbol B,\boldsymbol C\}
-\]</span></p>
-<p><span class="math display">\[
-D_0:=\overrightarrow{OA}\times\overrightarrow{OB}\cdot\overrightarrow{OC}=\left|
-\begin{array}{ccc} \frac{A_x}{|\boldsymbol A|} &amp;
-\frac{A_y}{|\boldsymbol A|} &amp; \frac{A_z}{|\boldsymbol
-A|}\\   \frac{B_x}{|\boldsymbol B|} &amp; \frac{B_y}{|\boldsymbol B|}
-&amp; \frac{B_z}{|\boldsymbol B|}\\   \frac{C_x}{|\boldsymbol C|} &amp;
-\frac{C_y}{|\boldsymbol C|} &amp; \frac{C_z}{|\boldsymbol
-C|}\\\end{array} \right|
-\]</span></p>
-<p><span class="math display">\[
-D:= {D_0}{|\boldsymbol A||\boldsymbol B||\boldsymbol C|} = \left|
-\begin{array} {ccc}
-    A_x &amp; A_y &amp; A_z \\
-    B_x &amp; B_y &amp; B_z \\
-    C_x &amp; C_y &amp; C_z
-\end{array} \right|
-\]</span></p>
-<p>由三棱锥体积公式，可得： <span class="math display">\[
-\begin{align}
-V:=V_{OABC}
-&amp;=\frac{1}{3}Sh\\
-&amp;=\frac{1}{6}|D_0|=\frac{|D|}{6|\boldsymbol A||\boldsymbol
-B||\boldsymbol C|}
-\end{align}
-\]</span></p>
-<p><span class="math display">\[
-h=\frac{|D|}{2S|\boldsymbol A||\boldsymbol B||\boldsymbol C|}
-\]</span></p>
-<p>注意到 <span class="math inline">\(\sqrt3\approx1.7\)</span>,
-故尽量选取等边三角形以达到最优。</p>
-<p>同时注意到： <span class="math display">\[
-D=
-\left| \begin{array} {ccc}
-    1 &amp; 1 &amp; 0 \\
-    0 &amp; -1 &amp; 1 \\
-    -1 &amp; 0 &amp; -1
-\end{array} \right|
-\]</span> 满足：<span class="math inline">\(D=0\)</span>, <span
-class="math inline">\(|AB|=|BC|=|CA|=\sqrt3\)</span>.</p>
-<p>同理， <span class="math display">\[
-D=
-\left| \begin{array} {ccc}
-    10^6 &amp; 10^6 &amp; 0 \\
-    0 &amp; -10^6 &amp; 10^6 \\
-    -10^6 &amp; 0 &amp; -10^6
-\end{array} \right|
-\]</span> 有同样的性质，此时： <span class="math display">\[
-|\boldsymbol A|=|\boldsymbol B|=|\boldsymbol C|=\sqrt2\cdot10^6
-\]</span></p>
-<p><span class="math display">\[
-h=\frac{|D|}{2S|\boldsymbol A||\boldsymbol B||\boldsymbol
-C|}=\frac{|D|}{3\sqrt6\cdot10^{18}}
-\]</span></p>
-<p>微调 <span class="math inline">\(\boldsymbol A,\boldsymbol
-B,\boldsymbol C\)</span> , s.t. <span
-class="math inline">\(|D|\leq7\)</span> 即可。</p>
-<p>打表发现：满足条件的一个 <span class="math inline">\(D\)</span> 是：
-<span class="math display">\[
-D=\left|\begin{array}{ccc}999999 &amp; 10^6 &amp; 0 \\0 &amp; -999999
-&amp; 999997 \\-999997 &amp; 0 &amp; -999996\end{array}\right|=-4
-\]</span></p>
-<p><span class="math display">\[
-h=\frac{|D|}{2S|\boldsymbol A||\boldsymbol B||\boldsymbol
-C|}\approx\frac{4}{3\sqrt6\cdot10^{18}}&lt;10^{-18}
-\]</span></p>
-
-    
-
-        <a href="/2020/01/19/2020%20Wannafly%20Winter%205H/" class="post-more waves-effect waves-button">
-            阅读全文…
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ICPC/" rel="tag">ICPC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%89%93%E8%A1%A8/" rel="tag">打表</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E5%87%A0%E4%BD%95/" rel="tag">计算几何</a></li></ul>
 
     </div>
     

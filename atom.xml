@@ -6,7 +6,7 @@
   <link href="https://sheauhawjang.github.io/atom.xml" rel="self"/>
   
   <link href="https://sheauhawjang.github.io/"/>
-  <updated>2023-05-27T12:36:36.000Z</updated>
+  <updated>2023-06-04T02:01:46.000Z</updated>
   <id>https://sheauhawjang.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>無題</title>
+    <link href="https://sheauhawjang.github.io/2023/06/04/Emotional/2023-06-04/"/>
+    <id>https://sheauhawjang.github.io/2023/06/04/Emotional/2023-06-04/</id>
+    <published>2023-06-03T16:00:00.000Z</published>
+    <updated>2023-06-04T02:01:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>自尋路 望前路 自由人間道 山與水 走了幾多未去數 千條路都導返家鄉路</p><p>望盡盡是青山 青山處處雨急風高 故園路 竟是走不盡長路</p><p>道人道 道神道 自求人間道 妖也好 魔也好 都道最好 少年怒天地鬼哭神號</p><p><strong>大地舊日江山 怎麼會變血海滔滔 故園路怎麼盡是不歸路</strong></p><p>大地舊日江山 怎麼會變血海滔滔 故園路 怎麼盡是不歸路</p><p>驚問世間 怎麼盡是無道</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;自尋路 望前路 自由人間道 山與水 走了幾多未去數 千條路
+都導返家鄉路&lt;/p&gt;
+&lt;p&gt;望盡盡是青山 青山處處雨急風高 故園路 竟是走不盡長路&lt;/p&gt;
+&lt;p&gt;道人道 道神道 自求人間道 妖也好 魔也好 都道最好 少年怒
+天地鬼哭神號&lt;/p</summary>
+      
+    
+    
+    
+    <category term="心情杂谈" scheme="https://sheauhawjang.github.io/categories/%E5%BF%83%E6%83%85%E6%9D%82%E8%B0%88/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>2023 ICPC 陕西省赛 J 题题解</title>
@@ -872,27 +899,6 @@ class=&quot;math inline&quot;&gt;&#92;(&#92;boldsymbol{0}&#92;)&lt;/span&gt; 矩
     <category term="ICPC" scheme="https://sheauhawjang.github.io/tags/ICPC/"/>
     
     <category term="线性基" scheme="https://sheauhawjang.github.io/tags/%E7%BA%BF%E6%80%A7%E5%9F%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://sheauhawjang.github.io/2019/12/11/hello-world/"/>
-    <id>https://sheauhawjang.github.io/2019/12/11/hello-world/</id>
-    <published>2019-12-11T13:11:47.000Z</published>
-    <updated>2019-12-11T13:11:47.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your veryfirst post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> formore info. If you get any problems when using Hexo, you can find theanswer in <ahref="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> oryou can ask me on <ahref="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="quick-start">Quick Start</h2><h3 id="create-a-new-post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <ahref="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="run-server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="generate-static-files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <ahref="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="deploy-to-remote-sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <ahref="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very
-first post. Check &lt;a href=&quot;https://hexo</summary>
-      
-    
-    
-    
     
   </entry>
   

@@ -118,11 +118,11 @@ class=&quot;math inline&quot;&gt;&#92;((n,n)&#92;)&lt;/span&gt; 的最短时间,
     <category term="XCPC题解" scheme="https://sheauhawjang.github.io/categories/XCPC%E9%A2%98%E8%A7%A3/"/>
     
     
-    <category term="BFS" scheme="https://sheauhawjang.github.io/tags/BFS/"/>
-    
     <category term="省赛" scheme="https://sheauhawjang.github.io/tags/%E7%9C%81%E8%B5%9B/"/>
     
     <category term="ICPC 2023" scheme="https://sheauhawjang.github.io/tags/ICPC-2023/"/>
+    
+    <category term="BFS" scheme="https://sheauhawjang.github.io/tags/BFS/"/>
     
   </entry>
   
@@ -162,9 +162,9 @@ class=&quot;math inline&quot;&gt;&#92;(p=998244353&#92;)&lt;/span&gt;.&lt;/p&gt;
     
     <category term="省赛" scheme="https://sheauhawjang.github.io/tags/%E7%9C%81%E8%B5%9B/"/>
     
-    <category term="ICPC 2023" scheme="https://sheauhawjang.github.io/tags/ICPC-2023/"/>
-    
     <category term="整除分块" scheme="https://sheauhawjang.github.io/tags/%E6%95%B4%E9%99%A4%E5%88%86%E5%9D%97/"/>
+    
+    <category term="ICPC 2023" scheme="https://sheauhawjang.github.io/tags/ICPC-2023/"/>
     
   </entry>
   
@@ -558,9 +558,9 @@ class=&quot;math inline&quot;&gt;&#92;(920011128&#92;)&lt;/span&gt; 取模后的
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
-    
     <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
+    
+    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
   </entry>
   
@@ -611,9 +611,9 @@ class=&quot;math inline&quot;&gt;&#92;(&#92;gcd(a,y)&#92;ne &#92;gcd(x,y)&#92;)&
     
     <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
-    <category term="高精度" scheme="https://sheauhawjang.github.io/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6/"/>
-    
     <category term="2020 CCPC WannaFly 冬令营" scheme="https://sheauhawjang.github.io/tags/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/"/>
+    
+    <category term="高精度" scheme="https://sheauhawjang.github.io/tags/%E9%AB%98%E7%B2%BE%E5%BA%A6/"/>
     
   </entry>
   
@@ -723,9 +723,9 @@ class=&quot;math inline&quot;&gt;&#92;(p&#92;)&lt;/span&gt; 意义下的结果�
     <category term="学习笔记" scheme="https://sheauhawjang.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     
     
-    <category term="数学分析" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/"/>
-    
     <category term="原创" scheme="https://sheauhawjang.github.io/tags/%E5%8E%9F%E5%88%9B/"/>
+    
+    <category term="数学分析" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E5%AD%A6%E5%88%86%E6%9E%90/"/>
     
     <category term="读书报告" scheme="https://sheauhawjang.github.io/tags/%E8%AF%BB%E4%B9%A6%E6%8A%A5%E5%91%8A/"/>
     
@@ -824,11 +824,11 @@ class=&quot;math inline&quot;&gt;&#92;(x,y,z&#92;in[-10^{6},10^6]&#92;cap&#92;ma
     <category term="XCPC题解" scheme="https://sheauhawjang.github.io/categories/XCPC%E9%A2%98%E8%A7%A3/"/>
     
     
+    <category term="2020 CCPC WannaFly 冬令营" scheme="https://sheauhawjang.github.io/tags/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/"/>
+    
     <category term="计算几何" scheme="https://sheauhawjang.github.io/tags/%E8%AE%A1%E7%AE%97%E5%87%A0%E4%BD%95/"/>
     
     <category term="打表" scheme="https://sheauhawjang.github.io/tags/%E6%89%93%E8%A1%A8/"/>
-    
-    <category term="2020 CCPC WannaFly 冬令营" scheme="https://sheauhawjang.github.io/tags/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/"/>
     
   </entry>
   
@@ -876,9 +876,9 @@ class=&quot;math inline&quot;&gt;&#92;(A&#92;)&lt;/span&gt;.&lt;/p&gt;
     
     <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
-    <category term="二分查找" scheme="https://sheauhawjang.github.io/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
-    
     <category term="2020 CCPC WannaFly 冬令营" scheme="https://sheauhawjang.github.io/tags/2020-CCPC-WannaFly-%E5%86%AC%E4%BB%A4%E8%90%A5/"/>
+    
+    <category term="二分查找" scheme="https://sheauhawjang.github.io/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/"/>
     
   </entry>
   

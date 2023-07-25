@@ -6,7 +6,7 @@
   <link href="https://sheauhawjang.github.io/atom.xml" rel="self"/>
   
   <link href="https://sheauhawjang.github.io/"/>
-  <updated>2023-07-24T19:41:13.000Z</updated>
+  <updated>2023-07-25T21:34:32.000Z</updated>
   <id>https://sheauhawjang.github.io/</id>
   
   <author>
@@ -15,6 +15,67 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>2020 小学期第二期 Day7G 题解</title>
+    <link href="https://sheauhawjang.github.io/2023/07/26/2020%20Microterm%202-7G/"/>
+    <id>https://sheauhawjang.github.io/2023/07/26/2020%20Microterm%202-7G/</id>
+    <published>2023-07-25T18:28:23.000Z</published>
+    <updated>2023-07-25T21:34:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>题目来源: 2019 ICPC Asia EC Final: H. King</p><p>题目来源: XJTUOJ-1223 zxh的一气通贯</p><p>题目链接: <ahref="https://oj.xjtuicpc.com/problem/1223">https://oj.xjtuicpc.com/problem/1223</a></p><h2 id="题面">题面</h2><p>一共 <span class="math inline">\(T\)</span> 组数据.</p><p>给定素数 <span class="math inline">\(p\)</span>, 以及长度为 <spanclass="math inline">\(n\)</span> 的序列 <spanclass="math inline">\(a_1,a_2,\cdots, a_n\)</span>.</p><p>需要找出满足下列条件的子序列 <spanclass="math inline">\(b_1,b_2,\cdots,b_m\)</span> 的最大长度:</p><ol type="1"><li>子序列长度 <span class="math inline">\(m\ge n/2\)</span>.</li><li><span class="math inline">\(\forall i\in[1,m)\cap\mathbb N\)</span>,<span class="math inline">\(\exists q\in\mathbb N\)</span>, s.t. <spanclass="math inline">\(qb_i\equiv b_{i+1}\pmod p\)</span>. 即子序列在模<span class="math inline">\(p\)</span> 意义下是等比子序列.</li></ol><p>若不存在这种子序列, 输出 <code>-1</code>.</p><h3 id="数据范围">数据范围</h3><p><span class="math display">\[1\le T&lt;1000\]</span></p><p><span class="math display">\[1\le n\le2\times10^5\]</span></p><p><span class="math display">\[2\le p\le10^9+7\]</span></p><p><span class="math display">\[1\le a_1,a_2,\cdots,a_n&lt;p\]</span></p><p>保证输入的 <span class="math inline">\(p\)</span> 是素数. 数据组中<span class="math inline">\(n\)</span> 的总和不超过 <spanclass="math inline">\(2\times10^5\)</span>.</p><a id="more"></a><h2 id="题解">题解</h2><p>考虑在确定公比 <span class="math inline">\(q\)</span> 的情况下,找出最长的等比子序列. 记 <span class="math inline">\(dp[i]\)</span>为序列 <span class="math inline">\(a_i,a_{i+1},\cdots,a_n\)</span>的最长等比子序列的长度, 其中该等比子序列公比为 <spanclass="math inline">\(q\)</span>, 首项为 <spanclass="math inline">\(a_i\)</span>. 则若 <spanclass="math inline">\(i\)</span> 之后的第一个 <spanclass="math inline">\(qa_i\bmod p\)</span> 位置在 <spanclass="math inline">\(a_j\)</span>, 则 <span class="math display">\[dp[i]=dp[j]+1\]</span> 用<code>vector&lt;int&gt;</code> 存储同一个数字 <spanclass="math inline">\(a\)</span> 的所有位置, 并用 <code>map</code> 建立<span class="math inline">\(a\)</span> 和其所有位置的映射.由于位置是固定的, 且位置编号单调递增, 故寻找之后第一个 <spanclass="math inline">\(qa_i\bmod p\)</span>的位置可以在映射的所有位置中使用二分查找. 按该方法查找一次的复杂度为<span class="math inline">\(O(\log n)\)</span>.</p><p>边界条件: 找不到 <span class="math inline">\(a_j\)</span>,则最长等比子序列为 <span class="math inline">\(a_i\)</span>, 长度为<span class="math inline">\(1\)</span>, <spanclass="math inline">\(dp[i]=1\)</span>.</p><p>确定公比 <span class="math inline">\(q\)</span> 的情况下,最长等比子序列的长度为: <span class="math display">\[\max_{1\le i\le n}dp[i]\]</span> 求得长度的复杂度为 <span class="math inline">\(O(n\logn)\)</span>.</p><p>若直接枚举公比, 则每个可能的公比都形如 <spanclass="math inline">\(a_ia_j^{-1}\bmod p\)</span>, 至多有 <spanclass="math inline">\(O(n^2)\)</span> 个公比可供选择, 不能接受.</p><p>考虑取公比 <span class="math inline">\(q\)</span> 时, 若以 <spanclass="math inline">\(q\)</span> 为公比的子序列长度不小于 <spanclass="math inline">\(n/2\)</span>, 则可以注意到:这个子序列一定有一定量的相邻元素对, 在原序列的位置相邻或隔一.考虑这样的相邻元素对的最小数量 <span class="math inline">\(s\)</span>.若所有的相邻元素对在原序列的位置都相隔至少 <spanclass="math inline">\(2\)</span>, 则最多一共有 <spanclass="math inline">\((n-1)/3\)</span> 对元素. 但由于子序列长度不小于<span class="math inline">\(n/2\)</span>, 相邻元素对的数量不小于 <spanclass="math inline">\(n/2-1\)</span>. 故 <spanclass="math inline">\(s\)</span> 的一个下界为: <spanclass="math display">\[s\ge \frac n2-\frac{n-1}3-1\tag1\]</span> 这个下界是 <span class="math inline">\(n/6\)</span>量级的.</p><p>考虑原序列中相邻或隔一的元素对, 每个元素对确定了一个公比$a_ia_j^{-1}p $, 这一共有 <span class="math inline">\(2n-3\)</span>个（可以重复的）取值, 而 <span class="math inline">\(q\)</span>要在这些取值中出现至少 <span class="math inline">\(s\)</span> 次.这是一个必要条件, 可以利用这个必要条件筛选掉不可能满足条件的公比.使用下界(1)进行筛选, 最终最多只会剩 <spanclass="math inline">\(12\)</span> 个左右的公比可能符合条件, 即公比只有<span class="math inline">\(O(1)\)</span> 个取值.</p><p>总复杂度为 <span class="math inline">\(O(n\log n)\)</span>.</p><h3 id="备注">备注</h3><p><span class="math inline">\(s\)</span> 的一个更紧的下界为 <spanclass="math display">\[s\ge \frac n4-1\tag 2\]</span> 证明如下: 设有 <span class="math inline">\(k\)</span>个相邻元素对在原序列中的位置相隔至少 <spanclass="math inline">\(2\)</span>, 则有以下不等式: <spanclass="math display">\[\begin{align}3k+s+1&amp;\le n\tag3\\k+s+1&amp;\ge\left\lceil{n/2}\right\rceil\tag4\end{align}\]</span> (3) 减 (4) 可得 <span class="math display">\[k\le \frac n4\]</span> 而根据 (4) 可知 <span class="math display">\[s\ge\frac n2-k-1\ge\frac n4-1\]</span></p><h2 id="代码实现">代码实现</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> rep(i, n) for (int i = 1; i &lt;= n; ++i)</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> llong;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> mxn = <span class="number">300000</span>;</span><br><span class="line"><span class="keyword">int</span> dp[mxn];</span><br><span class="line">llong n, p;</span><br><span class="line">llong s[mxn], a[mxn], sv[mxn], inv[mxn];</span><br><span class="line"><span class="built_in">map</span>&lt;llong, llong&gt; cnt;</span><br><span class="line"><span class="built_in">map</span>&lt;llong, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; fnd;</span><br><span class="line"><span class="function">llong <span class="title">fpow</span><span class="params">(llong a, llong b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    llong ans = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (b)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (b &amp; <span class="number">1</span>)</span><br><span class="line">            ans *= a, ans %= p;</span><br><span class="line">        b &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        a *= a, a %= p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fndinv</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    s[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    rep(i, n)</span><br><span class="line">        s[i] = s[i - <span class="number">1</span>] * a[i] % p;</span><br><span class="line">    sv[n] = fpow(s[n], p - <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = n; i &gt;= <span class="number">1</span>; --i)</span><br><span class="line">        sv[i - <span class="number">1</span>] = sv[i] * a[i] % p;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; ++i)</span><br><span class="line">        inv[i] = sv[i] * s[i - <span class="number">1</span>] % p;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fndl</span><span class="params">(<span class="keyword">int</span> st, <span class="keyword">int</span> ds)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (dp[st])</span><br><span class="line">        <span class="keyword">return</span> dp[st];</span><br><span class="line">    llong nxvar = a[st] * ds % p;</span><br><span class="line">    <span class="keyword">auto</span> nx = upper_bound(fnd[nxvar].<span class="built_in">begin</span>(), fnd[nxvar].<span class="built_in">end</span>(), st);</span><br><span class="line">    <span class="keyword">if</span> (nx == fnd[nxvar].<span class="built_in">end</span>())</span><br><span class="line">        <span class="keyword">return</span> dp[st] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> dp[st] = fndl(*nx, ds) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">nm</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> n / <span class="number">2</span> - (n - <span class="number">1</span>) / <span class="number">3</span> - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> t;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;t);</span><br><span class="line">    rep(rt, t)</span><br><span class="line">    &#123;</span><br><span class="line">        cnt.<span class="built_in">clear</span>();</span><br><span class="line">        fnd.<span class="built_in">clear</span>();</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%lld%lld"</span>, &amp;n, &amp;p);</span><br><span class="line">        rep(i, n)</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">"%lld"</span>, &amp;a[i]),</span><br><span class="line">            fnd[a[i]].push_back(i);</span><br><span class="line">        fndinv();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; ++i)</span><br><span class="line">            ++cnt[a[i] * inv[i - <span class="number">1</span>] % p];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">3</span>; i &lt;= n; ++i)</span><br><span class="line">            ++cnt[a[i] * inv[i - <span class="number">2</span>] % p];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> sp : cnt)</span><br><span class="line">            <span class="keyword">if</span> (sp.second &gt;= nm(n))</span><br><span class="line">            &#123;</span><br><span class="line">                rep(i, n)</span><br><span class="line">                    ans = <span class="built_in">max</span>(ans, fndl(i, sp.first));</span><br><span class="line">                rep(i, n)</span><br><span class="line">                    dp[i] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">if</span> (ans * <span class="number">2</span> &gt;= n)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, ans);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"-1\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="花絮">花絮</h2><p>笔者在现场比赛过程中未能通过本题, 但算法与本文一致.在复现中使用相同的算法重写, 仍 <strong><font color=#ff0000>WrongAnswer</font></strong>. 经排查算法未有错误,<strong><font color=#ff0000>Wrong Answer</font></strong>是代码中某运算未取模导致. 由于此问题, 笔者错失了 ICPC Asia EC Final的银牌. 在发现这一问题后, 为防止再次出现类似问题, 笔者撰写了<ahref="/2020/08/14/Modulo%20p%20Module/">模 <spanclass="math inline">\(p\)</span> 同余类模板</a>.</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;题目来源: 2019 ICPC Asia EC Final: H. King&lt;/p&gt;
+&lt;p&gt;题目来源: XJTUOJ-1223 zxh的一气通贯&lt;/p&gt;
+&lt;p&gt;题目链接: &lt;a
+href=&quot;https://oj.xjtuicpc.com/problem/1223&quot;&gt;https://oj.xjtuicpc.com/problem/1223&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;题面&quot;&gt;题面&lt;/h2&gt;
+&lt;p&gt;一共 &lt;span class=&quot;math inline&quot;&gt;&#92;(T&#92;)&lt;/span&gt; 组数据.&lt;/p&gt;
+&lt;p&gt;给定素数 &lt;span class=&quot;math inline&quot;&gt;&#92;(p&#92;)&lt;/span&gt;, 以及长度为 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(n&#92;)&lt;/span&gt; 的序列 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(a_1,a_2,&#92;cdots, a_n&#92;)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;需要找出满足下列条件的子序列 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(b_1,b_2,&#92;cdots,b_m&#92;)&lt;/span&gt; 的最大长度:&lt;/p&gt;
+&lt;ol type=&quot;1&quot;&gt;
+&lt;li&gt;子序列长度 &lt;span class=&quot;math inline&quot;&gt;&#92;(m&#92;ge n/2&#92;)&lt;/span&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;span class=&quot;math inline&quot;&gt;&#92;(&#92;forall i&#92;in[1,m)&#92;cap&#92;mathbb N&#92;)&lt;/span&gt;,
+&lt;span class=&quot;math inline&quot;&gt;&#92;(&#92;exists q&#92;in&#92;mathbb N&#92;)&lt;/span&gt;, s.t. &lt;span
+class=&quot;math inline&quot;&gt;&#92;(qb_i&#92;equiv b_{i+1}&#92;pmod p&#92;)&lt;/span&gt;. 即子序列在模
+&lt;span class=&quot;math inline&quot;&gt;&#92;(p&#92;)&lt;/span&gt; 意义下是等比子序列.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;若不存在这种子序列, 输出 &lt;code&gt;-1&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;数据范围&quot;&gt;数据范围&lt;/h3&gt;
+&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
+1&#92;le T&amp;lt;1000
+&#92;]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
+1&#92;le n&#92;le2&#92;times10^5
+&#92;]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
+2&#92;le p&#92;le10^9+7
+&#92;]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
+1&#92;le a_1,a_2,&#92;cdots,a_n&amp;lt;p
+&#92;]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;保证输入的 &lt;span class=&quot;math inline&quot;&gt;&#92;(p&#92;)&lt;/span&gt; 是素数. 数据组中
+&lt;span class=&quot;math inline&quot;&gt;&#92;(n&#92;)&lt;/span&gt; 的总和不超过 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(2&#92;times10^5&#92;)&lt;/span&gt;.&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="XCPC题解" scheme="https://sheauhawjang.github.io/categories/XCPC%E9%A2%98%E8%A7%A3/"/>
+    
+    
+    <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
+    
+    <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
+    
+    <category term="动态规划" scheme="https://sheauhawjang.github.io/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
+    
+    <category term="ICPC 2019" scheme="https://sheauhawjang.github.io/tags/ICPC-2019/"/>
+    
+  </entry>
   
   <entry>
     <title>秋生回忆录：其一</title>
@@ -428,9 +489,9 @@ class=&quot;math inline&quot;&gt;&#92;(a_i&#92;in&#92;{A_1,A_2,&#92;cdots,A_k&#9
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="组合数学" scheme="https://sheauhawjang.github.io/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/"/>
-    
     <category term="动态规划" scheme="https://sheauhawjang.github.io/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
+    
+    <category term="组合数学" scheme="https://sheauhawjang.github.io/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/"/>
     
     <category term="背包" scheme="https://sheauhawjang.github.io/tags/%E8%83%8C%E5%8C%85/"/>
     
@@ -500,11 +561,11 @@ class=&quot;math inline&quot;&gt;&#92;(p=998244353&#92;)&lt;/span&gt;.&lt;/p&gt;
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="图论" scheme="https://sheauhawjang.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
+    <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
     
     <category term="组合数学" scheme="https://sheauhawjang.github.io/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/"/>
     
-    <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
+    <category term="图论" scheme="https://sheauhawjang.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
     
   </entry>
   
@@ -559,66 +620,9 @@ class=&quot;math inline&quot;&gt;&#92;(920011128&#92;)&lt;/span&gt; 取模后的
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
-    
     <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
-  </entry>
-  
-  <entry>
-    <title>2020 小学期第一期 Day7G 题解</title>
-    <link href="https://sheauhawjang.github.io/2020/08/19/2020%20Microterm%202-7G/"/>
-    <id>https://sheauhawjang.github.io/2020/08/19/2020%20Microterm%202-7G/</id>
-    <published>2020-08-19T04:33:50.000Z</published>
-    <updated>2020-08-20T14:55:49.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>题目来源: XJTUOJ-1168 zxh的后宫管理系统</p><p>题目链接: <ahref="https://oj.xjtuicpc.com/problem/1168">https://oj.xjtuicpc.com/problem/1168</a></p><h2 id="题面">题面</h2><p>一共 <span class="math inline">\(T\)</span> 组数据.</p><p>现有一个未知的整数 <span class="math inline">\(k\)</span>, 满足 <spanclass="math inline">\(1\le k\le n\)</span>.</p><p>现在你被宣称 <span class="math inline">\(k\)</span> 的值等于 <spanclass="math inline">\(x\)</span>, 但是你不知道真假.你现在可以提交一个任意大的正整数 <span class="math inline">\(y\)</span>,之后获得返回值 <span class="math inline">\(\gcd(k,y)\)</span>.</p><p>你需要寻找一个合适的 <span class="math inline">\(y\)</span>,使得你可以通过返回值来查验 <span class="math inline">\(x\)</span> 和<span class="math inline">\(k\)</span> 是否相等. 如果有很多满足条件的值,选阿泽最小的那个. 如果没有合适的 <span class="math inline">\(y\)</span>,输出 <span class="math inline">\(-1\)</span>.</p><p>由于 <span class="math inline">\(y\)</span> 很大, 输出对 <spanclass="math inline">\(920011128\)</span> 取模后的结果.</p><h3 id="简要描述">简要描述</h3><p>给定 <span class="math inline">\(n, x\)</span>, 试给出一个最小的<span class="math inline">\(y\)</span>, 使得 <spanclass="math inline">\(\forall 1\le a\le n\)</span>, 若 <spanclass="math inline">\(a\ne x\)</span>, 则 <spanclass="math inline">\(\gcd(a,y)\ne \gcd(x,y)\)</span>. 由于 <spanclass="math inline">\(y\)</span> 很大, 输出对 <spanclass="math inline">\(920011128\)</span> 取模后的结果.</p><h3 id="数据范围">数据范围</h3><p><span class="math display">\[1\le T&lt;10\]</span></p><p><span class="math display">\[1\le k\le n\le10^7\]</span></p><a id="more"></a><h2 id="题解">题解</h2><p>答案为 <span class="math display">\[y=x\prod_{p\le n/x}p\]</span> 证明见 <ahref="/2020/08/18/2020%20Wannafly%20Winter%201H/">2020 CCPC Wannafly冬令营 Day1H 题解</a>.</p><p>采用线性筛预处理 <span class="math inline">\([1,10^7]\)</span>中的所有素数. 若每次询问暴力计算素数乘积, 则复杂度为 <spanclass="math inline">\(O(Tn)\)</span>. 若采用前缀积, 则复杂度为 <spanclass="math inline">\(O(T+n)\)</span>.</p><h2 id="代码实现">代码实现</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">1e7</span> + <span class="number">5</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> p = <span class="number">920011128</span>;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ps; <span class="comment">// 所有素数</span></span><br><span class="line"><span class="keyword">bool</span> chk[maxn]; <span class="comment">// 合数为true</span></span><br><span class="line">ll psum[maxn];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fillPrime</span><span class="params">(<span class="keyword">int</span> rge)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= rge; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!chk[i])</span><br><span class="line">            ps.push_back(i);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; ps.<span class="built_in">size</span>() &amp;&amp; ps[j] &lt;= rge / i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            chk[i * ps[j]] = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">if</span> (i % ps[j] == <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> rge = <span class="number">1e7</span> + <span class="number">3</span>;</span><br><span class="line">    fillPrime(rge);</span><br><span class="line">    psum[<span class="number">0</span>] = psum[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= rge; ++i)</span><br><span class="line">        <span class="keyword">if</span> (chk[i])</span><br><span class="line">            psum[i] = psum[i - <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            psum[i] = psum[i - <span class="number">1</span>] * i % p;</span><br><span class="line">    <span class="keyword">int</span> t;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; t;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> tt = <span class="number">0</span>; tt &lt; t; ++tt)</span><br><span class="line">    &#123;</span><br><span class="line">        ll n, k;</span><br><span class="line">        <span class="built_in">cin</span> &gt;&gt; n &gt;&gt; k;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; k * psum[n / k] % p &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;题目来源: XJTUOJ-1168 zxh的后宫管理系统&lt;/p&gt;
-&lt;p&gt;题目链接: &lt;a
-href=&quot;https://oj.xjtuicpc.com/problem/1168&quot;&gt;https://oj.xjtuicpc.com/problem/1168&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&quot;题面&quot;&gt;题面&lt;/h2&gt;
-&lt;p&gt;一共 &lt;span class=&quot;math inline&quot;&gt;&#92;(T&#92;)&lt;/span&gt; 组数据.&lt;/p&gt;
-&lt;p&gt;现有一个未知的整数 &lt;span class=&quot;math inline&quot;&gt;&#92;(k&#92;)&lt;/span&gt;, 满足 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(1&#92;le k&#92;le n&#92;)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;现在你被宣称 &lt;span class=&quot;math inline&quot;&gt;&#92;(k&#92;)&lt;/span&gt; 的值等于 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(x&#92;)&lt;/span&gt;, 但是你不知道真假.
-你现在可以提交一个任意大的正整数 &lt;span class=&quot;math inline&quot;&gt;&#92;(y&#92;)&lt;/span&gt;,
-之后获得返回值 &lt;span class=&quot;math inline&quot;&gt;&#92;(&#92;gcd(k,y)&#92;)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;你需要寻找一个合适的 &lt;span class=&quot;math inline&quot;&gt;&#92;(y&#92;)&lt;/span&gt;,
-使得你可以通过返回值来查验 &lt;span class=&quot;math inline&quot;&gt;&#92;(x&#92;)&lt;/span&gt; 和
-&lt;span class=&quot;math inline&quot;&gt;&#92;(k&#92;)&lt;/span&gt; 是否相等. 如果有很多满足条件的值,
-选阿泽最小的那个. 如果没有合适的 &lt;span class=&quot;math inline&quot;&gt;&#92;(y&#92;)&lt;/span&gt;,
-输出 &lt;span class=&quot;math inline&quot;&gt;&#92;(-1&#92;)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;由于 &lt;span class=&quot;math inline&quot;&gt;&#92;(y&#92;)&lt;/span&gt; 很大, 输出对 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(920011128&#92;)&lt;/span&gt; 取模后的结果.&lt;/p&gt;
-&lt;h3 id=&quot;简要描述&quot;&gt;简要描述&lt;/h3&gt;
-&lt;p&gt;给定 &lt;span class=&quot;math inline&quot;&gt;&#92;(n, x&#92;)&lt;/span&gt;, 试给出一个最小的
-&lt;span class=&quot;math inline&quot;&gt;&#92;(y&#92;)&lt;/span&gt;, 使得 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(&#92;forall 1&#92;le a&#92;le n&#92;)&lt;/span&gt;, 若 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(a&#92;ne x&#92;)&lt;/span&gt;, 则 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(&#92;gcd(a,y)&#92;ne &#92;gcd(x,y)&#92;)&lt;/span&gt;. 由于 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(y&#92;)&lt;/span&gt; 很大, 输出对 &lt;span
-class=&quot;math inline&quot;&gt;&#92;(920011128&#92;)&lt;/span&gt; 取模后的结果.&lt;/p&gt;
-&lt;h3 id=&quot;数据范围&quot;&gt;数据范围&lt;/h3&gt;
-&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
-1&#92;le T&amp;lt;10
-&#92;]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&quot;math display&quot;&gt;&#92;[
-1&#92;le k&#92;le n&#92;le10^7
-&#92;]&lt;/span&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="XCPC题解" scheme="https://sheauhawjang.github.io/categories/XCPC%E9%A2%98%E8%A7%A3/"/>
-    
-    
-    <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
-    
     <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
-    
-    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
   </entry>
   

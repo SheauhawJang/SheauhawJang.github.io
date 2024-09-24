@@ -224,73 +224,7 @@ class="math inline">\(A_{ij}\)</span> 满足 <span
 class="math inline">\(-10\le A_{ij}\le10\)</span>.</p>
 <a id="more"></a>
 <h2 id="题解">题解</h2>
-<p><span class="math inline">\(\newcommand{\eps}{\varepsilon}
-\newcommand{\vphi}{\varphi}
-\newcommand{\exist}{\exists}
-\newcommand{\eqno}[1]{\tag*{ #1 }}
-\newcommand{\isum}[2]{\sum\limits_{ #2 = #1 }^{\infty}}
-\newcommand{\iprod}[2]{\prod\limits_{ #2 = #1 }^{\infty}}
-\newcommand{\lsum}[3]{\sum\limits_{ #2 = #1 }^{ #3 }}
-\newcommand{\lprod}[3]{\prod\limits_{ #2 = #1 }^{ #3 }}
-\newcommand{\llim}[2]{\lim\limits_{ #1 \rightarrow #2 }}
-\newcommand{\dllim}[1]{\lim\limits_{\begin{subarray}c #1
-\end{subarray}}}
-\newcommand{\brac}[1]{\left( #1 \right)}
-\newcommand{\lrac}[1]{\left\{ #1 \right\}}
-\newcommand{\flor}[1]{\left\lfloor #1 \right\rfloor}
-\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
-\newcommand{\agle}[1]{\left\langle #1 \right\rangle}
-\newcommand{\abs}[1]{\left| #1 \right|}
-\newcommand{\abss}[1]{\left\| #1 \right\|}
-\newcommand{\bgac}[3]{\big #1  #3 \big #2 }
-\newcommand{\xbrac}[3]{\left #1  #3 \right #2 }
-\newcommand{\id}[1]{\text{( #1 ) }}
-\newcommand{\mathbs}[1]{\boldsymbol{ #1 }}
-\newcommand{\mvec}[1]{\overrightarrow{ #1 }}
-\newcommand{\mbar}[1]{\overline{ #1 }}
-\newcommand{\bgf}{\displaystyle}
-\newcommand{\dif}{\mathrm{d}}
-\newcommand{\ddif}[1]{\frac{\dif}{\dif #1 }}
-\newcommand{\cddif}[1]{\cfrac{\dif}{\dif #1 }}
-\newcommand{\eset}{\varnothing}
-\newcommand{\gcd}{\operatorname{gcd}}
-\newcommand{\lcm}{\operatorname{lcm}}
-\newcommand{\sh}{\operatorname{sh}}
-\newcommand{\ch}{\operatorname{ch}}
-\newcommand{\Imm}{\operatorname{Im}}
-\newcommand{\Ker}{\operatorname{Ker}}
-\newcommand{\rank}{\operatorname{rank}}
-\newcommand{\diag}{\operatorname{diag}}
-\newcommand{\tr}{\operatorname{tr}}
-\newcommand{\rad}{\operatorname{rad}}
-\newcommand{\radx}[1]{\operatorname{rad}_ #1 }
-\newcommand{\sgn}{\operatorname{sgn}}
-\newcommand{\ord}{\operatorname{ord}}
-\newcommand{\Aut}{\operatorname{Aut}}
-\newcommand{\punit}[1]{\operatorname{ #1 }}
-\newcommand{\simeqq}{\cong}
-\newcommand{\tdeg}{^\circ}
-\newcommand{\roku}{\partial}
-\newcommand{\setsub}{\backslash}
-\newcommand{\midd}{\parellal}
-\newcommand{\mrm}{\mathrm}
-\newcommand{\mbb}{\mathbb}
-\newcommand{\mbf}{\mathbf}
-\newcommand{\mbs}{\mathbs}
-\newcommand{\mscr}{\mathscr}
-\newcommand{\mfk}{\mathfrak}
-\newcommand{\kaz}[1]{\begin{cases} #1 \end{cases}}
-\newcommand{\vmat}[1]{\begin{vmatrix} #1 \end{vmatrix}}
-\newcommand{\pmat}[1]{\begin{pmatrix} #1 \end{pmatrix}}
-\newcommand{\bmat}[1]{\begin{bmatrix} #1 \end{bmatrix}}
-\newcommand{\algn}[1]{\begin{aligned} #1 \end{aligned}}
-\newcommand{\dydx}[2]{\frac{\dif  #1 }{\dif  #2 }}
-\newcommand{\dxdy}[2]{\frac{\dif  #2 }{\dif  #1 }}
-\newcommand{\ddx}[1]{\frac{\dif}{\dif  #1 }}
-\newcommand{\ryrx}[2]{\frac{\roku  #1 }{\roku  #2 }}
-\newcommand{\rxry}[2]{\frac{\roku  #2 }{\roku  #1 }}
-\newcommand{\rrx}[1]{\frac{\roku}{\roku  #1 }}\)</span>由于 <span
-class="math inline">\(\mbs {BC}=\mbs A\)</span>, 故 <span
+<p>由于 <span class="math inline">\(\mbs {BC}=\mbs A\)</span>, 故 <span
 class="math inline">\(\abs{\mbs A}=\abs{\mbs{B}}\abs{\mbs C}=\abs{\mbs
 B}^2\)</span>. 由于 <span class="math inline">\(\mbs {A},\mbs B,\mbs
 C\)</span> 的元素均为整数, 其行列式也为整数.
@@ -350,7 +284,9 @@ class="math inline">\(\mbs P(i,-\frac{\mbs A[j;i]}{\mbs
 A[i;i]},j)\)</span>, 则不能保证 <span class="math inline">\(-\frac{\mbs
 A[j;i]}{\mbs A[i;i]}\)</span> 是整数, 故取变换矩阵为 <span
 class="math display">\[
-\mbs P\brac{i,-\flor{\frac{\mbs A[j;i]}{\mbs A[i;i]}},j}
+\newcommand{\brac}[1]{\left( #1
+\right)}\newcommand{\flor}[1]{\left\lfloor #1 \right\rfloor}\mbs
+P\brac{i,-\flor{\frac{\mbs A[j;i]}{\mbs A[i;i]}},j}
 \]</span> 交换第 <span class="math inline">\(i\)</span> 行和第 <span
 class="math inline">\(j\)</span> 行后再重复进行上述过程, 直至 <span
 class="math inline">\(\mbs A[j;i]=0\)</span> 为止.</p>
@@ -377,7 +313,7 @@ class="math inline">\(\mbs A_k\)</span> 分解为两个上三角矩阵的乘积.
 D}\)</span>, 这样令 <span class="math inline">\(\mbs B=\mbs
 {JD}\)</span> 即满足题意.</p>
 <p>设: <span class="math display">\[
-\mbs
+\newcommand{\pmat}[1]{\begin{pmatrix} #1 \end{pmatrix}}\mbs
 A_k=\pmat{a_{11}&amp;a_{12}&amp;\cdots&amp;a_{1n}\\&amp;a_{22}&amp;\cdots&amp;a_{2n}\\&amp;&amp;\ddots&amp;\vdots\\&amp;&amp;&amp;a_{nn}}
 \]</span></p>
 <p><span class="math display">\[
@@ -396,10 +332,10 @@ a_{ii}=b_{ii}c_{ii}\tag1
 class="math display">\[
 a_{ij}=\sum_{k=i}^jb_{ik}c_{kj}=b_{ii}c_{ij}+\sum_{k=i+1}^{j-1}b_{ik}c_{kj}+b_{ij}c_{jj}\tag2
 \]</span></p>
-<p>记 <span class="math inline">\(\mbs
-b_i:=\lrac{b_{1,1+i},b_{2,2+i},\cdots,b_{n-i,n}}\)</span> 即 <span
-class="math inline">\(b_{1,1+i}\)</span> 所在的对角线的元素, 同理记
-<span class="math inline">\(\mbs
+<p>记 <span class="math inline">\(\newcommand{\lrac}[1]{\left\{ #1
+\right\}}\mbs b_i:=\lrac{b_{1,1+i},b_{2,2+i},\cdots,b_{n-i,n}}\)</span>
+即 <span class="math inline">\(b_{1,1+i}\)</span> 所在的对角线的元素,
+同理记 <span class="math inline">\(\mbs
 c_i:=\lrac{c_{1,1+i},c_{2,2+i},\cdots,c_{n-i,n}}\)</span>. 则可知当
 <span class="math inline">\(\mbs b_0,\mbs b_1,\cdots,\mbs
 b_{j-i-1}\)</span> 和 <span class="math inline">\(\mbs c_0,\mbs
@@ -443,7 +379,8 @@ c_{ii}=\gcd\brac{a_{ii},\frac{\sqrt{\abs{\mbs A}}}{c_{11}c_{22}\cdots
 c_{i-1,i-1}}}\tag4
 \]</span> 并通过条件 2 构造 <span class="math inline">\(\mbs
 b_{0}\)</span>, 检验是否满足其他条件. <span class="math display">\[
-\algn{\abs{\mbs C}=c_{11}c_{22}\cdots c_{nn}&amp;=c_{11}c_{22}\cdots
+\newcommand{\algn}[1]{\begin{aligned} #1 \end{aligned}}\algn{\abs{\mbs
+C}=c_{11}c_{22}\cdots c_{nn}&amp;=c_{11}c_{22}\cdots
 c_{n-1,n-1}\gcd\brac{a_{nn},\frac{\sqrt{\abs{\mbs
 A}}}{c_{11}c_{22}\cdots
 c_{n-1,n-1}}}\\&amp;=\gcd({a_{nn}c_{11}c_{22}\cdots

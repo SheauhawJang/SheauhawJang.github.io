@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>お風呂の随想　一 | 孤星捧月堂 | Sheauhaw Jang&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#df698c">
+    
+    
+    <meta name="keywords" content="构造,抽象代数">
+    <meta name="description" content="题面 给定长度为 \(n\) 的序列 \(A\) 和 \(B\). 一次 \(k\)-区间轮换是指: 选择 \(A\) 中一个长度为 \(k\) 的子区间, 将区间内的数字进行轮换. 求最大的 \(k\le n\), 满足: 对 \(A\) 进行若干次 \(k\)-区间轮换后, 可以将 \(A\) 变为 \(B\). 若没有 \(k\) 满足条件, 输出 \(-1\). 数据范围 \[">
+<meta property="og:type" content="article">
+<meta property="og:title" content="お風呂の随想　一">
+<meta property="og:url" content="https://sheauhawjang.github.io/2023/05/26/Ofuro%201/index.html">
+<meta property="og:site_name" content="孤星捧月堂">
+<meta property="og:description" content="题面 给定长度为 \(n\) 的序列 \(A\) 和 \(B\). 一次 \(k\)-区间轮换是指: 选择 \(A\) 中一个长度为 \(k\) 的子区间, 将区间内的数字进行轮换. 求最大的 \(k\le n\), 满足: 对 \(A\) 进行若干次 \(k\)-区间轮换后, 可以将 \(A\) 变为 \(B\). 若没有 \(k\) 满足条件, 输出 \(-1\). 数据范围 \[">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-26T08:32:06.000Z">
+<meta property="article:modified_time" content="2023-05-27T12:36:36.000Z">
+<meta property="article:author" content="Sheauhaw Jang">
+<meta property="article:tag" content="构造">
+<meta property="article:tag" content="抽象代数">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="孤星捧月堂" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/head.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/sakura.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/usedhead.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sheauhaw Jang</h5>
+          <a href="mailto:www.zhangxiaohao.cn@foxmail.com" title="www.zhangxiaohao.cn@foxmail.com" class="mail">www.zhangxiaohao.cn@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/old_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/SheauhawJang" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">お風呂の随想　一</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">お風呂の随想　一</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2023-05-26T08:32:06.000Z" itemprop="datePublished" class="page-time">
+  2023-05-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题面"><span class="post-toc-number">1.</span> <span class="post-toc-text">题面</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#数据范围"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">数据范围</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#题解"><span class="post-toc-number">2.</span> <span class="post-toc-text">题解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#排列情形"><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">排列情形</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#k-可以取-n-1-的排列"><span class="post-toc-number">2.0.1.1.</span> <span class="post-toc-text">\(k\)
+可以取 \(n-1\) 的排列</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#k-不能取-n-1-的排列"><span class="post-toc-number">2.0.1.2.</span> <span class="post-toc-text">\(k\)
+不能取 \(n-1\) 的排列</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一般序列情形"><span class="post-toc-number">2.0.2.</span> <span class="post-toc-text">一般序列情形</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#结论总结"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">结论总结</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#复杂度分析"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">复杂度分析</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#补充证明"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">补充证明</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Ofuro 1"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">お風呂の随想　一</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2023-05-26 16:32:06" datetime="2023-05-26T08:32:06.000Z"  itemprop="datePublished">2023-05-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="题面">题面</h2>
+<p>给定长度为 <span class="math inline">\(n\)</span> 的序列 <span
+class="math inline">\(A\)</span> 和 <span
+class="math inline">\(B\)</span>. 一次 <span
+class="math inline">\(k\)</span>-区间轮换是指: 选择 <span
+class="math inline">\(A\)</span> 中一个长度为 <span
+class="math inline">\(k\)</span> 的子区间, 将区间内的数字进行轮换.
+求最大的 <span class="math inline">\(k\le n\)</span>, 满足: 对 <span
+class="math inline">\(A\)</span> 进行若干次 <span
+class="math inline">\(k\)</span>-区间轮换后, 可以将 <span
+class="math inline">\(A\)</span> 变为 <span
+class="math inline">\(B\)</span>. 若没有 <span
+class="math inline">\(k\)</span> 满足条件, 输出 <span
+class="math inline">\(-1\)</span>.</p>
+<h3 id="数据范围">数据范围</h3>
+<p><span class="math display">\[
+1\le n\le 2\times 10^5
+\]</span></p>
+<a id="more"></a>
+<h2 id="题解">题解</h2>
+<p>若序列 <span class="math inline">\(A,B\)</span> 的元素不完全相同
+(不记顺序), 则必然不存在满足题意的 <span
+class="math inline">\(k\)</span>. 若序列 <span
+class="math inline">\(A,B\)</span> 的元素完全相同 (不记顺序), 则取 <span
+class="math inline">\(k=2\)</span>, 一定可以满足题意, 意即 <span
+class="math inline">\(k\)</span> 必然存在.</p>
+<p>考虑 <span class="math inline">\(k\)</span> 可以取 <span
+class="math inline">\(n\)</span> 的场景: 此时 <span
+class="math inline">\(A\)</span> 本身经过若干次轮换可以得到 <span
+class="math inline">\(B\)</span>, 即 <span
+class="math inline">\(A\)</span> 和 <span
+class="math inline">\(B\)</span> 在循环序列意义下是相同的序列.
+只需要使用 KMP 算法判断 <span class="math inline">\(A\)</span> 是否为
+<span class="math inline">\(\overline{BB}\)</span> 的子串即可. 复杂度为
+<span class="math inline">\(O(n)\)</span>.</p>
+<p>下面考虑 <span class="math inline">\(k\)</span> 无法取到 <span
+class="math inline">\(n\)</span>, 即 <span
+class="math inline">\(k&lt;n\)</span> 的场景.</p>
+<h4 id="排列情形">排列情形</h4>
+<p>为方便讨论轮换, 首先考虑 <span class="math inline">\(A,B\)</span> 是
+<span class="math inline">\(1\)</span> 到 <span
+class="math inline">\(n\)</span> 的排列的情形.</p>
+<h5 id="k-可以取-n-1-的排列"><span class="math inline">\(k\)</span>
+可以取 <span class="math inline">\(n-1\)</span> 的排列</h5>
+<p>考虑 <span class="math inline">\(k\)</span> 何时可以取 <span
+class="math inline">\(n-1\)</span>:</p>
+<p>此时, 我们只有两种 <span class="math inline">\(k\)</span>-区间轮换:
+<span class="math display">\[
+\newcommand{\pmat}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\alpha:=\pmat{
+a_1&amp;a_2&amp;\cdots&amp;a_{n-1}&amp;a_n\\
+a_2&amp;a_3&amp;\cdots&amp;a_1&amp;a_n
+}
+\]</span></p>
+<p><span class="math display">\[
+\beta:=\pmat{
+a_1&amp;a_2&amp;a_3&amp;\cdots&amp;a_n\\
+a_1&amp;a_3&amp;a_4&amp;\cdots&amp;a_2
+}
+\]</span></p>
+<p>现考虑我们可以通过若干次 <span
+class="math inline">\(\alpha,\beta\)</span> 后可以得到的轮换.</p>
+<p>首先, 我们可以通过如下操作得到一个长度为 <span
+class="math inline">\(3\)</span> 的轮换 <span
+class="math inline">\(\tau\)</span>:</p>
+<ol type="1">
+<li><p>任取 <span class="math inline">\(i\in(1,n)\)</span>.</p></li>
+<li><p>进行 <span class="math inline">\(i-1\)</span> 次 <span
+class="math inline">\(\beta\)</span> 操作, 得到: <span
+class="math display">\[
+\beta^{i-1}=\pmat{
+a_1&amp;a_2&amp;a_3&amp;\cdots&amp;a_{n-i+1}&amp;a_{n-i+2}&amp;\cdots&amp;a_{n-1}&amp;a_n\\
+a_1&amp;a_{i+1}&amp;a_{i+2}&amp;\cdots&amp;a_n&amp;a_2&amp;\cdots&amp;a_{i-1}&amp;a_i
+}
+\]</span></p></li>
+<li><p>再进行 <span class="math inline">\(n-i\)</span> 次 <span
+class="math inline">\(\alpha\)</span> 操作, 得到: <span
+class="math display">\[
+\newcommand{\algn}[1]{\begin{aligned} #1 \end{aligned}}
+\algn{
+\tau_{i,1,n}:=\alpha^{n-i}\beta^{i-1}&amp;=
+\pmat{a_1&amp;a_2&amp;\cdots&amp;a_{i-1}&amp;a_i&amp;a_{i+1}&amp;\cdots&amp;a_{n-1}&amp;a_n\\a_n&amp;a_2&amp;\cdots&amp;a_{i-1}&amp;a_1&amp;a_{i+1}&amp;\cdots&amp;a_{n-1}&amp;a_i}\\
+&amp;=(a_i\ a_1\ a_n)
+}
+\]</span></p></li>
+</ol>
+<p>由于 <span class="math inline">\(\newcommand{\mfk}{\mathfrak}\mfk
+A_n\)</span> 的一个生成元系为: <span class="math display">\[
+\newcommand{\agle}[1]{\left\langle #1
+\right\rangle}\newcommand{\brac}[1]{\left( #1 \right)}\mfk
+A_n=\agle{\brac{1\ 2\ 3},(1\ 2\ 4),\cdots,(1\ 2\ n)}
+\]</span> 故自然地, 我们猜想: 经过若干次 <span
+class="math inline">\(\tau\)</span> 操作后, 我们可以得到所有 <span
+class="math inline">\(\mfk A_n\)</span> 的元素. 为证明该命题,
+只需证明任意两个对换的乘积均可以通过若干次 <span
+class="math inline">\(\tau\)</span> 操作得到即可. 证明可以采取构造法,
+构造放在本文末尾, 此处暂不做证明.</p>
+<p>若 <span class="math inline">\(A, B\)</span> 的奇偶性相同, 则 <span
+class="math inline">\(\delta_{BA}:=BA^{-1}\in\mfk A_n\)</span>. 将 <span
+class="math inline">\(\delta_{BA}\)</span> 作用于 <span
+class="math inline">\(A\)</span> 即可得到 <span
+class="math inline">\(B\)</span>. <span
+class="math inline">\(k=n-1\)</span> 满足条件.</p>
+<p>若 <span class="math inline">\(A,B\)</span> 的奇偶性不同, 则需要考虑
+<span class="math inline">\(\alpha,\beta\)</span> 的奇偶性. 因为 <span
+class="math inline">\(\alpha,\beta\)</span> 是长度为 <span
+class="math inline">\(n-1\)</span> 的轮换, 其可以表示为 <span
+class="math inline">\(n-2\)</span> 个对换的乘积, 奇偶性与 <span
+class="math inline">\(n\)</span> 的奇偶性相同. 则根据 <span
+class="math inline">\(n\)</span> 的奇偶性讨论:</p>
+<ol type="1">
+<li>若 <span class="math inline">\(n\)</span> 是偶数, 则 <span
+class="math inline">\(\alpha,\beta\)</span> 均为偶变换. <span
+class="math inline">\(A\)</span> 经过若干次偶变换后, 奇偶性不变,
+无法得到 <span class="math inline">\(B\)</span>. 此时 <span
+class="math inline">\(k\)</span> 无法取 <span
+class="math inline">\(n-1\)</span>​.</li>
+<li>若 <span class="math inline">\(n\)</span> 是奇数, <span
+class="math inline">\(\alpha\)</span> 是奇变换. 令 <span
+class="math inline">\(A&#39;=\alpha A\)</span>, 则 <span
+class="math inline">\(A&#39;\)</span> 与 <span
+class="math inline">\(B\)</span> 的奇偶性相同, <span
+class="math inline">\(\delta_{BA&#39;}=BA&#39;^{-1}\in\mfk A_n\)</span>.
+将 <span class="math inline">\(\delta_{BA&#39;}\alpha\)</span> 作用于
+<span class="math inline">\(A\)</span> 即可得到 <span
+class="math inline">\(B\)</span>, <span
+class="math inline">\(k=n-1\)</span> 满足条件.</li>
+</ol>
+<h5 id="k-不能取-n-1-的排列"><span class="math inline">\(k\)</span>
+不能取 <span class="math inline">\(n-1\)</span> 的排列</h5>
+<p>考虑 <span class="math inline">\(n\)</span> 是偶数且 <span
+class="math inline">\(A,B\)</span> 奇偶性不同的情况下, <span
+class="math inline">\(k\)</span> 能否取 <span
+class="math inline">\(n-2\)</span>. 设 <span
+class="math inline">\(B[1]=A[i]\)</span>, 则经过若干次 <span
+class="math inline">\(k\)</span>-区间轮换 <span
+class="math inline">\(\delta_1\)</span>, 可以得到 <span
+class="math inline">\(A&#39;=\delta_1A\)</span>, 满足 <span
+class="math inline">\(A&#39;[1]=A[i]=B[1]\)</span>. 子序列 <span
+class="math inline">\(A&#39;[2:n],B[2:n]\)</span> 是两个长度为 <span
+class="math inline">\(n-1\)</span> 的序列, 由于 <span
+class="math inline">\(n-1\)</span> 是奇数, 故一定可以对 <span
+class="math inline">\(A&#39;[2:n]\)</span> 通过若干次 <span
+class="math inline">\(k\)</span>-区间轮换 <span
+class="math inline">\(\delta_2\)</span> 得到 <span
+class="math inline">\(B[2:n]\)</span>. 此时, <span
+class="math inline">\(B=\delta_2\delta_1A\)</span>. <span
+class="math inline">\(k=n-2\)</span> 满足条件.</p>
+<h4 id="一般序列情形">一般序列情形</h4>
+<p>最后考虑回 <span class="math inline">\(A,B\)</span> 是一般序列的情况.
+每一组相同的数字里, 设置位置编号作为区分. 将 <span
+class="math inline">\(A,B\)</span> 映射到长度为 <span
+class="math inline">\(n\)</span> 的排列, 满足:</p>
+<ol type="1">
+<li>若 <span class="math inline">\(X[i]&lt;X[j]\)</span>, 映射后满足
+<span class="math inline">\(f(X)[i]&lt;f(X)[j]\)</span>.</li>
+<li>若 <span class="math inline">\(X[i]=A[j], i&lt;j\)</span>,
+映射后满足 <span class="math inline">\(f(X)[i]&lt;f(X)[j]\)</span>.</li>
+</ol>
+<p>则 <span class="math inline">\(f(A)\)</span> 和 <span
+class="math inline">\(f(B)\)</span> 是两个排列, 且若 <span
+class="math inline">\(\delta f(A)=f(B)\)</span>, 则 <span
+class="math inline">\(f^{-1}(\delta) A=B\)</span>. 应用之前排列的结论,
+若 <span class="math inline">\(n\)</span> 是奇数或 <span
+class="math inline">\(f(A),f(B)\)</span> 奇偶性相同, 则 <span
+class="math inline">\(k\)</span> 可以取到 <span
+class="math inline">\(n-1\)</span>. 若 <span
+class="math inline">\(n\)</span> 为偶数且 <span
+class="math inline">\(f(A),f(B)\)</span> 奇偶性不同,
+则根据是否有重复元素讨论:</p>
+<ol type="1">
+<li>若 <span class="math inline">\(A,B\)</span> 中没有重复元素, 则 <span
+class="math inline">\(f\)</span> 是双射, <span
+class="math inline">\(A,B\)</span> 和 <span
+class="math inline">\(f(A),f(B)\)</span> 同构, <span
+class="math inline">\(k\)</span> 的取值无法取到 <span
+class="math inline">\(n-1\)</span>.</li>
+<li>若 <span class="math inline">\(A\)</span> 中有重复元素, 则任取 <span
+class="math inline">\(A[i]=A[j]\)</span>, 交换 <span
+class="math inline">\(f(A)[i]\)</span> 和 <span
+class="math inline">\(f(A)[j]\)</span> 的位置得到 <span
+class="math inline">\(C=\varepsilon f(A)\)</span>. 此时若 <span
+class="math inline">\(\delta C=f(B)\)</span>, 则 <span
+class="math inline">\(f^{-1}(\delta) A=f^{-1}(\delta)f^{-1}(\varepsilon)
+A=B\)</span>. 而 <span class="math inline">\(C\)</span> 和 <span
+class="math inline">\(f(B)\)</span> 奇偶性相同, 故 <span
+class="math inline">\(k\)</span> 可以取 <span
+class="math inline">\(n-1\)</span>.</li>
+</ol>
+<h3 id="结论总结">结论总结</h3>
+<ol type="1">
+<li>若 <span class="math inline">\(A, B\)</span> 元素不同, 则不存在
+<span class="math inline">\(k\)</span>.</li>
+<li>若 <span class="math inline">\(A\)</span> 是 <span
+class="math inline">\(\overline{BB}\)</span> 的子串, 则最大 <span
+class="math inline">\(k=n\)</span>.</li>
+<li>否则:
+<ul>
+<li>若 <span class="math inline">\(n\)</span> 为奇数, 则最大 <span
+class="math inline">\(k=n-1\)</span>.</li>
+<li>若 <span class="math inline">\(n\)</span> 为偶数且 <span
+class="math inline">\(A\)</span> 中有重复元素, 则最大 <span
+class="math inline">\(k=n-1\)</span>.</li>
+<li>若 <span class="math inline">\(n\)</span> 为偶数且 <span
+class="math inline">\(A,B\)</span> 奇偶性相同, 则最大 <span
+class="math inline">\(k=n-1\)</span>.</li>
+<li>若 <span class="math inline">\(n\)</span> 为偶数且 <span
+class="math inline">\(A,B\)</span> 奇偶性不同, 则最大 <span
+class="math inline">\(k=n-2\)</span>.</li>
+</ul></li>
+</ol>
+<h3 id="复杂度分析">复杂度分析</h3>
+<p>判断 <span class="math inline">\(k\)</span> 可否取 <span
+class="math inline">\(n\)</span>, KMP 算法复杂度为 <span
+class="math inline">\(O(n)\)</span>.</p>
+<p>求 <span class="math inline">\(A,B\)</span> 逆序对数, 复杂度为 <span
+class="math inline">\(O(n\log n)\)</span>.</p>
+<p>总复杂度为 <span class="math inline">\(O(n\log n)\)</span>​.</p>
+<h3 id="补充证明">补充证明</h3>
+<p>任意两个对换的乘积均可以由若干次 <span
+class="math inline">\(\tau\)</span> 操作得到. 证明如下:</p>
+<p>对于任意 <span class="math inline">\(i,j\in(1,n)\)</span> 定义 <span
+class="math inline">\(\sigma\)</span> 操作如下: <span
+class="math display">\[
+\sigma_{i,j,1,n}:=\tau_{j,n,i}\tau_{i,1,n}=
+\pmat{
+a_1&amp;a_i&amp;a_j&amp;a_n\\
+a_i&amp;a_1&amp;a_n&amp;a_j
+}=(a_1\ a_i)(a_n\ a_j)
+\]</span> 则任意两个对换的乘积均可以表示为下列对换乘积的一种:</p>
+<p><span class="math display">\[
+\algn{
+(a_i\ a_1)(a_i\ a_n)&amp;=(a_i\ a_n\ a_1)=\tau_{1,n,i}\tau_{i,1,n}\\
+(a_i\ a_j)(a_i\ a_n)&amp;=(a_i\ a_n\
+a_j)=\tau_{j,i,1}\tau_{1,n,i}\tau_{i,1,n}\\
+(a_i\ a_j)(a_i\ a_t)&amp;=(a_i\ a_t\
+a_j)=\sigma_{1,n,j,i}\tau_{i,t,j}\tau_{j,i,t}\sigma_{i,t,1,n}\\
+(a_i\ a_1)(a_s\ a_n)&amp;=\sigma_{i,s,1,n}\\
+(a_i\ a_j)(a_1\ a_n)&amp;=\sigma_{n,i,i,j}\sigma_{i,j,1,n}\\
+(a_i\ a_j)(a_s\
+a_n)&amp;=\sigma_{1,s,j,n}\sigma_{j,n,i,s}\sigma_{i,s,1,n}\\
+(a_i\ a_j)(a_s\
+a_t)&amp;=\sigma_{1,n,j,t}\sigma_{j,t,i,s}\sigma_{i,s,1,n}\\
+}
+\]</span></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2023-05-27T12:36:36.000Z" itemprop="dateUpdated">2023-05-27 20:36:36</time>
+</span><br>
+
+
+        
+        纰漏之处, 还望海涵, 请您联系作者, 我会尽快改正错误!
+        
+    </div>
+    
+    <footer>
+        <a href="https://SheauhawJang.github.io">
+            <img src="/img/usedhead.jpg" alt="Sheauhaw Jang">
+            Sheauhaw Jang
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8A%BD%E8%B1%A1%E4%BB%A3%E6%95%B0/" rel="tag">抽象代数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9E%84%E9%80%A0/" rel="tag">构造</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/&title=《お風呂の随想　一》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/&title=《お風呂の随想　一》 — 孤星捧月堂&source=题面
+给定长度为 \(n\) 的序列 \(A\) 和 \(B\). 一次 \(k\)-区间轮换是指: 选择 \(A\) 中一个长度为 \(k\) 的子区..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《お風呂の随想　一》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2023/05/26/2023%20Shaanxi%20Provincial%20J/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">2023 ICPC 陕西省赛 J 题题解</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2023/05/25/2023%20Shaanxi%20Provincial%20D/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">2023 ICPC 陕西省赛 D 题题解</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Sheauhaw Jang &copy; 2019 - 2024</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/&title=《お風呂の随想　一》 — 孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/&title=《お風呂の随想　一》 — 孤星捧月堂&source=题面
+给定长度为 \(n\) 的序列 \(A\) 和 \(B\). 一次 \(k\)-区间轮换是指: 选择 \(A\) 中一个长度为 \(k\) 的子区..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《お風呂の随想　一》 — 孤星捧月堂&url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://sheauhawjang.github.io/2023/05/26/Ofuro%201/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>

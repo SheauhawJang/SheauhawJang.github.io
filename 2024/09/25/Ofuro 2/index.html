@@ -21,12 +21,12 @@
     
     
     <meta name="keywords" content="数论,构造">
-    <meta name="description" content="题面 现有 \((3k+1)\times(3k+2)\) 大小的网格, 需要在每个网格中填写 \(0,1,2\) 中的一个数字, 使得网格中任意一行数字之和、任意一列数字之和均为 \(3\) 的倍数. 求网格中 \(1\) 的数量的最大值.">
+    <meta name="description" content="题面 现有 \((3k+1)\times(3k+2)\) 大小的网格, 需要在每个网格中填写 \(0,1,2\) 中的一个数字, 使得网格中任意一行数字之和、任意一列数字之和均为 \(3\) 的倍数. 求网格中 \(1\)​ 的数量的最大值. 原题目 \(k&#x3D;668\), 我们可以扩展至任意 \(k\in\mbb N\).">
 <meta property="og:type" content="article">
 <meta property="og:title" content="お風呂の随想之二">
 <meta property="og:url" content="https://sheauhawjang.github.io/2024/09/25/Ofuro%202/index.html">
 <meta property="og:site_name" content="孤星捧月堂">
-<meta property="og:description" content="题面 现有 \((3k+1)\times(3k+2)\) 大小的网格, 需要在每个网格中填写 \(0,1,2\) 中的一个数字, 使得网格中任意一行数字之和、任意一列数字之和均为 \(3\) 的倍数. 求网格中 \(1\) 的数量的最大值.">
+<meta property="og:description" content="题面 现有 \((3k+1)\times(3k+2)\) 大小的网格, 需要在每个网格中填写 \(0,1,2\) 中的一个数字, 使得网格中任意一行数字之和、任意一列数字之和均为 \(3\) 的倍数. 求网格中 \(1\)​ 的数量的最大值. 原题目 \(k&#x3D;668\), 我们可以扩展至任意 \(k\in\mbb N\).">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-09-25T11:02:14.000Z">
 <meta property="article:modified_time" content="2024-09-25T11:06:21.000Z">
@@ -207,10 +207,164 @@
 class="math inline">\(0,1,2\)</span> 中的一个数字,
 使得网格中任意一行数字之和、任意一列数字之和均为 <span
 class="math inline">\(3\)</span> 的倍数. 求网格中 <span
-class="math inline">\(1\)</span> 的数量的最大值.</p>
+class="math inline">\(1\)</span>​ 的数量的最大值.</p>
+<p>原题目 <span class="math inline">\(k=668\)</span>, 我们可以扩展至任意
+<span class="math inline">\(k\in\mbb N\)</span>.</p>
 <a id="more"></a>
 <h2 id="题解">题解</h2>
-<p>题解施工中……</p>
+<p>由于 <span class="math inline">\(2\equiv-1\pmod3\)</span>,
+故图中的所有 <span class="math inline">\(2\)</span> 和 <span
+class="math inline">\(-1\)</span> 互换仍满足要求.
+而对图中所有元素取相反数后仍满足要求. 故求图中 <span
+class="math inline">\(1\)</span> 的数量的最大值等价于求图中 <span
+class="math inline">\(2\)</span> 的数量的最大值.</p>
+<p>对于图 <span class="math inline">\(\newcommand{\mfk}{\mathfrak}\mfk
+D\)</span> 记图中数字之和为 <span class="math inline">\(S(\mfk
+D)\)</span>. 图中 <span class="math inline">\(2\)</span> 的数量为 <span
+class="math inline">\(C(\mfk D)\)</span>​.</p>
+<p>记 <span
+class="math inline">\(\newcommand{\bgf}{\displaystyle}A:=\bgf\max_{\mfk
+D} S(\mfk D)\)</span>, <span class="math inline">\(\bgf G:=\max_{\mfk
+D}C(D)\)</span>. <span class="math inline">\(G\)</span> 即为所求.</p>
+<p>对一列元素全填 <span class="math inline">\(2\)</span>,
+此列的数字之和为 <span class="math inline">\(2(3k+1)\)</span>.
+故一列的数字之和不超过 <span class="math inline">\(2(3k+1)\)</span>.
+而一列的数字之和需为 <span class="math inline">\(3\)</span> 的倍数,
+故一列的数字之和不超过 <span class="math inline">\(6k\)</span>. 故 <span
+class="math inline">\(A\le 6k(3k+2)\)</span>.</p>
+<p>现考虑一行的数字之和. 一行的数字全填 <span
+class="math inline">\(2\)</span>, 此时的数字之和为 <span
+class="math inline">\(2(3k+2)\)</span>. 故一行的数字之和不超过 <span
+class="math inline">\(2(3k+2)\)</span>. 而一行的数字之和需为 <span
+class="math inline">\(3\)</span> 的倍数, 故一行的数字之和不超过 <span
+class="math inline">\(6k+3\)</span>. 当一行的数字之和为 <span
+class="math inline">\(6k+3\)</span> 时, 一行 <span
+class="math inline">\(3k+2\)</span> 个数字中必须有且仅有 <span
+class="math inline">\(3k+1\)</span> 个 <span
+class="math inline">\(2\)</span> 和 <span
+class="math inline">\(1\)</span> 个 <span
+class="math inline">\(1\)</span>. 当一行的数字之和为 <span
+class="math inline">\(6k\)</span> 时, 一行 <span
+class="math inline">\(3k+2\)</span> 个数字中至多有 <span
+class="math inline">\(3k\)</span> 个 <span
+class="math inline">\(2\)</span>.</p>
+<p>现在考虑任意一行的数字之和至少为 <span
+class="math inline">\(6k\)</span> 的图, 称作均匀图.
+这种图只有以下两类行:</p>
+<ol type="1">
+<li>数字之和和为 <span class="math inline">\(6k+3\)</span>. 这一行最多有
+<span class="math inline">\(3k+1\)</span> 个 <span
+class="math inline">\(2\)</span>. (I 类行)</li>
+<li>数字之和为 <span class="math inline">\(6k\)</span>. 这一行最多有
+<span class="math inline">\(3k\)</span> 个 <span
+class="math inline">\(2\)</span>. (II 类行)</li>
+</ol>
+<p>由于 <span class="math inline">\(A\le 6k(3k+2)\)</span>, 设图中有
+<span class="math inline">\(x\)</span> 个 I 类行, 则有不等式: <span
+class="math display">\[
+(6k+3)x+6k(3k+1-x)\le A\le6k(3k+2)
+\]</span> 整理得: <span class="math display">\[
+(6k+3)x-6kx\le6k
+\]</span> 解得: <span class="math display">\[
+x\le2k
+\]</span> 若存在图 <span class="math inline">\(\mfk B\)</span>, 其有
+<span class="math inline">\(2k\)</span> 个 I 类行, 且其他行为 II 类行,
+则称 <span class="math inline">\(\mfk B\)</span> 为和最大图, 有: <span
+class="math display">\[
+S(\mfk B)=6k(3k+2)
+\]</span></p>
+<p><span class="math display">\[
+C(\mfk B)\le2k(3k+1)+(k+1)3k=3k(3k+1)+2k\tag1
+\]</span></p>
+<p>取等号的条件为, <span class="math inline">\(\mfk B\)</span> 中每个 II
+类行都恰好有 <span class="math inline">\(3k\)</span> 个 <span
+class="math inline">\(2\)</span> 和 <span
+class="math inline">\(2\)</span> 个 <span
+class="math inline">\(0\)</span>.</p>
+<p>考虑 <span class="math inline">\((1)\)</span>
+式满足取等条件的和最大图 <span class="math inline">\(\mfk A\)</span>,
+称做和量最大图. 直觉上, 若和量最大图 <span class="math inline">\(\mfk
+A\)</span> 存在, 则 <span class="math inline">\(C(\mfk
+A)=G\)</span>.</p>
+<p>若 <span class="math inline">\(\mfk A\)</span> 存在,
+则根据行的限制条件, <span class="math inline">\(\mfk A\)</span> 中有
+<span class="math inline">\(2(k+1)\)</span> 个 <span
+class="math inline">\(0\)</span> 和 <span
+class="math inline">\(2k\)</span> 个 <span
+class="math inline">\(1\)</span>, 其余位置全部为 <span
+class="math inline">\(2\)</span>. 再考虑 <span
+class="math inline">\(\mfk A\)</span> 的列的限制条件: 由于 <span
+class="math inline">\(S(\mfk A)=A\)</span>, 故任意一列的和均为为 <span
+class="math inline">\(6k\)</span>​, 则一列有两种情况:</p>
+<ol type="1">
+<li>有 <span class="math inline">\(3k\)</span> 个 <span
+class="math inline">\(2\)</span> 和 <span
+class="math inline">\(1\)</span> 个 <span
+class="math inline">\(0\)</span>. (I 类列)</li>
+<li>有 <span class="math inline">\(3k-1\)</span> 个 <span
+class="math inline">\(2\)</span> 和 <span
+class="math inline">\(2\)</span> 个 <span
+class="math inline">\(1\)</span>. (II 类列)</li>
+</ol>
+<p>根据行的限制, 可知 <span class="math inline">\(0\)</span> 和 <span
+class="math inline">\(1\)</span> 的数量对应 <span
+class="math inline">\(2(k+1)\)</span> 个 I 类列和 <span
+class="math inline">\(k\)</span> 个 II 类列. 由于 <span
+class="math inline">\(2(k+1)+k=3k+2\)</span>, 即 I 类列的数量和 II
+类列的数量之和恰好等于图的列数, 行的限制和列的限制不矛盾, 可以构造出
+<span class="math inline">\(\mfk A\)</span>. 构造 <span
+class="math inline">\(\mfk A\)</span> 的方法为: <span
+class="math inline">\(2k\)</span> 个 I 类行分为 <span
+class="math inline">\(k\)</span> 对, 每对 I 类行的 <span
+class="math inline">\(1\)</span> 放在同一个 II 类列; <span
+class="math inline">\(k+1\)</span> 个 II 类行的 <span
+class="math inline">\(2(k+1)\)</span> 个 <span
+class="math inline">\(0\)</span> 放在 <span
+class="math inline">\(2(k+1)\)</span> 个 I 类列即可. 一个 <span
+class="math inline">\(\mfk A\)</span> 的构造为: <span
+class="math display">\[
+\mfk A=\pmat{
+1\\
+1\\
+&amp;1\\
+&amp;1\\
+&amp;&amp;\ddots\\
+&amp;&amp;&amp;1\\
+&amp;&amp;&amp;1\\
+&amp;&amp;&amp;&amp;0&amp;0\\
+&amp;&amp;&amp;&amp;&amp;&amp;0&amp;0\\
+&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;\ddots\\
+&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;&amp;0&amp;0
+}
+\]</span> 其中空白位置均为 <span class="math inline">\(2\)</span>.</p>
+<p>现在尝试证明 <span class="math inline">\(C(\mfk A)=G\)</span>.
+即对于任意一个不是和量最大图的图 <span class="math inline">\(\mfk
+D\)</span>, <span class="math inline">\(C(\mfk D)\le C(\mfk
+A)\)</span>.</p>
+<p>若 <span class="math inline">\(S(\mfk D)&lt;6k(3k+1)\)</span>, 则
+<span class="math inline">\(C(\mfk D)&lt;S(\mfk D)/2&lt;C(\mfk
+A)\)</span>. 否则, 设 <span class="math inline">\(S(\mfk
+D)=6k(3k+1)+3s\)</span>, 且 <span class="math inline">\(\mfk D\)</span>
+中有 <span class="math inline">\(x\)</span> 个行数字之和为奇数. 记第
+<span class="math inline">\(i\)</span> 行的数字之和为 <span
+class="math inline">\(L(i)\)</span>​​, 则有: <span class="math display">\[
+\algn{6k(3k+1)+3s=S(\mfk D)&amp;=\sum_{L(i)\text{ is
+odd}}L(i)+\sum_{L(i)\text{ is even}}L(i)\\&amp;\le\sum_{L(i)\text{ is
+odd}}(6k+3)+\sum_{L(i)\text{ is
+even}}6k\\&amp;=(6k+3)x+6k(3k+1-x)\\&amp;=6k(3k+1)+3x}
+\]</span> 故 <span class="math inline">\(s\)</span> 确定时, <span
+class="math inline">\(x\)</span> 有下限: <span class="math display">\[
+s\le x
+\]</span> 而 <span class="math inline">\(s\)</span> 的上限为: <span
+class="math display">\[
+s=\frac{S(\mfk D)-6k(3k+1)}3\le\frac{A-6k(3k+1)}{2}=2k
+\]</span></p>
+<p>最后可得 $$ $$</p>
+<p>故可知结论:</p>
+<p><span class="math display">\[
+\algn{G=C(\mfk
+A)&amp;=2k(3k+1)+(k+1)3k\\&amp;=3k(3k+1)+2k\\&amp;=(3k+1)(3k+2)-2k-2(k+1)}
+\]</span></p>
 
         </div>
 

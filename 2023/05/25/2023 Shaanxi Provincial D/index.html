@@ -224,7 +224,7 @@ class="math inline">\(p=998244353\)</span>.</p>
 class="math inline">\(x\)</span> 和 <span
 class="math inline">\(n\)</span> 的二元函数, 记: <span
 class="math display">\[
-F(x,n)=\begin{cases}
+F(x,n):=\begin{cases}
 \displaystyle 1+\sum_{k=2}^a F(kx,n)&amp;x\le n\\
 0&amp;x&gt;n
 \end{cases}
@@ -236,7 +236,7 @@ class="math inline">\(F(1,n)\bmod p\)</span>.</p>
 <p>根据 <span class="math inline">\(F\)</span> 的定义, 可知: <span
 class="math display">\[
 F(x,y)=F\left(\frac xz,\frac yz\right)=F\left(1,\frac yx\right)\tag1
-\]</span> 记 <span class="math inline">\(g(y)=F(1,y)\)</span>.
+\]</span> 记 <span class="math inline">\(g(y):=F(1,y)\)</span>.
 则所求转换为求 <span class="math inline">\(g(n)\)</span>, 且有下式成立:
 <span class="math display">\[
 g(y)=1+\sum_{k=2}^a g\left(\frac yk\right)
@@ -263,7 +263,7 @@ class="math inline">\(O(\sqrt{\sqrt n})\)</span> 项相加,
 class="math inline">\(O(n^{3/4})\)</span>.</p>
 <p>对于 <span class="math inline">\(\flor{n/k}&gt;\sqrt n\)</span>
 的情况, 此时可知 <span class="math inline">\(k&lt;\sqrt n\)</span>,
-此时记 <span class="math inline">\(h_n(k)=g(\flor{n/k})\)</span>,
+此时记 <span class="math inline">\(h_n(k):=g(\flor{n/k})\)</span>,
 则需求解 <span class="math inline">\(h_n(1),h_n(2),\cdots,h_n(\sqrt
 n)\)</span>. 其中 <span class="math inline">\(h_n(k)\)</span> 共有 <span
 class="math inline">\(O(\sqrt{n/k})\)</span>​ 项相加,

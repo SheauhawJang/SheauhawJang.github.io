@@ -212,8 +212,8 @@ class=&quot;math inline&quot;&gt;&#92;(2&#92;times10^5&#92;)&lt;/span&gt;.&lt;/p
   
   <entry>
     <title>GB/T 12345-1990 字符表</title>
-    <link href="https://sheauhawjang.github.io/2023/06/23/GBT%2012345-1990/"/>
-    <id>https://sheauhawjang.github.io/2023/06/23/GBT%2012345-1990/</id>
+    <link href="https://sheauhawjang.github.io/2023/06/23/GB%2012345-90/"/>
+    <id>https://sheauhawjang.github.io/2023/06/23/GB%2012345-90/</id>
     <published>2023-06-22T18:05:41.000Z</published>
     <updated>2023-06-22T18:05:46.000Z</updated>
     
@@ -707,11 +707,11 @@ class=&quot;math inline&quot;&gt;&#92;(p=998244353&#92;)&lt;/span&gt;.&lt;/p&gt;
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
-    
     <category term="图论" scheme="https://sheauhawjang.github.io/tags/%E5%9B%BE%E8%AE%BA/"/>
     
     <category term="组合数学" scheme="https://sheauhawjang.github.io/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/"/>
+    
+    <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
     
   </entry>
   
@@ -766,9 +766,9 @@ class=&quot;math inline&quot;&gt;&#92;(920011128&#92;)&lt;/span&gt; 取模后的
     
     <category term="数论" scheme="https://sheauhawjang.github.io/tags/%E6%95%B0%E8%AE%BA/"/>
     
-    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
-    
     <category term="小学期" scheme="https://sheauhawjang.github.io/tags/%E5%B0%8F%E5%AD%A6%E6%9C%9F/"/>
+    
+    <category term="构造" scheme="https://sheauhawjang.github.io/tags/%E6%9E%84%E9%80%A0/"/>
     
   </entry>
   

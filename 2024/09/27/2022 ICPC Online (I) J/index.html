@@ -284,6 +284,8 @@ J_{s,k}:=&amp;\sum_{i=s}^kp_i\prod_{j=s}^{i-1}q_j+\prod_{j=s}^kq_j\\
 I_{s,t}=\sum_{i=s}^tp_i\prod_{j=s}^{i-1}q_j+\prod_{j=s}^tq_j-\prod_{j=s}^tq_j=J_{s,t}-\prod_{j=s}^tq_j=1-\frac{Q_{t+1}}{Q_s}
 \end{aligned}
 \]</span> 故 <span class="math display">\[
+\newcommand{\brac}[1]{\left( #1 \right)}
+\newcommand{\abs}[1]{\left| #1 \right|}
 I_s=\lim_{t\rightarrow\infty}I_{s,t}=\lim_{t\rightarrow\infty}\brac{1-\frac{Q_{t+1}}{Q_s}}=1-\frac{Q_\infty}{Q_s}
 \]</span> 若 <span class="math inline">\(Q_\infty=0\)</span>, 则 <span
 class="math inline">\(I_s=1\)</span>. 一般情况下, 即使 <span

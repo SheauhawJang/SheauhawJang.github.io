@@ -295,7 +295,60 @@ x+y=y+x
 <p><strong>群</strong></p>
 <p>装备了满足上述 <span class="math inline">\(1_+,2_+,3_+\)</span>
 条件的运算的集合称为<strong>群</strong>.</p>
-<p>如果这个运算叫加法, 那么这个群称为加群.</p>
+<p>xxxxxxxxxx #include &lt;bits/stdc++.h&gt;using namespace std;#define
+rep(i, n) for (int i = 0; i &lt; n; ++i)typedef long long ll;class llp{
+   int v;    template <class T>    llp(T a, int) { v = a; }​public:  
+ static const int p = 998244353;    static const int phi = p - 1;  
+ static const int invp = phi - 1;    llp() { v = 0; }    template
+<class T>    static T mod(T a) { return a %= p, a &gt;= 0 ? a : a + p; }
+   template <class T>    static T &amp;opmod(T &amp;a) { return a =
+mod(a); }    template <class T>    llp(T a) { v = mod(a); }    template
+<class T>    explicit operator T() const { return v; }    int
+operator<em>() const { return v; }    int </em>operator&amp;() const {
+return (int <em>)&amp;v; }    friend istream
+&amp;operator&gt;&gt;(istream &amp;ipt, llp &amp;x) { return ipt
+&gt;&gt; x.v, opmod(x.v), ipt; }    friend ostream
+&amp;operator&lt;&lt;(ostream &amp;opt, llp x) { return opt &lt;&lt;
+x.v; }    llp operator+(llp b) const { return v + b.v &gt;= p ? llp(v +
+b.v - p, 0) : llp(v + b.v, 0); }    friend llp operator+(ll a, llp b) {
+return b + a; }    llp &amp;operator+=(llp b) { return v += b.v, v = v
+&gt;= p ? v - p : v, </em>this; }    llp &amp;operator++() { return
+<em>this += 1; }    llp operator++(int) { return ++</em>this, <em>this -
+1; }    llp operator-() const { return v ? llp(p - v, 0) : llp(); }  
+ llp operator-(llp b) const { return </em>this + (-b); }    friend llp
+operator-(ll a, llp b) { return -b + a; }    llp &amp;operator-=(llp b)
+{ return <em>this += -b; }    llp &amp;operator--() { return </em>this
+-= 1; }    llp operator--(int) { return --<em>this, </em>this + 1; }  
+ llp operator<em>(llp b) const { return ll(v) </em> b.v; }    friend llp
+operator<em>(ll a, llp b) { return b </em> a; }    llp
+&amp;operator<em>=(llp b) { return </em>this = <em>this </em> b; }  
+ llp operator<a href="ll%20b"></a> const   {        llp ans = 1, a =
+<em>this;        while (b)       {            if (b &amp; 1)            
+   ans </em>= a;            a <em>= a, b &gt;&gt;= 1;       }      
+ return ans;   }    llp operator^(ll b) const { return (</em>this)[b]; }
+   llp &amp;operator^=(ll b) { return <em>this = </em>this ^ b; }    llp
+operator~() const { return <em>this ^ invp; }    llp operator/(llp b)
+const { return </em>this * ~b; }    friend llp operator/(ll a, llp b) {
+return (~b) * a; }    llp &amp;operator/=(llp b) { return <em>this =
+</em>this / b; }    llp operator&lt;&lt;(int b) const { return <em>this
+</em> llp(2)[b]; }    llp &amp;operator&lt;&lt;=(int b) { return
+<em>this = </em>this &lt;&lt; b; }    llp operator&gt;&gt;(int b) const
+{ return <em>this / llp(2)[b]; }    llp &amp;operator&gt;&gt;=(int b) {
+return </em>this = <em>this &gt;&gt; b; }    bool operator==(ll b) const
+{ return mod(b) == v; }    bool operator==(llp b) const { return v ==
+b.v; }    bool operator!=(ll b) const { return !(</em>this == b); }  
+ bool operator!=(llp b) const { return !(<em>this == b); }    bool
+operator&lt;(llp b) const { return v &lt; b.v; }    bool
+operator&lt;=(llp b) const { return v &lt;= b.v; }    bool
+operator&gt;(llp b) const { return v &gt; b.v; }    bool
+operator&gt;=(llp b) const { return v &gt;= b.v; }    friend llp
+operator&lt;(ll a, llp b) { return b &gt; a; }    friend llp
+operator&lt;=(ll a, llp b) { return b &gt;= a; }    friend llp
+operator&gt;(ll a, llp b) { return b &lt; a; }    friend llp
+operator&gt;=(ll a, llp b) { return b &lt;= a; }    int var() const {
+return v; }    int mod() const { return p; }    llp sqd() const { return
+</em>this * <em>this; }    llp inv() const { return ~</em>this; }    llp
+pow(ll b) const { return *this ^ b; }};c++</p>
 <p>如果这个运算是交换的, 即满足条件 <span
 class="math inline">\(4_+\)</span>,
 那么这个群称为<strong>交换群</strong>或 Abel 群.</p>
@@ -992,7 +1045,7 @@ href="https://zhuanlan.zhihu.com/p/38393931">https://zhuanlan.zhihu.com/p/383939
         </p>
     </div>
     <div class="bottom">
-        <p><span>Sheauhaw Jang &copy; 2019 - 2024</span>
+        <p><span>Sheauhaw Jang &copy; 2019 - 2025</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

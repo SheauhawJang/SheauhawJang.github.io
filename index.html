@@ -182,7 +182,7 @@
 
   
     <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2024/09/27/2022%20ICPC%20Online%20(I)%20J/">【预告】2022 ICPC Asia EC 网络赛第一场 J 题题解</a>
+      <a class="post-title-link" href="/2024/09/27/2022%20ICPC%20Online%20(I)%20J/">2022 ICPC Asia EC 网络赛第一场 J 题题解</a>
     </h3>
   
 
@@ -193,8 +193,41 @@
 
     
         <p>题目来源: 2022 ICPC Asia EC 网络赛第一场: J. Gachapon</p>
+<p>比赛链接: https://pintia.cn/market/item/1571156622976593920</p>
 <h2 id="题面">题面</h2>
-<p>题面施工中……</p>
+<p>考虑抽卡操作: 若第 <span class="math inline">\(1\)</span> 次操作至第
+<span class="math inline">\(i-1\)</span> 次操作都为操作失败, 则第 <span
+class="math inline">\(i\)</span> 次操作成功的概率为 <span
+class="math inline">\(p_i\)</span>, 成功后停止操作, 否则进行第 <span
+class="math inline">\(i+1\)</span> 次操作. 现给定正整数 <span
+class="math inline">\(X,Y\)</span>, 构造数列 <span
+class="math inline">\(\{p_i\}\)</span> 满足下述条件:</p>
+<ol type="1">
+<li>第 <span class="math inline">\(X\)</span> 次操作一定成功. 即 <span
+class="math inline">\(p_X=1\)</span>.</li>
+<li>第 <span class="math inline">\(1\)</span> 次至第 <span
+class="math inline">\(X-1\)</span> 次操作都不能保证一定成功. 即 <span
+class="math inline">\(\forall i\in[1,X), p_i&lt;1\)</span>.</li>
+<li>任何操作都不能不可能成功. 即 <span class="math inline">\(\forall i,
+p_i&gt;0\)</span>.</li>
+<li>期望上是第 <span class="math inline">\(Y\)</span> 次抽卡成功.</li>
+</ol>
+<h3 id="数据范围">数据范围</h3>
+<p><span class="math display">\[
+1&lt;Y&lt;X\le100
+\]</span></p>
+<h3 id="输出格式">输出格式</h3>
+<p><span class="math inline">\(\forall i\)</span>, <span
+class="math inline">\(p_i\)</span> 需为 <span
+class="math inline">\([0,1]\)</span> 中的有理数. 设 <span
+class="math inline">\(p_i=a_i/b_i\)</span>, 其中 <span
+class="math inline">\(a_i,b_i\)</span> 为正整数且 <span
+class="math inline">\(\gcd(a_i,b_i)=1\)</span>, 则 <span
+class="math inline">\(a_i,b_i\)</span> 需满足: <span
+class="math display">\[
+0\le a_i,b_i\le10^4
+\]</span> 输出 <span class="math inline">\((a_i,b_i)\)</span> 表示 <span
+class="math inline">\(p_i\)</span>.</p>
     
 
         <a href="/2024/09/27/2022%20ICPC%20Online%20(I)%20J/" class="post-more waves-effect waves-button">
@@ -1844,7 +1877,7 @@ class="math inline">\(A\)</span>.</p>
         </p>
     </div>
     <div class="bottom">
-        <p><span>Sheauhaw Jang &copy; 2019 - 2024</span>
+        <p><span>Sheauhaw Jang &copy; 2019 - 2025</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>

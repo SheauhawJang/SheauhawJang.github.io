@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>文本替换转换器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      font-size: 14px;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 200px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    hr {
+      margin: 20px 0;
+    }
+    /* 替换规则区域，两列布局 */
+    #rulesContainer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .rule-column {
+      width: 48%;
+    }
+    .rule-column h3 {
+      margin-bottom: 5px;
+    }
+    .rule-column ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .rule-column li {
+      margin-bottom: 5px;
+    }
+    .rule-form label {
+      display: inline-block;
+      width: 80px;
+    }
+    .rule-form input, .rule-form select {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>文本替换转换器</h1>
+  <textarea id="inputText" placeholder="请输入文章文本..."></textarea>
+  <button onclick="convertText()">转换</button>
+  <br><br>
+  <textarea id="outputText" placeholder="转换后的文本..." readonly></textarea>
+  
+  <hr>
+  <h2>替换规则</h2>
+  <div id="rulesContainer"></div>
+  
+  <h3>添加新规则</h3>
+  <div class="rule-form">
+    <label for="ruleType">规则类型:</label>
+    <select id="ruleType">
+      <option value="multi">多字符规则</option>
+      <option value="single">单字符规则</option>
+    </select>
+    <br>
+    <label for="rulePattern">匹配内容:</label>
+    <input type="text" id="rulePattern" placeholder="请输入要匹配的文本">
+    <br>
+    <label for="ruleReplacement">替换为:</label>
+    <input type="text" id="ruleReplacement" placeholder="请输入替换内容">
+    <br>
+    <button onclick="addRule()">添加规则</button>
+  </div>
+  
+  <script>
+    // 默认规则：多字符规则（优先替换）
+    var multiRules = [
+      { pattern: "毛泽东", replacement: "🐱🐱🐱" },
+      { pattern: "中南海", replacement: "🀄🇦🇶🌊" },
+      { pattern: "中央", replacement: "🀄🐏" },
+      { pattern: "王洪文", replacement: "🃏🟥📄" },
+      { pattern: "林彪", replacement: "🌳🐯" },
+      { pattern: "文革", replacement: "📄🈹" },
+      { pattern: "周恩来", replacement: "🗓️🔚🔚" },
+      { pattern: "秦城", replacement: "💋🏰" },
+      { pattern: "政治", replacement: "➕📏" },
+      { pattern: "共产", replacement: "🏹🏹" },
+      { pattern: "中国", replacement: "⏰⏰" },
+      { pattern: "习近平", replacement: "🔪🔪🔪" }
+    ];
+    
+    // 默认规则：单字符规则
+    var singleRules = [
+      { pattern: "毛", replacement: "🐱" },
+      { pattern: "王", replacement: "🃏" },
+      { pattern: "林", replacement: "🌳" },
+      { pattern: "军", replacement: "👨‍✈️" },
+      { pattern: "委", replacement: "🇻🇪" },
+      { pattern: "中", replacement: "🀄" },
+      { pattern: "党", replacement: "🎊" },
+      { pattern: "共", replacement: "🏹" },
+      { pattern: "国", replacement: "🍎" },
+      { pattern: "民", replacement: "🙇" },
+      { pattern: "习", replacement: "🔪" }
+    ];
+    
+    // 转义正则表达式中的特殊字符
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    // 更新页面中显示的规则列表，分左右两列展示
+    function updateRulesDisplay() {
+      var container = document.getElementById("rulesContainer");
+      var multiHtml = "<div class='rule-column'><h3>多字符规则</h3>";
+      if (multiRules.length === 0) {
+        multiHtml += "<p>暂无多字符规则。</p>";
+      } else {
+        multiHtml += "<ul>";
+        multiRules.forEach(function(rule, index) {
+          multiHtml += "<li>“" + rule.pattern + "” → “" + rule.replacement + "” " +
+                       "<button onclick='deleteRule(\"multi\", " + index + ")'>删除</button></li>";
+        });
+        multiHtml += "</ul>";
+      }
+      multiHtml += "</div>";
+      
+      var singleHtml = "<div class='rule-column'><h3>单字符规则</h3>";
+      if (singleRules.length === 0) {
+        singleHtml += "<p>暂无单字符规则。</p>";
+      } else {
+        singleHtml += "<ul>";
+        singleRules.forEach(function(rule, index) {
+          singleHtml += "<li>“" + rule.pattern + "” → “" + rule.replacement + "” " +
+                        "<button onclick='deleteRule(\"single\", " + index + ")'>删除</button></li>";
+        });
+        singleHtml += "</ul>";
+      }
+      singleHtml += "</div>";
+      
+      container.innerHTML = multiHtml + singleHtml;
+    }
+    
+    // 删除指定规则
+    function deleteRule(type, index) {
+      if (type === "multi") {
+        multiRules.splice(index, 1);
+      } else {
+        singleRules.splice(index, 1);
+      }
+      updateRulesDisplay();
+    }
+    
+    // 添加新规则
+    function addRule() {
+      var type = document.getElementById("ruleType").value;
+      var pattern = document.getElementById("rulePattern").value;
+      var replacement = document.getElementById("ruleReplacement").value;
+      if (!pattern) {
+        alert("请输入匹配内容！");
+        return;
+      }
+      if (type === "multi") {
+        multiRules.push({ pattern: pattern, replacement: replacement });
+      } else {
+        singleRules.push({ pattern: pattern, replacement: replacement });
+      }
+      document.getElementById("rulePattern").value = "";
+      document.getElementById("ruleReplacement").value = "";
+      updateRulesDisplay();
+    }
+    
+    // 按当前规则转换文本
+    function convertText() {
+      var text = document.getElementById('inputText').value;
+      
+      // 按多字符规则替换（优先替换）
+      multiRules.forEach(function(rule) {
+        var re = new RegExp(escapeRegExp(rule.pattern), "g");
+        text = text.replace(re, rule.replacement);
+      });
+      
+      // 按单字符规则替换
+      singleRules.forEach(function(rule) {
+        var re = new RegExp(escapeRegExp(rule.pattern), "g");
+        text = text.replace(re, rule.replacement);
+      });
+      
+      document.getElementById('outputText').value = text;
+    }
+    
+    // 页面加载时更新规则显示
+    updateRulesDisplay();
+  </script>
+</body>
+</html>

@@ -9,6 +9,7 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #f9f9f9;
       padding: 40px;
+      max-width: 1000px;
       margin: auto;
     }
 
@@ -116,7 +117,7 @@
       if (full_tcnt !== tcnt) {
         const ans = f();
         const cnt = countWaitingCards(tiles, ans);
-        result += `待 ${cnt} 枚\t\t` + ans.map(cardName).join(' ') + "\n";
+        result += `待 ${cnt} 枚：\t` + ans.map(cardName).join(' ') + "\n";
       } else {
         const ans = Array(34).fill(null).map(() => []);
         const cnts = [];
@@ -133,7 +134,7 @@
         }
         cnts.sort((a, b) => a.cnt - b.cnt);
         for (const { cnt, id } of cnts) {
-          result += `打 ${cardName(id)}\t待 ${-cnt} 枚\t\t` + ans[id].map(cardName).join(' ') + "\n";
+          result += `打 ${cardName(id)}\t待 ${-cnt} 枚：\t` + ans[id].map(cardName).join(' ') + "\n";
         }
       }
       return result; // 返回结果字符串

@@ -2,7 +2,6 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>文本替换转换器</title>
   <style>
     body {
@@ -24,7 +23,6 @@
       padding: 8px 16px;
       font-size: 16px;
       cursor: pointer;
-      margin: 5px 0;
     }
     hr {
       margin: 20px 0;
@@ -55,15 +53,6 @@
     .rule-form input, .rule-form select {
       margin-bottom: 10px;
     }
-    /* 移动端适配 */
-    @media (max-width: 600px) {
-      #rulesContainer {
-        flex-direction: column;
-      }
-      .rule-column {
-        width: 100%;
-      }
-    }
   </style>
 </head>
 <body>
@@ -72,8 +61,6 @@
   <button onclick="convertText()">转换</button>
   <br><br>
   <textarea id="outputText" placeholder="转换后的文本..." readonly></textarea>
-  <br>
-  <button onclick="copyText()">复制替换后的文本</button>
   
   <hr>
   <h2>替换规则</h2>
@@ -118,7 +105,7 @@
       { pattern: "毛", replacement: "🐱" },
       { pattern: "王", replacement: "🃏" },
       { pattern: "林", replacement: "🌳" },
-      { pattern: "军", replacement: "💂" },
+      { pattern: "军", replacement: "👨‍✈️" },
       { pattern: "委", replacement: "🇻🇪" },
       { pattern: "中", replacement: "🀄" },
       { pattern: "党", replacement: "🎊" },
@@ -211,20 +198,6 @@
       });
       
       document.getElementById('outputText').value = text;
-    }
-    
-    // 复制输出文本到剪贴板
-    function copyText() {
-      var output = document.getElementById('outputText').value;
-      if (!output) {
-        alert("当前无转换后的文本可复制！");
-        return;
-      }
-      navigator.clipboard.writeText(output).then(function() {
-        alert("已复制到剪贴板！");
-      }).catch(function(err) {
-        alert("复制失败，请手动复制！");
-      });
     }
     
     // 页面加载时更新规则显示

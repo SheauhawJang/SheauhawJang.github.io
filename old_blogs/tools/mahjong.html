@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>麻将牌理向听数计算</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .input-area {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .placeholder-note {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .output-box {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-left: 5px solid #4CAF50;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 4px;
+    }
+
+    .output-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .output-context {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>麻将牌理向听数计算</h1>
+
+  <div class="section">
+    <label for="inputText">请输入手牌</label>
+    <div class="input-area">
+      <input type="text" id="inputText" placeholder="例如：123m456p789s东南西" />
+      <div class="placeholder-note">输入格式说明</div>
+    </div>
+    <button onclick="processInput()">计算</button>
+  </div>
+
+  <div class="section">
+    <div class="output-box">
+      <div class="output-title">一般型牌理</div>
+      <div class="output-context" id="output-std"></div>
+    </div>
+    <div class="output-box">
+      <div class="output-title">国标麻将标准型牌理</div>
+      <div class="output-context" id="output-gb"></div>
+    </div>
+    <div class="output-box">
+      <div class="output-title">立直麻将标准型牌理</div>
+      <div class="output-context" id="output-jp"></div>
+    </div>
+  </div>
+  <script src="mahjong.js"></script>
+  <script>
+    function printWaiting(tiles, tcnt, full_tcnt, f) {
+      let result = ""; // 用来存储所有的输出
+      if (full_tcnt !== tcnt) {
+        const ans = f();
+        const cnt = countWaitingCards(tiles, ans);
+        result += `待 ${cnt} 枚\t\t` + ans.map(cardName).join(' ') + "\n";
+      } else {
+        const ans = Array(34).fill(null).map(() => []);
+        const cnts = [];
+        for (let i = 0; i < 34; ++i) {
+          if (tiles[i]) {
+            tiles[i]--;
+            ans[i] = f();
+            const cnt = countWaitingCards(tiles, ans[i]);
+            if (ans[i].length > 0) {
+              cnts.push({ cnt: -cnt, id: i });
+            }
+            tiles[i]++;
+          }
+        }
+        cnts.sort((a, b) => a.cnt - b.cnt);
+        for (const { cnt, id } of cnts) {
+          result += `打 ${cardName(id)}\t待 ${-cnt} 枚\t\t` + ans[id].map(cardName).join(' ') + "\n";
+        }
+      }
+      return result; // 返回结果字符串
+    }
+    function getWaitingType(step) {
+      if (step === -1) {
+        return "和牌";
+      } else if (step === 0) {
+        return "听牌";
+      } else {
+        return step + " 向听";
+      }
+    }
+    function processInput() {
+      KDragonCreate();
+      const input = document.getElementById('inputText').value;
+      let tiles = split(input);
+      let tcnt = 0;
+      for (let i = 0; i < tiles.length; ++i) {
+        tcnt += tiles[i];
+      }
+      let full_tcnt = tcnt;
+      if (tcnt % 3 === 1) {
+        ++full_tcnt;
+      }
+      let step = Step(tiles, tcnt);
+      let stepJP = step;
+      let stepGB = step;
+      let output_std = getWaitingType(step) + "\n";
+      output_std += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return normalWaiting(tiles, step, full_tcnt);
+      });;
+      document.getElementById('output-std').textContent = output_std;
+      let step7JP, step7GB, step13, step16, stepkd;
+      if (full_tcnt === 14) {
+        step7JP = PairStep(tiles, true);
+        stepJP = Math.min(stepJP, step7JP);
+        step7GB = PairStep(tiles, false);
+        stepGB = Math.min(stepGB, step7GB);
+        step13 = OrphanStep(tiles);
+        stepJP = Math.min(stepJP, step13);
+        stepGB = Math.min(stepGB, step13);
+        step16 = full_tcnt - 1 - Bukao16Count(tiles);
+        stepGB = Math.min(stepGB, step16);
+      }
+
+      if (full_tcnt >= 9) {
+        stepkd = KDragonStep(tiles, tcnt);
+        stepGB = Math.min(stepGB, stepkd);
+      }
+
+      let output_JP = getWaitingType(stepJP);
+      let stepTypeJP = []
+      if (step == stepJP) {
+        stepTypeJP.push("一般型");
+      }
+      if (full_tcnt == 14) {
+        if (step7JP == stepJP) {
+          stepTypeJP.push("七对型");
+        }
+        if (step13 == stepJP) {
+          stepTypeJP.push("国士无双型");
+        }
+      }
+      output_JP += ` （` + stepTypeJP.join('／') + `）\n`;
+      output_JP += "一般型:　　\t" + getWaitingType(step) + "\n";
+      if (full_tcnt == 14) {
+        output_JP += "七对型:　　\t" + getWaitingType(step7JP) + "\n";
+        output_JP += "国士无双型:\t" + getWaitingType(step13) + "\n";
+      }
+      output_JP += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return JPWaiting(tiles, stepJP, [step, step7JP, step13], full_tcnt);
+      });
+      document.getElementById('output-jp').textContent = output_JP;
+
+      let output_GB = "";
+      if (stepGB === -1) {
+        output_GB += "和牌";
+      } else if (stepGB === 0) {
+        output_GB += "听牌";
+      } else {
+        output_GB += stepGB + " 向听";
+      }
+      let stepTypeGB = []
+      if (step == stepGB) {
+        stepTypeGB.push("一般型");
+      }
+      if (full_tcnt === 14) {
+        if (step7GB == stepGB) {
+          stepTypeGB.push("七对子型");
+        }
+        if (step13 == stepGB) {
+          stepTypeGB.push("十三幺型");
+        }
+        if (step16 == stepGB) {
+          stepTypeGB.push("全不靠型");
+        }
+      }
+      if (full_tcnt >= 9 && stepkd == stepGB) {
+        stepTypeGB.push("组合龙型");
+      }
+      output_GB += ` （` + stepTypeGB.join('／') + `）\n`;
+      output_GB += "一般型:　　\t" + getWaitingType(step) + "\n";
+      if (full_tcnt === 14) {
+        output_GB += "七对子型:　\t" + getWaitingType(step7GB) + "\n";
+        output_GB += "十三幺型:　\t" + getWaitingType(step13) + "\n";
+        output_GB += "全不靠型:　\t" + getWaitingType(step16) + "\n";
+      }
+      if (full_tcnt >= 9)
+        output_GB += "组合龙型:　\t" + getWaitingType(stepkd) + "\n";
+      output_GB += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt);
+      });
+      document.getElementById('output-gb').textContent = output_GB;
+    }
+  </script>
+
+</body>
+
+</html>

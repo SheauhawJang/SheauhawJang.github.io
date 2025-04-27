@@ -254,6 +254,7 @@ function Step(tiles, tcnt) {
 }
 // Check whether the step of new tiles decreased or not.
 function StepCheck(tiles, limit, tcnt) {
+    if (limit === -1) return false;
     if (Win(tiles, tcnt)) return true;
     if (limit === 0) return false;
     if (Listen(tiles, tcnt)) return true;
@@ -269,6 +270,25 @@ function RelativeCard(tiles, i) {
         return true;
     }
     if (tiles[i]) {
+        return true;
+    }
+    if (tiles[i + 1] && (SeqCheck(i - 1) || SeqCheck(i))) {
+        return true;
+    }
+    if (tiles[i + 2] && SeqCheck(i)) {
+        return true;
+    }
+    return false;
+}
+// Only relative card may increase the step.
+function RelativeCardWithMyself(tiles, i) {
+    if (tiles[i - 2] && SeqCheck(i - 2)) {
+        return true;
+    }
+    if (tiles[i - 1] && (SeqCheck(i - 2) || SeqCheck(i - 1))) {
+        return true;
+    }
+    if (tiles[i] > 1) {
         return true;
     }
     if (tiles[i + 1] && (SeqCheck(i - 1) || SeqCheck(i))) {
@@ -411,7 +431,7 @@ function JPWaiting(tiles, step, substep, tcnt) {
             ans.push(i);
         } else if (tcnt === 14 && step === substep[2] && OrphanStep(tiles) < step) {
             ans.push(i);
-        } else if (step === substep[0] && RelativeCard(tiles, i) && StepCheck(tiles, step, tcnt)) {
+        } else if (step === substep[0] && RelativeCardWithMyself(tiles, i) && StepCheck(tiles, step, tcnt)) {
             ans.push(i);
         }
         tiles[i]--;
@@ -429,7 +449,7 @@ function GBWaiting(tiles, step, substep, tcnt) {
             ans.push(i);
         } else if (tcnt === 14 && step === substep[3] && (tcnt - 1 - Bukao16Count(tiles)) < step) {
             ans.push(i);
-        } else if (step === substep[0] && RelativeCard(tiles, i) && StepCheck(tiles, step, tcnt)) {
+        } else if (step === substep[0] && RelativeCardWithMyself(tiles, i) && StepCheck(tiles, step, tcnt)) {
             ans.push(i);
         } else if (tcnt >= 9 && step === substep[4] && KDragonStep(tiles, tcnt) < step) {
             ans.push(i);

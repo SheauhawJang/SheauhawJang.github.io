@@ -80,6 +80,13 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
+
+    .output-time {
+      font-size: 14px;
+      color: #888;
+      font-style: italic;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
@@ -100,14 +107,17 @@
     <div class="output-box">
       <div class="output-title">一般型牌理</div>
       <div class="output-context" id="output-std"></div>
+      <div class="output-time" id="output-time-std"></div>
     </div>
     <div class="output-box">
       <div class="output-title">国标麻将标准型牌理</div>
       <div class="output-context" id="output-gb"></div>
+      <div class="output-time" id="output-time-gb"></div>
     </div>
     <div class="output-box">
       <div class="output-title">立直麻将标准型牌理</div>
       <div class="output-context" id="output-jp"></div>
+      <div class="output-time" id="output-time-jp"></div>
     </div>
   </div>
   <script src="mahjong.js"></script>
@@ -160,14 +170,17 @@
       if (tcnt % 3 === 1) {
         ++full_tcnt;
       }
+      const st_std = new Date();
       let step = Step(tiles, tcnt);
-      let stepJP = step;
-      let stepGB = step;
       let output_std = getWaitingType(step) + "\n";
       output_std += printWaiting(tiles, tcnt, full_tcnt, function () {
         return normalWaiting(tiles, step, full_tcnt);
       });;
+      const ed_std = new Date();
       document.getElementById('output-std').textContent = output_std;
+      document.getElementById('output-time-std').textContent = `Used ${ed_std - st_std} ms`;
+      let stepJP = step;
+      let stepGB = step;
       let step7JP, step7GB, step13, step16, stepkd;
       if (full_tcnt === 14) {
         step7JP = PairStep(tiles, true);
@@ -186,6 +199,7 @@
         stepGB = Math.min(stepGB, stepkd);
       }
 
+      const st_jp = new Date();
       let output_JP = getWaitingType(stepJP);
       let stepTypeJP = []
       if (step == stepJP) {
@@ -208,8 +222,11 @@
       output_JP += printWaiting(tiles, tcnt, full_tcnt, function () {
         return JPWaiting(tiles, stepJP, [step, step7JP, step13], full_tcnt);
       });
+      const ed_jp = new Date();
       document.getElementById('output-jp').textContent = output_JP;
+      document.getElementById('output-time-jp').textContent = `Used ${ed_jp - st_jp} ms`;
 
+      const st_gb = new Date();
       let output_GB = "";
       if (stepGB === -1) {
         output_GB += "和牌";
@@ -248,7 +265,9 @@
       output_GB += printWaiting(tiles, tcnt, full_tcnt, function () {
         return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt);
       });
+      const ed_gb = new Date();
       document.getElementById('output-gb').textContent = output_GB;
+      document.getElementById('output-time-gb').textContent = `Used ${ed_gb - st_gb} ms`;
     }
   </script>
 

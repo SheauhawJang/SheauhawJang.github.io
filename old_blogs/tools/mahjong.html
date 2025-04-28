@@ -87,6 +87,46 @@
       font-style: italic;
       margin-top: 10px;
     }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 20px;
+      }
+
+      .section {
+        margin-top: 15px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      input[type="text"] {
+        font-size: 14px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+      }
+
+      .output-box {
+        padding: 12px;
+      }
+
+      .output-title {
+        font-size: 16px;
+      }
+
+      .output-context {
+        font-size: 14px;
+      }
+
+      .output-time {
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 
@@ -97,8 +137,14 @@
   <div class="section">
     <label for="inputText">请输入手牌</label>
     <div class="input-area">
-      <input type="text" id="inputText" placeholder="例如：123m456p789s东南西" />
-      <div class="placeholder-note">输入格式说明</div>
+      <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
+      <div class="placeholder-note">
+        输入栏支持以下格式，以下格式可混合使用：<br/>
+        1. 天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。<br/>
+        2. 国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。<br/>
+        3. 英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。<br/>
+        4. 汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。
+      </div>
     </div>
     <button onclick="processInput()">计算</button>
   </div>
@@ -179,27 +225,16 @@
       const ed_std = new Date();
       document.getElementById('output-std').textContent = output_std;
       document.getElementById('output-time-std').textContent = `Used ${ed_std - st_std} ms`;
+      const st_jp = new Date();
       let stepJP = step;
-      let stepGB = step;
-      let step7JP, step7GB, step13, step16, stepkd;
+      let step7JP, step13;
       if (full_tcnt === 14) {
         step7JP = PairStep(tiles, true);
         stepJP = Math.min(stepJP, step7JP);
-        step7GB = PairStep(tiles, false);
-        stepGB = Math.min(stepGB, step7GB);
         step13 = OrphanStep(tiles);
         stepJP = Math.min(stepJP, step13);
-        stepGB = Math.min(stepGB, step13);
-        step16 = full_tcnt - 1 - Bukao16Count(tiles);
-        stepGB = Math.min(stepGB, step16);
       }
 
-      if (full_tcnt >= 9) {
-        stepkd = KDragonStep(tiles, tcnt);
-        stepGB = Math.min(stepGB, stepkd);
-      }
-
-      const st_jp = new Date();
       let output_JP = getWaitingType(stepJP);
       let stepTypeJP = []
       if (step == stepJP) {
@@ -227,6 +262,19 @@
       document.getElementById('output-time-jp').textContent = `Used ${ed_jp - st_jp} ms`;
 
       const st_gb = new Date();
+      let stepGB = step;
+      let step7GB, step16, stepkd;
+      if (full_tcnt === 14) {
+        step7GB = PairStep(tiles, false);
+        stepGB = Math.min(stepGB, step7GB);
+        stepGB = Math.min(stepGB, step13);
+        step16 = full_tcnt - 1 - Bukao16Count(tiles);
+        stepGB = Math.min(stepGB, step16);
+      }
+      if (full_tcnt >= 9) {
+        stepkd = KDragonStep(tiles, tcnt);
+        stepGB = Math.min(stepGB, stepkd);
+      }
       let output_GB = "";
       if (stepGB === -1) {
         output_GB += "和牌";

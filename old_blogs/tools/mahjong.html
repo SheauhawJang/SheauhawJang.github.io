@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #f9f9f9;
       padding: 40px;
-      max-width: 1000px;
+      max-width: 800px;
       margin: auto;
     }
 
@@ -85,7 +85,6 @@
       font-size: 14px;
       color: #888;
       font-style: italic;
-      margin-top: 10px;
     }
 
     @media (max-width: 600px) {
@@ -139,10 +138,12 @@
     <div class="input-area">
       <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
       <div class="placeholder-note">
-        输入栏支持以下格式，以下格式可混合使用：<br/>
-        1. 天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。<br/>
-        2. 国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。<br/>
-        3. 英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。<br/>
+        输入栏支持以下格式，以下格式可混合使用：<br />
+        1.
+        天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。<br />
+        2. 国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。<br />
+        3.
+        英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。<br />
         4. 汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。
       </div>
     </div>
@@ -168,12 +169,15 @@
   </div>
   <script src="mahjong.js"></script>
   <script>
+    function cardImage(id) {
+      return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`
+    }
     function printWaiting(tiles, tcnt, full_tcnt, f) {
-      let result = ""; // 用来存储所有的输出
+      let result = "<table style=\"vertical-align: middle; border-collapse: collapse; padding: 0px;\">"; // 用来存储所有的输出
       if (full_tcnt !== tcnt) {
         const ans = f();
         const cnt = countWaitingCards(tiles, ans);
-        result += `待 ${cnt} 枚：\t` + ans.map(cardName).join(' ') + "\n";
+        result += `<td style="white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans.map(cardImage).join('') + "</td>";
       } else {
         const ans = Array(34).fill(null).map(() => []);
         const cnts = [];
@@ -190,10 +194,10 @@
         }
         cnts.sort((a, b) => a.cnt - b.cnt);
         for (const { cnt, id } of cnts) {
-          result += `打 ${cardName(id)}\t待 ${-cnt} 枚：\t` + ans[id].map(cardName).join(' ') + "\n";
+          result += `<tr><td style="white-space: nowrap; padding-left: 0px;">打 ${cardImage(id)} 待 ${-cnt} 枚</td><td style="padding-left: 10px;">` + ans[id].map(cardImage).join('') + "</td></tr>";
         }
       }
-      return result; // 返回结果字符串
+      return result + "</table>"; // 返回结果字符串
     }
     function getWaitingType(step) {
       if (step === -1) {
@@ -205,117 +209,151 @@
       }
     }
     function processInput() {
-      KDragonCreate();
-      const input = document.getElementById('inputText').value;
-      let tiles = split(input);
-      let tcnt = 0;
-      for (let i = 0; i < tiles.length; ++i) {
-        tcnt += tiles[i];
-      }
-      let full_tcnt = tcnt;
-      if (tcnt % 3 === 1) {
-        ++full_tcnt;
-      }
-      const st_std = new Date();
-      let step = Step(tiles, tcnt);
-      let output_std = getWaitingType(step) + "\n";
-      output_std += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return normalWaiting(tiles, step, full_tcnt);
-      });;
-      const ed_std = new Date();
-      document.getElementById('output-std').textContent = output_std;
-      document.getElementById('output-time-std').textContent = `Used ${ed_std - st_std} ms`;
-      const st_jp = new Date();
-      let stepJP = step;
-      let step7JP, step13;
-      if (full_tcnt === 14) {
-        step7JP = PairStep(tiles, true);
-        stepJP = Math.min(stepJP, step7JP);
-        step13 = OrphanStep(tiles);
-        stepJP = Math.min(stepJP, step13);
-      }
+      try {
+        document.getElementById('output-std').innerHTML = "";
+        document.getElementById('output-jp').innerHTML = "";
+        document.getElementById('output-gb').innerHTML = "";
+        document.getElementById('output-time-std').textContent = `Calculating......`;
+        document.getElementById('output-time-jp').textContent = `Calculating......`;
+        document.getElementById('output-time-gb').textContent = `Calculating......`;
+        const st_std = new Date();
+        start_search_time = st_std;
+        KDragonCreate();
+        const input = document.getElementById('inputText').value;
+        let tiles = split(input);
+        let tcnt = 0;
+        for (let i = 0; i < tiles.length; ++i) {
+          tcnt += tiles[i];
+        }
+        let full_tcnt = tcnt;
+        if (tcnt % 3 === 1) {
+          ++full_tcnt;
+        }
+        let step = Step(tiles, tcnt);
+        let output_std = getWaitingType(step) + "\n";
+        document.getElementById('output-std').innerHTML = output_std;
+        output_std += printWaiting(tiles, tcnt, full_tcnt, function () {
+          return normalWaiting(tiles, step, full_tcnt);
+        });;
+        const ed_std = new Date();
+        document.getElementById('output-std').innerHTML = output_std;
+        document.getElementById('output-time-std').textContent = `Used ${ed_std - st_std} ms`;
+        const st_jp = new Date();
+        start_search_time = st_jp;
+        let stepJP = step;
+        let step7JP, step13;
+        if (full_tcnt === 14) {
+          step7JP = PairStep(tiles, true);
+          stepJP = Math.min(stepJP, step7JP);
+          step13 = OrphanStep(tiles);
+          stepJP = Math.min(stepJP, step13);
+        }
+        let output_JP = getWaitingType(stepJP);
+        let stepTypeJP = []
+        if (step == stepJP) {
+          stepTypeJP.push("一般型");
+        }
+        if (full_tcnt == 14) {
+          if (step7JP == stepJP) {
+            stepTypeJP.push("七对型");
+          }
+          if (step13 == stepJP) {
+            stepTypeJP.push("国士无双型");
+          }
+        }
+        output_JP += ` （` + stepTypeJP.join('／') + `）\n`;
+        output_JP += "<table style=\"vertical-align: middle; border-collapse: collapse; padding: 0px;\">";
+        output_JP += "<tr><td style=\"padding-left: 0px;\">一般型：</td><td>" + getWaitingType(step) + "</td></tr>";
+        if (full_tcnt == 14) {
+          output_JP += "<tr><td style=\"padding-left: 0px;\">七对型：</td><td>" + getWaitingType(step7JP) + "</td></tr>";
+          output_JP += "<tr><td style=\"padding-left: 0px;\">国士无双型：</td><td>" + getWaitingType(step13) + "</td></tr>";
+        }
+        output_JP += "</table>";
+        document.getElementById('output-jp').innerHTML = output_JP;
+        output_JP += printWaiting(tiles, tcnt, full_tcnt, function () {
+          return JPWaiting(tiles, stepJP, [step, step7JP, step13], full_tcnt);
+        });
+        const ed_jp = new Date();
+        document.getElementById('output-jp').innerHTML = output_JP;
+        document.getElementById('output-time-jp').textContent = `Used ${ed_jp - st_jp} ms`;
 
-      let output_JP = getWaitingType(stepJP);
-      let stepTypeJP = []
-      if (step == stepJP) {
-        stepTypeJP.push("一般型");
-      }
-      if (full_tcnt == 14) {
-        if (step7JP == stepJP) {
-          stepTypeJP.push("七对型");
+        const st_gb = new Date();
+        start_search_time = st_gb;
+        let stepGB = step;
+        let step7GB, step16, stepkd;
+        if (full_tcnt === 14) {
+          step7GB = PairStep(tiles, false);
+          stepGB = Math.min(stepGB, step7GB);
+          stepGB = Math.min(stepGB, step13);
+          step16 = full_tcnt - 1 - Bukao16Count(tiles);
+          stepGB = Math.min(stepGB, step16);
         }
-        if (step13 == stepJP) {
-          stepTypeJP.push("国士无双型");
+        if (full_tcnt >= 9) {
+          let tmp_output_GB = "";
+          tmp_output_GB += "<table style=\"vertical-align: middle; border-collapse: collapse; padding: 0px;\">";
+          tmp_output_GB += "<tr><td style=\"padding-left: 0px;\">一般型：</td><td>" + getWaitingType(step) + "</td></tr>";
+          if (full_tcnt === 14) {
+            tmp_output_GB += "<tr><td style=\"padding-left: 0px;\">七对型：</td><td>" + getWaitingType(step7GB) + "</td></tr>";
+            tmp_output_GB += "<tr><td style=\"padding-left: 0px;\">十三幺型：</td><td>" + getWaitingType(step13) + "</td></tr>";
+            tmp_output_GB += "<tr><td style=\"padding-left: 0px;\">全不靠型：</td><td>" + getWaitingType(step16) + "</td></tr>";
+          }
+          tmp_output_GB += "</table>";
+          document.getElementById('output-gb').innerHTML = tmp_output_GB;
+          stepkd = KDragonStep(tiles, tcnt);
+          stepGB = Math.min(stepGB, stepkd);
+        }
+        let output_GB = getWaitingType(stepGB);
+        let stepTypeGB = [];
+        if (step == stepGB) {
+          stepTypeGB.push("一般型");
+        }
+        if (full_tcnt === 14) {
+          if (step7GB == stepGB) {
+            stepTypeGB.push("七对型");
+          }
+          if (step13 == stepGB) {
+            stepTypeGB.push("十三幺型");
+          }
+          if (step16 == stepGB) {
+            stepTypeGB.push("全不靠型");
+          }
+        }
+        if (full_tcnt >= 9 && stepkd == stepGB) {
+          stepTypeGB.push("组合龙型");
+        }
+        output_GB += ` （` + stepTypeGB.join('／') + `）\n`;
+        output_GB += "<table style=\"vertical-align: middle; border-collapse: collapse; padding: 0px;\">";
+        output_GB += "<tr><td style=\"padding-left: 0px;\">一般型：</td><td>" + getWaitingType(step) + "</td></tr>";
+        if (full_tcnt === 14) {
+          output_GB += "<tr><td style=\"padding-left: 0px;\">七对型：</td><td>" + getWaitingType(step7GB) + "</td></tr>";
+          output_GB += "<tr><td style=\"padding-left: 0px;\">十三幺型：</td><td>" + getWaitingType(step13) + "</td></tr>";
+          output_GB += "<tr><td style=\"padding-left: 0px;\">全不靠型：</td><td>" + getWaitingType(step16) + "</td></tr>";
+        }
+        if (full_tcnt >= 9)
+          output_GB += "<tr><td style=\"padding-left: 0px;\">组合龙型：</td><td>" + getWaitingType(stepkd) + "</td></tr>";
+        output_GB += "</table>";
+        document.getElementById('output-gb').innerHTML = output_GB;
+        output_GB += printWaiting(tiles, tcnt, full_tcnt, function () {
+          return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt);
+        });
+        const ed_gb = new Date();
+        document.getElementById('output-gb').innerHTML = output_GB;
+        document.getElementById('output-time-gb').textContent = `Used ${ed_gb - st_gb} ms`;
+      }
+      catch (err) {
+        if (document.getElementById('output-time-std').textContent == `Calculating......`) {
+          //document.getElementById('output-std').innerHTML = "";
+          document.getElementById('output-time-std').textContent = err.message;
+        }
+        if (document.getElementById('output-time-jp').textContent == `Calculating......`) {
+          //document.getElementById('output-jp').innerHTML = "";
+          document.getElementById('output-time-jp').textContent = err.message;
+        }
+        if (document.getElementById('output-time-gb').textContent == `Calculating......`) {
+          //document.getElementById('output-gb').innerHTML = "";
+          document.getElementById('output-time-gb').textContent = err.message;
         }
       }
-      output_JP += ` （` + stepTypeJP.join('／') + `）\n`;
-      output_JP += "一般型:　　\t" + getWaitingType(step) + "\n";
-      if (full_tcnt == 14) {
-        output_JP += "七对型:　　\t" + getWaitingType(step7JP) + "\n";
-        output_JP += "国士无双型:\t" + getWaitingType(step13) + "\n";
-      }
-      output_JP += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return JPWaiting(tiles, stepJP, [step, step7JP, step13], full_tcnt);
-      });
-      const ed_jp = new Date();
-      document.getElementById('output-jp').textContent = output_JP;
-      document.getElementById('output-time-jp').textContent = `Used ${ed_jp - st_jp} ms`;
-
-      const st_gb = new Date();
-      let stepGB = step;
-      let step7GB, step16, stepkd;
-      if (full_tcnt === 14) {
-        step7GB = PairStep(tiles, false);
-        stepGB = Math.min(stepGB, step7GB);
-        stepGB = Math.min(stepGB, step13);
-        step16 = full_tcnt - 1 - Bukao16Count(tiles);
-        stepGB = Math.min(stepGB, step16);
-      }
-      if (full_tcnt >= 9) {
-        stepkd = KDragonStep(tiles, tcnt);
-        stepGB = Math.min(stepGB, stepkd);
-      }
-      let output_GB = "";
-      if (stepGB === -1) {
-        output_GB += "和牌";
-      } else if (stepGB === 0) {
-        output_GB += "听牌";
-      } else {
-        output_GB += stepGB + " 向听";
-      }
-      let stepTypeGB = []
-      if (step == stepGB) {
-        stepTypeGB.push("一般型");
-      }
-      if (full_tcnt === 14) {
-        if (step7GB == stepGB) {
-          stepTypeGB.push("七对子型");
-        }
-        if (step13 == stepGB) {
-          stepTypeGB.push("十三幺型");
-        }
-        if (step16 == stepGB) {
-          stepTypeGB.push("全不靠型");
-        }
-      }
-      if (full_tcnt >= 9 && stepkd == stepGB) {
-        stepTypeGB.push("组合龙型");
-      }
-      output_GB += ` （` + stepTypeGB.join('／') + `）\n`;
-      output_GB += "一般型:　　\t" + getWaitingType(step) + "\n";
-      if (full_tcnt === 14) {
-        output_GB += "七对子型:　\t" + getWaitingType(step7GB) + "\n";
-        output_GB += "十三幺型:　\t" + getWaitingType(step13) + "\n";
-        output_GB += "全不靠型:　\t" + getWaitingType(step16) + "\n";
-      }
-      if (full_tcnt >= 9)
-        output_GB += "组合龙型:　\t" + getWaitingType(stepkd) + "\n";
-      output_GB += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt);
-      });
-      const ed_gb = new Date();
-      document.getElementById('output-gb').textContent = output_GB;
-      document.getElementById('output-time-gb').textContent = `Used ${ed_gb - st_gb} ms`;
     }
   </script>
 

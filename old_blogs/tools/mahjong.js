@@ -1,5 +1,5 @@
-let start_search_time = new Date()
-let search_time_limit = 1000
+let start_search_time = new Date();
+let search_time_limit = 1000;
 function id(name) {
     switch (name[0]) {
         case "E":
@@ -85,8 +85,7 @@ function FivePartCheck(meld, joint, pair, tcnt) {
 }
 // Search for step, check meld, joint and pair
 function search(tiles, meld, joint, pairs, tcnt, last = [0, 0]) {
-    if (new Date() - start_search_time > search_time_limit) 
-        throw new Error(`Time Limit Exceeded (${search_time_limit} ms)`);
+    if (new Date() - start_search_time > search_time_limit) throw new Error(`Time Limit Exceeded (${search_time_limit} ms)`);
     let max_ans = Math.floor(tcnt / 3) * 2 + (tcnt % 3 ? 1 : 0) - 1;
     if (!FivePartCheck(meld, joint, pairs, tcnt)) return max_ans;
     let ans = max_ans - meld * 2 - joint - pairs;
@@ -139,8 +138,7 @@ function search(tiles, meld, joint, pairs, tcnt, last = [0, 0]) {
 }
 // Search for winning, only check meld so very fast
 function searchWin(tiles, meld, tcnt, last = [0, 0]) {
-    if (new Date() - start_search_time > search_time_limit) 
-        throw new Error(`Time Limit Exceeded (${search_time_limit} ms)`);
+    if (new Date() - start_search_time > search_time_limit) throw new Error(`Time Limit Exceeded (${search_time_limit} ms)`);
     if (meld * 3 + 2 === tcnt)
         for (let i = 0; i < 34; ++i)
             if (tiles[i] === 2) return true;
@@ -179,9 +177,96 @@ function searchWin(tiles, meld, tcnt, last = [0, 0]) {
     }
     return false;
 }
+function countCouple(tiles) {
+    let pair = 0,
+        joint = 0;
+    tiles = tiles.slice(); // copy
+    for (let i = 0; i < 34; ++i) {
+        pair += Math.floor(tiles[i] / 2);
+        tiles[i] %= 2;
+        if ((SeqCheck(i) || SeqCheck(i - 1)) && tiles[i] && tiles[i + 1]) {
+            joint++;
+            tiles[i + 1]--;
+        } else if (SeqCheck(i) && tiles[i] && tiles[i + 2]) {
+            joint++;
+            tiles[i + 2]--;
+        }
+    }
+    return [pair, joint];
+}
+function calculateStep(missMeld, needPair, joint, pair) {
+    let maxStep = missMeld * 2 + needPair - 1;
+    let realJoint = Math.min(missMeld, joint);
+    let realPair = Math.min(missMeld + needPair - realJoint, pair);
+    return maxStep - realJoint - realPair;
+}
+function searchGreedy(tiles, meld, tcnt, last = [0, false]) {
+    let missMeld = Math.max(Math.floor(tcnt / 3) - meld, 0);
+    let needPair = tcnt % 3 ? 1 : 0;
+    let maxAns = missMeld * 2 + needPair - 1;
+    let ans = maxAns;
+    const [si, sj] = last;
+    for (let i = si; i < 34; ++i) {
+        if (tiles[i] >= 3 && (i > si || !sj)) {
+            tiles[i] -= 3;
+            ans = Math.min(searchGreedy(tiles, meld + 1, tcnt, [i, false]), ans);
+            tiles[i] += 3;
+        }
+        if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
+            tiles[i]--;
+            tiles[i + 1]--;
+            tiles[i + 2]--;
+            ans = Math.min(searchGreedy(tiles, meld + 1, tcnt, [i, true]), ans);
+            tiles[i]++;
+            tiles[i + 1]++;
+            tiles[i + 2]++;
+        }
+    }
+    let [pair, joint] = countCouple(tiles);
+    let step = calculateStep(missMeld, needPair, joint, pair);
+    ans = Math.min(ans, step);
+    if (joint > 0 && pair === 0 && calculateStep(missMeld, needPair, joint + 1, pair - 1) < step)
+        for (let i = 0; i < 34; ++i)
+            if (tiles[i] >= 2) {
+                tiles[i] -= 2;
+                let [np, nj] = countCouple(tiles);
+                tiles[i] += 2;
+                let ns = calculateStep(missMeld, needPair, nj, np + 1);
+                if (ns < step) {
+                    ans = Math.min(ans, ns);
+                    break;
+                }
+            }
+    return ans;
+}
+function searchWinGreedy(tiles, tcnt) {
+    for (let i = 0; i < 34; ++i)
+        if (tiles[i] >= 2) {
+            const t = tiles.slice(); // 创建拷贝
+            t[i] -= 2;
+            let meld = 0;
+            for (let j = 0; j < 34; ++j) {
+                if (t[j] >= 3) {
+                    meld += Math.floor(t[j] / 3);
+                    t[j] %= 3;
+                }
+                if (SeqCheck(j) && t[j] && t[j + 1] && t[j + 2]) {
+                    const cnt = Math.min(t[j], t[j + 1], t[j + 2]);
+                    meld += cnt;
+                    t[j] -= cnt;
+                    t[j + 1] -= cnt;
+                    t[j + 2] -= cnt;
+                }
+                if (t[j]) break;
+            }
+            if (meld === Math.floor(tcnt / 3)) return true;
+        }
+    return false;
+}
 // Win function
 function Win(tiles, tcnt) {
-    return tcnt % 3 === 1 ? false : searchWin(tiles, 0, tcnt);
+    // return tcnt % 3 === 1 ? false : searchWin(tiles, 0, tcnt);
+    return tcnt % 3 === 1 ? false : searchWinGreedy(tiles, tcnt);
 }
 // Listen function
 function Listen(tiles, tcnt) {
@@ -214,7 +299,8 @@ function Listen(tiles, tcnt) {
 function Step(tiles, tcnt) {
     if (Win(tiles, tcnt)) return -1;
     if (Listen(tiles, tcnt)) return 0;
-    return search(tiles, 0, 0, 0, tcnt);
+    //return search(tiles, 0, 0, 0, tcnt);
+    return searchGreedy(tiles, 0, tcnt);
 }
 // Check whether the step of new tiles decreased or not.
 function StepCheck(tiles, limit, tcnt) {
@@ -223,7 +309,8 @@ function StepCheck(tiles, limit, tcnt) {
     if (limit === 0) return false;
     if (Listen(tiles, tcnt)) return true;
     if (limit === 1) return false;
-    return search(tiles, 0, 0, 0, tcnt) < limit;
+    //return search(tiles, 0, 0, 0, tcnt) < limit;
+    return searchGreedy(tiles, 0, tcnt) < limit;
 }
 // Only relative card may increase the step.
 function RelativeCard(tiles, i) {
@@ -319,7 +406,8 @@ function KDragonStep(tiles, tcnt) {
                 count[j] = 0;
             }
         }
-        ans = Math.min(ans, search(tiles, 3, 0, 0, tcnt) + miss);
+        //ans = Math.min(ans, search(tiles, 3, 0, 0, tcnt) + miss);
+        ans = Math.min(ans, searchGreedy(tiles, 3, tcnt) + miss);
         for (let j = 0; j < 9; ++j) if (count[j]) tiles[KDragonSave[i][j]]++;
     }
     return ans;

@@ -250,7 +250,7 @@ function PairCount(tiles, disjoint = false) {
     for (let i = 0; i < 34; ++i)
         if (disjoint)
             if (tiles[i] >= 2) ++ans;
-            else ++sig;
+            else ++tiles[i];
         else {
             ans += Math.floor(tiles[i] / 2);
             sig += tiles[i] % 2;

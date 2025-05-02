@@ -194,6 +194,21 @@
             let task = 0;
             let step, step13;
             worker.onmessage = function (e) {
+                if ('output' in e.data) {
+                    worker.last_output = e.data.output;
+                    switch (task) {
+                    case 0:
+                        document.getElementById("output-std").innerHTML = e.data.output;
+                        break;
+                    case 1:
+                        document.getElementById("output-jp").innerHTML = e.data.output;
+                        break;
+                    case 2:
+                        document.getElementById("output-gb").innerHTML = e.data.output;
+                        break;
+                    }
+                    return;
+                }
                 const { result, time } = e.data;
                 switch (task) {
                     case 0:
@@ -204,7 +219,7 @@
                     case 1:
                         document.getElementById("output-jp").innerHTML = result.output;
                         document.getElementById("output-time-jp").textContent = `Used ${time} ms`;
-                        step13 = result.setp13;
+                        step13 = result.step13;
                         break;
                     case 2:
                         document.getElementById("output-gb").innerHTML = result.output;

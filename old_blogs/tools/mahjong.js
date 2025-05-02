@@ -75,259 +75,160 @@ function split(s) {
     return tiles;
 }
 // Check left, left+1, left+2 can be a sequence or not
-const SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+let SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 function SeqCheck(left) {
     return left >= 0 && left < 34 ? SeqArray[left] : false;
 }
-// Five Parts Principle: Up to five parts when normal winning.
-function FivePartCheck(meld, joint, pair, tcnt) {
-    return meld + joint <= Math.floor(tcnt / 3) && meld + joint + pair <= Math.floor(tcnt / 3) + (tcnt % 3 ? 1 : 0);
-}
-// Search for step, check meld, joint and pair
-function search(tiles, meld, joint, pairs, tcnt, last = [0, 0]) {
-    if (new Date() - start_search_time > search_time_limit) throw new Error(`Time Limit Exceeded (${search_time_limit} ms)`);
-    let max_ans = Math.floor(tcnt / 3) * 2 + (tcnt % 3 ? 1 : 0) - 1;
-    if (!FivePartCheck(meld, joint, pairs, tcnt)) return max_ans;
-    let ans = max_ans - meld * 2 - joint - pairs;
-    let [si, sj] = last;
-    for (let i = si; i < 34; ++i) {
-        if (tiles[i] >= 3 && (i > si || 0 >= sj)) {
-            tiles[i] -= 3;
-            ans = Math.min(search(tiles, meld + 1, joint, pairs, tcnt, [i, 0]), ans);
-            tiles[i] += 3;
-        }
-        if (tiles[i] >= 2 && (i > si || 1 >= sj)) {
-            tiles[i] -= 2;
-            ans = Math.min(search(tiles, meld, joint, pairs + 1, tcnt, [i, 1]), ans);
-            tiles[i] += 2;
-        }
-        if (SeqCheck(i)) {
-            if (tiles[i] && tiles[i + 1] && tiles[i + 2] && (i > si || 2 >= sj)) {
-                tiles[i]--;
-                tiles[i + 1]--;
-                tiles[i + 2]--;
-                ans = Math.min(search(tiles, meld + 1, joint, pairs, tcnt, [i, 2]), ans);
-                tiles[i]++;
-                tiles[i + 1]++;
-                tiles[i + 2]++;
-            }
-            if (!SeqCheck(i - 1) && tiles[i] && tiles[i + 1] && (i > si || 3 >= sj)) {
-                tiles[i]--;
-                tiles[i + 1]--;
-                ans = Math.min(search(tiles, meld, joint + 1, pairs, tcnt, [i, 3]), ans);
-                tiles[i]++;
-                tiles[i + 1]++;
-            }
-            if (tiles[i] && tiles[i + 2] && (i > si || 4 >= sj)) {
-                tiles[i]--;
-                tiles[i + 2]--;
-                ans = Math.min(search(tiles, meld, joint + 1, pairs, tcnt, [i, 4]), ans);
-                tiles[i]++;
-                tiles[i + 2]++;
-            }
-            if (tiles[i + 1] && tiles[i + 2]) {
-                tiles[i + 1]--;
-                tiles[i + 2]--;
-                ans = Math.min(search(tiles, meld, joint + 1, pairs, tcnt, [i, 5]), ans);
-                tiles[i + 1]++;
-                tiles[i + 2]++;
-            }
-        }
-    }
-    return ans;
-}
-// Search for winning, only check meld so very fast
-function searchWin(tiles, meld, tcnt, last = [0, 0]) {
-    if (new Date() - start_search_time > search_time_limit) throw new Error(`Time Limit Exceeded (${search_time_limit} ms)`);
-    if (meld * 3 + 2 === tcnt)
-        for (let i = 0; i < 34; ++i)
-            if (tiles[i] === 2) return true;
-            else if (tiles[i] === 1) return false;
-    if (meld * 3 === tcnt) return true;
-    // When winning, every card should be in a meld or pair.
-    for (let i = 0; i < 34; ++i)
-        if (tiles[i] > 0 && tiles[i] < 2) {
-            let inMeld = false;
-            for (let left = i; left >= i - 2; --left)
-                if (SeqCheck(left) && tiles[left] && tiles[left + 1] && tiles[left + 2]) {
-                    i = left + 2;
-                    inMeld = true;
-                    break;
-                }
-            if (!inMeld) return false;
-        }
-    let [start, stype] = last;
-    for (let i = start; i < 34; ++i) {
-        if (tiles[i] >= 3 && (i > start || !stype)) {
-            tiles[i] -= 3;
-            let ans = searchWin(tiles, meld + 1, tcnt, [i, 0]);
-            tiles[i] += 3;
-            if (ans) return true;
-        }
-        if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
-            --tiles[i];
-            --tiles[i + 1];
-            --tiles[i + 2];
-            let ans = searchWin(tiles, meld + 1, tcnt, [i, 1]);
-            ++tiles[i];
-            ++tiles[i + 1];
-            ++tiles[i + 2];
-            if (ans) return true;
-        }
-    }
-    return false;
-}
-function countCouple(tiles) {
-    let pair = 0,
-        joint = 0;
-    tiles = tiles.slice(); // copy
+// Check for step
+let dp;
+function prepareDp(nm, np) {
+    dp = new Array(34);
     for (let i = 0; i < 34; ++i) {
-        pair += Math.floor(tiles[i] / 2);
-        tiles[i] %= 2;
-        if ((SeqCheck(i) || SeqCheck(i - 1)) && tiles[i] && tiles[i + 1]) {
-            joint++;
-            tiles[i + 1]--;
-        } else if (SeqCheck(i) && tiles[i] && tiles[i + 2]) {
-            joint++;
-            tiles[i + 2]--;
-        }
-    }
-    return [pair, joint];
-}
-function calculateStep(missMeld, needPair, joint, pair) {
-    let maxStep = missMeld * 2 + needPair - 1;
-    let realJoint = Math.min(missMeld, joint);
-    let realPair = Math.min(missMeld + needPair - realJoint, pair);
-    return maxStep - realJoint - realPair;
-}
-function searchGreedy(tiles, meld, tcnt, last = [0, false]) {
-    let missMeld = Math.max(Math.floor(tcnt / 3) - meld, 0);
-    let needPair = tcnt % 3 ? 1 : 0;
-    let maxAns = missMeld * 2 + needPair - 1;
-    let ans = maxAns;
-    const [si, sj] = last;
-    for (let i = si; i < 34; ++i) {
-        if (tiles[i] >= 3 && (i > si || !sj)) {
-            tiles[i] -= 3;
-            ans = Math.min(searchGreedy(tiles, meld + 1, tcnt, [i, false]), ans);
-            tiles[i] += 3;
-        }
-        if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
-            tiles[i]--;
-            tiles[i + 1]--;
-            tiles[i + 2]--;
-            ans = Math.min(searchGreedy(tiles, meld + 1, tcnt, [i, true]), ans);
-            tiles[i]++;
-            tiles[i + 1]++;
-            tiles[i + 2]++;
-        }
-    }
-    let [pair, joint] = countCouple(tiles);
-    let step = calculateStep(missMeld, needPair, joint, pair);
-    ans = Math.min(ans, step);
-    if (joint > 0 && pair === 0 && calculateStep(missMeld, needPair, joint + 1, pair - 1) < step)
-        for (let i = 0; i < 34; ++i)
-            if (tiles[i] >= 2) {
-                tiles[i] -= 2;
-                let [np, nj] = countCouple(tiles);
-                tiles[i] += 2;
-                let ns = calculateStep(missMeld, needPair, nj, np + 1);
-                if (ns < step) {
-                    ans = Math.min(ans, ns);
-                    break;
-                }
+        dp[i] = new Array(5);
+        for (let ui = 0; ui <= 4; ++ui) {
+            dp[i][ui] = new Array(3);
+            for (let uj = 0; uj <= 2; ++uj) {
+                dp[i][ui][uj] = new Array(np + 1);
+                for (let p = 0; p <= np; ++p) dp[i][ui][uj][p] = new Array(nm + 1).fill(-10);
             }
+        }
+    }
+}
+function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0) {
+    if (i >= 34) return (nm - em) * 3 + (np - ep) * 2 - 1;
+    if (dp[i][ui][uj][ep][em] >= -1) return dp[i][ui][uj][ep][em];
+    let ans = (nm - em) * 3 + (np - ep) * 2 - 1;
+    let ri = Math.max(tiles[i] - ui, 0);
+    let rj = SeqCheck(i) ? Math.max(tiles[i + 1] - uj, 0) : 0;
+    let mp = Math.min(np - ep, ri);
+    let ms = SeqCheck(i) ? Math.min(nm - em, 2) : 0;
+    for (let p = 0; p <= mp; ++p)
+        for (let s = 0; s <= ms; ++s) {
+            let lri = limit - p * 2 - s - ui;
+            if (lri < 0) break;
+            let ds = s ? Math.max(s - rj, 0) + Math.max(s - tiles[i + 2], 0) : 0;
+            let rri = Math.max(ri - p * 2 - s, 0);
+            let mmk = Math.floor(rri / 3);
+            let pmk = mmk * 3 < rri ? mmk + 1 : mmk;
+            let rgk = Math.min(nm - em - s, Math.floor(lri / 3));
+            mmk = Math.min(mmk, rgk);
+            pmk = Math.min(pmk, rgk);
+            for (let k = mmk; k <= pmk; ++k) {
+                let ti = p * 2 + s + k * 3;
+                let d = Math.max(ti - ri, 0) + ds;
+                if (d - 1 >= ans) break;
+                ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s) + d);
+            }
+        }
+    dp[i][ui][uj][ep][em] = ans;
     return ans;
 }
-function searchWinGreedy(tiles, tcnt) {
+function searchDp(tiles, em, ep, tcnt, limit = Infinity) {
+    tiles = tiles.slice();
+    let nm = Math.floor(tcnt / 3);
+    let np = tcnt % 3 > 0 ? 1 : 0;
+    for (let i = 0; i < 34; ++i) {
+        tiles[i] = Math.min(tiles[i], limit);
+        let km = Math.floor(Math.max(tiles[i] - 4, 0) / 3);
+        nm -= km;
+        tiles[i] -= km * 3;
+    }
+    prepareDp(nm, np);
+    return kernelDp(tiles, em, ep, nm, np, limit);
+}
+// Check for winning
+function check(tiles, target) {
+    let meld = 0;
+    tiles = tiles.slice();
+    for (let i = 0; i < 34; ++i) {
+        if (tiles[i] >= 3) {
+            meld += Math.floor(tiles[i] / 3);
+            tiles[i] %= 3;
+        }
+        if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
+            let cnt = Math.min(tiles[i], tiles[i + 1], tiles[i + 2]);
+            meld += cnt;
+            tiles[i] -= cnt;
+            tiles[i + 1] -= cnt;
+            tiles[i + 2] -= cnt;
+        }
+        if (tiles[i]) break;
+    }
+    return meld === target;
+}
+function Win(tiles, tcnt, limit = Infinity) {
+    let meld = Math.floor(tcnt / 3);
+    let head = tcnt % 3;
+    for (let i = 0; i < 34; ++i) if (tiles[i] > limit) return false;
+    if (head === 0) return check(tiles, meld);
+    if (head === 1) return false;
     for (let i = 0; i < 34; ++i)
         if (tiles[i] >= 2) {
-            const t = tiles.slice(); // 创建拷贝
-            t[i] -= 2;
-            let meld = 0;
-            for (let j = 0; j < 34; ++j) {
-                if (t[j] >= 3) {
-                    meld += Math.floor(t[j] / 3);
-                    t[j] %= 3;
-                }
-                if (SeqCheck(j) && t[j] && t[j + 1] && t[j + 2]) {
-                    const cnt = Math.min(t[j], t[j + 1], t[j + 2]);
-                    meld += cnt;
-                    t[j] -= cnt;
-                    t[j + 1] -= cnt;
-                    t[j + 2] -= cnt;
-                }
-                if (t[j]) break;
-            }
-            if (meld === Math.floor(tcnt / 3)) return true;
+            tiles[i] -= 2;
+            let ans = check(tiles, meld);
+            tiles[i] += 2;
+            if (ans) return true;
         }
     return false;
 }
-// Win function
-function Win(tiles, tcnt) {
-    // return tcnt % 3 === 1 ? false : searchWin(tiles, 0, tcnt);
-    return tcnt % 3 === 1 ? false : searchWinGreedy(tiles, tcnt);
-}
 // Listen function
-function Listen(tiles, tcnt) {
+function Listen(tiles, tcnt, limit = Infinity) {
     if (tcnt % 3 === 1)
         for (let j = 0; j < 34; ++j) {
-            tiles[j]++;
-            const ans = Win(tiles, tcnt + 1);
-            tiles[j]--;
+            if (tiles[j] >= limit) continue;
+            ++tiles[j];
+            let ans = Win(tiles, tcnt + 1, limit);
+            --tiles[j];
             if (ans) return true;
         }
     else
-        for (let i = 0; i < 34; ++i)
-            if (tiles[i]) {
-                tiles[i]--;
-                for (let j = 0; j < 34; ++j) {
-                    if (i === j) continue;
-                    tiles[j]++;
-                    const ans = Win(tiles, tcnt);
-                    tiles[j]--;
-                    if (ans) {
-                        tiles[i]++;
-                        return true;
-                    }
+        for (let i = 0; i < 34; ++i) {
+            if (!tiles[i]) continue;
+            --tiles[i];
+            for (let j = 0; j < 34; ++j) {
+                if (i === j) continue;
+                if (tiles[j] >= limit) continue;
+                ++tiles[j];
+                let ans = Win(tiles, tcnt, limit);
+                --tiles[j];
+                if (ans) {
+                    ++tiles[i];
+                    return true;
                 }
-                tiles[i]++;
             }
+            ++tiles[i];
+        }
     return false;
 }
 // Step function
-function Step(tiles, tcnt) {
-    if (Win(tiles, tcnt)) return -1;
-    if (Listen(tiles, tcnt)) return 0;
-    //return search(tiles, 0, 0, 0, tcnt);
-    return searchGreedy(tiles, 0, tcnt);
+function Step(tiles, tcnt = 14, limit = Infinity) {
+    if (Win(tiles, tcnt, limit)) return -1;
+    if (Listen(tiles, tcnt, limit)) return 0;
+    return searchDp(tiles, 0, 0, tcnt, limit);
 }
 // Check whether the step of new tiles decreased or not.
-function StepCheck(tiles, limit, tcnt) {
-    if (limit === -1) return false;
+function StepCheck(tiles, maxstep, tcnt = 14, limit = Infinity) {
+    if (maxstep === -1) return false;
     if (Win(tiles, tcnt)) return true;
-    if (limit === 0) return false;
+    if (maxstep === 0) return false;
     if (Listen(tiles, tcnt)) return true;
-    if (limit === 1) return false;
-    //return search(tiles, 0, 0, 0, tcnt) < limit;
-    return searchGreedy(tiles, 0, tcnt) < limit;
+    if (maxstep === 1) return false;
+    return searchDp(tiles, 0, 0, tcnt, limit) < maxstep;
 }
 // Only relative card may increase the step.
 function RelativeCard(tiles, i) {
-    if (tiles[i - 2] && SeqCheck(i - 2)) return true;
-    if (tiles[i - 1] && (SeqCheck(i - 2) || SeqCheck(i - 1))) return true;
     if (tiles[i]) return true;
-    if (tiles[i + 1] && (SeqCheck(i - 1) || SeqCheck(i))) return true;
-    if (tiles[i + 2] && SeqCheck(i)) return true;
+    if (SeqCheck(i) && (tiles[i + 1] || tiles[i + 2])) return true;
+    if (SeqCheck(i - 1) && (tiles[i - 1] || tiles[i + 1])) return true;
+    if (SeqCheck(i - 2) && (tiles[i - 2] || tiles[i - 1])) return true;
     return false;
 }
 // Only relative card may increase the step.
 function RelativeCardWithMyself(tiles, i) {
-    if (tiles[i - 2] && SeqCheck(i - 2)) return true;
-    if (tiles[i - 1] && (SeqCheck(i - 2) || SeqCheck(i - 1))) return true;
     if (tiles[i] > 1) return true;
-    if (tiles[i + 1] && (SeqCheck(i - 1) || SeqCheck(i))) return true;
-    if (tiles[i + 2] && SeqCheck(i)) return true;
+    if (SeqCheck(i) && (tiles[i + 1] || tiles[i + 2])) return true;
+    if (SeqCheck(i - 1) && (tiles[i - 1] || tiles[i + 1])) return true;
+    if (SeqCheck(i - 2) && (tiles[i - 2] || tiles[i - 1])) return true;
     return false;
 }
 // Special Check for 7 pairs
@@ -348,7 +249,7 @@ function PairStep(tiles, disjoint = false) {
     return 13 - count * 2 - Math.min(single, 7 - count);
 }
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14
-const Orphan13Array = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1];
+let Orphan13Array = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1];
 function OrphanStep(tiles) {
     let pair = 0,
         count = 0;
@@ -406,25 +307,23 @@ function KDragonStep(tiles, tcnt) {
                 count[j] = 0;
             }
         }
-        //ans = Math.min(ans, search(tiles, 3, 0, 0, tcnt) + miss);
-        ans = Math.min(ans, searchGreedy(tiles, 3, tcnt) + miss);
+        ans = Math.min(ans, searchDp(tiles, 3, 0, tcnt) + miss);
         for (let j = 0; j < 9; ++j) if (count[j]) tiles[KDragonSave[i][j]]++;
     }
     return ans;
 }
 function countWaitingCards(tiles, ans) {
     let cnt = 0;
-    for (let i = 0; i < ans.length; ++i) cnt += 4 - tiles[ans[i]];
+    for (let i = 0; i < ans.length; ++i) cnt += Math.max(4 - tiles[ans[i]], 0);
     return cnt;
 }
 function normalWaiting(tiles, step, tcnt) {
     let ans = [];
-    for (let i = 0; i < 34; ++i)
-        if (RelativeCard(tiles, i)) {
-            tiles[i]++;
-            if (StepCheck(tiles, step, tcnt)) ans.push(i);
-            tiles[i]--;
-        }
+    for (let i = 0; i < 34; ++i) {
+        tiles[i]++;
+        if (StepCheck(tiles, step, tcnt)) ans.push(i);
+        tiles[i]--;
+    }
     return ans;
 }
 function JPWaiting(tiles, step, substep, tcnt) {
@@ -434,7 +333,7 @@ function JPWaiting(tiles, step, substep, tcnt) {
         tiles[i]++;
         if (tcnt === 14 && step === substep[1] && PairStep(tiles, true) < step) ans.push(i);
         else if (tcnt === 14 && step === substep[2] && OrphanStep(tiles) < step) ans.push(i);
-        else if (step === substep[0] && RelativeCardWithMyself(tiles, i) && StepCheck(tiles, step, tcnt)) ans.push(i);
+        else if (step === substep[0] && StepCheck(tiles, step, tcnt, 4)) ans.push(i);
         tiles[i]--;
     }
     return ans;
@@ -447,7 +346,7 @@ function GBWaiting(tiles, step, substep, tcnt) {
         if (tcnt === 14 && step === substep[1] && PairStep(tiles, false) < step) ans.push(i);
         else if (tcnt === 14 && step === substep[2] && OrphanStep(tiles) < step) ans.push(i);
         else if (tcnt === 14 && step === substep[3] && tcnt - 1 - Bukao16Count(tiles) < step) ans.push(i);
-        else if (step === substep[0] && RelativeCardWithMyself(tiles, i) && StepCheck(tiles, step, tcnt)) ans.push(i);
+        else if (step === substep[0] && StepCheck(tiles, step, tcnt)) ans.push(i);
         else if (tcnt >= 9 && step === substep[4] && KDragonStep(tiles, tcnt) < step) ans.push(i);
         tiles[i]--;
     }

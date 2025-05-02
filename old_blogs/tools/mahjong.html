@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8">
   <title>麻将牌理向听数计算</title>
@@ -12,26 +11,21 @@
       max-width: 800px;
       margin: auto;
     }
-
     h1 {
       text-align: center;
       color: #333;
     }
-
     .section {
       margin-top: 30px;
     }
-
     label {
       display: block;
       font-weight: bold;
       margin-bottom: 8px;
     }
-
     .input-area {
       margin-bottom: 10px;
     }
-
     input[type="text"] {
       width: 100%;
       padding: 10px;
@@ -39,13 +33,11 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
     .placeholder-note {
       font-size: 14px;
       color: #666;
       margin-top: 5px;
     }
-
     button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -56,11 +48,9 @@
       border-radius: 4px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #45a049;
     }
-
     .output-box {
       background-color: #fff;
       border: 1px solid #ddd;
@@ -69,70 +59,55 @@
       margin-top: 20px;
       border-radius: 4px;
     }
-
     .output-title {
       font-weight: bold;
       margin-bottom: 10px;
       color: #333;
     }
-
     .output-context {
       white-space: pre-wrap;
       word-wrap: break-word;
     }
-
     .output-time {
       font-size: 14px;
       color: #888;
       font-style: italic;
     }
-
     @media (max-width: 600px) {
       body {
         padding: 20px;
       }
-
       .section {
         margin-top: 15px;
       }
-
       h1 {
         font-size: 24px;
       }
-
       input[type="text"] {
         font-size: 14px;
       }
-
       button {
         width: 100%;
         padding: 12px;
         font-size: 14px;
       }
-
       .output-box {
         padding: 12px;
       }
-
       .output-title {
         font-size: 16px;
       }
-
       .output-context {
         font-size: 14px;
       }
-
       .output-time {
         font-size: 12px;
       }
     }
   </style>
 </head>
-
 <body>
-
   <h1>麻将牌理向听数计算</h1>
-
   <div class="section">
     <label for="inputText">请输入手牌</label>
     <div class="input-area">
@@ -149,7 +124,6 @@
     </div>
     <button onclick="processInput()">计算</button>
   </div>
-
   <div class="section">
     <div class="output-box">
       <div class="output-title">一般型牌理</div>
@@ -240,7 +214,8 @@
         document.getElementById('output-time-std').textContent = `Used ${ed_std - st_std} ms`;
         const st_jp = new Date();
         start_search_time = st_jp;
-        let stepJP = step;
+        let step4 = Step(tiles, tcnt, 4);
+        let stepJP = step4;
         let step7JP, step13;
         if (full_tcnt === 14) {
           step7JP = PairStep(tiles, true);
@@ -250,7 +225,7 @@
         }
         let output_JP = getWaitingType(stepJP);
         let stepTypeJP = []
-        if (step == stepJP) {
+        if (step4 == stepJP) {
           stepTypeJP.push("一般型");
         }
         if (full_tcnt == 14) {
@@ -263,7 +238,7 @@
         }
         output_JP += ` （` + stepTypeJP.join('／') + `）\n`;
         output_JP += "<table style=\"vertical-align: middle; border-collapse: collapse; padding: 0px;\">";
-        output_JP += "<tr><td style=\"padding-left: 0px;\">一般型：</td><td>" + getWaitingType(step) + "</td></tr>";
+        output_JP += "<tr><td style=\"padding-left: 0px;\">一般型：</td><td>" + getWaitingType(step4) + "</td></tr>";
         if (full_tcnt == 14) {
           output_JP += "<tr><td style=\"padding-left: 0px;\">七对型：</td><td>" + getWaitingType(step7JP) + "</td></tr>";
           output_JP += "<tr><td style=\"padding-left: 0px;\">国士无双型：</td><td>" + getWaitingType(step13) + "</td></tr>";
@@ -271,12 +246,11 @@
         output_JP += "</table>";
         document.getElementById('output-jp').innerHTML = output_JP;
         output_JP += printWaiting(tiles, tcnt, full_tcnt, function () {
-          return JPWaiting(tiles, stepJP, [step, step7JP, step13], full_tcnt);
+          return JPWaiting(tiles, stepJP, [step4, step7JP, step13], full_tcnt);
         });
         const ed_jp = new Date();
         document.getElementById('output-jp').innerHTML = output_JP;
         document.getElementById('output-time-jp').textContent = `Used ${ed_jp - st_jp} ms`;
-
         const st_gb = new Date();
         start_search_time = st_gb;
         let stepGB = step;
@@ -356,7 +330,5 @@
       }
     }
   </script>
-
 </body>
-
 </html>

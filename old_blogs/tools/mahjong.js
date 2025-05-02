@@ -1,5 +1,5 @@
-let start_search_time = new Date();
-let search_time_limit = 1000;
+const sizeUT = 34;
+const sizeAT = 43;
 function id(name) {
     switch (name[0]) {
         case "E":
@@ -19,6 +19,9 @@ function id(name) {
         case "C":
         case "R":
             return 33;
+        case 'X':
+        case 'H':
+            return 42;
     }
     if (name[0] < "0" || name[0] > "9") return -1;
     let x = name.charCodeAt(0) - "1".charCodeAt(0);
@@ -36,11 +39,16 @@ function id(name) {
             break;
         case "z":
             x += 27;
+            if (x >= sizeUT) x = 42;
+            break;
+        case 'h':
+        case 'f':
+            x += 34;
             break;
         default:
             return -1;
     }
-    if (x < 0 || x >= 34) return -1;
+    if (x < 0 || x >= sizeAT) return -1;
     return x;
 }
 function cardName(id) {
@@ -50,6 +58,7 @@ function cardName(id) {
     else if (id >= 9 && id < 18) ans = JP_name ? `${id - 8}p` : `${id - 8}b`;
     else if (id >= 18 && id < 27) ans = `${id - 17}s`;
     else if (id >= 27 && id < 34) ans = `${id - 26}z`;
+    else if (id >= 34) ans = `${id - 33}h`;
     return ans;
 }
 function cardNameGB(id) {
@@ -59,31 +68,35 @@ function cardNameGB(id) {
     else if (id >= 9 && id < 18) ans = JP_name ? `${id - 8}p` : `${id - 8}b`;
     else if (id >= 18 && id < 27) ans = `${id - 17}s`;
     else if (id >= 27 && id < 34) ans = `${id - 26}z`;
+    else if (id >= 34) ans = `${id - 33}h`;
     return ans;
 }
 function split(s) {
-    let tiles = Array(34).fill(0);
+    let tiles = Array(sizeAT).fill(0);
     let ids = [];
     for (let i = 0; i < s.length; i++)
-        if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") ids.push(id("Wh"));
+        if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") {
+            ids.push(id("Wh"));
+            i = i + 1;
+        }
         else if (s[i] >= "a" && s[i] <= "z")
             for (let j = i - 1; j >= 0; --j)
                 if (s[j] >= "0" && s[j] <= "9") ids.push(id(s[j] + s[i]));
                 else break;
         else if (s[i] >= "A" && s[i] <= "Z") ids.push(id(s[i]));
-    for (let i = 0; i < ids.length; i++) if (ids[i] >= 0 && ids[i] < 34) tiles[ids[i]]++;
+    for (let i = 0; i < ids.length; i++) if (ids[i] >= 0 && ids[i] < sizeAT) tiles[ids[i]]++;
     return tiles;
 }
 // Check left, left+1, left+2 can be a sequence or not
 let SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 function SeqCheck(left) {
-    return left >= 0 && left < 34 ? SeqArray[left] : false;
+    return left >= 0 && left < sizeUT ? SeqArray[left] : false;
 }
 // Check for step
 let dp;
 function prepareDp(nm, np) {
-    dp = new Array(34);
-    for (let i = 0; i < 34; ++i) {
+    dp = new Array(sizeUT);
+    for (let i = 0; i < sizeUT; ++i) {
         dp[i] = new Array(5);
         for (let ui = 0; ui <= 4; ++ui) {
             dp[i][ui] = new Array(3);
@@ -95,7 +108,7 @@ function prepareDp(nm, np) {
     }
 }
 function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0) {
-    if (i >= 34) return (nm - em) * 3 + (np - ep) * 2 - 1;
+    if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     if (dp[i][ui][uj][ep][em] >= -1) return dp[i][ui][uj][ep][em];
     let ans = (nm - em) * 3 + (np - ep) * 2 - 1;
     let ri = Math.max(tiles[i] - ui, 0);
@@ -127,7 +140,7 @@ function searchDp(tiles, em, ep, tcnt, limit = Infinity) {
     tiles = tiles.slice();
     let nm = Math.floor(tcnt / 3);
     let np = tcnt % 3 > 0 ? 1 : 0;
-    for (let i = 0; i < 34; ++i) {
+    for (let i = 0; i < sizeUT; ++i) {
         tiles[i] = Math.min(tiles[i], limit);
         let km = Math.floor(Math.max(tiles[i] - 4, 0) / 3);
         nm -= km;
@@ -140,7 +153,7 @@ function searchDp(tiles, em, ep, tcnt, limit = Infinity) {
 function check(tiles, target) {
     let meld = 0;
     tiles = tiles.slice();
-    for (let i = 0; i < 34; ++i) {
+    for (let i = 0; i < sizeUT; ++i) {
         if (tiles[i] >= 3) {
             meld += Math.floor(tiles[i] / 3);
             tiles[i] %= 3;
@@ -159,10 +172,10 @@ function check(tiles, target) {
 function Win(tiles, tcnt, limit = Infinity) {
     let meld = Math.floor(tcnt / 3);
     let head = tcnt % 3;
-    for (let i = 0; i < 34; ++i) if (tiles[i] > limit) return false;
+    for (let i = 0; i < sizeUT; ++i) if (tiles[i] > limit) return false;
     if (head === 0) return check(tiles, meld);
     if (head === 1) return false;
-    for (let i = 0; i < 34; ++i)
+    for (let i = 0; i < sizeUT; ++i)
         if (tiles[i] >= 2) {
             tiles[i] -= 2;
             let ans = check(tiles, meld);
@@ -174,7 +187,7 @@ function Win(tiles, tcnt, limit = Infinity) {
 // Listen function
 function Listen(tiles, tcnt, limit = Infinity) {
     if (tcnt % 3 === 1)
-        for (let j = 0; j < 34; ++j) {
+        for (let j = 0; j < sizeUT; ++j) {
             if (tiles[j] >= limit) continue;
             ++tiles[j];
             let ans = Win(tiles, tcnt + 1, limit);
@@ -182,10 +195,10 @@ function Listen(tiles, tcnt, limit = Infinity) {
             if (ans) return true;
         }
     else
-        for (let i = 0; i < 34; ++i) {
+        for (let i = 0; i < sizeAT; ++i) {
             if (!tiles[i]) continue;
             --tiles[i];
-            for (let j = 0; j < 34; ++j) {
+            for (let j = 0; j < sizeUT; ++j) {
                 if (i === j) continue;
                 if (tiles[j] >= limit) continue;
                 ++tiles[j];
@@ -234,7 +247,7 @@ function RelativeCardWithMyself(tiles, i) {
 // Special Check for 7 pairs
 function PairCount(tiles, disjoint = false) {
     let ans = 0;
-    for (let i = 0; i < 34; ++i) {
+    for (let i = 0; i < sizeUT; ++i) {
         if (disjoint && tiles[i] >= 2) ++ans;
         if (!disjoint) ans += Math.floor(tiles[i] / 2);
     }
@@ -245,7 +258,7 @@ function PairStep(tiles, disjoint = false) {
     let count = PairCount(tiles, disjoint);
     if (!disjoint) return 6 - count;
     let single = 0;
-    for (let i = 0; i < 34; ++i) if (tiles[i] === 1) ++single;
+    for (let i = 0; i < sizeUT; ++i) if (tiles[i] === 1) ++single;
     return 13 - count * 2 - Math.min(single, 7 - count);
 }
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14
@@ -253,7 +266,7 @@ let Orphan13Array = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0,
 function OrphanStep(tiles) {
     let pair = 0,
         count = 0;
-    for (let i = 0; i < 34; ++i)
+    for (let i = 0; i < sizeUT; ++i)
         if (Orphan13Array[i] && tiles[i]) {
             ++count;
             pair = Math.max(pair, tiles[i]);
@@ -320,7 +333,7 @@ function countWaitingCards(tiles, ans) {
 }
 function normalWaiting(tiles, step, tcnt) {
     let ans = [];
-    for (let i = 0; i < 34; ++i) {
+    for (let i = 0; i < sizeUT; ++i) {
         tiles[i]++;
         if (StepCheck(tiles, step, tcnt)) ans.push(i);
         tiles[i]--;
@@ -330,7 +343,7 @@ function normalWaiting(tiles, step, tcnt) {
 function JPWaiting(tiles, step, substep, tcnt) {
     // substep: [normal, 7pairs, 13orphans]
     let ans = [];
-    for (let i = 0; i < 34; ++i) {
+    for (let i = 0; i < sizeUT; ++i) {
         tiles[i]++;
         if (tcnt === 14 && step === substep[1] && PairStep(tiles, true) < step) ans.push(i);
         else if (tcnt === 14 && step === substep[2] && OrphanStep(tiles) < step) ans.push(i);
@@ -342,7 +355,7 @@ function JPWaiting(tiles, step, substep, tcnt) {
 function GBWaiting(tiles, step, substep, tcnt) {
     // substep: [normal, 7pairs, 13orphans, bukao16, dragon]
     let ans = [];
-    for (let i = 0; i < 34; ++i) {
+    for (let i = 0; i < sizeUT; ++i) {
         tiles[i]++;
         if (tcnt === 14 && step === substep[1] && PairStep(tiles, false) < step) ans.push(i);
         else if (tcnt === 14 && step === substep[2] && OrphanStep(tiles) < step) ans.push(i);

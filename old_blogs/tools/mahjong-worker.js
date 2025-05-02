@@ -11,11 +11,11 @@ function printWaiting(tiles, tcnt, full_tcnt, f) {
         const cnt = countWaitingCards(tiles, ans);
         result += `<td style="white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans.map(cardImage).join("") + "</td>";
     } else {
-        const ans = Array(34)
+        const ans = Array(sizeAT)
             .fill(null)
             .map(() => []);
         const cnts = [];
-        for (let i = 0; i < 34; ++i)
+        for (let i = 0; i < sizeAT; ++i)
             if (tiles[i]) {
                 tiles[i]--;
                 ans[i] = f();
@@ -24,7 +24,7 @@ function printWaiting(tiles, tcnt, full_tcnt, f) {
                 tiles[i]++;
             }
         cnts.sort((a, b) => b.cnt - a.cnt);
-        for (const { cnt, id } of cnts) result += `<tr><td style="white-space: nowrap; padding-left: 0px;">打 ${cardImage(id)} 待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans[id].map(cardImage).join("") + "</td></tr>";
+        for (const { cnt, id } of cnts) result += `<tr><td style="white-space: nowrap; padding-left: 0px;">${id >= 34 ? "补" : "打"} ${cardImage(id)} 待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans[id].map(cardImage).join("") + "</td></tr>";
     }
     return table_head + result + table_tail;
 }

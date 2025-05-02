@@ -209,9 +209,9 @@ function Step(tiles, tcnt = 14, limit = Infinity) {
 // Check whether the step of new tiles decreased or not.
 function StepCheck(tiles, maxstep, tcnt = 14, limit = Infinity) {
     if (maxstep === -1) return false;
-    if (Win(tiles, tcnt)) return true;
+    if (Win(tiles, tcnt, limit)) return true;
     if (maxstep === 0) return false;
-    if (Listen(tiles, tcnt)) return true;
+    if (Listen(tiles, tcnt, limit)) return true;
     if (maxstep === 1) return false;
     return searchDp(tiles, 0, 0, tcnt, limit) < maxstep;
 }
@@ -280,6 +280,7 @@ function KDragonCreate() {
             KDragonSave[i][j] = id;
         }
 }
+KDragonCreate();
 // Special Check for Bukao
 function Bukao16Count(tiles) {
     let ans = 0;

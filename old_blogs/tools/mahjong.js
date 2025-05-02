@@ -19,8 +19,8 @@ function id(name) {
         case "C":
         case "R":
             return 33;
-        case 'X':
-        case 'H':
+        case "X":
+        case "H":
             return 42;
     }
     if (name[0] < "0" || name[0] > "9") return -1;
@@ -41,8 +41,8 @@ function id(name) {
             x += 27;
             if (x >= sizeUT) x = 42;
             break;
-        case 'h':
-        case 'f':
+        case "h":
+        case "f":
             x += 34;
             break;
         default:
@@ -78,8 +78,7 @@ function split(s) {
         if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") {
             ids.push(id("Wh"));
             i = i + 1;
-        }
-        else if (s[i] >= "a" && s[i] <= "z")
+        } else if (s[i] >= "a" && s[i] <= "z")
             for (let j = i - 1; j >= 0; --j)
                 if (s[j] >= "0" && s[j] <= "9") ids.push(id(s[j] + s[i]));
                 else break;
@@ -247,18 +246,20 @@ function RelativeCardWithMyself(tiles, i) {
 // Special Check for 7 pairs
 function PairCount(tiles, disjoint = false) {
     let ans = 0;
-    for (let i = 0; i < sizeUT; ++i) {
-        if (disjoint && tiles[i] >= 2) ++ans;
-        if (!disjoint) ans += Math.floor(tiles[i] / 2);
-    }
-    return ans;
+    let sig = 0;
+    for (let i = 0; i < 34; ++i)
+        if (disjoint)
+            if (tiles[i] >= 2) ++ans;
+            else ++sig;
+        else {
+            ans += Math.floor(tiles[i] / 2);
+            sig += tiles[i] % 2;
+        }
+    return [ans, sig];
 }
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
 function PairStep(tiles, disjoint = false) {
-    let count = PairCount(tiles, disjoint);
-    if (!disjoint) return 6 - count;
-    let single = 0;
-    for (let i = 0; i < sizeUT; ++i) if (tiles[i] === 1) ++single;
+    let [count, single] = PairCount(tiles, disjoint);
     return 13 - count * 2 - Math.min(single, 7 - count);
 }
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14

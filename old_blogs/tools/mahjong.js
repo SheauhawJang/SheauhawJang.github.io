@@ -141,7 +141,7 @@ function searchDp(tiles, em, ep, tcnt, limit = Infinity) {
     let np = tcnt % 3 > 0 ? 1 : 0;
     for (let i = 0; i < sizeUT; ++i) {
         tiles[i] = Math.min(tiles[i], limit);
-        let km = Math.floor(Math.max(tiles[i] - 4, 0) / 3);
+        let km = Math.floor(Math.max(tiles[i] - 8, 0) / 3);
         nm -= km;
         tiles[i] -= km * 3;
     }

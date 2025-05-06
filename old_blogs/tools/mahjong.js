@@ -25,6 +25,22 @@ function id(name) {
         case "J":
             return 42;
     }
+    if (name[0] == "i")
+        switch (name[1]) {
+            case "w":
+            case "m":
+                return 43;
+            case "b":
+            case "p":
+                return 44;
+            case "s":
+                return 45;
+            case "z":
+                return 49;
+            case "h":
+            case "f":
+                return 50;
+        }
     if (name[0] < "0" || name[0] > "9") return -1;
     let x = name.charCodeAt(0) - "1".charCodeAt(0);
     if (name.length < 2) return -1;
@@ -89,7 +105,7 @@ function split(s) {
             i = i + 1;
         } else if (s[i] >= "a" && s[i] <= "z")
             for (let j = i - 1; j >= 0; --j)
-                if (s[j] >= "0" && s[j] <= "9") ids.push(id(s[j] + s[i]));
+                if ((s[j] >= "0" && s[j] <= "9") || s[j] == "i") ids.push(id(s[j] + s[i]));
                 else break;
         else if (s[i] >= "A" && s[i] <= "Z") ids.push(id(s[i]));
     for (let i = 0; i < ids.length; i++) if (ids[i] >= 0 && ids[i] < sizeAT) tiles[ids[i]]++;
@@ -144,13 +160,13 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
         ri += rb;
         rb = bj = 0;
     }
-    if (i === 33) {
+    if (i + 1 >= sizeUT) {
         ri += rc;
         rc = cj = 0;
     }
     const mp = Math.min(np - ep, ri);
     const ms = SeqCheck(i) ? Math.min(nm - em, 2) : 0;
-    for (let p = 0; p <= mp; ++p) {
+    for (let p = 0; p <= mp; ++p)
         for (let s = 0; s <= ms; ++s) {
             const lri = li - p * 2 - s;
             if (lri < 0) break;
@@ -175,7 +191,7 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
                 ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
             }
         }
-    }
+
     dp[dpi] = ans;
     return ans;
 }
@@ -283,40 +299,85 @@ function StepCheck(tiles, maxstep, tcnt = 14, limit = Infinity) {
     if (maxstep === 1) return false;
     return searchDp(tiles, 0, 0, tcnt, limit) < maxstep;
 }
-// Only relative card may increase the step.
-function RelativeCard(tiles, i) {
-    if (tiles[i]) return true;
-    if (SeqCheck(i) && (tiles[i + 1] || tiles[i + 2])) return true;
-    if (SeqCheck(i - 1) && (tiles[i - 1] || tiles[i + 1])) return true;
-    if (SeqCheck(i - 2) && (tiles[i - 2] || tiles[i - 1])) return true;
-    return false;
-}
-// Only relative card may increase the step.
-function RelativeCardWithMyself(tiles, i) {
-    if (tiles[i] > 1) return true;
-    if (SeqCheck(i) && (tiles[i + 1] || tiles[i + 2])) return true;
-    if (SeqCheck(i - 1) && (tiles[i - 1] || tiles[i + 1])) return true;
-    if (SeqCheck(i - 2) && (tiles[i - 2] || tiles[i - 1])) return true;
-    return false;
-}
-// Special Check for 7 pairs
-function PairCount(tiles, disjoint = false) {
-    let ans = 0;
-    let sig = 0;
-    for (let i = 0; i < 34; ++i)
-        if (disjoint) {
-            if (tiles[i] >= 2) ++ans;
-            else if (tiles[i]) ++sig;
-        } else {
-            ans += Math.floor(tiles[i] / 2);
-            sig += tiles[i] % 2;
-        }
-    return [ans, sig];
-}
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
 function PairStep(tiles, disjoint = false) {
-    const [count, single] = PairCount(tiles, disjoint);
-    return 13 - count * 2 - Math.min(single, 7 - count);
+    if (!disjoint) {
+        tiles = tiles.slice();
+        let ans = 0;
+        let sig = 0;
+        for (let i = 0; i < sizeUT; ++i) {
+            if (JokerA[i] != JokerA[i + 1]) {
+                tiles[i] += tiles[JokerA[i]];
+                tiles[JokerA[i]] = 0;
+            }
+            if (JokerB[i] != JokerB[i + 1]) {
+                tiles[i] += tiles[JokerB[i]];
+                tiles[JokerB[i]] = 0;
+            }
+            ans += Math.floor(tiles[i] / 2);
+            if (tiles[i] % 2)
+                if (tiles[JokerA[i]]) {
+                    --tiles[JokerA[i]];
+                    ++ans;
+                } else if (tiles[JokerB[i]]) {
+                    --tiles[JokerB[i]];
+                    ++ans;
+                } else ++sig;
+        }
+        return 13 - ans * 2 - Math.min(sig, 7 - ans) - tiles[42];
+    } else {
+        let t = tiles.slice();
+        for (let i = 0; i < sizeUT; ++i) {
+            if (t[i] != 1) continue;
+            if (t[JokerA[i]]) {
+                --t[JokerA[i]];
+                ++t[i];
+            } else if (t[JokerB[i]]) {
+                --t[JokerB[i]];
+                ++t[i];
+            } else if (t[42]) {
+                --t[42];
+                ++t[i];
+            }
+        }
+        for (let i = 0; i < sizeUT; ++i) {
+            if (t[i] != 0) continue;
+            const cnt = Math.min(t[JokerA[i]], 2);
+            t[i] = cnt;
+            t[JokerA[i]] -= cnt;
+            if (t[i] != 1) continue;
+            if (t[JokerB[i]]) {
+                --t[JokerB[i]];
+                ++t[i];
+            } else if (t[42]) {
+                --t[42];
+                ++t[i];
+            }
+        }
+        for (let i = 0; i < sizeUT; ++i) {
+            if (t[i] != 0) continue;
+            const cnt = Math.min(t[JokerB[i]], 2);
+            t[i] = cnt;
+            t[JokerB[i]] -= cnt;
+            if (t[i] != 1) continue;
+            if (t[42]) {
+                --t[42];
+                ++t[i];
+            }
+        }
+        for (let i = 0; i < sizeUT; ++i) {
+            if (t[i] != 0) continue;
+            const cnt = Math.min(t[42], 2);
+            t[i] = cnt;
+            t[42] -= cnt;
+        }
+        let ans = 0;
+        let sig = 0;
+        for (let i = 0; i < sizeUT; ++i)
+            if (t[i] >= 2) ++ans;
+            else if (t[i] === 1) ++sig;
+        return 13 - ans * 2 - Math.min(sig, 7 - ans);
+    }
 }
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14
 const Orphan13Array = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
@@ -419,7 +480,6 @@ function normalWaiting(tiles, step, tcnt, discard) {
 }
 function JPWaiting(tiles, step, substep, tcnt, discard) {
     // substep: [normal, 7pairs, 13orphans]
-    discard = false;
     subcheck = [false, false, false];
     if (tcnt === 14 && step === substep[1] && (!discard || PairStep(tiles, true) === step)) subcheck[1] = true;
     if (tcnt === 14 && step === substep[2] && (!discard || OrphanStep(tiles) === step)) subcheck[2] = true;
@@ -436,7 +496,6 @@ function JPWaiting(tiles, step, substep, tcnt, discard) {
 }
 function GBWaiting(tiles, step, substep, tcnt, discard) {
     // substep: [normal, 7pairs, 13orphans, bukao16, dragon]
-    discard = false;
     subcheck = [false, false, false, false, false];
     if (tcnt === 14 && step === substep[1] && (!discard || PairStep(tiles, false) === step)) subcheck[1] = true;
     if (tcnt === 14 && step === substep[2] && (!discard || OrphanStep(tiles) === step)) subcheck[2] = true;

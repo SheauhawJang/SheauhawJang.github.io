@@ -136,15 +136,27 @@
         <div class="input-area">
             <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
             <div class="placeholder-note">
-                输入栏支持以下格式，以下格式可混合使用：<br />
-				<ol>
+				输入栏支持以下格式，以下格式可混合使用：
+				<ol style="margin-top: 0;">
                 <li>天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。</li>
                 <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
                 <li>
                 英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。</li>
                 <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
 				</ol>
-				关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>表示。万能花牌使用<b>H/X/9h</b>表示。
+				<p>关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。<br/></p>
+				关于百搭牌：
+				<ul style="margin-top: 0;">
+					<li>不定向百搭牌<img src="./cards/a1j.gif" style="vertical-align: middle;">：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。</li>
+					<li>万字百搭牌<img src="./cards/a2j.gif" style="vertical-align: middle;">：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
+					<li>饼子百搭牌<img src="./cards/a3j.gif" style="vertical-align: middle;">：可以视作任何一张饼子。使用<b>3j/ip/ib</b>表示。</li>
+					<li>索子百搭牌<img src="./cards/a4j.gif" style="vertical-align: middle;">：可以视作任何一张索子。使用<b>4j/is</b>表示。</li>
+					<li>数牌百搭牌<img src="./cards/a5j.gif" style="vertical-align: middle;">：可以视作任何一张序数牌。使用<b>5j</b>表示。</li>
+					<li>风牌百搭牌<img src="./cards/a6j.gif" style="vertical-align: middle;">：可以视作<b>东南西北</b>中的任何一张。使用<b>6j</b>表示。</li>
+					<li>三元百搭牌<img src="./cards/a7j.gif" style="vertical-align: middle;">：可以视作<b>白发中</b>中的任何一张。使用<b>7j</b>表示。</li>
+					<li>字牌百搭牌<img src="./cards/a8j.gif" style="vertical-align: middle;">：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
+					<li>花牌百搭牌<img src="./cards/a9j.gif" style="vertical-align: middle;">：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
+				</ul>
             </div>
         </div>
         <button onclick="processInput()">计算</button>
@@ -167,7 +179,7 @@
         </div>
     </div>
     <div class="section">
-	<div class="output-time">v3.3</div>
+	<div class="output-time">v3.4</div>
     </div>
     <script src="mahjong.js"></script>
     <script>

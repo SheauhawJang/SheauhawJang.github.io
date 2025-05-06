@@ -151,7 +151,7 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
     let ra = tiles[JokerA[i]] - aj;
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[42] - cj;
-    let li = limit + ra + rb + rc - ui;
+    let li = limit - ui + ra + rb + rc;
     if (JokerA[i] != JokerA[i + 1]) {
         ri += ra;
         ra = aj = 0;
@@ -181,14 +181,26 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
             for (let k = mmk; k <= pmk; ++k) {
                 const ti = p * 2 + s + k * 3;
                 let d = Math.max(ti - ri, 0) + ds;
-                const uaj = Math.min(ra, d);
-                d -= uaj;
-                const ubj = Math.min(rb, d);
-                d -= ubj;
-                const ucj = Math.min(rc, d);
-                d -= ucj;
-                if (d - 1 >= ans) break;
-                ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
+                if (limit == Infinity) {
+                    const uaj = Math.min(ra, d);
+                    d -= uaj;
+                    const ubj = Math.min(rb, d);
+                    d -= ubj;
+                    const ucj = Math.min(rc, d);
+                    d -= ucj;
+                    if (d - 1 >= ans) break;
+                    ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
+                } else {
+                    const el = Math.max(ti + ui - limit, 0);
+                    const er = Math.min(ra + rb + rc, d);
+                    for (let e = er; e >= el; --e) {
+                        const uaj = Math.min(ra, e);
+                        const ubj = Math.min(rb, e - uaj);
+                        const ucj = Math.min(rc, e - uaj - ubj);
+                        if (d - e - 1 >= ans) break;
+                        ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d - e);
+                    }
+                }
             }
         }
 
@@ -514,3 +526,4 @@ function GBWaiting(tiles, step, substep, tcnt, discard) {
     }
     return ans;
 }
+

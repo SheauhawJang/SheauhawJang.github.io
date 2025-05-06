@@ -18,7 +18,7 @@ function printWaiting(tiles, tcnt, full_tcnt, f) {
         for (let i = 0; i < sizeAT; ++i)
             if (tiles[i]) {
                 tiles[i]--;
-                ans[i] = f(i + 1);
+                ans[i] = f(tcnt % 3 != 0);
                 const cnt = countWaitingCards(tiles, ans[i]);
                 if (ans[i].length > 0) cnts.push({ cnt: cnt, id: i });
                 tiles[i]++;

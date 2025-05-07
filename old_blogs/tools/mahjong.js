@@ -191,7 +191,7 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
                     if (d - 1 >= ans) break;
                     ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
                 } else {
-                    const el = Math.max(ti + ui - limit, 0);
+                    const el = Math.max(ti - li, 0);
                     const er = Math.min(ra + rb + rc, d);
                     for (let e = er; e >= el; --e) {
                         const uaj = Math.min(ra, e);

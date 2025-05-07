@@ -36,7 +36,7 @@ function getWaitingType(step) {
 function normalStep(tiles, tcnt, full_tcnt) {
     let step = Step(tiles, tcnt);
     let output = getWaitingType(step) + "\n";
-    postMessage({ output });
+    postMessage({ output, brief: getWaitingType(step) });
     output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
         return normalWaiting(tiles, step, full_tcnt, discard);
     });
@@ -67,8 +67,9 @@ function JPStep(tiles, tcnt, full_tcnt) {
         if (step13 == stepJP) stepTypeJP.push("国士无双型");
     }
     output += ` （` + stepTypeJP.join("／") + `）\n`;
+    let brief = output;
     output += table_head + table + table_tail;
-    postMessage({ output });
+    postMessage({ output, brief });
     output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
         return JPWaiting(tiles, stepJP, [step4, step7JP, step13], full_tcnt, discard);
     });
@@ -109,8 +110,9 @@ function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     }
     if (full_tcnt >= 9 && stepkd == stepGB) stepTypeGB.push("组合龙型");
     output += ` （` + stepTypeGB.join("／") + `）\n`;
+    let brief = output;
     output += table_head + table + table_tail;
-    postMessage({ output });
+    postMessage({ output, brief });
     output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
         return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt, discard);
     });

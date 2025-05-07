@@ -45,7 +45,7 @@
             border-radius: 4px;
         }
 
-        .placeholder-note-wrapper {
+        .input-note-wrapper {
             font-size: 14px;
             color: #666;
             margin-top: 5px;
@@ -89,7 +89,7 @@
             width: 200px;
             align-items: center;
         }
-		
+
         .random-button:hover {
             background-color: #45a049;
         }
@@ -104,18 +104,23 @@
             overflow-y: scroll;
         }
 
-        .toggle-note {
+        .toggle-button {
             background: none;
             border: none;
-            color: #4caf50;
             font-weight: bold;
             cursor: pointer;
             margin-bottom: 8px;
             padding: 0;
         }
 
-        .toggle-note:hover {
+        .toggle-button:hover {
             text-decoration: underline;
+        }
+
+        .output-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         @media screen and (max-width: 512px) {
@@ -170,9 +175,10 @@
             <button onclick="randomInput()" class="random-button">
                 随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌
             </button>
-            <div class="placeholder-note-wrapper">
-                <button class="toggle-note" onclick="togglePlaceholderNote()">显示输入说明 ▼</button>
-                <div class="placeholder-note" id="placeholderNote" style="display: none;">
+            <div class="input-note-wrapper">
+                <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50;">显示输入说明
+                    ▼</button>
+                <div class="input-note" id="inputNote" style="display: none;">
                     输入栏支持以下格式，以下格式可混合使用：
                     <ol style="margin-top: 0;">
                         <li>天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。
@@ -208,19 +214,31 @@
             </div>
         </div>
         <div class="output-box">
-            <div class="output-title">一般型牌理</div>
+            <div class="output-title-container">
+                <div class="output-title">一般型牌理</div>
+                <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
+            </div>
             <div class="output-context" id="output-std"></div>
-            <div class="output-time" id="output-time-std"></div>
+            <div class="output-context" id="brief-output-std" style="display: none;"></div>
+            <div class="output-time" id="time-output-std"></div>
         </div>
         <div class="output-box">
-            <div class="output-title">国标麻将标准型牌理</div>
+            <div class="output-title-container">
+                <div class="output-title">国标麻将标准型牌理</div>
+                <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
+            </div>
             <div class="output-context" id="output-gb"></div>
-            <div class="output-time" id="output-time-gb"></div>
+            <div class="output-context" id="brief-output-gb" style="display: none;"></div>
+            <div class="output-time" id="time-output-gb"></div>
         </div>
         <div class="output-box">
-            <div class="output-title">立直麻将标准型牌理</div>
+            <div class="output-title-container">
+                <div class="output-title">立直麻将标准型牌理</div>
+                <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">折叠 ▲</button>
+            </div>
             <div class="output-context" id="output-jp"></div>
-            <div class="output-time" id="output-time-jp"></div>
+            <div class="output-context" id="brief-output-jp" style="display: none;"></div>
+            <div class="output-time" id="time-output-jp"></div>
         </div>
     </div>
     <div class="section">
@@ -238,9 +256,12 @@
             document.getElementById("output-std").innerHTML = "";
             document.getElementById("output-jp").innerHTML = "";
             document.getElementById("output-gb").innerHTML = "";
-            document.getElementById("output-time-std").textContent = `Calculating......`;
-            document.getElementById("output-time-jp").textContent = `Calculating......`;
-            document.getElementById("output-time-gb").textContent = `Calculating......`;
+            document.getElementById("brief-output-std").innerHTML = "";
+            document.getElementById("brief-output-jp").innerHTML = "";
+            document.getElementById("brief-output-gb").innerHTML = "";
+            document.getElementById("time-output-std").textContent = `Calculating......`;
+            document.getElementById("time-output-jp").textContent = `Calculating......`;
+            document.getElementById("time-output-gb").textContent = `Calculating......`;
             KDragonCreate();
             const input = document.getElementById("inputText").value;
             let tiles = split(input);
@@ -256,8 +277,20 @@
             let task = 0;
             let step, step13;
             worker.onmessage = function (e) {
+                if ('brief' in e.data) {
+                    switch (task) {
+                        case 0:
+                            document.getElementById("brief-output-std").textContent = e.data.brief;
+                            break;
+                        case 1:
+                            document.getElementById("brief-output-jp").textContent = e.data.brief;
+                            break;
+                        case 2:
+                            document.getElementById("brief-output-gb").textContent = e.data.brief;
+                            break;
+                    }
+                }
                 if ('output' in e.data) {
-                    worker.last_output = e.data.output;
                     switch (task) {
                         case 0:
                             document.getElementById("output-std").innerHTML = e.data.output;
@@ -275,17 +308,17 @@
                 switch (task) {
                     case 0:
                         document.getElementById("output-std").innerHTML = result.output;
-                        document.getElementById("output-time-std").textContent = `Used ${time} ms`;
+                        document.getElementById("time-output-std").textContent = `Used ${time} ms`;
                         step = result.step;
                         break;
                     case 1:
                         document.getElementById("output-jp").innerHTML = result.output;
-                        document.getElementById("output-time-jp").textContent = `Used ${time} ms`;
+                        document.getElementById("time-output-jp").textContent = `Used ${time} ms`;
                         step13 = result.step13;
                         break;
                     case 2:
                         document.getElementById("output-gb").innerHTML = result.output;
-                        document.getElementById("output-time-gb").textContent = `Used ${time} ms`;
+                        document.getElementById("time-output-gb").textContent = `Used ${time} ms`;
                         break;
                 }
                 ++task;
@@ -334,16 +367,26 @@
             document.getElementById("inputText").value = handname.join('');
             processInput();
         }
-        function togglePlaceholderNote() {
-            const note = document.getElementById('placeholderNote');
-            const button = document.querySelector('.toggle-note');
+        function toggleNote() {
+            const note = document.getElementById('inputNote');
+            const button = document.getElementById('inputNoteButton');
             const isVisible = note.style.display !== 'none';
             note.style.display = isVisible ? 'none' : 'block';
             button.textContent = isVisible ? '显示输入说明 ▼' : '隐藏输入说明 ▲';
         }
+        function toggleOutput(i) {
+            const ids = ["output-std", "output-gb", "output-jp"];
+            const d = document.getElementById(ids[i]);
+            const b = document.getElementById("toggle-" + ids[i]);
+            const s = document.getElementById("brief-" + ids[i]);
+            const v = d.style.display !== 'none';
+            d.style.display = v ? 'none' : 'block';
+            s.style.display = v ? 'block' : 'none';
+            b.textContent = v ? '展开 ▼' : '折叠 ▲';
+        }
         window.onload = function () {
             if (window.innerWidth >= 512) {
-                togglePlaceholderNote();
+                toggleNote();
             }
             randomInput();
         }

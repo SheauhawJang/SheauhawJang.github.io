@@ -1,396 +1,362 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>麻将牌理向听数计算</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background-color: #f9f9f9;
-            padding: 40px;
-            max-width: 1024px;
-            margin: auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .section {
-            margin-top: 30px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .input-area {
-            margin-bottom: 10px
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .input-note-wrapper {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .output-box {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-left: 5px solid #4caf50;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 4px;
-        }
-
-        .output-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .output-context {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .output-time {
-            font-size: 14px;
-            color: #888;
-            font-style: italic;
-        }
-
-        .random-button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 200px;
-            align-items: center;
-        }
-
-        .random-button:hover {
-            background-color: #45a049;
-        }
-
-        .random-button input {
-            width: 5ch;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        html {
-            overflow-y: scroll;
-        }
-
-        .toggle-button {
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 8px;
-            padding: 0;
-        }
-
-        .toggle-button:hover {
-            text-decoration: underline;
-        }
-
-        .output-title-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        @media screen and (max-width: 512px) {
-            body {
-                padding: 20px;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>麻将牌理向听数计算</title>
+        <style>
+            * {
+                box-sizing: border-box;
             }
 
-            .section {
-                margin-top: 15px;
+            body {
+                font-family: "Segoe UI", sans-serif;
+                background-color: #f9f9f9;
+                padding: 40px;
+                max-width: 1024px;
+                margin: auto;
             }
 
             h1 {
-                font-size: 24px;
+                text-align: center;
+                color: #333;
+            }
+
+            .section {
+                margin-top: 30px;
+            }
+
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+
+            .input-area {
+                margin-bottom: 10px;
             }
 
             input[type="text"] {
+                width: 100%;
+                padding: 10px;
                 font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
             }
 
-            .random-button {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
+            .input-note-wrapper {
+                font-size: 14px;
+                color: #666;
+                margin-top: 5px;
             }
 
             .output-box {
-                padding: 12px;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-left: 5px solid #4caf50;
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 4px;
             }
 
             .output-title {
-                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #333;
             }
 
             .output-context {
-                font-size: 16px;
+                white-space: pre-wrap;
+                word-wrap: break-word;
             }
 
             .output-time {
-                font-size: 12px;
+                font-size: 14px;
+                color: #888;
+                font-style: italic;
             }
-        }
-    </style>
-</head>
 
-<body>
-    <h1>麻将牌理向听数计算</h1>
-    <div class="section">
-        <label for="inputText">请输入手牌</label>
-        <div class="input-area">
-            <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
-            <button onclick="processInput()" class="random-button">计算</button>
-            <button onclick="randomInput()" class="random-button">
-                随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌
-            </button>
-            <div class="input-note-wrapper">
-                <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50;">显示输入说明
-                    ▼</button>
-                <div class="input-note" id="inputNote" style="display: none;">
-                    输入栏支持以下格式，以下格式可混合使用：
-                    <ol style="margin-top: 0;">
-                        <li>天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。
-                        </li>
-                        <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
-                        <li>英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。
-                        </li>
-                        <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
-                    </ol>
-                    <p>关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。<br /></p>
-                    关于百搭牌：
-                    <ul style="margin-top: 0;">
-                        <li>不定向百搭牌 <img src="./cards/a1j.gif"
-                                style="vertical-align: middle;">：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。</li>
-                        <li>万字百搭牌 <img src="./cards/a2j.gif"
-                                style="vertical-align: middle;">：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
-                        <li>饼子百搭牌 <img src="./cards/a3j.gif"
-                                style="vertical-align: middle;">：可以视作任何一张饼子。使用<b>3j/ip/ib</b>表示。</li>
-                        <li>索子百搭牌 <img src="./cards/a4j.gif"
-                                style="vertical-align: middle;">：可以视作任何一张索子。使用<b>4j/is</b>表示。</li>
-                        <li>数牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle;">：可以视作任何一张序数牌。使用<b>5j</b>表示。
-                        </li>
-                        <li>风牌百搭牌 <img src="./cards/a6j.gif"
-                                style="vertical-align: middle;">：可以视作<b>东南西北</b>中的任何一张。使用<b>6j</b>表示。</li>
-                        <li>三元百搭牌 <img src="./cards/a7j.gif"
-                                style="vertical-align: middle;">：可以视作<b>白发中</b>中的任何一张。使用<b>7j</b>表示。</li>
-                        <li>字牌百搭牌 <img src="./cards/a8j.gif"
-                                style="vertical-align: middle;">：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
-                        <li>花牌百搭牌 <img src="./cards/a9j.gif"
-                                style="vertical-align: middle;">：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
-                    </ul>
+            .random-button {
+                margin-top: 15px;
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                width: 200px;
+                align-items: center;
+            }
+
+            .random-button:hover {
+                background-color: #45a049;
+            }
+
+            .random-button input {
+                width: 5ch;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            html {
+                overflow-y: scroll;
+            }
+
+            .toggle-button {
+                background: none;
+                border: none;
+                font-weight: bold;
+                cursor: pointer;
+                margin-bottom: 8px;
+                padding: 0;
+            }
+
+            .toggle-button:hover {
+                text-decoration: underline;
+            }
+
+            .output-title-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            @media screen and (max-width: 512px) {
+                body {
+                    padding: 20px;
+                }
+
+                .section {
+                    margin-top: 15px;
+                }
+
+                h1 {
+                    font-size: 24px;
+                }
+
+                input[type="text"] {
+                    font-size: 16px;
+                }
+
+                .random-button {
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 16px;
+                }
+
+                .output-box {
+                    padding: 12px;
+                }
+
+                .output-title {
+                    font-size: 16px;
+                }
+
+                .output-context {
+                    font-size: 16px;
+                }
+
+                .output-time {
+                    font-size: 12px;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>麻将牌理向听数计算</h1>
+        <div class="section">
+            <label for="inputText">请输入手牌</label>
+            <div class="input-area">
+                <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
+                <button onclick="processInput()" class="random-button">计算</button>
+                <button onclick="randomInput()" class="random-button">随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌</button>
+                <div class="input-note-wrapper">
+                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">显示输入说明 ▼</button>
+                    <div class="input-note" id="inputNote" style="display: none">
+                        输入栏支持以下格式，以下格式可混合使用：
+                        <ol style="margin-top: 0">
+                            <li>天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>饼/筒=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。</li>
+                            <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
+                            <li>英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。</li>
+                            <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
+                        </ol>
+                        <p>关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。<br /></p>
+                        关于百搭牌：
+                        <ul style="margin-top: 0">
+                            <li>不定向百搭牌 <img src="./cards/a1j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。</li>
+                            <li>万字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
+                            <li>饼子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以视作任何一张饼子。使用<b>3j/ip/ib</b>表示。</li>
+                            <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以视作任何一张索子。使用<b>4j/is</b>表示。</li>
+                            <li>数牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌。使用<b>5j</b>表示。</li>
+                            <li>风牌百搭牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：可以视作<b>东南西北</b>中的任何一张。使用<b>6j</b>表示。</li>
+                            <li>三元百搭牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：可以视作<b>白发中</b>中的任何一张。使用<b>7j</b>表示。</li>
+                            <li>字牌百搭牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
+                            <li>花牌百搭牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">一般型牌理</div>
-                <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
+            <div class="output-box">
+                <div class="output-title-container">
+                    <div class="output-title">一般型牌理</div>
+                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-std"></div>
+                <div class="output-context" id="brief-output-std" style="display: none"></div>
+                <div class="output-time" id="time-output-std"></div>
             </div>
-            <div class="output-context" id="output-std"></div>
-            <div class="output-context" id="brief-output-std" style="display: none;"></div>
-            <div class="output-time" id="time-output-std"></div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">国标麻将标准型牌理</div>
-                <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
+            <div class="output-box">
+                <div class="output-title-container">
+                    <div class="output-title">国标麻将标准型牌理</div>
+                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-gb"></div>
+                <div class="output-context" id="brief-output-gb" style="display: none"></div>
+                <div class="output-time" id="time-output-gb"></div>
             </div>
-            <div class="output-context" id="output-gb"></div>
-            <div class="output-context" id="brief-output-gb" style="display: none;"></div>
-            <div class="output-time" id="time-output-gb"></div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">立直麻将标准型牌理</div>
-                <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">折叠 ▲</button>
+            <div class="output-box">
+                <div class="output-title-container">
+                    <div class="output-title">立直麻将标准型牌理</div>
+                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-jp"></div>
+                <div class="output-context" id="brief-output-jp" style="display: none"></div>
+                <div class="output-time" id="time-output-jp"></div>
             </div>
-            <div class="output-context" id="output-jp"></div>
-            <div class="output-context" id="brief-output-jp" style="display: none;"></div>
-            <div class="output-time" id="time-output-jp"></div>
+            <div class="output-box">
+                <div class="output-title-container">
+                    <div class="output-title">台湾麻将总和牌型牌理</div>
+                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-tw"></div>
+                <div class="output-context" id="brief-output-tw" style="display: none"></div>
+                <div class="output-time" id="time-output-tw"></div>
+            </div>
         </div>
-    </div>
-    <div class="section">
-        <div class="output-time">v3.6</div>
-    </div>
-    <script src="mahjong.js"></script>
-    <script>
-        let worker = null;
-        function processInput() {
-            if (worker) {
-                console.log("working break");
-                worker.terminate();
-                worker = null;
-            }
-            document.getElementById("output-std").innerHTML = "";
-            document.getElementById("output-jp").innerHTML = "";
-            document.getElementById("output-gb").innerHTML = "";
-            document.getElementById("brief-output-std").innerHTML = "";
-            document.getElementById("brief-output-jp").innerHTML = "";
-            document.getElementById("brief-output-gb").innerHTML = "";
-            document.getElementById("time-output-std").textContent = `Calculating......`;
-            document.getElementById("time-output-jp").textContent = `Calculating......`;
-            document.getElementById("time-output-gb").textContent = `Calculating......`;
-            KDragonCreate();
-            const input = document.getElementById("inputText").value;
-            let tiles = split(input);
-            let tcnt = 0;
-            for (let i = 0; i < sizeAT; ++i) {
-                tcnt += tiles[i];
-            }
-            let full_tcnt = tcnt;
-            if (tcnt % 3 === 1) {
-                ++full_tcnt;
-            }
-            worker = new Worker("mahjong-worker.js");
-            let task = 0;
-            let step, step13;
-            worker.onmessage = function (e) {
-                if ('brief' in e.data) {
+        <div class="section">
+            <div class="output-time">v3.7</div>
+        </div>
+        <script src="mahjong.js"></script>
+        <script>
+            let worker = null;
+            function processInput() {
+                if (worker) {
+                    console.log("working break");
+                    worker.terminate();
+                    worker = null;
+                }
+                const ids = ["output-std", "output-jp", "output-gb", "output-tw"];
+                for (let i = 0; i < ids.length; ++i) {
+                    document.getElementById(ids[i]).innerHTML = "";
+                    document.getElementById("brief-" + ids[i]).innerHTML = "";
+                    document.getElementById("time-" + ids[i]).textContent = `Calculating......`;
+                }
+                const input = document.getElementById("inputText").value;
+                let tiles = split(input);
+                let tcnt = 0;
+                for (let i = 0; i < sizeAT; ++i) {
+                    tcnt += tiles[i];
+                }
+                let full_tcnt = tcnt;
+                if (tcnt % 3 === 1) {
+                    ++full_tcnt;
+                }
+                worker = new Worker("mahjong-worker.js");
+                let task = 0;
+                let step, step13;
+                worker.onmessage = function (e) {
+                    if ("brief" in e.data) document.getElementById("brief-" + ids[task]).textContent = e.data.brief;
+                    if ("output" in e.data) {
+                        document.getElementById(ids[task]).innerHTML = e.data.output;
+                        return;
+                    }
+                    const { result, time } = e.data;
+                    document.getElementById(ids[task]).innerHTML = result.output;
+                    document.getElementById("time-" + ids[task]).textContent = `Used ${time} ms`;
                     switch (task) {
                         case 0:
-                            document.getElementById("brief-output-std").textContent = e.data.brief;
+                            step = result.step;
                             break;
                         case 1:
-                            document.getElementById("brief-output-jp").textContent = e.data.brief;
-                            break;
-                        case 2:
-                            document.getElementById("brief-output-gb").textContent = e.data.brief;
+                            step13 = result.step13;
                             break;
                     }
-                }
-                if ('output' in e.data) {
+                    ++task;
                     switch (task) {
                         case 0:
-                            document.getElementById("output-std").innerHTML = e.data.output;
-                            break;
                         case 1:
-                            document.getElementById("output-jp").innerHTML = e.data.output;
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt });
                             break;
                         case 2:
-                            document.getElementById("output-gb").innerHTML = e.data.output;
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, step13 });
+                            break;
+                        case 3:
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step });
+                            break;
+                        case 4:
+                            worker.terminate();
+                            worker = null;
                             break;
                     }
-                    return;
-                }
-                const { result, time } = e.data;
-                switch (task) {
-                    case 0:
-                        document.getElementById("output-std").innerHTML = result.output;
-                        document.getElementById("time-output-std").textContent = `Used ${time} ms`;
-                        step = result.step;
-                        break;
-                    case 1:
-                        document.getElementById("output-jp").innerHTML = result.output;
-                        document.getElementById("time-output-jp").textContent = `Used ${time} ms`;
-                        step13 = result.step13;
-                        break;
-                    case 2:
-                        document.getElementById("output-gb").innerHTML = result.output;
-                        document.getElementById("time-output-gb").textContent = `Used ${time} ms`;
-                        break;
-                }
-                ++task;
-                switch (task) {
-                    case 0: case 1:
-                        worker.postMessage({ task, tiles, tcnt, full_tcnt });
-                        break;
-                    case 2:
-                        worker.postMessage({ task, tiles, tcnt, full_tcnt, step, step13 });
-                        break;
-                    case 3:
-                        worker.terminate();
-                        worker = null;
-                }
+                };
+                worker.postMessage({ task, tiles, tcnt, full_tcnt });
             }
-            worker.postMessage({ task, tiles, tcnt, full_tcnt });
-        }
-        function randomInput() {
-            function shuffle(array) {
-                for (let i = 0; i < array.length; ++i) {
-                    const j = Math.floor(Math.random() * (array.length - i));
-                    [array[i], array[i + j]] = [array[i + j], array[i]];
+            function randomInput() {
+                function shuffle(array) {
+                    for (let i = 0; i < array.length; ++i) {
+                        const j = Math.floor(Math.random() * (array.length - i));
+                        [array[i], array[i + j]] = [array[i + j], array[i]];
+                    }
+                    return array;
                 }
-                return array;
-            }
-            let mount = new Array(136);
-            for (let i = 0; i < mount.length; ++i) {
-                mount[i] = Math.floor(i / 4);
-            }
-            shuffle(mount);
-            const n = parseInt(document.getElementById("randomCardCount").value);
-            let hand = [];
-            for (let i = 0; i < n; ++i) {
-                hand.push(mount[i]);
-            }
-            hand.sort((a, b) => a - b);
-            let handname = [];
-            for (let i = 0; i < n; ++i) {
-                handname.push(cardName(hand[i]));
-                if (handname.length >= 2) {
-                    if (handname[i][1] === handname[i - 1][1]) {
-                        handname[i - 1] = handname[i - 1][0];
+                let mount = new Array(136);
+                for (let i = 0; i < mount.length; ++i) {
+                    mount[i] = Math.floor(i / 4);
+                }
+                shuffle(mount);
+                const n = parseInt(document.getElementById("randomCardCount").value);
+                let hand = [];
+                for (let i = 0; i < n; ++i) {
+                    hand.push(mount[i]);
+                }
+                hand.sort((a, b) => a - b);
+                let handname = [];
+                for (let i = 0; i < n; ++i) {
+                    handname.push(cardName(hand[i]));
+                    if (handname.length >= 2) {
+                        if (handname[i][1] === handname[i - 1][1]) {
+                            handname[i - 1] = handname[i - 1][0];
+                        }
                     }
                 }
+                document.getElementById("inputText").value = handname.join("");
+                processInput();
             }
-            document.getElementById("inputText").value = handname.join('');
-            processInput();
-        }
-        function toggleNote() {
-            const note = document.getElementById('inputNote');
-            const button = document.getElementById('inputNoteButton');
-            const isVisible = note.style.display !== 'none';
-            note.style.display = isVisible ? 'none' : 'block';
-            button.textContent = isVisible ? '显示输入说明 ▼' : '隐藏输入说明 ▲';
-        }
-        function toggleOutput(i) {
-            const ids = ["output-std", "output-gb", "output-jp"];
-            const d = document.getElementById(ids[i]);
-            const b = document.getElementById("toggle-" + ids[i]);
-            const s = document.getElementById("brief-" + ids[i]);
-            const v = d.style.display !== 'none';
-            d.style.display = v ? 'none' : 'block';
-            s.style.display = v ? 'block' : 'none';
-            b.textContent = v ? '展开 ▼' : '折叠 ▲';
-        }
-        window.onload = function () {
-            if (window.innerWidth >= 512) {
-                toggleNote();
+            function toggleNote() {
+                const note = document.getElementById("inputNote");
+                const button = document.getElementById("inputNoteButton");
+                const isVisible = note.style.display !== "none";
+                note.style.display = isVisible ? "none" : "block";
+                button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
             }
-            randomInput();
-        }
-    </script>
-</body>
-
+            function toggleOutput(i) {
+                const ids = ["output-std", "output-gb", "output-jp", "output-tw"];
+                const d = document.getElementById(ids[i]);
+                const b = document.getElementById("toggle-" + ids[i]);
+                const s = document.getElementById("brief-" + ids[i]);
+                const v = d.style.display !== "none";
+                d.style.display = v ? "none" : "block";
+                s.style.display = v ? "block" : "none";
+                b.textContent = v ? "展开 ▼" : "折叠 ▲";
+            }
+            window.onload = function () {
+                if (window.innerWidth >= 512) {
+                    toggleNote();
+                }
+                randomInput();
+            };
+        </script>
+    </body>
 </html>

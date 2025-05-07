@@ -119,6 +119,44 @@ function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     return { output };
 }
 
+function TWStep(tiles, tcnt, full_tcnt, step) {
+    let table = "";
+    let stepTW = step;
+    table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step) + "</td></tr>";
+    postMessage({ output: table_head + table + table_tail });
+    let step13, step16, stepnico;
+    if (full_tcnt === 17) {
+        stepnico = NiconicoStep(tiles);
+        table += '<tr><td style="padding-left: 0px;">呖咕呖咕型：</td><td>' + getWaitingType(stepnico) + "</td></tr>";
+        stepTW = Math.min(stepTW, stepnico);
+        postMessage({ output: table_head + table + table_tail });
+        step13 = OrphanMeldStep(tiles);
+        table += '<tr><td style="padding-left: 0px;">十三幺型：</td><td>' + getWaitingType(step13) + "</td></tr>";
+        postMessage({ output: table_head + table + table_tail });
+        stepTW = Math.min(stepTW, step13);
+        step16 = Buda16Step(tiles);
+        table += '<tr><td style="padding-left: 0px;">十六不搭型：</td><td>' + getWaitingType(step16) + "</td></tr>";
+        postMessage({ output: table_head + table + table_tail });
+        stepTW = Math.min(stepTW, step16);
+    }
+    let output = getWaitingType(stepTW);
+    let stepTypeTW = [];
+    if (step == stepTW) stepTypeTW.push("一般型");
+    if (full_tcnt === 17) {
+        if (stepnico == stepTW) stepTypeTW.push("呖咕呖咕型");
+        if (step13 == stepTW) stepTypeTW.push("十三幺型");
+        if (step16 == stepTW) stepTypeTW.push("十六不搭型");
+    }
+    output += ` （` + stepTypeTW.join("／") + `）\n`;
+    let brief = output;
+    output += table_head + table + table_tail;
+    postMessage({ output, brief });
+    output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
+        return TWWaiting(tiles, stepTW, [step, stepnico, step13, step16], full_tcnt, discard);
+    });
+    return { output };
+}
+
 self.onmessage = function (e) {
     let { task, tiles, tcnt, full_tcnt } = e.data;
     let result;
@@ -130,10 +168,16 @@ self.onmessage = function (e) {
         case 1:
             result = JPStep(tiles, tcnt, full_tcnt);
             break;
-        case 2:
+        case 2: {
             let { step, step13 } = e.data;
             result = GBStep(tiles, tcnt, full_tcnt, step, step13);
             break;
+        }
+        case 3: {
+            let { step } = e.data;
+            result = TWStep(tiles, tcnt, full_tcnt, step);
+            break;
+        }
     }
     const ed = new Date();
     postMessage({ result, time: ed - st });

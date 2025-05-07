@@ -463,7 +463,7 @@ function Bukao16Count(tiles) {
         }
         ans = Math.max(ans, count);
     }
-    return ans - tiles[42];
+    return ans + tiles[42];
 }
 // Special Check for Knitted Dragon
 function KDragonStep(tiles, tcnt) {

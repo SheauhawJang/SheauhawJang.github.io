@@ -3,13 +3,18 @@
 
 <head>
     <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>麻将牌理向听数计算</title>
     <style>
+		* {
+		  	box-sizing: border-box;
+		}
+		
         body {
             font-family: "Segoe UI", sans-serif;
             background-color: #f9f9f9;
             padding: 40px;
-            max-width: 800px;
+            max-width: 1024px;
             margin: auto;
         }
 
@@ -29,7 +34,7 @@
         }
 
         .input-area {
-            margin-bottom: 10px;
+            margin-bottom: 10px
         }
 
         input[type="text"] {
@@ -55,6 +60,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+			width: 200px;
         }
 
         button:hover {
@@ -86,8 +92,22 @@
             color: #888;
             font-style: italic;
         }
+		
+		.random-button {
+			align-items: center;
+		}
 
-        @media (max-width: 600px) {
+		.random-button input {
+			width: 5ch;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+        
+        html {
+            overflow-y: scroll;
+        }
+
+        @media screen and (max-width: 512px) {
             body {
                 padding: 20px;
             }
@@ -101,13 +121,13 @@
             }
 
             input[type="text"] {
-                font-size: 14px;
+                font-size: 16px;
             }
 
             button {
                 width: 100%;
                 padding: 12px;
-                font-size: 14px;
+                font-size: 16px;
             }
 
             .output-box {
@@ -119,7 +139,7 @@
             }
 
             .output-context {
-                font-size: 14px;
+                font-size: 16px;
             }
 
             .output-time {
@@ -135,6 +155,10 @@
         <label for="inputText">请输入手牌</label>
         <div class="input-area">
             <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
+        	<button onclick="processInput()">计算</button>
+			<button onclick="randomInput()" class="random-button">
+				随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99"/> 张牌
+			</button>
             <div class="placeholder-note">
 				输入栏支持以下格式，以下格式可混合使用：
 				<ol style="margin-top: 0;">
@@ -159,9 +183,6 @@
 				</ul>
             </div>
         </div>
-        <button onclick="processInput()">计算</button>
-    </div>
-    <div class="section">
         <div class="output-box">
             <div class="output-title">一般型牌理</div>
             <div class="output-context" id="output-std"></div>
@@ -257,6 +278,37 @@
                 }
             }
             worker.postMessage({ task, tiles, tcnt, full_tcnt });
+        }
+        function randomInput() {
+            function shuffle(array) {
+                for (let i = 0; i < array.length; ++i) {
+                    const j = Math.floor(Math.random() * (array.length - i));
+                    [array[i], array[i + j]] = [array[i + j], array[i]];
+                }
+                return array;
+            }
+            let mount = new Array(136);
+            for (let i = 0; i < mount.length; ++i) {
+                mount[i] = Math.floor(i / 4);
+            }
+            shuffle(mount);
+            const n = parseInt(document.getElementById("randomCardCount").value);
+            let hand = [];
+            for (let i = 0; i < n; ++i) {
+                hand.push(mount[i]);
+            }
+            hand.sort((a, b) => a - b);
+            let handname = [];
+            for (let i = 0; i < n; ++i) {
+                handname.push(cardName(hand[i]));
+                if (handname.length >= 2) {
+                    if (handname[i][1] === handname[i - 1][1]) {
+                        handname[i - 1] = handname[i - 1][0];
+                    }
+                }
+            }
+            document.getElementById("inputText").value = handname.join('');
+            processInput();
         }
     </script>
 </body>

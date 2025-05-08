@@ -198,6 +198,10 @@
                     </div>
                 </div>
             </div>
+            <div class="output-box" style="display: none;" id="output-box-head">
+                <div class="output-context" style="text-align: center;" id="output-cnt"></div>
+                <div class="output-context" style="text-align: center; overflow-x: auto; white-space: nowrap;" id="output-pic"></div>
+            </div>
             <div class="output-box">
                 <div class="output-title-container">
                     <div class="output-title">一般型牌理</div>
@@ -236,10 +240,35 @@
             </div>
         </div>
         <div class="section">
-            <div class="output-time">v3.7</div>
+            <div class="output-time">v3.8</div>
         </div>
         <script src="mahjong.js"></script>
         <script>
+            function tilesInfo(tcnt) {
+                const meld = Math.floor(tcnt / 3);
+                let output = `${tcnt} 张牌\n`;
+                switch (tcnt % 3) {
+                    case 1:
+                        output += `3n+1 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
+                        break;
+                    case 2:
+                        output += `3n+2 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
+                        break;
+                    case 0:
+                        output += `3n 型: 和牌需要 ${meld} 个面子和 ${0} 个雀头`;
+                        break;
+                }
+                return output;
+            }
+            function cardLargeImage(id) {
+                return `<img src="./cards/${cardName(id)}.gif" style="vertical-align: middle; width: 5%;">`;
+            }
+            function tilesImage(tiles) {
+                let output = "";
+                for (let i = 0; i < sizeAT; ++i)
+                    for (let j = 0; j < tiles[i]; ++j) output += cardLargeImage(i);
+                return output;
+            }
             let worker = null;
             function processInput() {
                 if (worker) {
@@ -263,6 +292,9 @@
                 if (tcnt % 3 === 1) {
                     ++full_tcnt;
                 }
+                document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
+                document.getElementById("output-pic").innerHTML = tilesImage(tiles);
+                document.getElementById("output-box-head").style.display = 'block';
                 worker = new Worker("mahjong-worker.js");
                 let task = 0;
                 let step, step13;

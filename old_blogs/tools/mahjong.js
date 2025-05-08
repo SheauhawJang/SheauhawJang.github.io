@@ -568,7 +568,7 @@ function Buda16Step(tiles) {
     let step = Infinity;
     for (let pi = 0; pi < 5; ++pi) {
         let ra = tiles[46],
-            rb = tiles[48];
+            rb = tiles[49];
         let ans = -tiles[42];
         for (let i = 0; i < 3; ++i) {
             const m = i === pi ? pmiss[i] : miss[i];

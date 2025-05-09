@@ -218,8 +218,8 @@ function useDpMemory(nm, np, tiles, limit, maxans) {
     if (limit !== last_info.limit) return false;
     if (limit !== Infinity) 
         if (tiles[42] !== last_info.tiles[42]) return false;
-        else if (maxans !== last_info.maxans) return false;
-    if (limit === Infinity && maxans + tiles[42] !== last_info.maxans + last_info.tiles[42]) return false;
+        else if (maxans > last_info.maxans) return false;
+    if (limit === Infinity && maxans + tiles[42] > last_info.maxans + last_info.tiles[42]) return false;
     let last_same = 0;
     for (let i = 0; i < sizeUT; ++i) {
         if (tiles[JokerA[i]] !== last_info.tiles[JokerA[i]]) return false;
@@ -503,6 +503,7 @@ function KDragonStep(tiles, tcnt) {
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
             else ++miss;
         }
+        if (miss - 1 - tiles[42] >= ans) continue;
         ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt) + miss);
     }
     return ans;
@@ -519,6 +520,8 @@ function KDragonStepCheck(tiles, maxstep, tcnt) {
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
             else ++miss;
         }
+        if (miss - 1 - tiles[42] >= ans) continue;
+        if (miss - 1 - tiles[42] >= maxstep) continue;
         ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, maxstep - miss) + miss);
     }
     return ans;

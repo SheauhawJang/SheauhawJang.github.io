@@ -645,12 +645,10 @@ function checkGoodWaiting(tiles, stepf) {
                 if (stepf(tiles, 0, 0)) listencnt += 5 - tiles[ib];
                 --tiles[ib];
                 if (listencnt >= 6) {
-                    console.log(tiles, listencnt);
                     ++tiles[ia];
                     return true;
                 }
             }
-            console.log(tiles, listencnt);
         }
         ++tiles[ia];
     }
@@ -692,6 +690,7 @@ function JPSubcheck(tiles, step, substep, tcnt) {
     return subchecks;
 }
 function GBSubcheck(tiles, step, substep, tcnt) {
+    console.log("GB", step, substep);
     const subchecks = Array(sizeAT).fill(null).map(() => Array(5).fill(false));
     if (step === substep[0]) 
         for (let i = 0; i < sizeAT; ++i) { 

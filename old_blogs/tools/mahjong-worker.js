@@ -29,7 +29,8 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
         const save = Array(sizeAT);
         const cnts = [];
         const subchecks = subcheck();
-        for (let i = 0; i < sizeAT; ++i) 
+        for (let i = 0; i < sizeAT; ++i) {
+            console.log(i, subchecks[i])
             if (tiles[i]) {
                 tiles[i]--;
                 save[i] = getWaiting(subchecks[i]);
@@ -44,6 +45,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
                     if (ans.length > 0) cnts.push({ cnt: cnt, id: i });
                 }
             }
+        }
         cnts.sort((a, b) => {
             if (b.cnt !== a.cnt) return b.cnt - a.cnt;
             if ("gcnt" in a && "gcnt" in b) return b.gcnt - a.gcnt;
@@ -151,7 +153,7 @@ function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step, step7GB, step13, step16, stepkd];
-    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => GBWaiting(tiles, step, substep, full_tcnt, subcheck), () => GBSubcheck(tiles, step, substep, full_tcnt));
+    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => GBWaiting(tiles, stepGB, substep, full_tcnt, subcheck), () => GBSubcheck(tiles, stepGB, substep, full_tcnt));
     return { output };
 }
 function TWStep(tiles, tcnt, full_tcnt, step) {
@@ -187,7 +189,7 @@ function TWStep(tiles, tcnt, full_tcnt, step) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step, stepnico, step13, step16];
-    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => TWWaiting(tiles, step, substep, full_tcnt, subcheck), () => TWSubcheck(tiles, step, substep, full_tcnt));
+    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => TWWaiting(tiles, stepTW, substep, full_tcnt, subcheck), () => TWSubcheck(tiles, stepTW, substep, full_tcnt));
     return { output };
 }
 self.onmessage = function (e) {

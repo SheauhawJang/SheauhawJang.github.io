@@ -4,7 +4,7 @@ let table_tail = "</table>";
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
-function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
+function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
     let result = "";
     if (full_tcnt !== tcnt) {
         const { ans, gans } = getWaiting();
@@ -12,25 +12,27 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
             const bcnt = countWaitingCards(tiles, ans);
             const gcnt = countWaitingCards(tiles, gans);
             const cnt = gcnt + bcnt;
-            const ratio = gcnt / cnt * 100;
-            result += `<td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td>` + 
-                      `<td class="devided-waiting-td">` + 
-                      `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
-                      `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` + 
-                      `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
-                      `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` + 
-                      `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
+            const ratio = (gcnt / cnt) * 100;
+            result +=
+                `<td class="waiting-brief">待 ${cnt} 枚</td>` +
+                `<td class="devided-waiting-td">` +
+                `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` +
+                `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` +
+                `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` +
+                `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` +
+                `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
         } else {
             const cnt = countWaitingCards(tiles, ans);
-            result += `<td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
+            result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
     } else {
         const save = Array(sizeAT);
         const cnts = [];
-        for (let i = 0; i < sizeAT; ++i)
+        const subchecks = subcheck();
+        for (let i = 0; i < sizeAT; ++i) 
             if (tiles[i]) {
                 tiles[i]--;
-                save[i] = getWaiting();
+                save[i] = getWaiting(subchecks[i]);
                 tiles[i]++;
                 const { ans, gans } = save[i];
                 if (gans !== undefined) {
@@ -42,23 +44,28 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
                     if (ans.length > 0) cnts.push({ cnt: cnt, id: i });
                 }
             }
-        cnts.sort((a, b) => b.cnt - a.cnt);
+        cnts.sort((a, b) => {
+            if (b.cnt !== a.cnt) return b.cnt - a.cnt;
+            if ("gcnt" in a && "gcnt" in b) return b.gcnt - a.gcnt;
+            return 0;
+        });
         for (const { cnt, bcnt, gcnt, id } of cnts) {
             const verb = (id >= 34 && id < 42) || id == 50 ? "补" : "打";
             if (gcnt !== undefined) {
-                const ratio = gcnt / cnt * 100;
-                result += `<tr><td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` + 
-                          `<td class="devided-waiting-td">` + 
-                          `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
-                          `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` +
-                          `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
-                          `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + 
-                          `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td></tr>`;
-            } else {
-                result += `<tr><td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` + 
-                          `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
-            } 
-        } 
+                const ratio = (gcnt / cnt) * 100;
+                result +=
+                    `<tr><td class="waiting-brief">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` +
+                    `<td class="devided-waiting-td">` +
+                    `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` +
+                    `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` +
+                    `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` +
+                    `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` +
+                    `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td></tr>`;
+            } else
+                result +=
+                    `<tr><td class="waiting-brief">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` +
+                    `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+        }
     }
     return table_head + result + table_tail;
 }
@@ -71,9 +78,7 @@ function normalStep(tiles, tcnt, full_tcnt) {
     let step = Step(tiles, tcnt, full_tcnt);
     let output = getWaitingType(step) + "\n";
     postMessage({ output, brief: getWaitingType(step) });
-    output += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return normalWaiting(tiles, step, full_tcnt);
-    });
+    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => normalWaiting(tiles, step, full_tcnt, subcheck), () => normalSubcheck(tiles, step, full_tcnt));
     return { output, step };
 }
 function JPStep(tiles, tcnt, full_tcnt) {
@@ -104,12 +109,10 @@ function JPStep(tiles, tcnt, full_tcnt) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    output += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return JPWaiting(tiles, stepJP, [step4, step7JP, step13], full_tcnt);
-    });
+    const substep = [step4, step7JP, step13];
+    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => JPWaiting(tiles, stepJP, substep, full_tcnt, subcheck), () => JPSubcheck(tiles, stepJP, substep, full_tcnt));
     return { output, step13 };
 }
-
 function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     let table = "";
     let stepGB = step;
@@ -147,12 +150,10 @@ function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    output += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt);
-    });
+    const substep = [step, step7GB, step13, step16, stepkd];
+    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => GBWaiting(tiles, step, substep, full_tcnt, subcheck), () => GBSubcheck(tiles, step, substep, full_tcnt));
     return { output };
 }
-
 function TWStep(tiles, tcnt, full_tcnt, step) {
     let table = "";
     let stepTW = step;
@@ -185,12 +186,10 @@ function TWStep(tiles, tcnt, full_tcnt, step) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    output += printWaiting(tiles, tcnt, full_tcnt, function () {
-        return TWWaiting(tiles, stepTW, [step, stepnico, step13, step16], full_tcnt);
-    });
+    const substep = [step, stepnico, step13, step16];
+    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => TWWaiting(tiles, step, substep, full_tcnt, subcheck), () => TWSubcheck(tiles, step, substep, full_tcnt));
     return { output };
 }
-
 self.onmessage = function (e) {
     let { task, tiles, tcnt, full_tcnt } = e.data;
     let result;

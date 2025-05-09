@@ -77,6 +77,24 @@
             font-style: italic;
         }
 
+        .devided-waiting-td {
+            display: flex; 
+            flex-wrap: wrap; 
+            align-items: center;
+        }
+
+        .devided-waiting-brief {
+            white-space: nowrap; 
+            padding-left: 10px;
+            display: inline-block;
+        }
+
+        .devided-waiting-cards {
+            white-space: normal; 
+            padding-left: 10px;
+            display: inline-block;
+        }
+
         .random-button {
             margin-top: 15px;
             padding: 10px 20px;
@@ -444,6 +462,8 @@
         }
         window.onload = function () {
             randomInput();
+            document.getElementById("inputText").value = "2345678m2345678s234567899p";
+            processInput();
         };
 
     </script>

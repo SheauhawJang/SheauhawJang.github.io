@@ -94,7 +94,7 @@ function split(s) {
     s = Array.from(s);
     let tiles = Array(sizeAT).fill(0);
     let ids = [];
-    for (let i = 0; i < s.length; i++)
+    for (let i = 0; i < s.length; ++i)
         if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") {
             ids.push(id("Wh"));
             i = i + 1;
@@ -107,9 +107,9 @@ function split(s) {
         }
         else ids.push(id(s[i]));
     let valid_ids = [];
-    for (let i = 0; i < ids.length; i++) 
+    for (let i = 0; i < ids.length; ++i) 
         if (ids[i] >= 0 && ids[i] < sizeAT) {
-            tiles[ids[i]]++;
+            ++tiles[ids[i]];
             valid_ids.push(ids[i]);
         }
     return { tiles, ids: valid_ids };
@@ -144,7 +144,7 @@ function indexDp(em, ep, i, ui, uj, aj, bj, cj) {
 }
 const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, -1];
 const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, -1];
-function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
+function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     const dpi = indexDp(em, ep, i, ui, uj, aj, bj, cj);
     if (dp[dpi] !== Infinity) return dp[dpi];
@@ -192,7 +192,8 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
                     const ucj = Math.min(rc, d);
                     d -= ucj;
                     if (d - 1 >= ans) break;
-                    ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
+                    if (d - 1 >= maxans) break;
+                    ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, maxans, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
                 } else {
                     const el = Math.max(ti - li + ra + rb + rc, 0);
                     const er = Math.min(ra + rb + rc, d);
@@ -201,7 +202,8 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
                         const ubj = Math.min(rb, e - uaj);
                         const ucj = Math.min(rc, e - uaj - ubj);
                         if (d - e - 1 >= ans) break;
-                        ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d - e);
+                        if (d - e - 1 >= maxans) break;
+                        ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, maxans, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d - e);
                     }
                 }
             }
@@ -210,7 +212,7 @@ function kernelDp(tiles, em, ep, nm, np, limit = Infinity, i = 0, ui = 0, uj = 0
     dp[dpi] = ans;
     return ans;
 }
-function searchDp(tiles, em, ep, tcnt, limit = Infinity) {
+function searchDp(tiles, em, ep, tcnt, maxans = Infinity, limit = Infinity) {
     tiles = tiles.slice();
     let nm = Math.floor(tcnt / 3);
     let np = tcnt % 3 > 0 ? 1 : 0;
@@ -226,12 +228,12 @@ function searchDp(tiles, em, ep, tcnt, limit = Infinity) {
     }
     if (limit !== Infinity) {
         prepareDp(nm, np, aj, bj, tiles[42]);
-        return kernelDp(tiles, em, ep, nm, np, limit);
+        return kernelDp(tiles, em, ep, nm, np, maxans, limit);
     }
     let ans = -tiles[42];
     tiles[42] = 0;
     prepareDp(nm, np, aj, bj, 0);
-    return kernelDp(tiles, em, ep, nm, np, limit) + ans;
+    return kernelDp(tiles, em, ep, nm, np, maxans - ans, limit) + ans;
 }
 // Check for winning
 function check(tiles, target) {
@@ -299,20 +301,20 @@ function Listen(tiles, tcnt, full_tcnt = tcnt, limit = Infinity) {
 }
 // Step function
 function Step(tiles, tcnt = 14, full_tcnt = (tcnt % 3 === 1 ? tcnt + 1 : tcnt), limit = Infinity) {
-    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, tcnt, limit);
+    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, tcnt, Infinity, limit);
     if (Win(tiles, tcnt, limit)) return -1;
     if (Listen(tiles, tcnt, full_tcnt, limit)) return 0;
-    return searchDp(tiles, 0, 0, tcnt, limit);
+    return searchDp(tiles, 0, 0, tcnt, Infinity, limit);
 }
 // Check whether the step of new tiles decreased or not.
 function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = (tcnt % 3 === 1 ? tcnt + 1 : tcnt), limit = Infinity) {
-    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, tcnt, limit) < maxstep;
+    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, tcnt, maxstep, limit) < maxstep;
     if (maxstep === -1) return false;
     if (Win(tiles, tcnt, limit)) return true;
     if (maxstep === 0) return false;
     if (Listen(tiles, tcnt, full_tcnt, limit)) return true;
     if (maxstep === 1) return false;
-    return searchDp(tiles, 0, 0, tcnt, limit) < maxstep;
+    return searchDp(tiles, 0, 0, tcnt, maxstep, limit) < maxstep;
 }
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
 function PairStep(tiles, disjoint = false) {
@@ -410,8 +412,8 @@ function OrphanStep(tiles) {
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         if (tcp[id]) --tcp[id];
-        else if (tcp[JokerA[id]]) tcp[JokerA[id]]--;
-        else if (tcp[JokerB[id]]) tcp[JokerB[id]]--;
+        else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
+        else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
         else ++ans;
     }
     for (let i = 0; i < Orphan13Array.length; ++i) {
@@ -453,15 +455,15 @@ function Bukao16Count(tiles) {
             const id = KDragonSave[i][j];
             ++count;
             if (tiles[id]);
-            else if (tcp[JokerA[id]]) tcp[JokerA[id]]--;
-            else if (tcp[JokerB[id]]) tcp[JokerB[id]]--;
+            else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
+            else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
             else --count;
         }
         for (let i = 27; i < 34; ++i) {
             ++count;
             if (tiles[i]);
-            else if (tcp[JokerA[i]]) tcp[JokerA[i]]--;
-            else if (tcp[JokerB[i]]) tcp[JokerB[i]]--;
+            else if (tcp[JokerA[i]]) --tcp[JokerA[i]];
+            else if (tcp[JokerB[i]]) --tcp[JokerB[i]];
             else --count;
         }
         ans = Math.max(ans, count);
@@ -476,12 +478,28 @@ function KDragonStep(tiles, tcnt) {
         let tcp = tiles.slice();
         for (let j = 0; j < 9; ++j) {
             const id = KDragonSave[i][j];
-            if (tcp[id]) tcp[id]--;
-            else if (tcp[JokerA[id]]) tcp[JokerA[id]]--;
-            else if (tcp[JokerB[id]]) tcp[JokerB[id]]--;
-            else miss++;
+            if (tcp[id]) --tcp[id];
+            else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
+            else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
+            else ++miss;
         }
         ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt) + miss);
+    }
+    return ans;
+}
+function KDragonStepCheck(tiles, maxstep, tcnt) {
+    let ans = Infinity;
+    for (let i = 0; i < 6; ++i) {
+        let miss = 0;
+        let tcp = tiles.slice();
+        for (let j = 0; j < 9; ++j) {
+            const id = KDragonSave[i][j];
+            if (tcp[id]) --tcp[id];
+            else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
+            else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
+            else ++miss;
+        }
+        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, maxstep - miss) + miss);
     }
     return ans;
 }
@@ -493,8 +511,8 @@ function OrphanMeldStep(tiles) {
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         if (tcp[id]) --tcp[id];
-        else if (tcp[JokerA[id]]) tcp[JokerA[id]]--;
-        else if (tcp[JokerB[id]]) tcp[JokerB[id]]--;
+        else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
+        else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
         else ++miss;
     }
     for (let i = 0; i < Orphan13Array.length; ++i) {
@@ -594,33 +612,73 @@ function countWaitingCards(tiles, ans) {
     for (let i = 0; i < ans.length; ++i) cnt += Math.max(4 - tiles[ans[i]], 0);
     return cnt;
 }
+function checkGoodWaiting(tiles, stepf) {
+    for (let ia = 0; ia < sizeUT; ++ia) {
+        if (!tiles[ia]) continue;
+        --tiles[ia];
+        if (stepf(tiles, 1, 1)) {
+            let listencnt = 0;
+            for (let ib = 0; ib < sizeUT; ++ib) {
+                if (ia === ib) continue;
+                if (tiles[ib] >= 4) continue;
+                ++tiles[ib];
+                if (stepf(tiles, 0, 0)) listencnt += 5 - tiles[ib];
+                --tiles[ib];
+                if (listencnt >= 6) {
+                    console.log(tiles, listencnt);
+                    ++tiles[ia];
+                    return true;
+                }
+            }
+            console.log(tiles, listencnt);
+        }
+        ++tiles[ia];
+    }
+    return false;
+}
 function normalWaiting(tiles, step, tcnt) {
     let ans = [];
+    let gans = [];
     const discard = tcnt % 3 !== 1;
-    if (discard && !StepCheck(tiles, step + 1, tcnt - 1, tcnt)) return ans;
+    if (discard && !StepCheck(tiles, step + 1, tcnt - 1, tcnt)) return { ans };
     for (let i = 0; i < sizeUT; ++i) {
-        tiles[i]++;
-        if (StepCheck(tiles, step, tcnt, tcnt)) ans.push(i);
-        tiles[i]--;
+        ++tiles[i];
+        const iw = StepCheck(tiles, step, tcnt, tcnt);
+        if (iw) 
+            if (step === 1 && tiles[i] < 4) {
+                if (checkGoodWaiting(tiles, (t, i, d) => StepCheck(t, i, tcnt - d, tcnt))) gans.push(i);
+                else ans.push(i);
+            } else ans.push(i);
+        --tiles[i];
     }
-    return ans;
+    if (step === 1) return { ans, gans };
+    return { ans };
 }
 function JPWaiting(tiles, step, substep, tcnt) {
-    // substep: [normal, 7pairs, 13orphans]
     const discard = tcnt % 3 !== 1;
     subcheck = [false, false, false];
     if (tcnt === 14 && step === substep[1] && (!discard || PairStep(tiles, true) === step)) subcheck[1] = true;
     if (tcnt === 14 && step === substep[2] && (!discard || OrphanStep(tiles) === step)) subcheck[2] = true;
     if (step === substep[0] && (!discard || StepCheck(tiles, step + 1, tcnt - 1, tcnt, 4))) subcheck[0] = true;
     let ans = [];
-    for (let i = 0; i < sizeUT; ++i) {
-        tiles[i]++;
-        if (subcheck[1] && PairStep(tiles, true) < step) ans.push(i);
-        else if (subcheck[2] && OrphanStep(tiles) < step) ans.push(i);
-        else if (subcheck[0] && StepCheck(tiles, step, tcnt, tcnt, 4)) ans.push(i);
-        tiles[i]--;
+    let gans = [];
+    function waiting(tiles, step, d) {
+        if (subcheck[1] && PairStep(tiles, true) < step) return true;
+        else if (subcheck[2] && OrphanStep(tiles) < step) return true;
+        else if (subcheck[0] && StepCheck(tiles, step, tcnt - d, tcnt, 4)) return true;
     }
-    return ans;
+    for (let i = 0; i < sizeUT; ++i) {
+        ++tiles[i];
+        const iw = waiting(tiles, step, 0);
+        if (iw) 
+            if (step === 1 && tiles[i] < 4) {
+                if (checkGoodWaiting(tiles, waiting)) gans.push(i);
+                else ans.push(i);
+            } else ans.push(i);
+        --tiles[i];
+    }
+    if (step === 1) return { ans, gans };
+    return { ans };
 }
 function GBWaiting(tiles, step, substep, tcnt) {
     // substep: [normal, 7pairs, 13orphans, bukao16, dragon]
@@ -630,18 +688,28 @@ function GBWaiting(tiles, step, substep, tcnt) {
     if (tcnt === 14 && step === substep[2] && (!discard || OrphanStep(tiles) === step)) subcheck[2] = true;
     if (tcnt === 14 && step === substep[3] && (!discard || tcnt - 1 - Bukao16Count(tiles) === step)) subcheck[3] = true;
     if (step === substep[0] && (!discard || StepCheck(tiles, step + 1, tcnt - 1, tcnt))) subcheck[0] = true;
-    if (tcnt >= 9 && step === substep[4] && (!discard || KDragonStep(tiles, tcnt) === step)) subcheck[4] = true;
+    if (tcnt >= 9 && step === substep[4] && (!discard || KDragonStepCheck(tiles, step + 1, tcnt) === step)) subcheck[4] = true;
     let ans = [];
-    for (let i = 0; i < sizeUT; ++i) {
-        tiles[i]++;
-        if (subcheck[1] && PairStep(tiles, false) < step) ans.push(i);
-        else if (subcheck[2] && OrphanStep(tiles) < step) ans.push(i);
-        else if (subcheck[3] && tcnt - 1 - Bukao16Count(tiles) < step) ans.push(i);
-        else if (subcheck[0] && StepCheck(tiles, step, tcnt, tcnt)) ans.push(i);
-        else if (subcheck[4] && KDragonStep(tiles, tcnt) < step) ans.push(i);
-        tiles[i]--;
+    let gans = [];
+    function waiting(tiles, step, d) {
+        if (subcheck[1] && PairStep(tiles, false) < step) return true;
+        else if (subcheck[2] && OrphanStep(tiles) < step) return true;
+        else if (subcheck[3] && tcnt - 1 - Bukao16Count(tiles) < step) return true;
+        else if (subcheck[0] && StepCheck(tiles, step, tcnt - d, tcnt)) return true;
+        else if (subcheck[4] && KDragonStepCheck(tiles, step, tcnt) < step) return true;
     }
-    return ans;
+    for (let i = 0; i < sizeUT; ++i) {
+        ++tiles[i];
+        const iw = waiting(tiles, step, 0);
+        if (iw)
+            if (step === 1 && tiles[i] < 4) {
+                if (checkGoodWaiting(tiles, waiting)) gans.push(i);
+                else ans.push(i);
+            } else ans.push(i);
+        --tiles[i];
+    }
+    if (step === 1) return { ans, gans };
+    return { ans };
 }
 function TWWaiting(tiles, step, substep, tcnt) {
     // substep: [normal, niconico, 13orphans, buda16]
@@ -652,13 +720,23 @@ function TWWaiting(tiles, step, substep, tcnt) {
     if (step === substep[0] && (!discard || StepCheck(tiles, step + 1, tcnt - 1, tcnt))) subcheck[0] = true;
     if (tcnt === 17 && step === substep[2] && (!discard || OrphanMeldStep(tiles) === step)) subcheck[2] = true;
     let ans = [];
-    for (let i = 0; i < sizeUT; ++i) {
-        tiles[i]++;
-        if (subcheck[1] && NiconicoStep(tiles) < step) ans.push(i);
-        else if (subcheck[3] && Buda16Step(tiles) < step) ans.push(i);
-        else if (subcheck[0] && StepCheck(tiles, step, tcnt, tcnt)) ans.push(i);
-        else if (subcheck[2] && OrphanMeldStep(tiles) < step) ans.push(i);
-        tiles[i]--;
+    let gans = [];
+    function waiting(tiles, step, d) {
+        if (subcheck[1] && NiconicoStep(tiles) < step) return true;
+        else if (subcheck[3] && Buda16Step(tiles) < step) return true;
+        else if (subcheck[0] && StepCheck(tiles, step, tcnt - d, tcnt)) return true;
+        else if (subcheck[2] && OrphanMeldStep(tiles) < step) return true;
     }
-    return ans;
+    for (let i = 0; i < sizeUT; ++i) {
+        ++tiles[i];
+        const iw = waiting(tiles, step, 0);
+        if (iw)
+            if (step === 1 && tiles[i] < 4) {
+                if (checkGoodWaiting(tiles, waiting)) gans.push(i);
+                else ans.push(i);
+            } else ans.push(i);
+        --tiles[i];
+    }
+    if (step === 1) return { ans, gans };
+    return { ans };
 }

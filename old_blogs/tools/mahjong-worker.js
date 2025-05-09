@@ -7,24 +7,58 @@ function cardImage(id) {
 function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
     let result = "";
     if (full_tcnt !== tcnt) {
-        const ans = getWaiting();
-        const cnt = countWaitingCards(tiles, ans);
-        result += `<td style="white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans.map(cardImage).join("") + "</td>";
+        const { ans, gans } = getWaiting();
+        if (gans !== undefined) {
+            const bcnt = countWaitingCards(tiles, ans);
+            const gcnt = countWaitingCards(tiles, gans);
+            const cnt = gcnt + bcnt;
+            const ratio = gcnt / cnt * 100;
+            result += `<td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td>` + 
+                      `<td class="devided-waiting-td">` + 
+                      `<div style="white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
+                      `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` + 
+                      `<div style="white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
+                      `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` + 
+                      `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
+        } else {
+            const cnt = countWaitingCards(tiles, ans);
+            result += `<td style="white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
+        }
     } else {
-        const ans = Array(sizeAT)
-            .fill(null)
-            .map(() => []);
+        const save = Array(sizeAT);
         const cnts = [];
         for (let i = 0; i < sizeAT; ++i)
             if (tiles[i]) {
                 tiles[i]--;
-                ans[i] = getWaiting();
-                const cnt = countWaitingCards(tiles, ans[i]);
-                if (ans[i].length > 0) cnts.push({ cnt: cnt, id: i });
+                save[i] = getWaiting();
                 tiles[i]++;
+                const { ans, gans } = save[i];
+                if (gans !== undefined) {
+                    const bcnt = countWaitingCards(tiles, ans);
+                    const gcnt = countWaitingCards(tiles, gans);
+                    if (ans.length > 0 || gans.length > 0) cnts.push({ cnt: bcnt + gcnt, bcnt, gcnt, id: i });
+                } else {
+                    const cnt = countWaitingCards(tiles, ans);
+                    if (ans.length > 0) cnts.push({ cnt: cnt, id: i });
+                }
             }
         cnts.sort((a, b) => b.cnt - a.cnt);
-        for (const { cnt, id } of cnts) result += `<tr><td style="white-space: nowrap; padding-left: 0px;">${(id >= 34 && id < 42) || id == 50 ? "补" : "打"} ${cardImage(id)} 待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans[id].map(cardImage).join("") + "</td></tr>";
+        for (const { cnt, bcnt, gcnt, id } of cnts) {
+            const verb = (id >= 34 && id < 42) || id == 50 ? "补" : "打";
+            if (gcnt !== undefined) {
+                const ratio = gcnt / cnt * 100;
+                result += `<tr><td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` + 
+                          `<td class="devided-waiting-td">` + 
+                          `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
+                          `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` +
+                          `<div style="white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
+                          `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + 
+                          `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td></tr>`;
+            } else {
+                result += `<tr><td style="white-space: nowrap; padding-left: 0px;">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` + 
+                          `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+            } 
+        } 
     }
     return table_head + result + table_tail;
 }

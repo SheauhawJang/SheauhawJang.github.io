@@ -1,5 +1,5 @@
 importScripts("mahjong.js");
-let table_head = '<table style="vertical-align: middle; border-collapse: collapse; padding: 0px;">';
+let table_head = '<table style="border-collapse: collapse; padding: 0px;">';
 let table_tail = "</table>";
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
@@ -22,7 +22,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
                       `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
         } else {
             const cnt = countWaitingCards(tiles, ans);
-            result += `<td style="white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
+            result += `<td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
     } else {
         const save = Array(sizeAT);
@@ -55,7 +55,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
                           `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + 
                           `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td></tr>`;
             } else {
-                result += `<tr><td style="white-space: nowrap; padding-left: 0px;">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` + 
+                result += `<tr><td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` + 
                           `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
             } 
         } 

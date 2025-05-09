@@ -122,6 +122,33 @@
                 align-items: center;
             }
 
+            .card-div {
+                position: relative;
+                display: inline-block;
+                cursor: pointer; 
+                vertical-align: middle;
+                width: 5%;
+            }
+            .card-div img {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+            .card-div .card-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 123, 255, 0.4);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+            .card-div:hover .card-overlay {
+                opacity: 1;
+            }
+
             @media screen and (max-width: 512px) {
                 body {
                     padding: 20px;
@@ -246,6 +273,7 @@
         </div>
         <script src="mahjong.js"></script>
         <script>
+            let tiles;
             function tilesInfo(tcnt) {
                 const meld = Math.floor(tcnt / 3);
                 let output = `${tcnt} 张手牌\n`;
@@ -263,12 +291,11 @@
                 return output;
             }
             function cardLargeImage(id) {
-                return `<img src="./cards/${cardName(id)}.gif" style="vertical-align: middle; width: 5%;">`;
+                return `<div class="card-div"><div class="card-overlay"></div><img src="./cards/${cardName(id)}.gif" onclick="discard(${id})"></div>`;
             }
             function tilesImage(tiles) {
                 let output = "";
-                for (let i = 0; i < sizeAT; ++i)
-                    for (let j = 0; j < tiles[i]; ++j) output += cardLargeImage(i);
+                for (let j = 0; j < tiles.length; ++j) output += cardLargeImage(tiles[j]);
                 return output;
             }
             let worker = null;
@@ -285,18 +312,15 @@
                     document.getElementById("time-" + ids[i]).textContent = `Calculating......`;
                 }
                 const input = document.getElementById("inputText").value;
-                let tiles = split(input);
+                let splitans = split(input);
+                tiles = splitans.tiles;
                 let tcnt = 0;
-                for (let i = 0; i < sizeAT; ++i) {
-                    tcnt += tiles[i];
-                }
+                for (let i = 0; i < sizeAT; ++i) tcnt += tiles[i];
                 let full_tcnt = tcnt;
-                if (tcnt % 3 === 1) {
-                    ++full_tcnt;
-                }
+                if (tcnt % 3 === 1) ++full_tcnt;
                 document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
-                document.getElementById("output-pic").innerHTML = tilesImage(tiles);
-                document.getElementById("output-box-head").style.display = 'block';
+                document.getElementById("output-pic").innerHTML = tilesImage(splitans.ids);
+                document.getElementById("output-box-head").style.display = "block";
                 worker = new Worker("mahjong-worker.js");
                 let task = 0;
                 let step, step13;
@@ -346,24 +370,16 @@
                     return array;
                 }
                 let mount = new Array(136);
-                for (let i = 0; i < mount.length; ++i) {
-                    mount[i] = Math.floor(i / 4);
-                }
+                for (let i = 0; i < mount.length; ++i) mount[i] = Math.floor(i / 4);
                 shuffle(mount);
                 const n = parseInt(document.getElementById("randomCardCount").value);
                 let hand = [];
-                for (let i = 0; i < n; ++i) {
-                    hand.push(mount[i]);
-                }
+                for (let i = 0; i < n; ++i) hand.push(mount[i]);
                 hand.sort((a, b) => a - b);
                 let handname = [];
                 for (let i = 0; i < n; ++i) {
                     handname.push(cardName(hand[i]));
-                    if (handname.length >= 2) {
-                        if (handname[i][1] === handname[i - 1][1]) {
-                            handname[i - 1] = handname[i - 1][0];
-                        }
-                    }
+                    if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
                 }
                 document.getElementById("inputText").value = handname.join("");
                 processInput();
@@ -385,9 +401,29 @@
                 s.style.display = v ? "block" : "none";
                 b.textContent = v ? "展开 ▼" : "折叠 ▲";
             }
+            function discard(id) {
+                let mount = [];
+                for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i]; ++j) mount.push(i);
+                if (mount.length === 0) return;
+                --tiles[id];
+                let hand = [];
+                for (let i = 0; i < sizeAT; ++i) for (let j = 0; j < tiles[i]; ++j) hand.push(i);
+                hand.sort((a, b) => a - b);
+                let handname = [];
+                for (let i = 0; i < hand.length; ++i) {
+                    handname.push(cardName(hand[i]));
+                    if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+                }
+                let newInput = handname.join("");
+                let newCard = mount[Math.floor(Math.random() * mount.length)];
+                newInput += cardName(newCard);
+                document.getElementById("inputText").value = newInput;
+                processInput();
+            }
             window.onload = function () {
                 randomInput();
             };
+            
         </script>
     </body>
 </html>

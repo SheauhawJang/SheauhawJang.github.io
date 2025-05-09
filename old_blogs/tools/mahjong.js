@@ -100,13 +100,21 @@ function split(s) {
         if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") {
             ids.push(id("Wh"));
             i = i + 1;
-        } else if (s[i] >= "a" && s[i] <= "z")
+        } else if (s[i] >= "a" && s[i] <= "z") {
+            let tids = [];
             for (let j = i - 1; j >= 0; --j)
-                if ((s[j] >= "0" && s[j] <= "9") || s[j] === "i") ids.push(id(s[j] + s[i]));
+                if ((s[j] >= "0" && s[j] <= "9") || s[j] === "i") tids.push(id(s[j] + s[i]));
                 else break;
+            for (let j = tids.length - 1; j >= 0; --j) ids.push(tids[j]);
+        }
         else ids.push(id(s[i]));
-    for (let i = 0; i < ids.length; i++) if (ids[i] >= 0 && ids[i] < sizeAT) tiles[ids[i]]++;
-    return tiles;
+    let valid_ids = [];
+    for (let i = 0; i < ids.length; i++) 
+        if (ids[i] >= 0 && ids[i] < sizeAT) {
+            tiles[ids[i]]++;
+            valid_ids.push(ids[i]);
+        }
+    return { tiles, ids: valid_ids };
 }
 // Check left, left+1, left+2 can be a sequence or not
 const SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];

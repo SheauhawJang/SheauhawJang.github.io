@@ -29,8 +29,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
         const save = Array(sizeAT);
         const cnts = [];
         const subchecks = subcheck();
-        for (let i = 0; i < sizeAT; ++i) {
-            console.log(i, subchecks[i])
+        for (let i = 0; i < sizeAT; ++i) 
             if (tiles[i]) {
                 tiles[i]--;
                 save[i] = getWaiting(subchecks[i]);
@@ -45,7 +44,6 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
                     if (ans.length > 0) cnts.push({ cnt: cnt, id: i });
                 }
             }
-        }
         cnts.sort((a, b) => {
             if (b.cnt !== a.cnt) return b.cnt - a.cnt;
             if ("gcnt" in a && "gcnt" in b) return b.gcnt - a.gcnt;

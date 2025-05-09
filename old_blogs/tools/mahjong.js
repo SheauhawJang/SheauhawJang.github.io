@@ -690,7 +690,6 @@ function JPSubcheck(tiles, step, substep, tcnt) {
     return subchecks;
 }
 function GBSubcheck(tiles, step, substep, tcnt) {
-    console.log("GB", step, substep);
     const subchecks = Array(sizeAT).fill(null).map(() => Array(5).fill(false));
     if (step === substep[0]) 
         for (let i = 0; i < sizeAT; ++i) { 

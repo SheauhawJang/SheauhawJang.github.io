@@ -762,7 +762,7 @@ function TWSubcheck(tiles, step, substep, tcnt) {
     return subchecks;
 }
 function normalWaiting(tiles, step, tcnt, subcheck) {
-    if (!subcheck) return { ans: [] };
+    if (subcheck === false) return { ans: [] };
     let ans = [];
     let gans = [];
     for (let i = 0; i < sizeUT; ++i) {

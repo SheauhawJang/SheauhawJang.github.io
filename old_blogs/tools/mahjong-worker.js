@@ -15,9 +15,9 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
             const ratio = gcnt / cnt * 100;
             result += `<td style="vertical-align: top; white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td>` + 
                       `<td class="devided-waiting-td">` + 
-                      `<div style="white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
+                      `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
                       `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` + 
-                      `<div style="white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
+                      `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
                       `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` + 
                       `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
         } else {
@@ -51,7 +51,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
                           `<td class="devided-waiting-td">` + 
                           `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">好型 ${gcnt} 枚</div>` + 
                           `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` +
-                          `<div style="white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
+                          `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">愚型 ${bcnt} 枚</div>` + 
                           `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + 
                           `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td></tr>`;
             } else {

@@ -4,10 +4,10 @@ let table_tail = "</table>";
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
-function printWaiting(tiles, tcnt, full_tcnt, f) {
+function printWaiting(tiles, tcnt, full_tcnt, getWaiting) {
     let result = "";
     if (full_tcnt !== tcnt) {
-        const ans = f(false);
+        const ans = getWaiting();
         const cnt = countWaitingCards(tiles, ans);
         result += `<td style="white-space: nowrap; padding-left: 0px;">待 ${cnt} 枚</td><td style="padding-left: 10px;">` + ans.map(cardImage).join("") + "</td>";
     } else {
@@ -18,7 +18,7 @@ function printWaiting(tiles, tcnt, full_tcnt, f) {
         for (let i = 0; i < sizeAT; ++i)
             if (tiles[i]) {
                 tiles[i]--;
-                ans[i] = f(tcnt % 3 != 0);
+                ans[i] = getWaiting();
                 const cnt = countWaitingCards(tiles, ans[i]);
                 if (ans[i].length > 0) cnts.push({ cnt: cnt, id: i });
                 tiles[i]++;
@@ -34,17 +34,17 @@ function getWaitingType(step) {
     else return step + " 向听";
 }
 function normalStep(tiles, tcnt, full_tcnt) {
-    let step = Step(tiles, tcnt);
+    let step = Step(tiles, tcnt, full_tcnt);
     let output = getWaitingType(step) + "\n";
     postMessage({ output, brief: getWaitingType(step) });
-    output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
-        return normalWaiting(tiles, step, full_tcnt, discard);
+    output += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return normalWaiting(tiles, step, full_tcnt);
     });
     return { output, step };
 }
 function JPStep(tiles, tcnt, full_tcnt) {
     let table = "";
-    let step4 = Step(tiles, tcnt, 4);
+    let step4 = Step(tiles, tcnt, full_tcnt, 4);
     table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step4) + "</td></tr>";
     postMessage({ output: table_head + table + table_tail });
     let stepJP = step4;
@@ -70,8 +70,8 @@ function JPStep(tiles, tcnt, full_tcnt) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
-        return JPWaiting(tiles, stepJP, [step4, step7JP, step13], full_tcnt, discard);
+    output += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return JPWaiting(tiles, stepJP, [step4, step7JP, step13], full_tcnt);
     });
     return { output, step13 };
 }
@@ -113,8 +113,8 @@ function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
-        return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt, discard);
+    output += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return GBWaiting(tiles, stepGB, [step, step7GB, step13, step16, stepkd], full_tcnt);
     });
     return { output };
 }
@@ -151,8 +151,8 @@ function TWStep(tiles, tcnt, full_tcnt, step) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    output += printWaiting(tiles, tcnt, full_tcnt, function (discard) {
-        return TWWaiting(tiles, stepTW, [step, stepnico, step13, step16], full_tcnt, discard);
+    output += printWaiting(tiles, tcnt, full_tcnt, function () {
+        return TWWaiting(tiles, stepTW, [step, stepnico, step13, step16], full_tcnt);
     });
     return { output };
 }

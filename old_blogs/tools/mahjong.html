@@ -127,8 +127,7 @@
             position: relative;
             display: inline-block;
             cursor: pointer;
-            vertical-align: middle;
-            width: 5%;
+            vertical-align: bottom;
         }
 
         .card-div img {
@@ -247,8 +246,7 @@
         </div>
         <div style="display: none;" id="output-box-head">
             <div class="output-context" style="text-align: center;" id="output-cnt"></div>
-            <div class="output-context" style="text-align: center; overflow-x: auto; white-space: nowrap;"
-                id="output-pic"></div>
+            <div class="output-context" style="text-align: center; overflow-x: auto; white-space: nowrap;" id="output-pic"></div>
         </div>
         <div class="output-box">
             <div class="output-title-container">
@@ -309,18 +307,52 @@
             }
             return output;
         }
-        function cardLargeImage(id) {
-            return `<div class="card-div"><div class="card-overlay"></div><img src="./cards/${cardName(id)}.gif" onclick="discard(${id})"></div>`;
+        function cardLargeImage(id, width = 5) {
+            return `<div class="card-div" style="width: ${width}%;"><div class="card-overlay"></div><img src="./cards/${cardName(id)}.gif" onclick="discard(${id})"></div>`;
+        }
+        function cardLargeImageCombine(id, cnt, width = 5) {
+            return `<div class="card-div" style="width: ${width}%;"><div class="card-overlay"></div><div>×${cnt}</div><img src="./cards/${cardName(id)}.gif" onclick="discard(${id})"></div>`;
         }
         function tilesImage(tiles) {
             let output = "";
-            for (let j = 0; j < tiles.length; ++j) output += cardLargeImage(tiles[j]);
+            if (tiles.length <= 35) {
+                let width = 5;
+                if (tiles.length >= 35) width = 100 / 35;
+                else if (tiles.length >= 20) width = 100 / tiles.length;
+                for (let i = 0; i < tiles.length; ++i) output += cardLargeImage(tiles[i], width);
+            } else {
+                const combine = new Array(sizeAT).fill(0);
+                for (let i = 0; i < tiles.length - 1; ++i) ++combine[tiles[i]];
+                const freq = {};
+                for (const num of combine) freq[num] = (freq[num] || 0) + 1;
+                const sorted = Object.entries(freq).sort((a, b) => Number(a[0]) - Number(b[0])).map(([k, v]) => [Number(k), v]);
+                let presum = sizeAT - (freq[0] || 0) + 1, maxcnt = 1;
+                for (let i = 0; i < sorted.length; ++i) {
+                    if (sorted[i][0] <= 1) continue;
+                    const afsum = presum + (sorted[i][0] - 1) * sorted[i][1];
+                    if (afsum <= 20) {
+                        presum = afsum;
+                        maxcnt = sorted[i][0];
+                    } else break;
+                }
+                let width = 5;
+                if (presum >= 35) width = 100 / 35;
+                else if (presum >= 20) width = 100 / presum;
+                console.log(1 / width * 100);
+                for (let i = 0; i < sizeAT; ++i) {
+                    if (combine[i] <= maxcnt) {
+                        for (let j = 0; j < combine[i]; ++j) output += cardLargeImage(i, width);
+                    } else {
+                        output += cardLargeImageCombine(i, combine[i], width);
+                    }
+                }
+                output += cardLargeImage(tiles[tiles.length - 1], width);
+            }
             return output;
         }
         let worker = null;
         function processInput() {
             if (worker) {
-                console.log("working break");
                 worker.terminate();
                 worker = null;
             }
@@ -440,7 +472,8 @@
             processInput();
         }
         window.onload = function () {
-            randomInput();
+            document.getElementById("inputText").value = "123456789s123456789m123456789m123456789p1234567z12345678h1m";
+            processInput();
         };
 
     </script>

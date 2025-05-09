@@ -339,7 +339,7 @@
         }
         function tilesImage(tiles) {
             let output = "";
-            let width = 7;
+            let width = 6;
             if (tiles.length >= 35) width = 100 / 35;
             else if (tiles.length >= 100 / width) width = 100 / tiles.length;
             for (let i = 0; i < tiles.length; ++i) output += cardLargeImage(tiles[i], width);

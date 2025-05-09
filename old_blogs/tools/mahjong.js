@@ -613,7 +613,7 @@ function countWaitingCards(tiles, ans) {
     return cnt;
 }
 function checkGoodWaiting(tiles, stepf) {
-    for (let ia = 0; ia < sizeUT; ++ia) {
+    for (let ia = 0; ia < sizeAT; ++ia) {
         if (!tiles[ia]) continue;
         --tiles[ia];
         if (stepf(tiles, 1, 1)) {

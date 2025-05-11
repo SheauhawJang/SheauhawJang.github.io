@@ -1,489 +1,714 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>麻将牌理向听数计算</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background-color: #f9f9f9;
-            padding: 40px;
-            max-width: 1024px;
-            margin: auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .section {
-            margin-top: 30px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .input-area {
-            margin-bottom: 10px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .input-note-wrapper {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .output-box {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-left: 5px solid #4caf50;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 4px;
-        }
-
-        .output-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .output-context {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .output-time {
-            font-size: 14px;
-            color: #888;
-            font-style: italic;
-        }
-
-        .waiting-brief {
-            vertical-align: top; 
-            white-space: nowrap; 
-            padding-left: 0px;
-        }
-
-        .devided-waiting-td {
-            display: flex; 
-            flex-wrap: wrap; 
-            align-items: center;
-        }
-
-        .devided-waiting-brief {
-            white-space: nowrap; 
-            padding-left: 10px;
-            display: inline-block;
-        }
-
-        .devided-waiting-cards {
-            white-space: normal; 
-            padding-left: 10px;
-            display: inline-block;
-        }
-
-        .random-button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 200px;
-            align-items: center;
-        }
-
-        .random-button:hover {
-            background-color: #45a049;
-        }
-
-        .random-button input {
-            width: 5ch;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        html {
-            overflow-y: scroll;
-        }
-
-        .toggle-button {
-            background: none;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 8px;
-            padding: 0;
-        }
-
-        .toggle-button:hover {
-            text-decoration: underline;
-        }
-
-        .output-title-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-div {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            vertical-align: bottom;
-        }
-
-        .card-div img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        .card-div .card-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 123, 255, 0.4);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .card-div:hover .card-overlay {
-            opacity: 1;
-        }
-
-        @media screen and (max-width: 512px) {
-            body {
-                padding: 6px;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>麻将牌理向听数计算器</title>
+        <style>
+            * {
+                box-sizing: border-box;
             }
 
-            .section {
-                margin-top: 15px;
+            body {
+                font-family: "Segoe UI", sans-serif;
+                background-color: #f9f9f9;
+                padding: 40px;
+                max-width: 1024px;
+                margin: auto;
             }
 
             h1 {
-                font-size: 24px;
+                text-align: center;
+                color: #333;
+            }
+
+            .section {
+                margin-top: 30px;
+            }
+
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+
+            .input-area {
+                margin-bottom: 10px;
             }
 
             input[type="text"] {
+                width: 100%;
+                padding: 10px;
                 font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
             }
 
-            .random-button {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
+            .input-note-wrapper {
+                font-size: 14px;
+                color: #666;
+                margin-top: 5px;
             }
 
             .output-box {
-                padding: 9px;
-                padding-right: 0px;
-            }
-
-            .output-box .toggle-button {
-                padding-right: 9px;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-left: 5px solid #4caf50;
+                padding: 15px;
+                margin-top: 20px;
+                border-radius: 4px;
             }
 
             .output-title {
-                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #333;
             }
 
             .output-context {
-                font-size: 16px;
+                white-space: pre-wrap;
+                word-wrap: break-word;
             }
 
             .output-time {
-                font-size: 12px;
+                font-size: 14px;
+                color: #888;
+                font-style: italic;
+            }
+
+            .waiting-brief {
+                vertical-align: top;
+                white-space: nowrap;
+                padding-left: 0px;
+            }
+
+            .devided-waiting-td {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
             }
 
             .devided-waiting-brief {
-                padding-left: 5px;
+                white-space: nowrap;
+                padding-left: 10px;
+                display: inline-block;
             }
 
             .devided-waiting-cards {
-                padding-left: 5px;
+                white-space: normal;
+                padding-left: 10px;
+                display: inline-block;
             }
-        }
-    </style>
-</head>
 
-<body>
-    <h1>麻将牌理向听数计算</h1>
-    <div class="section">
-        <label for="inputText">请输入手牌</label>
-        <div class="input-area">
-            <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
-            <button onclick="processInput()" class="random-button">计算</button>
-            <button onclick="randomInput()" class="random-button">随机生成 <input type="number" id="randomCardCount"
-                    value="14" min="1" max="99" /> 张牌</button>
-            <div class="input-note-wrapper">
-                <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">显示输入说明
-                    ▼</button>
-                <div class="input-note" id="inputNote" style="display: none">
-                    输入栏支持以下格式，以下格式可混合使用：
-                    <ol style="margin-top: 0">
-                        <li>天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>筒/饼=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。
-                        </li>
-                        <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
-                        <li>英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。
-                        </li>
-                        <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
-                        <li>采谱记号格式：万字使用汉数字<b>一二三四五六七八九</b>，筒子/饼子使用带圈数字<b>①②③④⑤⑥⑦⑧⑨</b>，索子/条子使用全角数字<b>１２３４５６７８９</b>，字牌使用对应汉字。
-                        </li>
-                        <li>Unicode格式：使用Unicode U+1F000 至 U+1F02B 的字符表示对应的牌。</li>
-                    </ol>
-                    <p>关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。<br /></p>
-                    关于百搭牌：
-                    <ul style="margin-top: 0">
-                        <li>不定向百搭牌 <img src="./cards/a1j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。</li>
-                        <li>万字百搭牌 <img src="./cards/a2j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
-                        <li>饼子百搭牌 <img src="./cards/a3j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张筒子/饼子。使用<b>3j/ip/ib</b>表示。</li>
-                        <li>索子百搭牌 <img src="./cards/a4j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张索子/条子。使用<b>4j/is</b>表示。</li>
-                        <li>数牌百搭牌 <img src="./cards/a5j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张序数牌。使用<b>5j</b>表示。</li>
-                        <li>风牌百搭牌 <img src="./cards/a6j.gif"
-                                style="vertical-align: middle" />：可以视作<b>东南西北</b>中的任何一张。使用<b>6j</b>表示。</li>
-                        <li>三元百搭牌 <img src="./cards/a7j.gif"
-                                style="vertical-align: middle" />：可以视作<b>白发中</b>中的任何一张。使用<b>7j</b>表示。</li>
-                        <li>字牌百搭牌 <img src="./cards/a8j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
-                        <li>花牌百搭牌 <img src="./cards/a9j.gif"
-                                style="vertical-align: middle" />：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
-                    </ul>
+            .random-button {
+                margin-bottom: 10px;
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                width: 200px;
+                align-items: center;
+            }
+
+            .random-button:hover {
+                background-color: #45a049;
+            }
+
+            .random-button input {
+                width: 5ch;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            html {
+                overflow-y: scroll;
+            }
+
+            .toggle-button {
+                background: none;
+                border: none;
+                font-weight: bold;
+                cursor: pointer;
+                margin-bottom: 8px;
+                padding: 0;
+            }
+
+            .toggle-button:hover {
+                text-decoration: underline;
+            }
+
+            .title-button-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .card-container {
+                text-align: center; 
+                overflow-x: auto; 
+                white-space: nowrap;
+            }
+
+            .card-div {
+                position: relative;
+                display: inline-block;
+                cursor: pointer;
+                vertical-align: bottom;
+            }
+
+            .card-div img {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+            .card-div .card-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 123, 255, 0.4);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+            .card-div:hover .card-overlay {
+                opacity: 1;
+            }
+
+            .input-area .card-container {
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background-color: white;
+            }
+
+            .input-keyboard {
+                display: flex; 
+                flex-direction: row; 
+                align-items: flex-start; 
+                gap: 10px;
+                width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .input-mainkey {
+                width: 400px;
+            }
+            
+            .input-row {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 1%;
+            }
+
+            .input-card-button {
+                width: 7.5%;
+                cursor: pointer;
+            }
+
+            .input-subkeys {
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .subkey-button {
+                margin-bottom: 0px;
+                padding: 5px 0px;
+                font-size: 16px;
+                background-color: #f58c8a;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                width: 80px;
+                align-items: center;
+            }
+
+            .subkey-button:hover {
+                background-color: #e06f6c;
+            }
+
+            @media screen and (max-width: 512px) {
+                body {
+                    padding: 6px;
+                }
+
+                .section {
+                    margin-top: 15px;
+                }
+
+                h1 {
+                    font-size: 24px;
+                }
+
+                input[type="text"] {
+                    font-size: 16px;
+                }
+
+                .random-button {
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 16px;
+                }
+
+                .output-box {
+                    padding: 9px;
+                    padding-right: 0px;
+                }
+
+                .output-box .toggle-button {
+                    padding-right: 9px;
+                }
+
+                .output-title {
+                    font-size: 16px;
+                }
+
+                .output-context {
+                    font-size: 16px;
+                }
+
+                .output-time {
+                    font-size: 12px;
+                }
+
+                .devided-waiting-brief {
+                    padding-left: 5px;
+                }
+
+                .devided-waiting-cards {
+                    padding-left: 5px;
+                }
+
+                .input-keyboard {
+                    flex-direction: column; 
+                    align-items: center;
+                    width: 100%;
+                }
+
+                .input-mainkey {
+                    width: 100%;
+                }
+
+                .input-subkeys {
+                    margin-top: 0;
+                    flex-direction: row; 
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>麻将牌理向听数计算器</h1>
+        <div class="section">
+            <div class="title-button-container">
+                <label for="inputText">请输入手牌</label>
+                <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">打开输入面板 ▼</button>
+            </div>
+            <div class="input-area" id="textInput">
+                <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
+                <div class="input-note-wrapper">
+                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">显示输入说明 ▼</button>
+                    <div class="input-note" id="inputNote" style="display: none">
+                        输入栏支持以下格式，以下格式可混合使用：
+                        <ol style="margin-top: 0">
+                            <li>
+                                天凤格式：序数牌使用序数阿拉伯数字＋颜色小写字母表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>筒/饼=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。
+                            </li>
+                            <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
+                            <li>
+                                英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。
+                            </li>
+                            <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
+                            <li>
+                                采谱记号格式：万字使用汉数字<b>一二三四五六七八九</b>，筒子/饼子使用带圈数字<b>①②③④⑤⑥⑦⑧⑨</b>，索子/条子使用全角数字<b>１２３４５６７８９</b>，字牌使用对应汉字。
+                            </li>
+                            <li>Unicode格式：使用Unicode U+1F000 至 U+1F02B 的字符表示对应的牌。</li>
+                        </ol>
+                        <p>
+                            关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻将把花牌视作百搭牌，本计算器的花牌无此功能，如有需要请输入专门的百搭牌。<br />
+                        </p>
+                        关于百搭牌：
+                        <ul style="margin-top: 0">
+                            <li>不定向百搭牌 <img src="./cards/a1j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。</li>
+                            <li>万字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
+                            <li>饼子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以视作任何一张筒子/饼子。使用<b>3j/ip/ib</b>表示。</li>
+                            <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以视作任何一张索子/条子。使用<b>4j/is</b>表示。</li>
+                            <li>数牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌。使用<b>5j</b>表示。</li>
+                            <li>风牌百搭牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：可以视作<b>东南西北</b>中的任何一张。使用<b>6j</b>表示。</li>
+                            <li>三元百搭牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：可以视作<b>白发中</b>中的任何一张。使用<b>7j</b>表示。</li>
+                            <li>字牌百搭牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
+                            <li>花牌百搭牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div style="display: none;" id="output-box-head">
-            <div class="output-context" style="text-align: center;" id="output-cnt"></div>
-            <div class="output-context" style="text-align: center; overflow-x: auto; white-space: nowrap;" id="output-pic"></div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">一般型牌理</div>
-                <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
+            <div class="input-area" id="boardInput" style="display: none">
+                <div class="card-container" id="input-pic"></div>
+                <div class="input-keyboard">
+                    <div class="input-mainkey">
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1m.gif" class="input-card-button" onclick="addInput(0)" />
+                            <img src="./cards/2m.gif" class="input-card-button" onclick="addInput(1)" />
+                            <img src="./cards/3m.gif" class="input-card-button" onclick="addInput(2)" />
+                            <img src="./cards/4m.gif" class="input-card-button" onclick="addInput(3)" />
+                            <img src="./cards/5m.gif" class="input-card-button" onclick="addInput(4)" />
+                            <img src="./cards/6m.gif" class="input-card-button" onclick="addInput(5)" />
+                            <img src="./cards/7m.gif" class="input-card-button" onclick="addInput(6)" />
+                            <img src="./cards/8m.gif" class="input-card-button" onclick="addInput(7)" />
+                            <img src="./cards/9m.gif" class="input-card-button" onclick="addInput(8)" />
+                            <img src="./cards/0m.gif" class="input-card-button" onclick="addInput({ id: 4, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1p.gif" class="input-card-button" onclick="addInput(9)" />
+                            <img src="./cards/2p.gif" class="input-card-button" onclick="addInput(10)" />
+                            <img src="./cards/3p.gif" class="input-card-button" onclick="addInput(11)" />
+                            <img src="./cards/4p.gif" class="input-card-button" onclick="addInput(12)" />
+                            <img src="./cards/5p.gif" class="input-card-button" onclick="addInput(13)" />
+                            <img src="./cards/6p.gif" class="input-card-button" onclick="addInput(14)" />
+                            <img src="./cards/7p.gif" class="input-card-button" onclick="addInput(15)" />
+                            <img src="./cards/8p.gif" class="input-card-button" onclick="addInput(16)" />
+                            <img src="./cards/9p.gif" class="input-card-button" onclick="addInput(17)" />
+                            <img src="./cards/0p.gif" class="input-card-button" onclick="addInput({ id: 13, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1s.gif" class="input-card-button" onclick="addInput(18)" />
+                            <img src="./cards/2s.gif" class="input-card-button" onclick="addInput(19)" />
+                            <img src="./cards/3s.gif" class="input-card-button" onclick="addInput(20)" />
+                            <img src="./cards/4s.gif" class="input-card-button" onclick="addInput(21)" />
+                            <img src="./cards/5s.gif" class="input-card-button" onclick="addInput(22)" />
+                            <img src="./cards/6s.gif" class="input-card-button" onclick="addInput(23)" />
+                            <img src="./cards/7s.gif" class="input-card-button" onclick="addInput(24)" />
+                            <img src="./cards/8s.gif" class="input-card-button" onclick="addInput(25)" />
+                            <img src="./cards/9s.gif" class="input-card-button" onclick="addInput(26)" />
+                            <img src="./cards/0s.gif" class="input-card-button" onclick="addInput({ id: 22, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1z.gif" class="input-card-button" onclick="addInput(27)" />
+                            <img src="./cards/2z.gif" class="input-card-button" onclick="addInput(28)" />
+                            <img src="./cards/3z.gif" class="input-card-button" onclick="addInput(29)" />
+                            <img src="./cards/4z.gif" class="input-card-button" onclick="addInput(30)" />
+                            <img src="./cards/5z.gif" class="input-card-button" onclick="addInput(31)" />
+                            <img src="./cards/6z.gif" class="input-card-button" onclick="addInput(32)" />
+                            <img src="./cards/7z.gif" class="input-card-button" onclick="addInput(33)" />
+                            <img src="./cards/0z.gif" class="input-card-button" onclick="addInput({ id: 31, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1h.gif" class="input-card-button" onclick="addInput(34)" />
+                            <img src="./cards/2h.gif" class="input-card-button" onclick="addInput(35)" />
+                            <img src="./cards/3h.gif" class="input-card-button" onclick="addInput(36)" />
+                            <img src="./cards/4h.gif" class="input-card-button" onclick="addInput(37)" />
+                            <img src="./cards/5h.gif" class="input-card-button" onclick="addInput(38)" />
+                            <img src="./cards/6h.gif" class="input-card-button" onclick="addInput(39)" />
+                            <img src="./cards/7h.gif" class="input-card-button" onclick="addInput(40)" />
+                            <img src="./cards/8h.gif" class="input-card-button" onclick="addInput(41)" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1j.gif" class="input-card-button" onclick="addInput(42)" />
+                            <img src="./cards/2j.gif" class="input-card-button" onclick="addInput(43)" />
+                            <img src="./cards/3j.gif" class="input-card-button" onclick="addInput(44)" />
+                            <img src="./cards/4j.gif" class="input-card-button" onclick="addInput(45)" />
+                            <img src="./cards/5j.gif" class="input-card-button" onclick="addInput(46)" />
+                            <img src="./cards/6j.gif" class="input-card-button" onclick="addInput(47)" />
+                            <img src="./cards/7j.gif" class="input-card-button" onclick="addInput(48)" />
+                            <img src="./cards/8j.gif" class="input-card-button" onclick="addInput(49)" />
+                            <img src="./cards/9j.gif" class="input-card-button" onclick="addInput(50)" />
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="input-subkeys">
+                        <button onclick="clearInput()" class="subkey-button">清空</button>
+                        <button onclick="sortInput()" class="subkey-button">理牌</button>
+                    </div>
+                </div>
             </div>
-            <div class="output-context" id="output-std"></div>
-            <div class="output-context" id="brief-output-std" style="display: none"></div>
-            <div class="output-time" id="time-output-std"></div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">国标麻将标准型牌理</div>
-                <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
+            <div style="text-align: center;">
+                <button onclick="processInput()" class="random-button">计算</button>
+                <button onclick="randomInput()" class="random-button">随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌</button>
             </div>
-            <div class="output-context" id="output-gb"></div>
-            <div class="output-context" id="brief-output-gb" style="display: none"></div>
-            <div class="output-time" id="time-output-gb"></div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">立直麻将标准型牌理</div>
-                <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">折叠 ▲</button>
+            <div style="display: none" id="output-box-head">
+                <div class="output-context" style="text-align: center" id="output-cnt"></div>
+                <div class="card-container" id="output-pic"></div>
             </div>
-            <div class="output-context" id="output-jp"></div>
-            <div class="output-context" id="brief-output-jp" style="display: none"></div>
-            <div class="output-time" id="time-output-jp"></div>
-        </div>
-        <div class="output-box">
-            <div class="output-title-container">
-                <div class="output-title">港式台湾麻将牌理</div>
-                <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">折叠 ▲</button>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">一般型牌理</div>
+                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-std"></div>
+                <div class="output-context" id="brief-output-std" style="display: none"></div>
+                <div class="output-time" id="time-output-std"></div>
             </div>
-            <div class="output-context" id="output-tw"></div>
-            <div class="output-context" id="brief-output-tw" style="display: none"></div>
-            <div class="output-time" id="time-output-tw"></div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">国标麻将标准型牌理</div>
+                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-gb"></div>
+                <div class="output-context" id="brief-output-gb" style="display: none"></div>
+                <div class="output-time" id="time-output-gb"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">立直麻将标准型牌理</div>
+                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-jp"></div>
+                <div class="output-context" id="brief-output-jp" style="display: none"></div>
+                <div class="output-time" id="time-output-jp"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">港式台湾麻将牌理</div>
+                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">折叠 ▲</button>
+                </div>
+                <div class="output-context" id="output-tw"></div>
+                <div class="output-context" id="brief-output-tw" style="display: none"></div>
+                <div class="output-time" id="time-output-tw"></div>
+            </div>
         </div>
-    </div>
-    <div class="section">
-        <div class="output-time">v3.11</div>
-    </div>
-    <script src="mahjong.js"></script>
-    <script>
-        let tiles;
-        function tilesInfo(tcnt) {
-            const meld = Math.floor(tcnt / 3);
-            let output = `${tcnt} 张手牌\n`;
-            switch (tcnt % 3) {
-                case 1:
-                    output += `3n+1 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
-                    break;
-                case 2:
-                    output += `3n+2 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
-                    break;
-                case 0:
-                    output += `3n 型: 和牌需要 ${meld} 个面子和 ${0} 个雀头`;
-                    break;
-            }
-            return output;
-        }
-        function cardLargeImage(id, width = 5) {
-            return `<div class="card-div" style="width: ${width}%;"><div class="card-overlay"></div><img src="./cards/${cardName(id)}.gif" onclick="discard(${id})"></div>`;
-        }
-        function cardLargeImageCombine(id, cnt, width = 5) {
-            return `<div class="card-div" style="width: ${width}%;"><div class="card-overlay"></div><div>×${cnt}</div><img src="./cards/${cardName(id)}.gif" onclick="discard(${id})"></div>`;
-        }
-        function tilesImage(tiles) {
-            let output = "";
-            let width = 6;
-            if (tiles.length >= 35) width = 100 / 35;
-            else if (tiles.length >= 100 / width) width = 100 / tiles.length;
-            for (let i = 0; i < tiles.length; ++i) output += cardLargeImage(tiles[i], width);
-            return output;
-        }
-        let worker = null;
-        function processInput() {
-            if (worker) {
-                worker.terminate();
-                worker = null;
-            }
-            const ids = ["output-std", "output-jp", "output-gb", "output-tw"];
-            for (let i = 0; i < ids.length; ++i) {
-                document.getElementById(ids[i]).innerHTML = "";
-                document.getElementById("brief-" + ids[i]).innerHTML = "";
-                document.getElementById("time-" + ids[i]).textContent = `Calculating......`;
-            }
-            const input = document.getElementById("inputText").value;
-            let splitans = split(input);
-            tiles = splitans.tiles;
-            let tcnt = 0;
-            for (let i = 0; i < sizeAT; ++i) tcnt += tiles[i];
-            let full_tcnt = tcnt;
-            if (tcnt % 3 === 1) ++full_tcnt;
-            document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
-            document.getElementById("output-pic").innerHTML = tilesImage(splitans.ids);
-            document.getElementById("output-box-head").style.display = "block";
-            worker = new Worker("mahjong-worker.js");
-            let task = 0;
-            let step, step13;
-            worker.onmessage = function (e) {
-                if ("brief" in e.data) document.getElementById("brief-" + ids[task]).textContent = e.data.brief;
-                if ("output" in e.data) {
-                    document.getElementById(ids[task]).innerHTML = e.data.output;
-                    return;
-                }
-                const { result, time } = e.data;
-                document.getElementById(ids[task]).innerHTML = result.output;
-                document.getElementById("time-" + ids[task]).textContent = `Used ${time} ms`;
-                switch (task) {
-                    case 0:
-                        step = result.step;
-                        break;
+        <div class="section">
+            <div class="output-time">v3.11</div>
+        </div>
+        <script src="mahjong.js"></script>
+        <script>
+            let tiles, tids;
+            function tilesInfo(tcnt) {
+                const meld = Math.floor(tcnt / 3);
+                let output = `${tcnt} 张手牌\n`;
+                switch (tcnt % 3) {
                     case 1:
-                        step13 = result.step13;
-                        break;
-                }
-                ++task;
-                switch (task) {
-                    case 0:
-                    case 1:
-                        worker.postMessage({ task, tiles, tcnt, full_tcnt });
+                        output += `3n+1 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
                         break;
                     case 2:
-                        worker.postMessage({ task, tiles, tcnt, full_tcnt, step, step13 });
+                        output += `3n+2 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
                         break;
-                    case 3:
-                        worker.postMessage({ task, tiles, tcnt, full_tcnt, step });
-                        break;
-                    case 4:
-                        worker.terminate();
-                        worker = null;
+                    case 0:
+                        output += `3n 型: 和牌需要 ${meld} 个面子和 ${0} 个雀头`;
                         break;
                 }
+                return output;
+            }
+            function cardLargeImage(i, width = 5) {
+                return `<div class="card-div" style="width: ${width}%;"><div class="card-overlay"></div><img src="./cards/${cardName(tids[i])}.gif" onclick="discard(${i})"></div>`;
+            }
+            function discard(i) {
+                const id = tids[i].id;
+                let mount = [];
+                for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i]; ++j) mount.push(i);
+                if (mount.length === 0) return;
+                --tiles[id];
+                tids.splice(i, 1);
+                tids.sort((a, b) => a.id - b.id);
+                tids.push({ id: mount[Math.floor(Math.random() * mount.length)] });
+                let handname = [];
+                for (let i = 0; i < tids.length; ++i) {
+                    handname.push(cardName(tids[i]));
+                    if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+                }
+                let newInput = handname.join("");
+                document.getElementById("inputText").value = newInput;
+                drawInputCards();
+                processInput();
+            }
+            function tilesImage() {
+                let output = "";
+                let width = 5;
+                let max_card = 35;
+                if (window.matchMedia("screen and (max-width: 512px)").matches) {
+                    width = 7;
+                    max_card = 20;
+                }
+                if (tids.length >= max_card) width = 100 / max_card;
+                else if (tids.length >= 100 / width) width = 100 / tids.length;
+                for (let i = 0; i < tids.length; ++i) output += cardLargeImage(i, width);
+                return output;
+            }
+            let worker = null;
+            function processInput() {
+                if (worker) {
+                    worker.terminate();
+                    worker = null;
+                }
+                const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw"];
+                for (let i = 0; i < document_element_ids.length; ++i) {
+                    document.getElementById(document_element_ids[i]).innerHTML = "";
+                    document.getElementById("brief-" + document_element_ids[i]).innerHTML = "";
+                    document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`;
+                }
+                const input = document.getElementById("inputText").value;
+                let splitans = split(input);
+                tiles = splitans.tiles;
+                tids = splitans.ids;
+                let tcnt = 0;
+                for (let i = 0; i < sizeAT; ++i) tcnt += tiles[i];
+                let full_tcnt = tcnt;
+                if (tcnt % 3 === 1) ++full_tcnt;
+                document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
+                document.getElementById("output-pic").innerHTML = tilesImage(tids);
+                document.getElementById("output-box-head").style.display = "block";
+                worker = new Worker("mahjong-worker.js");
+                let task = 0;
+                let step, step13;
+                worker.onmessage = function (e) {
+                    if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
+                    if ("output" in e.data) {
+                        document.getElementById(document_element_ids[task]).innerHTML = e.data.output;
+                        return;
+                    }
+                    const { result, time } = e.data;
+                    document.getElementById(document_element_ids[task]).innerHTML = result.output;
+                    document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`;
+                    switch (task) {
+                        case 0:
+                            step = result.step;
+                            break;
+                        case 1:
+                            step13 = result.step13;
+                            break;
+                    }
+                    ++task;
+                    switch (task) {
+                        case 0:
+                        case 1:
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt });
+                            break;
+                        case 2:
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, step13 });
+                            break;
+                        case 3:
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step });
+                            break;
+                        case 4:
+                            worker.terminate();
+                            worker = null;
+                            break;
+                    }
+                };
+                worker.postMessage({ task, tiles, tcnt, full_tcnt });
+            }
+            function randomInput() {
+                function shuffle(array) {
+                    for (let i = 0; i < array.length; ++i) {
+                        const j = Math.floor(Math.random() * (array.length - i));
+                        [array[i], array[i + j]] = [array[i + j], array[i]];
+                    }
+                    return array;
+                }
+                let mount = new Array(136);
+                for (let i = 0; i < mount.length; ++i) mount[i] = Math.floor(i / 4);
+                shuffle(mount);
+                const n = parseInt(document.getElementById("randomCardCount").value);
+                let hand = [];
+                for (let i = 0; i < n; ++i) hand.push(mount[i]);
+                hand.sort((a, b) => a - b);
+                let handname = [];
+                for (let i = 0; i < n; ++i) {
+                    handname.push(cardName(hand[i]));
+                    if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+                }
+                document.getElementById("inputText").value = handname.join("");
+                drawInputCards();
+                processInput();
+            }
+            function toggleInput() {
+                const board = document.getElementById("boardInput");
+                const button = document.getElementById("inputButton");
+                const text = document.getElementById("textInput");
+                const isVisible = board.style.display !== "none";
+                if (!isVisible) drawInputCards();
+                board.style.display = isVisible ? "none" : "block";
+                text.style.display = isVisible ? "block" : "none";
+                button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
+            }
+            function toggleNote() {
+                const note = document.getElementById("inputNote");
+                const button = document.getElementById("inputNoteButton");
+                const isVisible = note.style.display !== "none";
+                note.style.display = isVisible ? "none" : "block";
+                button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
+            }
+            function toggleOutput(i) {
+                const ids = ["output-std", "output-gb", "output-jp", "output-tw"];
+                const d = document.getElementById(ids[i]);
+                const b = document.getElementById("toggle-" + ids[i]);
+                const s = document.getElementById("brief-" + ids[i]);
+                const v = d.style.display !== "none";
+                d.style.display = v ? "none" : "block";
+                s.style.display = v ? "block" : "none";
+                b.textContent = v ? "展开 ▼" : "折叠 ▲";
+            }
+            let ipids;
+            function cardInputImage(i, width) {
+                return `<div class="card-div" style="width: ${width};"><div class="card-overlay"></div><img src="./cards/${cardName(ipids[i])}.gif" onclick="removeInput(${i})"></div>`;
+            }
+            function drawInputCards() {
+                ipids = split(document.getElementById("inputText").value).ids;
+                let div = document.getElementById("input-pic");
+                let output = "";
+                let width = `${400 / 14}px`;
+                let height = `${400 * 129 / 14 / 80}px`;
+                if (window.matchMedia("screen and (max-width: 512px)").matches) {
+                    width = `${100 / 20}%`;
+                    height = `${100 * 129 / 20 / 80}%`;
+                } 
+                for (let i = 0; i < ipids.length; ++i) output += cardInputImage(i, width);
+                if (ipids.length === 0) div.style.paddingTop = height;
+                else div.style.paddingTop = "0";
+                div.innerHTML = output;
+            }
+            function addInput(i) {
+                if (typeof i === "number") i = { id: i };
+                document.getElementById("inputText").value += cardName(i);
+                drawInputCards();
+            }
+            function removeInput(i) {
+                ipids.splice(i, 1);
+                let handname = [];
+                for (let i = 0; i < ipids.length; ++i) {
+                    handname.push(cardName(ipids[i]));
+                    if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+                }
+                document.getElementById("inputText").value = handname.join("");
+                drawInputCards();
+            }
+            function clearInput() {
+                document.getElementById("inputText").value = "";
+                drawInputCards();
+            }
+            function sortInput() {
+                ipids.sort((a, b) => a.id - b.id);
+                let handname = [];
+                for (let i = 0; i < ipids.length; ++i) {
+                    handname.push(cardName(ipids[i]));
+                    if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+                }
+                document.getElementById("inputText").value = handname.join("");
+                drawInputCards();
+            }
+            window.onload = function () {
+                randomInput();
             };
-            worker.postMessage({ task, tiles, tcnt, full_tcnt });
-        }
-        function randomInput() {
-            function shuffle(array) {
-                for (let i = 0; i < array.length; ++i) {
-                    const j = Math.floor(Math.random() * (array.length - i));
-                    [array[i], array[i + j]] = [array[i + j], array[i]];
-                }
-                return array;
-            }
-            let mount = new Array(136);
-            for (let i = 0; i < mount.length; ++i) mount[i] = Math.floor(i / 4);
-            shuffle(mount);
-            const n = parseInt(document.getElementById("randomCardCount").value);
-            let hand = [];
-            for (let i = 0; i < n; ++i) hand.push(mount[i]);
-            hand.sort((a, b) => a - b);
-            let handname = [];
-            for (let i = 0; i < n; ++i) {
-                handname.push(cardName(hand[i]));
-                if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
-            }
-            document.getElementById("inputText").value = handname.join("");
-            processInput();
-        }
-        function toggleNote() {
-            const note = document.getElementById("inputNote");
-            const button = document.getElementById("inputNoteButton");
-            const isVisible = note.style.display !== "none";
-            note.style.display = isVisible ? "none" : "block";
-            button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
-        }
-        function toggleOutput(i) {
-            const ids = ["output-std", "output-gb", "output-jp", "output-tw"];
-            const d = document.getElementById(ids[i]);
-            const b = document.getElementById("toggle-" + ids[i]);
-            const s = document.getElementById("brief-" + ids[i]);
-            const v = d.style.display !== "none";
-            d.style.display = v ? "none" : "block";
-            s.style.display = v ? "block" : "none";
-            b.textContent = v ? "展开 ▼" : "折叠 ▲";
-        }
-        function discard(id) {
-            let mount = [];
-            for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i]; ++j) mount.push(i);
-            if (mount.length === 0) return;
-            --tiles[id];
-            let hand = [];
-            for (let i = 0; i < sizeAT; ++i) for (let j = 0; j < tiles[i]; ++j) hand.push(i);
-            hand.sort((a, b) => a - b);
-            let handname = [];
-            for (let i = 0; i < hand.length; ++i) {
-                handname.push(cardName(hand[i]));
-                if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
-            }
-            let newInput = handname.join("");
-            let newCard = mount[Math.floor(Math.random() * mount.length)];
-            newInput += cardName(newCard);
-            document.getElementById("inputText").value = newInput;
-            processInput();
-        }
-        window.onload = function () {
-            randomInput();
-        };
-
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>

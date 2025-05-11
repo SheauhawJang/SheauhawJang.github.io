@@ -23,7 +23,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
                 `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
         } else {
             const cnt = countWaitingCards(tiles, ans);
-            result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
+            result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="margin-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
     } else {
         const save = Array(sizeAT);
@@ -34,14 +34,14 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
                 tiles[i]--;
                 save[i] = getWaiting(subchecks[i]);
                 tiles[i]++;
-                const { ans, gans } = save[i];
+                const { ans, gans, checked } = save[i];
                 if (gans !== undefined) {
                     const bcnt = countWaitingCards(tiles, ans);
                     const gcnt = countWaitingCards(tiles, gans);
-                    if (ans.length > 0 || gans.length > 0) cnts.push({ cnt: bcnt + gcnt, bcnt, gcnt, id: i });
+                    if (checked) cnts.push({ cnt: bcnt + gcnt, bcnt, gcnt, id: i });
                 } else {
                     const cnt = countWaitingCards(tiles, ans);
-                    if (ans.length > 0) cnts.push({ cnt: cnt, id: i });
+                    if (checked) cnts.push({ cnt: cnt, id: i });
                 }
             }
         cnts.sort((a, b) => {
@@ -64,7 +64,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
             } else
                 result +=
                     `<tr><td class="waiting-brief">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` +
-                    `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+                    `<td style="margin-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
     }
     return table_head + result + table_tail;

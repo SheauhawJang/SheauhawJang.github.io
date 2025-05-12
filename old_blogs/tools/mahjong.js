@@ -835,7 +835,7 @@ function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
     return { dischecks, getchecks };
 }
 function normalWaiting(tiles, step, tcnt, discheck, getchecks) {
-    if (!discheck) return { ans: [], checked: false };
+    if (discheck === false) return { ans: [], checked: false };
     let ans = [];
     let gans = [];
     const nstep = step === -1 ? 0 : step;

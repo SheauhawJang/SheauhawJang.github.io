@@ -4,10 +4,11 @@ let table_tail = "</table>";
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
-function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
+function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
     let result = "";
     if (full_tcnt !== tcnt) {
-        const { ans, gans } = getWaiting();
+        const save = getWaiting(undefined, undefined, s => s);
+        const { ans, gans } = save;
         if (gans !== undefined) {
             const bcnt = countWaitingCards(tiles, ans);
             const gcnt = countWaitingCards(tiles, gans);
@@ -25,25 +26,27 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
             const cnt = countWaitingCards(tiles, ans);
             result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
+        return { output: table_head + result + table_tail, ans: { waiting: save }  };
     } else {
         const save = Array(sizeAT);
         const cnts = [];
-        const subchecks = subcheck();
-        for (let i = 0; i < sizeAT; ++i) 
-            if (tiles[i]) {
-                tiles[i]--;
-                save[i] = getWaiting(subchecks[i]);
-                tiles[i]++;
-                const { ans, gans, checked } = save[i];
-                if (gans !== undefined) {
-                    const bcnt = countWaitingCards(tiles, ans);
-                    const gcnt = countWaitingCards(tiles, gans);
-                    if (checked) cnts.push({ cnt: bcnt + gcnt, bcnt, gcnt, id: i });
-                } else {
-                    const cnt = countWaitingCards(tiles, ans);
-                    if (checked) cnts.push({ cnt: cnt, id: i });
-                }
+        const subchecks = getSubchecks();
+        const { dischecks, getchecks } = subchecks;
+        for (let i = 0; i < sizeAT; ++i) {
+            if (!tiles[i]) continue;
+            tiles[i]--;
+            save[i] = getWaiting(dischecks[i], getchecks, s => s[i]);
+            tiles[i]++;
+            const { ans, gans, checked } = save[i];
+            if (gans !== undefined) {
+                const bcnt = countWaitingCards(tiles, ans);
+                const gcnt = countWaitingCards(tiles, gans);
+                if (checked) cnts.push({ cnt: bcnt + gcnt, bcnt, gcnt, id: i });
+            } else {
+                const cnt = countWaitingCards(tiles, ans);
+                if (checked) cnts.push({ cnt: cnt, id: i });
             }
+        }
         cnts.sort((a, b) => {
             if (b.cnt !== a.cnt) return b.cnt - a.cnt;
             if ("gcnt" in a && "gcnt" in b) return b.gcnt - a.gcnt;
@@ -66,8 +69,8 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
                     `<tr><td class="waiting-brief">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` +
                     `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
+        return { output: table_head + result + table_tail, ans: { waiting: save, subchecks } };
     }
-    return table_head + result + table_tail;
 }
 function getWaitingType(step) {
     if (step === -1) return "和牌";
@@ -78,8 +81,9 @@ function normalStep(tiles, tcnt, full_tcnt) {
     let step = Step(tiles, tcnt, full_tcnt);
     let output = getWaitingType(step) + "\n";
     postMessage({ output, brief: getWaitingType(step) });
-    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => normalWaiting(tiles, step, full_tcnt, subcheck), () => normalSubcheck(tiles, step, full_tcnt));
-    return { output, step };
+    const r = printWaiting(tiles, tcnt, full_tcnt, (d, g) => normalWaiting(tiles, step, full_tcnt, d, g), () => normalPrecheck(tiles, step, full_tcnt));
+    output += r.output;
+    return { output, step, save: r.ans };
 }
 function JPStep(tiles, tcnt, full_tcnt) {
     let table = "";
@@ -110,10 +114,10 @@ function JPStep(tiles, tcnt, full_tcnt) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step4, step7JP, step13];
-    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => JPWaiting(tiles, stepJP, substep, full_tcnt, subcheck), () => JPSubcheck(tiles, stepJP, substep, full_tcnt));
+    output += printWaiting(tiles, tcnt, full_tcnt, (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt)).output;
     return { output, step13 };
 }
-function GBStep(tiles, tcnt, full_tcnt, step, step13) {
+function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
     let table = "";
     let stepGB = step;
     table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step) + "</td></tr>";
@@ -151,10 +155,12 @@ function GBStep(tiles, tcnt, full_tcnt, step, step13) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step, step7GB, step13, step16, stepkd];
-    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => GBWaiting(tiles, stepGB, substep, full_tcnt, subcheck), () => GBSubcheck(tiles, stepGB, substep, full_tcnt));
+    output += printWaiting(tiles, tcnt, full_tcnt, 
+        (d, g, f) => GBWaiting(tiles, stepGB, substep, full_tcnt, f(save.waiting), d, g), 
+        () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks)).output;
     return { output };
 }
-function TWStep(tiles, tcnt, full_tcnt, step) {
+function TWStep(tiles, tcnt, full_tcnt, step, save) {
     let table = "";
     let stepTW = step;
     table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step) + "</td></tr>";
@@ -187,7 +193,9 @@ function TWStep(tiles, tcnt, full_tcnt, step) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step, stepnico, step13, step16];
-    output += printWaiting(tiles, tcnt, full_tcnt, (subcheck) => TWWaiting(tiles, stepTW, substep, full_tcnt, subcheck), () => TWSubcheck(tiles, stepTW, substep, full_tcnt));
+    output += printWaiting(tiles, tcnt, full_tcnt, 
+        (d, g, f) => TWWaiting(tiles, stepTW, substep, full_tcnt, f(save.waiting), d, g), 
+        () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks)).output;
     return { output };
 }
 self.onmessage = function (e) {
@@ -202,13 +210,13 @@ self.onmessage = function (e) {
             result = JPStep(tiles, tcnt, full_tcnt);
             break;
         case 2: {
-            let { step, step13 } = e.data;
-            result = GBStep(tiles, tcnt, full_tcnt, step, step13);
+            let { step, save, step13 } = e.data;
+            result = GBStep(tiles, tcnt, full_tcnt, step, save, step13);
             break;
         }
         case 3: {
-            let { step } = e.data;
-            result = TWStep(tiles, tcnt, full_tcnt, step);
+            let { step, save } = e.data;
+            result = TWStep(tiles, tcnt, full_tcnt, step, save);
             break;
         }
     }

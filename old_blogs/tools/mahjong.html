@@ -571,6 +571,7 @@
                 worker = new Worker("mahjong-worker.js");
                 let task = 0;
                 let step, step13;
+                let save;
                 worker.onmessage = function (e) {
                     if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
                     if ("output" in e.data) {
@@ -583,6 +584,7 @@
                     switch (task) {
                         case 0:
                             step = result.step;
+                            save = result.save;
                             break;
                         case 1:
                             step13 = result.step13;
@@ -595,10 +597,10 @@
                             worker.postMessage({ task, tiles, tcnt, full_tcnt });
                             break;
                         case 2:
-                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, step13 });
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save, step13 });
                             break;
                         case 3:
-                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step });
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save });
                             break;
                         case 4:
                             worker.terminate();

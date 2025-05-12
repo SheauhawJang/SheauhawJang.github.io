@@ -621,7 +621,7 @@
                 let mount = new Array(136);
                 for (let i = 0; i < mount.length; ++i) mount[i] = Math.floor(i / 4);
                 shuffle(mount);
-                const n = parseInt(document.getElementById("randomCardCount").value);
+                const n = Math.min(parseInt(document.getElementById("randomCardCount").value), mount.length);
                 let hand = [];
                 for (let i = 0; i < n; ++i) hand.push(mount[i]);
                 hand.sort((a, b) => a - b);

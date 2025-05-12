@@ -23,7 +23,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
                 `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
         } else {
             const cnt = countWaitingCards(tiles, ans);
-            result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="margin-left: 10px;">${ans.map(cardImage).join("")}</td>`;
+            result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
     } else {
         const save = Array(sizeAT);
@@ -64,7 +64,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, subcheck) {
             } else
                 result +=
                     `<tr><td class="waiting-brief">${verb} ${cardImage(id)} 待 ${cnt} 枚</td>` +
-                    `<td style="margin-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+                    `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
     }
     return table_head + result + table_tail;

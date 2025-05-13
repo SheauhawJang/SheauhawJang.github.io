@@ -147,17 +147,18 @@ function indexDp(em, ep, i, ui, uj, aj, bj, cj) {
 }
 const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, -1];
 const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, -1];
+const JokerC = 42;
 function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     const dpi = indexDp(em, ep, i, ui, uj, aj, bj, cj);
     if (step[dpi] !== Infinity) return step[dpi];
-    let ans = (nm - em) * 3 + (np - ep) * 2 - 1;
+    let ans = (nm - em) * 3 + (np - ep) * 2 - 1 + Math.max(ui - tiles[i], 0) + Math.max(uj - tiles[i + 1], 0);
     let ri = Math.max(tiles[i] - ui, 0);
     let rj = SeqCheck(i) ? Math.max(tiles[i + 1] - uj, 0) : 0;
     let ra = tiles[JokerA[i]] - aj;
     let rb = tiles[JokerB[i]] - bj;
-    let rc = tiles[42] - cj;
-    let li = limit - ui + ra + rb + rc;
+    let rc = tiles[JokerC] - cj;
+    let lj = limit + ra + rb + rc;
     if (JokerA[i] !== JokerA[i + 1]) {
         ri += ra;
         ra = aj = 0;
@@ -174,10 +175,9 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
     const ms = SeqCheck(i) ? Math.min(nm - em, 2) : 0;
     for (let p = 0; p <= mp; ++p)
         for (let s = 0; s <= ms; ++s) {
-            const lri = li - p * 2 - s;
+            const lri = lj - ui - p * 2 - s;
             if (lri < 0) break;
-            const ds = s ? Math.max(s - rj, 0) + Math.max(s - tiles[i + 2], 0) : 0;
-            if (s && ri <= p * 2 && ds === s * 2) break;
+            if (s && p * 2 + s > ri && s > rj && s > tiles[i + 2]) break;
             let kri = Math.max(ri - p * 2 - s, 0);
             let mmk = Math.floor(kri / 3);
             let pmk = Math.ceil(kri / 3);
@@ -185,20 +185,18 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
             mmk = Math.min(mmk, rgk);
             pmk = Math.min(pmk, rgk);
             for (let k = mmk; k <= pmk; ++k) {
-                const ti = p * 2 + s + k * 3;
-                let d = Math.max(ti - ri, 0) + ds;
+                const ti = p * 2 + s + k * 3 + ui;
+                let d = Math.max(ti - tiles[i], 0);
                 if (limit === Infinity) {
                     const uaj = Math.min(ra, d);
-                    d -= uaj;
-                    const ubj = Math.min(rb, d);
-                    d -= ubj;
-                    const ucj = Math.min(rc, d);
-                    d -= ucj;
+                    const ubj = Math.min(rb, d - uaj);
+                    const ucj = Math.min(rc, d - uaj - ubj);
+                    d -= uaj + ubj + ucj;
                     if (d - 1 >= ans) break;
                     if (d - 1 >= maxans) break;
                     ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, maxans, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
                 } else {
-                    const el = Math.max(ti - li + ra + rb + rc, 0);
+                    const el = Math.max(ti - limit, 0);
                     const er = Math.min(ra + rb + rc, d);
                     for (let e = er; e >= el; --e) {
                         const uaj = Math.min(ra, e);
@@ -211,7 +209,6 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
                 }
             }
         }
-
     step[dpi] = ans;
     return ans;
 }
@@ -220,9 +217,9 @@ function useDpMemory(nm, np, tiles, limit, maxans) {
     if (np !== lastStep.np) return false;
     if (limit !== lastStep.limit) return false;
     if (limit !== Infinity) 
-        if (tiles[42] !== lastStep.tiles[42]) return false;
+        if (tiles[JokerC] !== lastStep.tiles[JokerC]) return false;
         else if (maxans > lastStep.maxans) return false;
-    if (limit === Infinity && maxans + tiles[42] > lastStep.maxans + lastStep.tiles[42]) return false;
+    if (limit === Infinity && maxans + tiles[JokerC] > lastStep.maxans + lastStep.tiles[JokerC]) return false;
     let last_same = 0;
     for (let i = 0; i < sizeUT; ++i) {
         if (tiles[JokerA[i]] !== lastStep.tiles[JokerA[i]]) return false;
@@ -248,12 +245,12 @@ function searchDp(tiles, em, ep, tcnt, maxans = Infinity, limit = Infinity) {
         bj = Math.max(bj, tiles[JokerB[i]]);
     }
     if (limit !== Infinity) {
-        if (!useDpMemory(nm, np, tiles, limit, maxans)) prepareDp(nm, np, aj, bj, tiles[42]);
+        if (!useDpMemory(nm, np, tiles, limit, maxans)) prepareDp(nm, np, aj, bj, tiles[JokerC]);
         lastStep = { nm, np, limit, tiles, maxans };
         return kernelDp(tiles, em, ep, nm, np, maxans, limit);
     }
-    let ans = -tiles[42];
-    tiles[42] = 0;
+    let ans = -tiles[JokerC];
+    tiles[JokerC] = 0;
     if (!useDpMemory(nm, np, tiles, limit, maxans)) prepareDp(nm, np, aj, bj, 0);
     lastStep = { nm, np, limit, tiles, maxans };
     return kernelDp(tiles, em, ep, nm, np, maxans - ans, limit) + ans;
@@ -369,7 +366,7 @@ function PairStep(tiles, disjoint = false) {
             sig += (ans - 7) * 2;
             ans = 7;
         }
-        return 13 - ans * 2 - Math.min(sig, 7 - ans) - tiles[42];
+        return 13 - ans * 2 - Math.min(sig, 7 - ans) - tiles[JokerC];
     } else {
         let t = tiles.slice();
         for (let i = 0; i < sizeUT; ++i) {
@@ -380,8 +377,8 @@ function PairStep(tiles, disjoint = false) {
             } else if (t[JokerB[i]]) {
                 --t[JokerB[i]];
                 ++t[i];
-            } else if (t[42]) {
-                --t[42];
+            } else if (t[JokerC]) {
+                --t[JokerC];
                 ++t[i];
             }
         }
@@ -394,8 +391,8 @@ function PairStep(tiles, disjoint = false) {
             if (t[JokerB[i]]) {
                 --t[JokerB[i]];
                 ++t[i];
-            } else if (t[42]) {
-                --t[42];
+            } else if (t[JokerC]) {
+                --t[JokerC];
                 ++t[i];
             }
         }
@@ -405,16 +402,16 @@ function PairStep(tiles, disjoint = false) {
             t[i] = cnt;
             t[JokerB[i]] -= cnt;
             if (t[i] !== 1) continue;
-            if (t[42]) {
-                --t[42];
+            if (t[JokerC]) {
+                --t[JokerC];
                 ++t[i];
             }
         }
         for (let i = 0; i < sizeUT; ++i) {
             if (t[i] !== 0) continue;
-            const cnt = Math.min(t[42], 2);
+            const cnt = Math.min(t[JokerC], 2);
             t[i] = cnt;
-            t[42] -= cnt;
+            t[JokerC] -= cnt;
         }
         let ans = 0;
         let sig = 0;
@@ -442,11 +439,11 @@ function OrphanStep(tiles) {
     }
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
-        if (tcp[id]) return ans - 1 - tiles[42];
-        else if (tcp[JokerA[id]]) return ans - 1 - tiles[42];
-        else if (tcp[JokerB[id]]) return ans - 1 - tiles[42];
+        if (tcp[id]) return ans - 1 - tiles[JokerC];
+        else if (tcp[JokerA[id]]) return ans - 1 - tiles[JokerC];
+        else if (tcp[JokerB[id]]) return ans - 1 - tiles[JokerC];
     }
-    return ans - tiles[42];
+    return ans - tiles[JokerC];
 }
 // Creation of Knitted Dragon
 let KDragonSave = Array.from({ length: 6 }, () => Array(9).fill(0));
@@ -492,7 +489,7 @@ function Bukao16Count(tiles) {
         }
         ans = Math.max(ans, count);
     }
-    return ans + tiles[42];
+    return ans + tiles[JokerC];
 }
 // Special Check for Knitted Dragon
 function KDragonStep(tiles, tcnt) {
@@ -507,8 +504,8 @@ function KDragonStep(tiles, tcnt) {
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
             else ++miss;
         }
-        if (miss - 1 - tiles[42] >= ans) continue;
-        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt) + miss);
+        if (miss - 1 - tiles[JokerC] >= ans) continue;
+        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, ans - miss) + miss);
     }
     return ans;
 }
@@ -524,8 +521,8 @@ function KDragonStepCheck(tiles, maxstep, tcnt) {
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
             else ++miss;
         }
-        if (miss - 1 - tiles[42] >= ans) continue;
-        if (miss - 1 - tiles[42] >= maxstep) continue;
+        if (miss - 1 - tiles[JokerC] >= ans) continue;
+        if (miss - 1 - tiles[JokerC] >= maxstep) continue;
         ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, maxstep - miss) + miss);
         if (ans < maxstep) return true;
     }
@@ -618,7 +615,7 @@ function Buda16Step(tiles) {
     for (let pi = 0; pi < 5; ++pi) {
         let ra = tiles[46],
             rb = tiles[49];
-        let ans = -tiles[42];
+        let ans = -tiles[JokerC];
         for (let i = 0; i < 3; ++i) {
             const m = i === pi ? pmiss[i] : miss[i];
             const ua = Math.min(ra, m);

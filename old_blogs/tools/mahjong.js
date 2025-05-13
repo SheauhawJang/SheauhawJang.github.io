@@ -177,7 +177,7 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
         for (let s = 0; s <= ms; ++s) {
             const lri = lj - ui - p * 2 - s;
             if (lri < 0) break;
-            if (s && p * 2 + s >= ri && s >= rj && s >= tiles[i + 2]) break;
+            if (s && p * 2 + s > ri && s > rj && s > tiles[i + 2]) break;
             let kri = Math.max(ri - p * 2 - s, 0);
             let mmk = Math.floor(kri / 3);
             let pmk = Math.ceil(kri / 3);

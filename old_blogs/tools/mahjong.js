@@ -152,7 +152,7 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     const dpi = indexDp(em, ep, i, ui, uj, aj, bj, cj);
     if (step[dpi] !== Infinity) return step[dpi];
-    let ans = (nm - em) * 3 + (np - ep) * 2 - 1 + Math.max(ui - tiles[i], 0) + Math.max(uj - tiles[i + 1], 0);
+    let ans = (nm - em) * 3 + (np - ep) * 2 + Math.max(ui - tiles[i], 0) + Math.max(uj - tiles[i + 1]) - 1;
     let ri = Math.max(tiles[i] - ui, 0);
     let rj = SeqCheck(i) ? Math.max(tiles[i + 1] - uj, 0) : 0;
     let ra = tiles[JokerA[i]] - aj;
@@ -178,6 +178,7 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
             const lri = lj - ui - p * 2 - s;
             if (lri < 0) break;
             if (s && p * 2 + s > ri && s > rj && s > tiles[i + 2]) break;
+            if (s && (s + uj > limit || s > limit)) break;
             let kri = Math.max(ri - p * 2 - s, 0);
             let mmk = Math.floor(kri / 3);
             let pmk = Math.ceil(kri / 3);
@@ -192,18 +193,16 @@ function kernelDp(tiles, em, ep, nm, np, maxans = Infinity, limit = Infinity, i 
                     const ubj = Math.min(rb, d - uaj);
                     const ucj = Math.min(rc, d - uaj - ubj);
                     d -= uaj + ubj + ucj;
-                    if (d - 1 >= ans) break;
-                    if (d - 1 >= maxans) break;
+                    if (d - 1 >= Math.min(ans, maxans)) break;
                     ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, maxans, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
                 } else {
-                    const el = Math.max(ti - limit, 0);
+                    const el = Math.max(ti - limit, 0); // 
                     const er = Math.min(ra + rb + rc, d);
                     for (let e = er; e >= el; --e) {
                         const uaj = Math.min(ra, e);
                         const ubj = Math.min(rb, e - uaj);
                         const ucj = Math.min(rc, e - uaj - ubj);
-                        if (d - e - 1 >= ans) break;
-                        if (d - e - 1 >= maxans) break;
+                        if (d - e - 1 >= Math.min(ans, maxans)) break;
                         ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, maxans, limit, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d - e);
                     }
                 }

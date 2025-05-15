@@ -682,6 +682,7 @@
             }
             function addInput(i) {
                 if (typeof i === "number") i = { id: i };
+                document.getElementById("inputText").value += " ";
                 document.getElementById("inputText").value += cardName(i);
                 drawInputCards();
             }

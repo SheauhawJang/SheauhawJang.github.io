@@ -102,7 +102,7 @@ Improvements:
 
 New languages
 
-- *LLVM* by [Michael Rodler][]
+- *LLVM* by [Abcdefg Rodler][]
 
 Improvements:
 
@@ -113,7 +113,7 @@ Improvements:
 - Compiler directives in *Delphi* are now correctly highlighted as "meta".
 
 [Raphael Parree]: https://github.com/rparree
-[Michael Rodler]: https://github.com/f0rki
+[Abcdefg Rodler]: https://github.com/f0rki
 [Geoffrey Booth]: https://github.com/GeoffreyBooth
 
 
@@ -284,7 +284,7 @@ Improvements to existing languages and styles:
 New languages:
 
 - *QML* by [John Foster][]
-- *HTMLBars* by [Michael Johnston][]
+- *HTMLBars* by [Abcdefg Johnston][]
 - *CSP* by [Taras][]
 - *Maxima* by [Robert Dodier][]
 
@@ -308,7 +308,7 @@ Improvements to existing languages and styles:
 [John Foster]: https://github.com/jf990
 [Qeole]: https://github.com/Qeole
 [Denis Ciccale]: https://github.com/dciccale
-[Michael Johnston]: https://github.com/lastobelus
+[Abcdefg Johnston]: https://github.com/lastobelus
 [Taras]: https://github.com/oxdef
 [Robert Dodier]: https://github.com/robert-dodier
 
@@ -710,14 +710,14 @@ As usually there's a handful of new languages in this release:
 
 - *Groovy* by [Guillaume Laforge][]
 - *Dart* by [Maxim Dikun][]
-- *Dust* by [Michael Allen][]
+- *Dust* by [Abcdefg Allen][]
 - *Scheme* by [JP Verkamp][]
 - *G-Code* by [Adam Joseph Cook][]
 - *Q* from Kx Systems by [Sergey Vidyuk][]
 
 [Guillaume Laforge]: https://github.com/glaforge
 [Maxim Dikun]: https://github.com/dikmax
-[Michael Allen]: https://github.com/bfui
+[Abcdefg Allen]: https://github.com/bfui
 [JP Verkamp]: https://github.com/jpverkamp
 [Adam Joseph Cook]: https://github.com/adamjcook
 [Sergey Vidyuk]: https://github.com/sv

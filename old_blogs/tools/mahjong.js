@@ -698,63 +698,66 @@ function normalPrecheck(tiles, step, tcnt) {
 function JPPrecheck(tiles, step, substep, tcnt) {
     const dischecks = Array(sizeAT).fill(null).map(() => Array(3).fill(false));
     const getchecks = Array(sizeAT).fill(null).map(() => Array(3).fill(false));
-    if (step === substep[0]) {
-        initDischecks(tiles, i => dischecks[i][0] = step === -1 || StepCheck(tiles, step + 1, tcnt - 1, tcnt, 4));
-        initGetchecks(tiles, i => getchecks[i][0] = step === -1 || StepCheck(tiles, step, tcnt + 1, tcnt, 4));
+    const nstep = Math.max(step, 0);
+    if (nstep >= substep[0]) {
+        initDischecks(tiles, i => dischecks[i][0] = substep[0] === -1 || StepCheck(tiles, nstep + 1, tcnt - 1, tcnt, 4));
+        initGetchecks(tiles, i => getchecks[i][0] = substep[0] === -1 || StepCheck(tiles, nstep, tcnt + 1, tcnt, 4));
     }
-    if (tcnt === 14 && step === substep[1]) {
-        initDischecks(tiles, i => dischecks[i][1] = step === -1 || PairStep(tiles, true) === step);
-        initGetchecks(tiles, i => getchecks[i][1] = step === -1 || PairStep(tiles, true) < step);
+    if (tcnt === 14 && nstep >= substep[1]) {
+        initDischecks(tiles, i => dischecks[i][1] = substep[1] === -1 || PairStep(tiles, true) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][1] = substep[1] === -1 || PairStep(tiles, true) < nstep);
     }
-    if (tcnt === 14 && step === substep[2]) {
-        initDischecks(tiles, i => dischecks[i][2] = step === -1 || OrphanStep(tiles) === step);
-        initGetchecks(tiles, i => getchecks[i][2] = step === -1 || OrphanStep(tiles) < step);
+    if (tcnt === 14 && nstep >= substep[2]) {
+        initDischecks(tiles, i => dischecks[i][2] = substep[2] === -1 || OrphanStep(tiles) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][2] = substep[2] === -1 || OrphanStep(tiles) < nstep);
     }
     return { dischecks, getchecks };
 }
 function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     const dischecks = Array(sizeAT).fill(null).map(() => Array(5).fill(false));
     const getchecks = Array(sizeAT).fill(null).map(() => Array(5).fill(false));
-    if (step === substep[0]) {
+    const nstep = Math.max(step, 0);
+    if (nstep >= substep[0]) {
         for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck.dischecks[i];
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck.getchecks[i];
     }
-    if (tcnt === 14 && step === substep[1]) {
-        initDischecks(tiles, i => dischecks[i][1] = step === -1 || PairStep(tiles, false) === step);
-        initGetchecks(tiles, i => getchecks[i][1] = step === -1 || PairStep(tiles, false) < step);
+    if (tcnt === 14 && nstep >= substep[1]) {
+        initDischecks(tiles, i => dischecks[i][1] = substep[1] === -1 || PairStep(tiles, false) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][1] = substep[1] === -1 || PairStep(tiles, false) < nstep);
     }
-    if (tcnt === 14 && step === substep[2]) {
-        initDischecks(tiles, i => dischecks[i][2] = step === -1 || OrphanStep(tiles) === step);
-        initGetchecks(tiles, i => getchecks[i][2] = step === -1 || OrphanStep(tiles) < step);
+    if (tcnt === 14 && nstep >= substep[2]) {
+        initDischecks(tiles, i => dischecks[i][2] = substep[2] === -1 || OrphanStep(tiles) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][2] = substep[2] === -1 || OrphanStep(tiles) < nstep);
     }
-    if (tcnt === 14 && step === substep[3]) {
-        initDischecks(tiles, i => dischecks[i][3] = step === -1 || tcnt - 1 - Bukao16Count(tiles) === step);
-        initGetchecks(tiles, i => getchecks[i][3] = step === -1 || tcnt - 1 - Bukao16Count(tiles) < step);
+    if (tcnt === 14 && nstep >= substep[3]) {
+        initDischecks(tiles, i => dischecks[i][3] = substep[3] === -1 || tcnt - 1 - Bukao16Count(tiles) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][3] = substep[3] === -1 || tcnt - 1 - Bukao16Count(tiles) < nstep);
     }
-    if (tcnt >= 9 && step === substep[4]) {
-        initDischecks(tiles, i => dischecks[i][4] = step === -1 || KDragonStepCheck(tiles, step + 1, tcnt));
-        initGetchecks(tiles, i => getchecks[i][4] = step === -1 || KDragonStepCheck(tiles, step, tcnt));
+    if (tcnt >= 9 && nstep >= substep[4]) {
+        initDischecks(tiles, i => dischecks[i][4] = substep[4] === -1 || KDragonStepCheck(tiles, nstep + 1, tcnt));
+        initGetchecks(tiles, i => getchecks[i][4] = substep[4] === -1 || KDragonStepCheck(tiles, nstep, tcnt));
     }
     return { dischecks, getchecks };
 }
 function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
     const dischecks = Array(sizeAT).fill(null).map(() => Array(4).fill(false));
     const getchecks = Array(sizeAT).fill(null).map(() => Array(4).fill(false));
-    if (step === substep[0]) {
+    const nstep = Math.max(step, 0);
+    if (nstep === substep[0]) {
         for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck.dischecks[i];
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck.getchecks[i];
     }
-    if (tcnt === 17 && step === substep[1]) {
-        initDischecks(tiles, i => dischecks[i][1] = step === -1 || NiconicoStep(tiles) === step);
-        initGetchecks(tiles, i => getchecks[i][1] = step === -1 || NiconicoStep(tiles) < step);
+    if (tcnt === 17 && nstep === substep[1]) {
+        initDischecks(tiles, i => dischecks[i][1] = substep[1] === -1 || NiconicoStep(tiles) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][1] = substep[1] === -1 || NiconicoStep(tiles) < nstep);
     }
-    if (tcnt === 17 && step === substep[2]) {
-        initDischecks(tiles, i => dischecks[i][2] = step === -1 || OrphanMeldStep(tiles) === step);
-        initGetchecks(tiles, i => getchecks[i][2] = step === -1 || OrphanMeldStep(tiles) < step);
+    if (tcnt === 17 && nstep === substep[2]) {
+        initDischecks(tiles, i => dischecks[i][2] = substep[2] === -1 || OrphanMeldStep(tiles) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][2] = substep[2] === -1 || OrphanMeldStep(tiles) < nstep);
     }
-    if (tcnt === 17 && step === substep[3]) {
-        initDischecks(tiles, i => dischecks[i][3] = step === -1 || Buda16Step(tiles) === step);
-        initGetchecks(tiles, i => getchecks[i][3] = step === -1 || Buda16Step(tiles) < step);
+    if (tcnt === 17 && nstep === substep[3]) {
+        initDischecks(tiles, i => dischecks[i][3] = substep[3] === -1 || Buda16Step(tiles) <= nstep);
+        initGetchecks(tiles, i => getchecks[i][3] = substep[3] === -1 || Buda16Step(tiles) < nstep);
     }
     return { dischecks, getchecks };
 }
@@ -774,14 +777,14 @@ function makeAns(step, tiles, f, ff) {
 }
 function normalWaiting(tiles, step, tcnt, discheck, getchecks) {
     if (discheck === false) return { ans: [], checked: false };
-    const nstep = step === -1 ? 0 : step;
+    const nstep = Math.max(step, 0);
     const waiting = (t, i, d, g) => g !== false && StepCheck(t, i, tcnt - d, tcnt);
     const { ans, gans } = makeAns(step, tiles, waiting, i => waiting(tiles, nstep, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck };
 }
 function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2]];
-    const nstep = step === -1 ? 0 : step;
+    const nstep = Math.max(step, 0);
     function waiting(tiles, step, d, g) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, true) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
@@ -792,7 +795,7 @@ function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
 }
 function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2], tcnt === 14 && step === substep[3], tcnt >= 9 && step === substep[4]];
-    const nstep = step === -1 ? 0 : step;
+    const nstep = Math.max(step, 0);
     function waiting(tiles, step, d, g, s) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, false) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
@@ -801,7 +804,7 @@ function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
         else if (discheck[4] && (!g || g[4]) && KDragonStepCheck(tiles, step, tcnt)) return true;
     }
     const saveWaiting = new Array(sizeUT).fill(false);
-    if (step === substep[0]) {
+    if (nstep >= substep[0]) {
         for (const x of saveans.ans) saveWaiting[x] = true;
         if (saveans.gans) for (const x of saveans.gans) saveWaiting[x] = true;
     }
@@ -810,7 +813,7 @@ function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
 }
 function TWWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 17 && step === substep[1], tcnt === 17 && step === substep[2], tcnt === 17 && step === substep[3]];
-    const nstep = step === -1 ? 0 : step;
+    const nstep = Math.max(step, 0);
     function waiting(tiles, step, d, g, s) {
         if (discheck[1] && (!g || g[1]) && NiconicoStep(tiles) < step) return true;
         else if (discheck[3] && (!g || g[3]) && Buda16Step(tiles) < step) return true;
@@ -818,7 +821,7 @@ function TWWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
         else if (discheck[2] && (!g || g[2]) && OrphanMeldStep(tiles) < step) return true;
     }
     const saveWaiting = new Array(sizeUT).fill(false);
-    if (step === substep[0]) {
+    if (nstep >= substep[0]) {
         for (const x of saveans.ans) saveWaiting[x] = true;
         if (saveans.gans) for (const x of saveans.gans) saveWaiting[x] = true;
     }

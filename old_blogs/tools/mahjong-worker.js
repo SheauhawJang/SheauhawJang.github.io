@@ -5,7 +5,7 @@ function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
 function cardImageDivide(id) {
-    return `<div class="card-div" style="width: 3%;"><img src="./cards/${cardName(id)}.gif""></div>`;
+    return `<img src="./cards/${cardName(id)}.gif">`;
 }
 const divideSpace = `<div class="card-div" style="width: 2%;"></div>`;
 function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {

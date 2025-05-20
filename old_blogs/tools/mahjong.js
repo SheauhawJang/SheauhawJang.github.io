@@ -125,35 +125,44 @@ function SeqCheck(left) {
 let step;
 let ldStep;
 let lastStep = {};
-function prepareDp(nm, np, aj, bj, cj) {
-    ldStep = new Array(7);
-    ldStep[0] = cj + 1;
-    ldStep[1] = ldStep[0] * (bj + 1);
-    ldStep[2] = ldStep[1] * (aj + 1);
-    ldStep[3] = ldStep[2] * 3;
-    ldStep[4] = ldStep[3] * 5;
-    ldStep[5] = ldStep[4] * sizeUT;
-    ldStep[6] = ldStep[5] * (np + 1);
-    step = new Array((nm + 1) * ldStep[6]).fill(null);
-}
-function getDp(em, ep, i, ui, uj, aj, bj, cj) {
-    return step[indexDp(em, ep, i, ui, uj, aj, bj, cj)];
-}
-function setDp(em, ep, i, ui, uj, aj, bj, cj, v) {
-    step[indexDp(em, ep, i, ui, uj, aj, bj, cj)] = v;
-}
-function indexDp(em, ep, i, ui, uj, aj, bj, cj) {
-    return em * ldStep[6] + ep * ldStep[5] + i * ldStep[4] + ui * ldStep[3] + uj * ldStep[2] + aj * ldStep[1] + bj * ldStep[0] + cj;
-}
 const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, -1];
 const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, -1];
 const JokerC = 42;
+function prepareStep(nm, np, tiles) {
+    ldStep = new Array(sizeUT * 7);
+    let sizeStep = 0;
+    for (let i = 0; i < sizeUT; ++i) {
+        const ldi = i * 7;
+        ldStep[ldi] = sizeStep;
+        ldStep[ldi + 1] = tiles[JokerC] + 1;
+        ldStep[ldi + 2] = ldStep[ldi + 1] * (tiles[JokerB[i]] + 1);
+        ldStep[ldi + 3] = ldStep[ldi + 2] * (tiles[JokerA[i]] + 1);
+        let mui = 0, muj = 0;
+        if (SeqCheck(i - 1)) mui = muj = 2;
+        if (SeqCheck(i - 2)) mui += 2;
+        ldStep[ldi + 4] = ldStep[ldi + 3] * (muj + 1);
+        ldStep[ldi + 5] = ldStep[ldi + 4] * (mui + 1);
+        ldStep[ldi + 6] = ldStep[ldi + 5] * (np + 1);
+        sizeStep += ldStep[ldi + 6] * (nm + 1);
+    }
+    step = new Array(sizeStep).fill(null);
+}
+function getStep(em, ep, i, ui, uj, aj, bj, cj) {
+    return step[indexStep(em, ep, i, ui, uj, aj, bj, cj)];
+}
+function setStep(em, ep, i, ui, uj, aj, bj, cj, v) {
+    return step[indexStep(em, ep, i, ui, uj, aj, bj, cj)] = v;
+}
+function indexStep(em, ep, i, ui, uj, aj, bj, cj) {
+    const ldi = i * 7;
+    return ldStep[ldi] + em * ldStep[ldi + 6] + ep * ldStep[ldi + 5] + ui * ldStep[ldi + 4] + uj * ldStep[ldi + 3] + aj * ldStep[ldi + 2] + bj * ldStep[ldi + 1] + cj;
+}
 const dgues = new Array(sizeAT).fill(0);
-function kernelDp(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
+function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
-    const dpi = indexDp(em, ep, i, ui, uj, aj, bj, cj);
+    const dpi = indexStep(em, ep, i, ui, uj, aj, bj, cj);
     if (step[dpi] !== null) return step[dpi];
-    if (guse[i] === Infinity) return step[dpi] = kernelDp(tiles, em, ep, nm, np, sup, glmt, guse, i + 1, uj, 0, aj, bj, cj);
+    if (guse[i] === Infinity) return step[dpi] = kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i + 1, uj, 0, aj, bj, cj);
     const lmti = glmt - guse[i];
     let ra = tiles[JokerA[i]] - aj;
     let rb = tiles[JokerB[i]] - bj;
@@ -180,7 +189,6 @@ function kernelDp(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0,
     let ans = Infinity;
     const mp = Math.min(np - ep, Math.ceil(ri / 2));
     const ms = cs ? Math.min(nm - em, 2) : 0;
-    let searched = false;
     for (let p = 0; p <= mp; ++p)
         for (let s = 0; s <= ms; ++s) {
             const lri = lmtj - ui - p * 2 - s;
@@ -202,7 +210,7 @@ function kernelDp(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0,
                     d -= uaj + ubj + ucj;
                     if (d - 1 >= Math.min(ans, sup)) break;
                     searched = true;
-                    ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, sup, glmt, guse, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
+                    ans = Math.min(ans, kernelStep(tiles, em + s + k, ep + p, nm, np, sup, glmt, guse, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
                 } else {
                     const el = Math.max(ti - lmti, 0);
                     const er = Math.min(ra + rb + rc, d);
@@ -211,15 +219,14 @@ function kernelDp(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0,
                         const ubj = Math.min(rb, e - uaj);
                         const ucj = Math.min(rc, e - uaj - ubj);
                         if (d - e - 1 >= Math.min(ans, sup)) break;
-                        ans = Math.min(ans, kernelDp(tiles, em + s + k, ep + p, nm, np, sup, glmt, guse, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d - e);
+                        ans = Math.min(ans, kernelStep(tiles, em + s + k, ep + p, nm, np, sup, glmt, guse, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d - e);
                     }
                 }
             }
         }
-    step[dpi] = ans;
-    return ans;
+    return step[dpi] = ans;
 }
-function useDpMemory(nm, np, tiles, glmt, sup, guse) {
+function useStepMemory(nm, np, tiles, glmt, sup, guse) {
     if (nm !== lastStep.nm) return false;
     if (np !== lastStep.np) return false;
     if (glmt !== lastStep.glmt) return false;
@@ -235,33 +242,29 @@ function useDpMemory(nm, np, tiles, glmt, sup, guse) {
         if (guse[i] !== lastStep.guse[i]) last_same = i + 1;
     }
     if (last_same === sizeUT) return false;
-    for (let i = 0; i <= nm; ++i) for (let j = 0; j <= np; ++j) step.fill(null, i * ldStep[6] + j * ldStep[5], i * ldStep[6] + j * ldStep[5] + last_same * ldStep[4]);
+    step.fill(null, 0, indexStep(0, 0, last_same, 0, 0, 0, 0, 0));
     return true;
 }
 function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = dgues) {
     tiles = tiles.slice();
     let nm = Math.floor(tcnt / 3);
     let np = tcnt % 3 > 0 ? 1 : 0;
-    let aj = 0,
-        bj = 0;
     for (let i = 0; i < sizeUT; ++i) {
         tiles[i] = Math.min(tiles[i], glmt);
         const km = Math.floor(Math.max(tiles[i] - 8, 0) / 3);
         nm -= km;
         tiles[i] -= km * 3;
-        aj = Math.max(aj, tiles[JokerA[i]]);
-        bj = Math.max(bj, tiles[JokerB[i]]);
     }
     if (glmt !== Infinity) {
-        if (!useDpMemory(nm, np, tiles, glmt, sup, guse)) prepareDp(nm, np, aj, bj, tiles[JokerC]);
+        if (!useStepMemory(nm, np, tiles, glmt, sup, guse)) prepareStep(nm, np, tiles);
         lastStep = { nm, np, glmt, tiles, sup, guse };
-        return kernelDp(tiles, em, ep, nm, np, sup, glmt, guse);
+        return kernelStep(tiles, em, ep, nm, np, sup, glmt, guse);
     }
     let ans = -tiles[JokerC];
     tiles[JokerC] = 0;
-    if (!useDpMemory(nm, np, tiles, glmt, sup, guse)) prepareDp(nm, np, aj, bj, 0);
+    if (!useStepMemory(nm, np, tiles, glmt, sup, guse)) prepareStep(nm, np, tiles);
     lastStep = { nm, np, glmt, tiles, sup, guse };
-    return kernelDp(tiles, em, ep, nm, np, sup - ans, glmt, guse) + ans;
+    return kernelStep(tiles, em, ep, nm, np, sup - ans, glmt, guse) + ans;
 }
 // Check for winning
 function check(tiles, target) {

@@ -1,13 +1,17 @@
 importScripts("mahjong.js");
-let table_head = '<table style="border-collapse: collapse; padding: 0px;">';
+let table_head = '<table style="border-collapse: collapse; padding: 0px">';
 let table_tail = "</table>";
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
+function cardImageDivide(id) {
+    return `<div class="card-div" style="width: 3%;"><img src="./cards/${cardName(id)}.gif""></div>`;
+}
+const divideSpace = `<div class="card-div" style="width: 2%;"></div>`;
 function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
     let result = "";
     if (full_tcnt !== tcnt) {
-        const save = getWaiting(undefined, undefined, s => s);
+        const save = getWaiting(undefined, undefined, (s) => s);
         const { ans, gans } = save;
         if (gans !== undefined) {
             const bcnt = countWaitingCards(tiles, ans);
@@ -26,7 +30,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
             const cnt = countWaitingCards(tiles, ans);
             result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
-        return { output: table_head + result + table_tail, ans: { waiting: save }  };
+        return { output: table_head + result + table_tail, ans: { waiting: save } };
     } else {
         const save = Array(sizeAT);
         const cnts = [];
@@ -35,7 +39,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
         for (let i = 0; i < sizeAT; ++i) {
             if (!tiles[i]) continue;
             tiles[i]--;
-            save[i] = getWaiting(dischecks[i], getchecks, s => s[i]);
+            save[i] = getWaiting(dischecks[i], getchecks, (s) => s[i]);
             tiles[i]++;
             const { ans, gans, checked } = save[i];
             if (gans !== undefined) {
@@ -81,8 +85,72 @@ function normalStep(tiles, tcnt, full_tcnt) {
     let step = Step(tiles, tcnt, full_tcnt);
     let output = getWaitingType(step) + "\n";
     postMessage({ output, brief: getWaitingType(step) });
-    const r = printWaiting(tiles, tcnt, full_tcnt, (d, g) => normalWaiting(tiles, step, full_tcnt, d, g), () => normalPrecheck(tiles, step, full_tcnt));
+    const r = printWaiting(
+        tiles,
+        tcnt,
+        full_tcnt,
+        (d, g) => normalWaiting(tiles, step, full_tcnt, d, g),
+        () => normalPrecheck(tiles, step, full_tcnt)
+    );
     output += r.output;
+    if (step === -1) {
+        const nm = Math.floor(full_tcnt / 3);
+        const np = full_tcnt % 3 ? 1 : 0;
+        const cnt = WinningDivide(tiles, nm, np);
+        let melds = [],
+            head = [];
+        let ots = [];
+        function dfs(i, dpi) {
+            if (melds.length === nm && head.length === np) {
+                ots.push([...head, ...melds]);
+                return;
+            }
+            const ans = dvd[dpi];
+            for (let j = 0; j < ans.nxt.length; ++j) {
+                const n = ans.nxt[j];
+                for (let p = 0; p < n.p; ++p) head.push([i, i]);
+                for (let s = 0; s < n.s; ++s) melds.push([i, i + 1, i + 2]);
+                for (let k = 0; k < n.k; ++k) melds.push([i, i, i]);
+                dfs(i + 1, n.dpi);
+                for (let p = 0; p < n.p; ++p) head.pop();
+                for (let m = 0; m < n.s + n.k; ++m) melds.pop();
+            }
+        }
+        if (cnt < 10) {
+            dfs(0, 0);
+            for (let i = 0; i < ots.length; ++i) {
+                let t = tiles.slice();
+                for (let j = 0; j < ots[i].length; ++j) 
+                    for (let k = 0; k < ots[i][j].length; ++k) {
+                        const id = ots[i][j][k];
+                        let rid = id;
+                        if (t[id] > 0);
+                        else if (t[JokerA[id]] > 0) rid = JokerA[id];
+                        else if (t[JokerB[id]] > 0) rid = JokerB[id];
+                        else if (t[JokerC] > 0) rid = JokerC;
+                        --t[rid]
+                        ots[i][j][k] = rid;
+                    }
+            }
+            ots.sort((a, b) => {
+                const m = Math.min(a.length, b.length);
+                for (let i = 0; i < m; i++) {
+                    const rowA = a[i];
+                    const rowB = b[i];
+                    const n = Math.min(rowA.length, rowB.length);
+                    for (let j = 0; j < n; j++) {
+                        if (rowA[j] !== rowB[j]) return rowA[j] - rowB[j];
+                    }
+                    if (rowA.length !== rowB.length) return rowA.length - rowB.length;
+                }
+                return a.length - b.length;
+            });
+            output += "和牌拆解: \n"
+            output += ots.map(a => `<div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`).join('');
+        } else {
+            output += `共有 ${cnt} 种和牌拆解方式`;
+        }
+    }
     return { output, step, save: r.ans };
 }
 function JPStep(tiles, tcnt, full_tcnt) {
@@ -114,7 +182,13 @@ function JPStep(tiles, tcnt, full_tcnt) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step4, step7JP, step13];
-    output += printWaiting(tiles, tcnt, full_tcnt, (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt)).output;
+    output += printWaiting(
+        tiles,
+        tcnt,
+        full_tcnt,
+        (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g),
+        () => JPPrecheck(tiles, stepJP, substep, full_tcnt)
+    ).output;
     return { output, step13 };
 }
 function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
@@ -155,9 +229,13 @@ function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step, step7GB, step13, step16, stepkd];
-    output += printWaiting(tiles, tcnt, full_tcnt, 
-        (d, g, f) => GBWaiting(tiles, stepGB, substep, full_tcnt, f(save.waiting), d, g), 
-        () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks)).output;
+    output += printWaiting(
+        tiles,
+        tcnt,
+        full_tcnt,
+        (d, g, f) => GBWaiting(tiles, stepGB, substep, full_tcnt, f(save.waiting), d, g),
+        () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks)
+    ).output;
     return { output };
 }
 function TWStep(tiles, tcnt, full_tcnt, step, save) {
@@ -193,9 +271,13 @@ function TWStep(tiles, tcnt, full_tcnt, step, save) {
     output += table_head + table + table_tail;
     postMessage({ output, brief });
     const substep = [step, stepnico, step13, step16];
-    output += printWaiting(tiles, tcnt, full_tcnt, 
-        (d, g, f) => TWWaiting(tiles, stepTW, substep, full_tcnt, f(save.waiting), d, g), 
-        () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks)).output;
+    output += printWaiting(
+        tiles,
+        tcnt,
+        full_tcnt,
+        (d, g, f) => TWWaiting(tiles, stepTW, substep, full_tcnt, f(save.waiting), d, g),
+        () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks)
+    ).output;
     return { output };
 }
 self.onmessage = function (e) {

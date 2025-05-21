@@ -81,6 +81,9 @@ function getWaitingType(step) {
     else if (step === 0) return "听牌";
     else return step + " 向听";
 }
+function getWinningLine(cards) {
+    return cards.map((b) => b.map(cardImageDivide).join("")).join(divideSpace);
+}
 function normalStep(tiles, tcnt, full_tcnt) {
     let step = Step(tiles, tcnt, full_tcnt);
     let output = getWaitingType(step) + "\n";
@@ -99,7 +102,7 @@ function normalStep(tiles, tcnt, full_tcnt) {
         dvd = windvd(tiles, full_tcnt);
         const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10);
         output += "和牌拆解: \n";
-        output += ots.map(a => `<div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`).join('');
+        output += ots.map((a) => `<div class="card-container">${getWinningLine(a)}</div>`).join("");
         if (ots.length < dvd.cnt) output += `以及其他 ${dvd.cnt - ots.length} 种和牌拆解方式`;
     }
     return { output, step, save: r.ans, dvd };
@@ -140,44 +143,45 @@ function JPStep(tiles, tcnt, full_tcnt, dvd) {
         (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g),
         () => JPPrecheck(tiles, stepJP, substep, full_tcnt)
     ).output;
-    let dvd7 = undefined, dvd13 = undefined;
+    let dvd7 = undefined,
+        dvd13 = undefined;
     if (stepJP === -1) {
         postMessage({ output });
         let odvd = [];
         let cnt = 0;
-        if (step4 === -1) {
-            cnt += dvd.cnt;
-            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10);
-            odvd = ots.map(a => `<div class="waiting-brief">一般型和牌：</div><div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`);
-        }
         if (step7 === -1) {
             ++cnt;
             dvd7 = PairOutput(tiles);
-            odvd.push(`<div class="waiting-brief">七对型和牌：</div><div class="card-container">${dvd7.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`);
+            odvd.push(`<div class="waiting-brief">七对型和牌：</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
         }
         if (step13 === -1) {
             ++cnt;
             dvd13 = OrphanOutput(tiles);
-            odvd.push(`<div class="waiting-brief">国士无双型和牌：</div><div class="card-container">${dvd13.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`);
+            odvd.push(`<div class="waiting-brief">国士无双型和牌：</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+        }
+        if (step4 === -1) {
+            cnt += dvd.cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10 - odvd.length);
+            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += "和牌拆解: \n";
-        output += `<div class="win-grid">${odvd.join('')}</div>`;
+        output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `以及其他 ${cnt - odvd.length} 种和牌拆解方式`;
     }
     return { output, step13, dvd7, dvd13 };
 }
-function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
+function GBStep(tiles, tcnt, full_tcnt, step, save, step13, dvd, dvd7, dvd13) {
     let table = "";
     let stepGB = step;
     table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step) + "</td></tr>";
     postMessage({ output: table_head + table + table_tail });
-    let step7GB, step16, stepkd;
+    let step7, step16, stepkd;
     if (full_tcnt === 14) {
-        step7GB = PairStep(tiles, false);
-        table += '<tr><td style="padding-left: 0px;">七对型：</td><td>' + getWaitingType(step7GB) + "</td></tr>";
+        step7 = PairStep(tiles, false);
+        table += '<tr><td style="padding-left: 0px;">七对型：</td><td>' + getWaitingType(step7) + "</td></tr>";
         table += '<tr><td style="padding-left: 0px;">十三幺型：</td><td>' + getWaitingType(step13) + "</td></tr>";
         postMessage({ output: table_head + table + table_tail });
-        stepGB = Math.min(stepGB, step7GB);
+        stepGB = Math.min(stepGB, step7);
         stepGB = Math.min(stepGB, step13);
         step16 = full_tcnt - 1 - Bukao16Count(tiles);
         table += '<tr><td style="padding-left: 0px;">全不靠型：</td><td>' + getWaitingType(step16) + "</td></tr>";
@@ -194,7 +198,7 @@ function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
     let stepTypeGB = [];
     if (step == stepGB) stepTypeGB.push("一般型");
     if (full_tcnt === 14) {
-        if (step7GB == stepGB) stepTypeGB.push("七对型");
+        if (step7 == stepGB) stepTypeGB.push("七对型");
         if (step13 == stepGB) stepTypeGB.push("十三幺型");
         if (step16 == stepGB) stepTypeGB.push("全不靠型");
     }
@@ -203,7 +207,7 @@ function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    const substep = [step, step7GB, step13, step16, stepkd];
+    const substep = [step, step7, step13, step16, stepkd];
     output += printWaiting(
         tiles,
         tcnt,
@@ -211,6 +215,40 @@ function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
         (d, g, f) => GBWaiting(tiles, stepGB, substep, full_tcnt, f(save.waiting), d, g),
         () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks)
     ).output;
+    if (stepGB === -1) {
+        postMessage({ output });
+        let odvd = [];
+        let cnt = 0;
+        if (step7 === -1) {
+            ++cnt;
+            if (dvd7 === undefined) dvd7 = PairOutput(tiles);
+            odvd.push(`<div class="waiting-brief">七对型和牌：</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+        }
+        if (step13 === -1) {
+            ++cnt;
+            odvd.push(`<div class="waiting-brief">十三幺型和牌：</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+        }
+        if (step16 === -1) {
+            const ots = Bukao16Output(tiles);
+            cnt += ots.length;
+            odvd = [...odvd, ...ots.map((a) => `<div class="waiting-brief">全不靠型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`)];
+        }
+        if (stepkd === -1) {
+            let opt_size = 10 - odvd.length;
+            if (step === -1) --opt_size;
+            const ans = KDragonOutput(tiles, full_tcnt, opt_size);
+            cnt += ans.cnt;
+            odvd = [...odvd, ...ans.ots.map((a) => `<div class="waiting-brief">组合龙型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`)];
+        }
+        if (step === -1) {
+            cnt += dvd.cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, Math.max(10 - odvd.length, 1));
+            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
+        }
+        output += "和牌拆解: \n";
+        output += `<div class="win-grid">${odvd.join("")}</div>`;
+        if (odvd.length < cnt) output += `以及其他 ${cnt - odvd.length} 种和牌拆解方式`;
+    }
     return { output };
 }
 function TWStep(tiles, tcnt, full_tcnt, step, save) {
@@ -267,8 +305,8 @@ self.onmessage = function (e) {
             result = JPStep(tiles, tcnt, full_tcnt, e.data.dvd);
             break;
         case 2: {
-            let { step, save, step13 } = e.data;
-            result = GBStep(tiles, tcnt, full_tcnt, step, save, step13);
+            let { step, save, step13, dvd, dvd7, dvd13 } = e.data;
+            result = GBStep(tiles, tcnt, full_tcnt, step, save, step13, dvd, dvd7, dvd13);
             break;
         }
         case 3: {

@@ -107,6 +107,7 @@ function normalStep(tiles, tcnt, full_tcnt) {
             }
             const ans = dvd[dpi];
             for (let j = 0; j < ans.nxt.length; ++j) {
+                if (ots.length >= 10) return;
                 const n = ans.nxt[j];
                 for (let p = 0; p < n.p; ++p) head.push([i, i]);
                 for (let s = 0; s < n.s; ++s) melds.push([i, i + 1, i + 2]);
@@ -116,40 +117,37 @@ function normalStep(tiles, tcnt, full_tcnt) {
                 for (let m = 0; m < n.s + n.k; ++m) melds.pop();
             }
         }
-        if (cnt < 10) {
-            dfs(0, 0);
-            for (let i = 0; i < ots.length; ++i) {
-                let t = tiles.slice();
-                for (let j = 0; j < ots[i].length; ++j) 
-                    for (let k = 0; k < ots[i][j].length; ++k) {
-                        const id = ots[i][j][k];
-                        let rid = id;
-                        if (t[id] > 0);
-                        else if (t[JokerA[id]] > 0) rid = JokerA[id];
-                        else if (t[JokerB[id]] > 0) rid = JokerB[id];
-                        else if (t[JokerC] > 0) rid = JokerC;
-                        --t[rid]
-                        ots[i][j][k] = rid;
-                    }
-            }
-            ots.sort((a, b) => {
-                const m = Math.min(a.length, b.length);
-                for (let i = 0; i < m; i++) {
-                    const rowA = a[i];
-                    const rowB = b[i];
-                    const n = Math.min(rowA.length, rowB.length);
-                    for (let j = 0; j < n; j++) {
-                        if (rowA[j] !== rowB[j]) return rowA[j] - rowB[j];
-                    }
-                    if (rowA.length !== rowB.length) return rowA.length - rowB.length;
+        dfs(0, 0);
+        ots.sort((a, b) => {
+            const m = Math.min(a.length, b.length);
+            for (let i = 0; i < m; i++) {
+                const rowA = a[i];
+                const rowB = b[i];
+                const n = Math.min(rowA.length, rowB.length);
+                for (let j = 0; j < n; j++) {
+                    if (rowA[j] !== rowB[j]) return rowA[j] - rowB[j];
                 }
-                return a.length - b.length;
-            });
-            output += "和牌拆解: \n"
-            output += ots.map(a => `<div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`).join('');
-        } else {
-            output += `共有 ${cnt} 种和牌拆解方式`;
+                if (rowA.length !== rowB.length) return rowA.length - rowB.length;
+            }
+            return a.length - b.length;
+        });
+        for (let i = 0; i < ots.length; ++i) {
+            let t = tiles.slice();
+            for (let j = 0; j < ots[i].length; ++j) 
+                for (let k = 0; k < ots[i][j].length; ++k) {
+                    const id = ots[i][j][k];
+                    let rid = id;
+                    if (t[id] > 0);
+                    else if (t[JokerA[id]] > 0) rid = JokerA[id];
+                    else if (t[JokerB[id]] > 0) rid = JokerB[id];
+                    else if (t[JokerC] > 0) rid = JokerC;
+                    --t[rid]
+                    ots[i][j][k] = rid;
+                }
         }
+        output += "和牌拆解: \n"
+        output += ots.map(a => `<div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`).join('');
+        if (ots.length < cnt) output += `以及其他 ${cnt - ots.length} 种和牌拆解方式`;
     }
     return { output, step, save: r.ans };
 }

@@ -152,17 +152,17 @@ function JPStep(tiles, tcnt, full_tcnt, dvd) {
         if (step7 === -1) {
             ++cnt;
             dvd7 = PairOutput(tiles);
-            odvd.push(`<div class="waiting-brief">七对型和牌：</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+            odvd.push(`<div class="waiting-brief">七对型：</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
         }
         if (step13 === -1) {
             ++cnt;
             dvd13 = OrphanOutput(tiles);
-            odvd.push(`<div class="waiting-brief">国士无双型和牌：</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+            odvd.push(`<div class="waiting-brief">国士无双型：</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
         }
         if (step4 === -1) {
             cnt += dvd.cnt;
             const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10 - odvd.length);
-            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
+            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += "和牌拆解: \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
@@ -222,28 +222,28 @@ function GBStep(tiles, tcnt, full_tcnt, step, save, step13, dvd, dvd7, dvd13) {
         if (step7 === -1) {
             ++cnt;
             if (dvd7 === undefined) dvd7 = PairOutput(tiles);
-            odvd.push(`<div class="waiting-brief">七对型和牌：</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+            odvd.push(`<div class="waiting-brief">七对型：</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
         }
         if (step13 === -1) {
             ++cnt;
-            odvd.push(`<div class="waiting-brief">十三幺型和牌：</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+            odvd.push(`<div class="waiting-brief">十三幺型：</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
         }
         if (step16 === -1) {
             const ots = Bukao16Output(tiles);
             cnt += ots.length;
-            odvd = [...odvd, ...ots.map((a) => `<div class="waiting-brief">全不靠型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`)];
+            odvd = [...odvd, ...ots.map((a) => `<div class="waiting-brief">全不靠型：</div><div class="card-container">${getWinningLine(a)}</div>`)];
         }
         if (stepkd === -1) {
             let opt_size = 10 - odvd.length;
             if (step === -1) --opt_size;
             const ans = KDragonOutput(tiles, full_tcnt, opt_size);
             cnt += ans.cnt;
-            odvd = [...odvd, ...ans.ots.map((a) => `<div class="waiting-brief">组合龙型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`)];
+            odvd = [...odvd, ...ans.ots.map((a) => `<div class="waiting-brief">组合龙型：</div><div class="card-container">${getWinningLine(a)}</div>`)];
         }
         if (step === -1) {
             cnt += dvd.cnt;
             const ots = WinOutput(tiles, full_tcnt, dvd.dvd, Math.max(10 - odvd.length, 1));
-            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型和牌：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
+            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += "和牌拆解: \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;

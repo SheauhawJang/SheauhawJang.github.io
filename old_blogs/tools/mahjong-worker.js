@@ -1,21 +1,21 @@
 importScripts("mahjong.js");
-let table_head = '<table style="border-collapse: collapse; padding: 0px">';
-let table_tail = "</table>";
+const table_head = '<table style="border-collapse: collapse; padding: 0px">';
+const table_tail = "</table>";
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
 function cardImageDivide(id) {
     return `<img src="./cards/${cardName(id)}.gif">`;
 }
-const divideSpace = `<div class="card-div" style="width: 2%;"></div>`;
+const divideSpace = `<div class="card-div" style="width: 10px;"></div>`;
 function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
     let result = "";
     if (full_tcnt !== tcnt) {
         const save = getWaiting(undefined, undefined, (s) => s);
         const { ans, gans } = save;
         if (gans !== undefined) {
-            const bcnt = countWaitingCards(tiles, ans);
-            const gcnt = countWaitingCards(tiles, gans);
+            const bcnt = CountWaitingCards(tiles, ans);
+            const gcnt = CountWaitingCards(tiles, gans);
             const cnt = gcnt + bcnt;
             const ratio = (gcnt / cnt) * 100;
             result +=
@@ -27,7 +27,7 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
                 `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` +
                 `<div class="devided-waiting-brief">好型率 ${ratio.toFixed(2)}%</div></td>`;
         } else {
-            const cnt = countWaitingCards(tiles, ans);
+            const cnt = CountWaitingCards(tiles, ans);
             result += `<td class="waiting-brief">待 ${cnt} 枚</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
         return { output: table_head + result + table_tail, ans: { waiting: save } };
@@ -43,11 +43,11 @@ function printWaiting(tiles, tcnt, full_tcnt, getWaiting, getSubchecks) {
             tiles[i]++;
             const { ans, gans, checked } = save[i];
             if (gans !== undefined) {
-                const bcnt = countWaitingCards(tiles, ans);
-                const gcnt = countWaitingCards(tiles, gans);
+                const bcnt = CountWaitingCards(tiles, ans);
+                const gcnt = CountWaitingCards(tiles, gans);
                 if (checked) cnts.push({ cnt: bcnt + gcnt, bcnt, gcnt, id: i });
             } else {
-                const cnt = countWaitingCards(tiles, ans);
+                const cnt = CountWaitingCards(tiles, ans);
                 if (checked) cnts.push({ cnt: cnt, id: i });
             }
         }
@@ -89,80 +89,33 @@ function normalStep(tiles, tcnt, full_tcnt) {
         tiles,
         tcnt,
         full_tcnt,
-        (d, g) => normalWaiting(tiles, step, full_tcnt, d, g),
-        () => normalPrecheck(tiles, step, full_tcnt)
+        (d, g) => NormalWaiting(tiles, step, full_tcnt, d, g),
+        () => NormalPrecheck(tiles, step, full_tcnt)
     );
     output += r.output;
+    let dvd = undefined;
     if (step === -1) {
-        const nm = Math.floor(full_tcnt / 3);
-        const np = full_tcnt % 3 ? 1 : 0;
-        const cnt = WinningDivide(tiles, nm, np);
-        let melds = [],
-            head = [];
-        let ots = [];
-        function dfs(i, dpi) {
-            if (melds.length === nm && head.length === np) {
-                ots.push([...head, ...melds]);
-                return;
-            }
-            const ans = dvd[dpi];
-            for (let j = 0; j < ans.nxt.length; ++j) {
-                if (ots.length >= 10) return;
-                const n = ans.nxt[j];
-                for (let p = 0; p < n.p; ++p) head.push([i, i]);
-                for (let s = 0; s < n.s; ++s) melds.push([i, i + 1, i + 2]);
-                for (let k = 0; k < n.k; ++k) melds.push([i, i, i]);
-                dfs(i + 1, n.dpi);
-                for (let p = 0; p < n.p; ++p) head.pop();
-                for (let m = 0; m < n.s + n.k; ++m) melds.pop();
-            }
-        }
-        dfs(0, 0);
-        ots.sort((a, b) => {
-            const m = Math.min(a.length, b.length);
-            for (let i = 0; i < m; i++) {
-                const rowA = a[i];
-                const rowB = b[i];
-                const n = Math.min(rowA.length, rowB.length);
-                for (let j = 0; j < n; j++) {
-                    if (rowA[j] !== rowB[j]) return rowA[j] - rowB[j];
-                }
-                if (rowA.length !== rowB.length) return rowA.length - rowB.length;
-            }
-            return a.length - b.length;
-        });
-        for (let i = 0; i < ots.length; ++i) {
-            let t = tiles.slice();
-            for (let j = 0; j < ots[i].length; ++j) 
-                for (let k = 0; k < ots[i][j].length; ++k) {
-                    const id = ots[i][j][k];
-                    let rid = id;
-                    if (t[id] > 0);
-                    else if (t[JokerA[id]] > 0) rid = JokerA[id];
-                    else if (t[JokerB[id]] > 0) rid = JokerB[id];
-                    else if (t[JokerC] > 0) rid = JokerC;
-                    --t[rid]
-                    ots[i][j][k] = rid;
-                }
-        }
-        output += "和牌拆解: \n"
+        postMessage({ output });
+        dvd = windvd(tiles, full_tcnt);
+        const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10);
+        output += "和牌拆解: \n";
         output += ots.map(a => `<div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`).join('');
-        if (ots.length < cnt) output += `以及其他 ${cnt - ots.length} 种和牌拆解方式`;
+        if (ots.length < dvd.cnt) output += `以及其他 ${dvd.cnt - ots.length} 种和牌拆解方式`;
     }
-    return { output, step, save: r.ans };
+    return { output, step, save: r.ans, dvd };
 }
-function JPStep(tiles, tcnt, full_tcnt) {
+function JPStep(tiles, tcnt, full_tcnt, dvd) {
     let table = "";
     let step4 = Step(tiles, tcnt, full_tcnt, 4);
     table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step4) + "</td></tr>";
     postMessage({ output: table_head + table + table_tail });
     let stepJP = step4;
-    let step7JP, step13;
+    let step7, step13;
     if (full_tcnt === 14) {
-        step7JP = PairStep(tiles, true);
-        table += '<tr><td style="padding-left: 0px;">七对型：</td><td>' + getWaitingType(step7JP) + "</td></tr>";
+        step7 = PairStep(tiles, true);
+        table += '<tr><td style="padding-left: 0px;">七对型：</td><td>' + getWaitingType(step7) + "</td></tr>";
         postMessage({ output: table_head + table + table_tail });
-        stepJP = Math.min(stepJP, step7JP);
+        stepJP = Math.min(stepJP, step7);
         step13 = OrphanStep(tiles);
         table += '<tr><td style="padding-left: 0px;">国士无双型：</td><td>' + getWaitingType(step13) + "</td></tr>";
         postMessage({ output: table_head + table + table_tail });
@@ -172,14 +125,14 @@ function JPStep(tiles, tcnt, full_tcnt) {
     let stepTypeJP = [];
     if (step4 == stepJP) stepTypeJP.push("一般型");
     if (full_tcnt == 14) {
-        if (step7JP == stepJP) stepTypeJP.push("七对型");
+        if (step7 == stepJP) stepTypeJP.push("七对型");
         if (step13 == stepJP) stepTypeJP.push("国士无双型");
     }
     output += ` （` + stepTypeJP.join("／") + `）\n`;
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    const substep = [step4, step7JP, step13];
+    const substep = [step4, step7, step13];
     output += printWaiting(
         tiles,
         tcnt,
@@ -187,7 +140,31 @@ function JPStep(tiles, tcnt, full_tcnt) {
         (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g),
         () => JPPrecheck(tiles, stepJP, substep, full_tcnt)
     ).output;
-    return { output, step13 };
+    let dvd7 = undefined, dvd13 = undefined;
+    if (stepJP === -1) {
+        postMessage({ output });
+        let odvd = [];
+        let cnt = 0;
+        if (step4 === -1) {
+            cnt += dvd.cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10);
+            odvd = ots.map(a => `<div class="waiting-brief">一般型和牌：</div><div class="card-container">${a.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`);
+        }
+        if (step7 === -1) {
+            ++cnt;
+            dvd7 = PairOutput(tiles);
+            odvd.push(`<div class="waiting-brief">七对型和牌：</div><div class="card-container">${dvd7.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`);
+        }
+        if (step13 === -1) {
+            ++cnt;
+            dvd13 = OrphanOutput(tiles);
+            odvd.push(`<div class="waiting-brief">国士无双型和牌：</div><div class="card-container">${dvd13.map(b => b.map(cardImageDivide).join('')).join(divideSpace)}</div>`);
+        }
+        output += "和牌拆解: \n";
+        output += `<div class="win-grid">${odvd.join('')}</div>`;
+        if (odvd.length < cnt) output += `以及其他 ${cnt - odvd.length} 种和牌拆解方式`;
+    }
+    return { output, step13, dvd7, dvd13 };
 }
 function GBStep(tiles, tcnt, full_tcnt, step, save, step13) {
     let table = "";
@@ -287,7 +264,7 @@ self.onmessage = function (e) {
             result = normalStep(tiles, tcnt, full_tcnt);
             break;
         case 1:
-            result = JPStep(tiles, tcnt, full_tcnt);
+            result = JPStep(tiles, tcnt, full_tcnt, e.data.dvd);
             break;
         case 2: {
             let { step, save, step13 } = e.data;

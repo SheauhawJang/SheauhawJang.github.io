@@ -81,7 +81,7 @@
             }
 
             .output-box .card-container img {
-                width: 3%;
+                width: 30px;
             }
 
             .waiting-brief {
@@ -158,6 +158,7 @@
                 text-align: center; 
                 overflow-x: auto; 
                 white-space: nowrap;
+                max-width: 100%;
             }
 
             .card-div {
@@ -245,6 +246,14 @@
                 background-color: #e06f6c;
             }
 
+            .win-grid {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                width: 100%;
+                padding: 0;
+                align-items: center;
+            }
+
             @media screen and (max-width: 512px) {
                 body {
                     padding: 6px;
@@ -290,7 +299,7 @@
                 }
 
                 .output-box .card-container img {
-                    width: 5%;
+                    width: 25px;
                 }
 
                 .devided-waiting-brief {
@@ -584,6 +593,7 @@
                 let task = 0;
                 let step, step13;
                 let save;
+                let dvd, dvd7, dvd13;
                 worker.onmessage = function (e) {
                     if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
                     if ("output" in e.data) {
@@ -597,22 +607,25 @@
                         case 0:
                             step = result.step;
                             save = result.save;
+                            dvd = result.dvd;
                             break;
                         case 1:
                             step13 = result.step13;
+                            dvd7 = result.dvd7;
+                            dvd13 = result.dvd13;
                             break;
                     }
                     ++task;
                     switch (task) {
                         case 0:
                         case 1:
-                            worker.postMessage({ task, tiles, tcnt, full_tcnt });
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, dvd });
                             break;
                         case 2:
-                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save, step13 });
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save, step13, dvd, dvd7, dvd13 });
                             break;
                         case 3:
-                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save });
+                            worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save, dvd });
                             break;
                         case 4:
                             worker.terminate();

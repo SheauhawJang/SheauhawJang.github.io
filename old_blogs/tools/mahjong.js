@@ -1012,7 +1012,8 @@ function OrphanOutput(tiles) {
         if (tiles[id]);
         else if (tiles[JokerA[id]]) rid = JokerA[id];
         else if (tiles[JokerB[id]]) rid = JokerB[id];
-        else rid = JokerC;
+        else if (tiles[JokerC]) rid = JokerC;
+        else continue;
         ot[5].push(rid);
         return ot;
     }

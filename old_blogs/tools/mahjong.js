@@ -174,7 +174,7 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[JokerC] - cj;
     const cs = SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity;
-    const csi = cs && SeqCheck(i + 1) && guse[i + 2] !== Infinity;
+    const csi = cs && glmt === Infinity && SeqCheck(i + 1) && guse[i + 2] !== Infinity;
     let ri = Math.max(tiles[i] - ui, 0);
     let rj = Math.max(tiles[i + 1] - uj, 0);
     let nxti;

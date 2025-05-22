@@ -174,7 +174,7 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[JokerC] - cj;
     const cs = SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity;
-    const csi = cs && glmt === Infinity && SeqCheck(i + 1) && guse[i + 2] !== Infinity;
+    const csi = glmt === Infinity && cs && SeqCheck(i + 1) && guse[i + 2] !== Infinity; // When glmt is not Infinity, slide is not equal
     let ri = Math.max(tiles[i] - ui, 0);
     let rj = Math.max(tiles[i + 1] - uj, 0);
     let nxti;
@@ -1173,7 +1173,7 @@ function isSeq(tids) {
     if (tids.length !== 3) return false;
     const [a, b, c] = tids;
     if (a >= sizeUT) return false;
-    if (SeqCheck(a) && a === b + 1 && c === b + 1) return true;
+    if (SeqCheck(a) && b === a + 1 && c === b + 1) return true;
     if ((SeqCheck(a) || SeqCheck(a - 1)) && b === a + 1 && isJokerEqual(a, c)) return true; // i, i+1, joker
     if (SeqCheck(a) && b === a + 2 && isJokerEqual(a, c)) return true; // i, joker, i+2
     return false;
@@ -1184,6 +1184,5 @@ function isTri(tids) {
     return isJokerEqual(a, b) && isJokerEqual(a, c) && isJokerEqual(b, c);
 }
 function isMeld(tids) {
-    console.log(tids);
     return isSeq(tids) || isTri(tids);
 }

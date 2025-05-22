@@ -251,7 +251,7 @@ function GBStep(tiles, tcnt, full_tcnt, step, save, step13, dvd, dvd7, dvd13) {
     }
     return { output };
 }
-function TWStep(tiles, tcnt, full_tcnt, step, save) {
+function TWStep(tiles, tcnt, full_tcnt, step, save, dvd) {
     let table = "";
     let stepTW = step;
     table += '<tr><td style="padding-left: 0px;">一般型：</td><td>' + getWaitingType(step) + "</td></tr>";
@@ -291,6 +291,33 @@ function TWStep(tiles, tcnt, full_tcnt, step, save) {
         (d, g, f) => TWWaiting(tiles, stepTW, substep, full_tcnt, f(save.waiting), d, g),
         () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks)
     ).output;
+    if (stepTW === -1) {
+        postMessage({ output });
+        let odvd = [];
+        let cnt = 0;
+        if (stepnico === -1) {
+            const ots = NiconicoOutput(tiles);
+            cnt += ots.length;
+            odvd = ots.map((a) => `<div class="waiting-brief">呖咕呖咕型：</div><div class="card-container">${getWinningLine(a)}</div>`);
+        }
+        if (step13 === -1) {
+            const ots = OrphanMeldOutput(tiles);
+            cnt += ots.length;
+            odvd = [...odvd, ots.map((a) => `<div class="waiting-brief">十三幺型：</div><div class="card-container">${getWinningLine(a)}</div>`)];
+        }
+        if (step16 === -1) {
+            ++cnt;
+            odvd.push(`<div class="waiting-brief">十六不搭型：</div><div class="card-container">${getWinningLine(Buda16Output(tiles))}</div>`);
+        }
+        if (step === -1) {
+            cnt += dvd.cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, Math.max(10 - odvd.length, 1));
+            odvd = [...ots.map((a) => `<div class="waiting-brief">一般型：</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
+        }
+        output += "和牌拆解: \n";
+        output += `<div class="win-grid">${odvd.join("")}</div>`;
+        if (odvd.length < cnt) output += `以及其他 ${cnt - odvd.length} 种和牌拆解方式`;
+    }
     return { output };
 }
 self.onmessage = function (e) {
@@ -310,8 +337,8 @@ self.onmessage = function (e) {
             break;
         }
         case 3: {
-            let { step, save } = e.data;
-            result = TWStep(tiles, tcnt, full_tcnt, step, save);
+            let { step, save, dvd } = e.data;
+            result = TWStep(tiles, tcnt, full_tcnt, step, save, dvd);
             break;
         }
     }

@@ -174,6 +174,7 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[JokerC] - cj;
     const cs = SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity;
+    const csi = cs && SeqCheck(i + 1) && guse[i + 2] !== Infinity;
     let ri = Math.max(tiles[i] - ui, 0);
     let rj = Math.max(tiles[i + 1] - uj, 0);
     let nxti;
@@ -185,13 +186,12 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     const lmtj = lmti + ra + rb + rc;
     if (ui > lmtj) return (step[dpi] = INF);
     let ans = INF;
-    const mp = Math.min(np - ep, Math.ceil(ri / 2));
+    const mp = Math.min(np - ep, ri); // we consider np - ep <= 1
     const ms = cs ? Math.min(nm - em, 2) : 0;
     for (let p = 0; p <= mp; ++p)
         for (let s = 0; s <= ms; ++s) {
             const lri = lmtj - ui - p * 2 - s;
-            if (lri < 0) break;
-            if (s && p * 2 + s > ri && s > rj && s > tiles[i + 2]) break;
+            if (lri < 0 || (s && p * 2 + s > ri && (csi || (s > rj && s > tiles[i + 2])))) break;
             let kri = Math.max(ri - p * 2 - s, 0);
             let mmk = Math.floor(kri / 3);
             let pmk = Math.ceil(kri / 3);
@@ -203,9 +203,11 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
                 let d = Math.max(ti - ei, 0);
                 if (glmt === Infinity) {
                     const uaj = Math.min(ra, d);
-                    const ubj = Math.min(rb, d - uaj);
-                    const ucj = Math.min(rc, d - uaj - ubj);
-                    d -= uaj + ubj + ucj;
+                    d -= uaj;
+                    const ubj = Math.min(rb, d);
+                    d -= ubj;
+                    const ucj = Math.min(rc, d);
+                    d -= ucj;
                     if (d - 1 >= Math.min(ans, sup)) break;
                     ans = Math.min(ans, kernelStep(tiles, em + s + k, ep + p, nm, np, sup, glmt, guse, i + 1, s + uj, s, aj + uaj, bj + ubj, cj + ucj) + d);
                 } else {
@@ -250,8 +252,8 @@ function useStepMemory(nm, np, tiles, glmt, sup, guse) {
 }
 function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = dgues) {
     tiles = tiles.slice();
-    let nm = Math.floor(tcnt / 3);
-    let np = tcnt % 3 > 0 ? 1 : 0;
+    let nm = (tcnt / 3) | 0;
+    let np = +(nm * 3 !== tcnt);
     INF = nm * 3 + np * 2 - 1;
     for (let i = 0; i < sizeUT; ++i) {
         tiles[i] = Math.min(tiles[i], glmt);
@@ -541,19 +543,14 @@ function OrphanMeldStep(tiles) {
     }
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
-        if (tcp[id]) {
-            --tcp[id];
-            ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss);
-            ++tcp[id];
-        } else if (tcp[JokerA[id]]) {
-            --tcp[JokerA[id]];
-            ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss);
-            ++tcp[JokerA[id]];
-        } else if (tcp[JokerB[id]]) {
-            --tcp[JokerB[id]];
-            ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss);
-            ++tcp[JokerB[id]];
-        }
+        let rid = id;
+        if (tcp[id]);
+        else if (tcp[JokerA[id]]) rid = JokerA[id];
+        else if (tcp[JokerB[id]]) rid = JokerB[id]; 
+        else continue;
+        --tcp[rid];
+        ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss);
+        ++tcp[rid];
     }
     ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss + 1);
     return ans;
@@ -933,12 +930,9 @@ function replaceJoker(tiles, ot) {
     for (let i = 0; i < ot.length; ++i)
         for (let j = 0; j < ot[i].length; ++j) {
             const id = ot[i][j];
-            let rid = id;
-            if (tiles[id] > 0);
-            else if (tiles[JokerA[id]] > 0) rid = JokerA[id];
-            else if (tiles[JokerB[id]] > 0) rid = JokerB[id];
-            else if (tiles[JokerC] > 0) rid = JokerC;
-            --tiles[rid];
+            let rid = getRealId(tiles, id);
+            if (rid === -1) rid = id;
+            else --tiles[rid];
             ot[i][j] = rid;
         }
 }
@@ -998,22 +992,14 @@ function OrphanOutput(tiles) {
     tiles = tiles.slice();
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
-        let rid = id;
-        if (tiles[id]);
-        else if (tiles[JokerA[id]]) rid = JokerA[id];
-        else if (tiles[JokerB[id]]) rid = JokerB[id];
-        else rid = JokerC;
+        let rid = getRealId(tiles, id);
         --tiles[rid];
         ot[Orphan13GroupArray[i]].push(rid);
     }
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
-        let rid = id;
-        if (tiles[id]);
-        else if (tiles[JokerA[id]]) rid = JokerA[id];
-        else if (tiles[JokerB[id]]) rid = JokerB[id];
-        else if (tiles[JokerC]) rid = JokerC;
-        else continue;
+        let rid = getRealId(tiles, id);
+        if (rid === -1) continue;
         ot[5].push(rid);
         return ot;
     }
@@ -1027,26 +1013,18 @@ function Bukao16Output(tiles) {
         let count = 0;
         for (let j = 0; j < 9; ++j) {
             const id = KDragonSave[i][j];
-            let rid = id;
-            if (tcp[id]);
-            else if (tcp[JokerA[id]]) rid = JokerA[id];
-            else if (tcp[JokerB[id]]) rid = JokerB[id];
-            else if (tcp[JokerC]) rid = JokerC;
-            else continue;
+            let rid = getRealId(tcp, id);
+            if (rid === -1) continue;
             ++count;
             --tcp[rid];
             rot[Math.floor(j / 3)].push(rid);
         }
         const s = JSON.stringify(rot);
         if (save.has(s)) continue;
-        else save.add(s);
+        save.add(s);
         for (let i = 27; i < 34; ++i) {
-            let rid = i;
-            if (tcp[i]);
-            else if (tcp[JokerA[i]]) rid = JokerA[i];
-            else if (tcp[JokerB[i]]) rid = JokerB[i];
-            else if (tcp[JokerC]) rid = JokerC;
-            else continue;
+            let rid = getRealId(tcp, i);
+            if (rid === -1) continue;
             ++count;
             --tcp[rid];
             rot[i <= 30 ? 3 : 4].push(rid);
@@ -1056,7 +1034,9 @@ function Bukao16Output(tiles) {
     return ots;
 }
 function KDragonOutput(tiles, full_tcnt, opt_size) {
-    let ots = Array(6).fill(null).map(() => []);
+    let ots = Array(6)
+        .fill(null)
+        .map(() => []);
     let save = new Set();
     let cnt = 0;
     for (let i = 0; i < 6; ++i) {
@@ -1065,12 +1045,8 @@ function KDragonOutput(tiles, full_tcnt, opt_size) {
         let head = [[], [], []];
         for (let j = 0; j < 9; ++j) {
             const id = KDragonSave[i][j];
-            let rid = id;
-            if (tcp[id]);
-            else if (tcp[JokerA[id]]) rid = JokerA[id];
-            else if (tcp[JokerB[id]]) rid = JokerB[id];
-            else if (tcp[JokerC]) rid = JokerC;
-            else {
+            let rid = getRealId(tcp, id);
+            if (rid === -1) {
                 win = false;
                 break;
             }
@@ -1086,6 +1062,7 @@ function KDragonOutput(tiles, full_tcnt, opt_size) {
         let tails = WinOutput(tcp, full_tcnt - 9, dvd.dvd, opt_size);
         for (let j = 0; j < tails.length; ++j) ots[i].push([...head, ...tails[j]]);
     }
+    // select opt_size outputs
     let select = Array(6).fill(0);
     let maxlen = Math.max(...ots.map((a) => a.length));
     let selectsum = 0;
@@ -1099,4 +1076,114 @@ function KDragonOutput(tiles, full_tcnt, opt_size) {
     let ans = [];
     for (let i = 0; i < 6; ++i) for (let j = 0; j < select[i]; ++j) ans.push(ots[i][j]);
     return { cnt, ots: ans };
+}
+function NiconicoOutput(tiles) {
+    let ots = [];
+    let save = new Set();
+    for (let i = 0; i < sizeUT; ++i) {
+        let t = tiles.slice();
+        let head = [];
+        for (let j = 0; j < 3; ++j) {
+            let rid = getRealId(t, i);
+            if (rid === -1) break;
+            --t[rid];
+            head.push(rid);
+        }
+        if (head.length < 3) continue;
+        if (PairStep(t, false) !== -1) continue;
+        const s = JSON.stringify(head);
+        if (save.has(s)) continue;
+        save.add(s);
+        ots.push([head, ...PairOutput(t)]);
+    }
+    return ots;
+}
+function OrphanMeldOutput(tiles) {
+    let head = [[], [], [], [], []];
+    let ots = [];
+    tiles = tiles.slice();
+    for (let i = 0; i < Orphan13Array.length; ++i) {
+        const id = Orphan13Array[i];
+        let rid = getRealId(tiles, id);
+        --tiles[rid];
+        head[Orphan13GroupArray[i]].push(rid);
+    }
+    let save = new Set();
+    for (let i = 0; i < Orphan13Array.length; ++i) {
+        const id = Orphan13Array[i];
+        let rid = getRealId(tiles, id);
+        if (rid === -1) continue;
+        if (save.has(rid)) continue;
+        save.add(rid);
+        --tiles[rid];
+        let rt = [];
+        for (let j = 0; j < sizeAT; ++j) 
+            for (let r = 0; r < tiles[j]; ++r) rt.push(j);
+        if (isMeld(rt)) ots.push([...head, [rid], rt]);
+        ++tiles[rid];
+    }
+    return ots;
+}
+function Buda16Output(tiles) {
+    let ot = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1], [-1]];
+    tiles = tiles.slice();    
+    for (let i = 0; i < 27; ++i) 
+        if (tiles[i]) ot[Math.floor(i / 9)][Math.floor(i % 9 / 3)] = i, --tiles[i];
+    for (let i = 27; i <= 30; ++i)
+        if (tiles[i]) ot[3][i - 27] = i, --tiles[i];
+    for (let i = 31; i <= 33; ++i)
+        if (tiles[i]) ot[4][i - 31] = i, --tiles[i];
+    const t_joker_a = [43, 44, 45, 47, 48];
+    for (let i = 0; i < 5; ++i) 
+        for (let j = 0; j < ot[i].length; ++j) 
+            if (tiles[t_joker_a[i]] === 0) break;
+            else if (ot[i][j] === -1) ot[i][j] = t_joker_a[i], --tiles[t_joker_a[i]];
+    const t_joker_b = [46, 46, 46, 49, 49];
+    for (let i = 0; i < 5; ++i) 
+        for (let j = 0; j < ot[i].length; ++j) 
+            if (ot[i][j] === -1) {
+                let rid = tiles[t_joker_b[i]] ? t_joker_b[i] : JokerC;
+                ot[i][j] = rid, --tiles[rid];
+            } 
+    for (let j = 0; j < sizeAT; ++j) if (tiles[j]) ot[5][0] = j;
+    return ot;
+}
+function getRealId(tiles, i) {
+    if (tiles[i]) return i;
+    if (tiles[JokerA[i]]) return JokerA[i];
+    if (tiles[JokerB[i]]) return JokerB[i];
+    if (tiles[JokerC]) return JokerC;
+    return -1;
+}
+function isJokerEqual(i, j) {
+    if (j === i) return true;
+    if (j < i) return isJokerEqual(j, i);
+    if (i < sizeUT) {
+        if (j === JokerA[i]) return true;
+        if (j === JokerB[i]) return true;
+        if (j === JokerC) return true;
+        return false;
+    }
+    if (i === JokerC) return true;
+    if (i >= 43 && i <= 45) return j === 46;
+    if (i >= 47 && i <= 48) return j === 49;
+    return false;
+}
+function isSeq(tids) {
+    if (tids.length !== 3) return false;
+    const [a, b, c] = tids;
+    if (a >= sizeUT) return false;
+    if (SeqCheck(a) && a === b + 1 && c === b + 1) return true;
+    if ((SeqCheck(a) || SeqCheck(a - 1)) && b === a + 1 && isJokerEqual(a, c)) return true; // i, i+1, joker
+    if (SeqCheck(a) && b === a + 2 && isJokerEqual(a, c)) return true; // i, joker, i+2
+    return false;
+}
+function isTri(tids) {
+    if (tids.length !== 3) return false;
+    const [a, b, c] = tids;
+    return isJokerEqual(a, b) && isJokerEqual(a, c) && isJokerEqual(b, c);
+}
+function isMeld(tids) {
+    console.log(tids);
+    return isSeq(tids) || isTri(tids);
 }

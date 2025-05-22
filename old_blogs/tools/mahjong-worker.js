@@ -303,7 +303,7 @@ function TWStep(tiles, tcnt, full_tcnt, step, save, dvd) {
         if (step13 === -1) {
             const ots = OrphanMeldOutput(tiles);
             cnt += ots.length;
-            odvd = [...odvd, ots.map((a) => `<div class="waiting-brief">十三幺型：</div><div class="card-container">${getWinningLine(a)}</div>`)];
+            odvd = [...odvd, ...ots.map((a) => `<div class="waiting-brief">十三幺型：</div><div class="card-container">${getWinningLine(a)}</div>`)];
         }
         if (step16 === -1) {
             ++cnt;

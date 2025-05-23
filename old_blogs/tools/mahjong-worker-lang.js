@@ -89,10 +89,10 @@ const en_loc = {
     qiduixing: "Seven Pairs Type",
     guoshiwushuangxing: "Kokushi Muso Type",
     shisanyaoxing: "Thirteen Orphans Type",
-    quanbukaoxing: "Honors and Knitted Tiles Type",
+    quanbukaoxing: "Knitted Honors Type",
     zuhelongxing: "Knitted Straight Type",
     niconicoxing: "Niconico Type",
-    shiliubudaxing: "Sixteen Unconnected Tiles Type",
+    shiliubudaxing: "Sixteen Pagodas Type",
 }
 let loc = cn_loc;
 function setLoc(lang) {

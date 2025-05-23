@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Mahjong Card Theory Calculator</title>
+        <link rel="stylesheet" href="mahjong.css" />
+    </head>
+
+    <body>
+        <div class="language-bar">
+            <a>简体中文</a>
+            <a href="mahjong-tw.html">繁體中文</a>
+            <a href="mahjong-ja.html">日本語</a>
+            <a href="mahjong-en.html">English</a>
+        </div>
+        <h1>Mahjong Card Theory Calculator</h1>
+        <div class="section">
+            <div class="title-button-container">
+                <label for="inputText">Please enter your hand</label>
+                <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">Open Input Panel ▼</button>
+            </div>
+            <div class="input-area" id="textInput">
+                <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
+                <div class="input-note-wrapper">
+                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">Show input instructions ▼</button>
+                    <div class="input-note" id="inputNote" style="display: none">
+                        The input field supports the following formats, which can be mixed:
+                        <ol style="margin-top: 0">
+                            <li>
+                                Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors,
+                                <b>East/South/West/North/White Dragon/Green Dragon/Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same
+                                color suffix can only keep the suffix of the rightmost tile.
+                            </li>
+                            <li>
+                                Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors,
+                                <b>East/South/West/North/White Dragon/Green Dragon/Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.
+                            </li>
+                            <li>
+                                English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East/South/West/North</b>, are represented by <b>ESWN</b> in
+                                order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.
+                            </li>
+                            <li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Characters=w</b>,<b>Circles=b</b>.</li>
+                            <li>
+                                Notation Format: Character tiles are represented by Chinese numbers<b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers<b>①②③④⑤⑥⑦⑧⑨</b>.
+                                Bamboo tiles are represented by full-width numbers<b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.
+                            </li>
+                            <li>Unicode Format: Use Unicode U+1F000 to U+1F02B characters to represent the corresponding cards.</li>
+                        </ol>
+                        <p>
+                            About Bonus: <b>Spring/Summer/Autumn/Winter/Plum/Orchid/Chrysanthemum/Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or
+                            <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rulew consider bonus as joker. This calculator does not have this function. Please convert them into
+                            joker if necessary.<br />
+                        </p>
+                        About Joker:
+                        <ul style="margin-top: 0">
+                            <li>
+                                Non-directional Joker
+                                <img src="./cards/a1j.gif" style="vertical-align: middle" />: Can be considered as any suit or honor tile. Represented by <b>1j/J</b>.
+                            </li>
+                            <li>Characters Joker <img src="./cards/a2j.gif" style="vertical-align: middle" />: Can be considered as any character tile. Represented by <b>2j/im/iw</b>.</li>
+                            <li>Circles Joker <img src="./cards/a3j.gif" style="vertical-align: middle" />: Can be considered as any circle tile. Represented by <b>3j/ip/ib</b>.</li>
+                            <li>Bamboo Joker <img src="./cards/a4j.gif" style="vertical-align: middle" />: Can be considered as any bamboo tile. Represented by <b>4j/is</b>.</li>
+                            <li>Suits Joker <img src="./cards/a5j.gif" style="vertical-align: middle" />: Can be considered as any suit tile. Represented by <b>5j</b>.</li>
+                            <li>Winds Joker <img src="./cards/a6j.gif" style="vertical-align: middle" />: Can be considered as any wind tile. Represented by <b>6j</b>.</li>
+                            <li>Dragons Joker <img src="./cards/a7j.gif" style="vertical-align: middle" />: Can be considered as any dragon tile. Represented by <b>7j</b>.</li>
+                            <li>Honors Joker <img src="./cards/a8j.gif" style="vertical-align: middle" />: Can be considered as any honor tile. Represented by <b>8j/iz</b>.</li>
+                            <li>Bonus Joker <img src="./cards/a9j.gif" style="vertical-align: middle" />: Can be considered as any bonus tile. Represented by <b>9j/H/X/9h/9f/ih/if</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="input-area" id="boardInput" style="display: none">
+                <div class="card-container" id="input-pic"></div>
+                <div class="input-keyboard">
+                    <div class="input-mainkey">
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1m.gif" class="input-card-button" onclick="addInput(0)" />
+                            <img src="./cards/2m.gif" class="input-card-button" onclick="addInput(1)" />
+                            <img src="./cards/3m.gif" class="input-card-button" onclick="addInput(2)" />
+                            <img src="./cards/4m.gif" class="input-card-button" onclick="addInput(3)" />
+                            <img src="./cards/5m.gif" class="input-card-button" onclick="addInput(4)" />
+                            <img src="./cards/6m.gif" class="input-card-button" onclick="addInput(5)" />
+                            <img src="./cards/7m.gif" class="input-card-button" onclick="addInput(6)" />
+                            <img src="./cards/8m.gif" class="input-card-button" onclick="addInput(7)" />
+                            <img src="./cards/9m.gif" class="input-card-button" onclick="addInput(8)" />
+                            <img src="./cards/0m.gif" class="input-card-button" onclick="addInput({ id: 4, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1p.gif" class="input-card-button" onclick="addInput(9)" />
+                            <img src="./cards/2p.gif" class="input-card-button" onclick="addInput(10)" />
+                            <img src="./cards/3p.gif" class="input-card-button" onclick="addInput(11)" />
+                            <img src="./cards/4p.gif" class="input-card-button" onclick="addInput(12)" />
+                            <img src="./cards/5p.gif" class="input-card-button" onclick="addInput(13)" />
+                            <img src="./cards/6p.gif" class="input-card-button" onclick="addInput(14)" />
+                            <img src="./cards/7p.gif" class="input-card-button" onclick="addInput(15)" />
+                            <img src="./cards/8p.gif" class="input-card-button" onclick="addInput(16)" />
+                            <img src="./cards/9p.gif" class="input-card-button" onclick="addInput(17)" />
+                            <img src="./cards/0p.gif" class="input-card-button" onclick="addInput({ id: 13, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1s.gif" class="input-card-button" onclick="addInput(18)" />
+                            <img src="./cards/2s.gif" class="input-card-button" onclick="addInput(19)" />
+                            <img src="./cards/3s.gif" class="input-card-button" onclick="addInput(20)" />
+                            <img src="./cards/4s.gif" class="input-card-button" onclick="addInput(21)" />
+                            <img src="./cards/5s.gif" class="input-card-button" onclick="addInput(22)" />
+                            <img src="./cards/6s.gif" class="input-card-button" onclick="addInput(23)" />
+                            <img src="./cards/7s.gif" class="input-card-button" onclick="addInput(24)" />
+                            <img src="./cards/8s.gif" class="input-card-button" onclick="addInput(25)" />
+                            <img src="./cards/9s.gif" class="input-card-button" onclick="addInput(26)" />
+                            <img src="./cards/0s.gif" class="input-card-button" onclick="addInput({ id: 22, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1z.gif" class="input-card-button" onclick="addInput(27)" />
+                            <img src="./cards/2z.gif" class="input-card-button" onclick="addInput(28)" />
+                            <img src="./cards/3z.gif" class="input-card-button" onclick="addInput(29)" />
+                            <img src="./cards/4z.gif" class="input-card-button" onclick="addInput(30)" />
+                            <img src="./cards/5z.gif" class="input-card-button" onclick="addInput(31)" />
+                            <img src="./cards/6z.gif" class="input-card-button" onclick="addInput(32)" />
+                            <img src="./cards/7z.gif" class="input-card-button" onclick="addInput(33)" />
+                            <img src="./cards/0z.gif" class="input-card-button" onclick="addInput({ id: 31, sp: 1 })" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1h.gif" class="input-card-button" onclick="addInput(34)" />
+                            <img src="./cards/2h.gif" class="input-card-button" onclick="addInput(35)" />
+                            <img src="./cards/3h.gif" class="input-card-button" onclick="addInput(36)" />
+                            <img src="./cards/4h.gif" class="input-card-button" onclick="addInput(37)" />
+                            <img src="./cards/5h.gif" class="input-card-button" onclick="addInput(38)" />
+                            <img src="./cards/6h.gif" class="input-card-button" onclick="addInput(39)" />
+                            <img src="./cards/7h.gif" class="input-card-button" onclick="addInput(40)" />
+                            <img src="./cards/8h.gif" class="input-card-button" onclick="addInput(41)" />
+                            <div></div>
+                        </div>
+                        <div class="input-row">
+                            <div></div>
+                            <img src="./cards/1j.gif" class="input-card-button" onclick="addInput(42)" />
+                            <img src="./cards/2j.gif" class="input-card-button" onclick="addInput(43)" />
+                            <img src="./cards/3j.gif" class="input-card-button" onclick="addInput(44)" />
+                            <img src="./cards/4j.gif" class="input-card-button" onclick="addInput(45)" />
+                            <img src="./cards/5j.gif" class="input-card-button" onclick="addInput(46)" />
+                            <img src="./cards/6j.gif" class="input-card-button" onclick="addInput(47)" />
+                            <img src="./cards/7j.gif" class="input-card-button" onclick="addInput(48)" />
+                            <img src="./cards/8j.gif" class="input-card-button" onclick="addInput(49)" />
+                            <img src="./cards/9j.gif" class="input-card-button" onclick="addInput(50)" />
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="input-subkeys">
+                        <button onclick="clearInput()" class="subkey-button">Clear</button>
+                        <button onclick="sortInput()" class="subkey-button">Sort</button>
+                        <button onclick="removeInput(ipids.length - 1)" class="subkey-button">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center">
+                <button onclick="processInput()" class="random-button">Calculate</button>
+                <button onclick="randomInput()" class="random-button">Generate <input type="number" id="randomCardCount" value="14" min="1" max="99" /> random tiles</button>
+            </div>
+            <div style="display: none" id="output-box-head">
+                <div class="output-context" style="text-align: center" id="output-cnt"></div>
+                <div class="card-container" id="output-pic"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">Normal Type Theory</div>
+                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">Fold ▲</button>
+                </div>
+                <div class="output-context" id="output-std"></div>
+                <div class="output-context" id="brief-output-std" style="display: none"></div>
+                <div class="output-time" id="time-output-std"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">Mahjong Competition Rule Stadard Type Theory</div>
+                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">Fold ▲</button>
+                </div>
+                <div class="output-context" id="output-gb"></div>
+                <div class="output-context" id="brief-output-gb" style="display: none"></div>
+                <div class="output-time" id="time-output-gb"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">Riichi Competition Rule Stadard Type Theory</div>
+                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">Fold ▲</button>
+                </div>
+                <div class="output-context" id="output-jp"></div>
+                <div class="output-context" id="brief-output-jp" style="display: none"></div>
+                <div class="output-time" id="time-output-jp"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">Hong Kong Style Taiwanese Mahjong Theory</div>
+                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">Fold ▲</button>
+                </div>
+                <div class="output-context" id="output-tw"></div>
+                <div class="output-context" id="brief-output-tw" style="display: none"></div>
+                <div class="output-time" id="time-output-tw"></div>
+            </div>
+        </div>
+        <div class="section title-button-container">
+            <div class="output-time">v4.1</div>
+        </div>
+        <script src="mahjong.js"></script>
+        <script src="mahjong-document.js"></script>
+        <script>
+            let tiles, tids;
+            function tilesInfo(tcnt) {
+                const meld = Math.floor(tcnt / 3);
+                let output = `${tcnt} tiles\n`;
+                switch (tcnt % 3) {
+                    case 1:
+                        output += `3n+1 Type: Winning needs ${meld} melds and ${1} pairs`;
+                        break;
+                    case 2:
+                        output += `3n+2 Type: Winning needs ${meld} melds and ${1} pairs`;
+                        break;
+                    case 0:
+                        output += `3n Type: Winning needs ${meld} melds and ${0} pairs`;
+                        break;
+                }
+                return output;
+            }
+            let worker = null;
+            function toggleInput() {
+                const board = document.getElementById("boardInput");
+                const button = document.getElementById("inputButton");
+                const text = document.getElementById("textInput");
+                const isVisible = board.style.display !== "none";
+                if (!isVisible) drawInputCards();
+                board.style.display = isVisible ? "none" : "block";
+                text.style.display = isVisible ? "block" : "none";
+                button.textContent = isVisible ? "Open Input Panel ▼" : "Close Input Panel ▲";
+            }
+            function toggleNote() {
+                const note = document.getElementById("inputNote");
+                const button = document.getElementById("inputNoteButton");
+                const isVisible = note.style.display !== "none";
+                note.style.display = isVisible ? "none" : "block";
+                button.textContent = isVisible ? "Show input instructions ▼" : "Hide input instructions ▲";
+            }
+            function toggleOutput(i) {
+                const ids = ["output-std", "output-gb", "output-jp", "output-tw"];
+                const d = document.getElementById(ids[i]);
+                const b = document.getElementById("toggle-" + ids[i]);
+                const s = document.getElementById("brief-" + ids[i]);
+                const v = d.style.display !== "none";
+                d.style.display = v ? "none" : "block";
+                s.style.display = v ? "block" : "none";
+                b.textContent = v ? "Expand ▼" : "Fold ▲";
+            }
+            let ipids;
+            window.onload = function () {
+                randomInput();
+            };
+            const lang = "cn";
+        </script>
+    </body>
+</html>

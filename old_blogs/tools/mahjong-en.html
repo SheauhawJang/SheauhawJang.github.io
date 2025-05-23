@@ -14,7 +14,7 @@
             <a href="mahjong-ja.html">日本語</a>
             <a href="mahjong-en.html">English</a>
         </div>
-        <h1>Mahjong Card Theory Calculator</h1>
+        <h1>Mahjong Theory Calculator</h1>
         <div class="section">
             <div class="title-button-container">
                 <label for="inputText">Please enter your hand</label>
@@ -49,7 +49,7 @@
                         </ol>
                         <p>
                             About Bonus: <b>Spring/Summer/Autumn/Winter/Plum/Orchid/Chrysanthemum/Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or
-                            <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rulew consider bonus as joker. This calculator does not have this function. Please convert them into
+                            <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into
                             joker if necessary.<br />
                         </p>
                         About Joker:
@@ -163,7 +163,7 @@
             </div>
             <div style="text-align: center">
                 <button onclick="processInput()" class="random-button">Calculate</button>
-                <button onclick="randomInput()" class="random-button">Generate <input type="number" id="randomCardCount" value="14" min="1" max="99" /> random tiles</button>
+                <button onclick="randomInput()" class="random-button">Get <input type="number" id="randomCardCount" value="14" min="1" max="99" /> random tiles</button>
             </div>
             <div style="display: none" id="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
@@ -180,7 +180,7 @@
             </div>
             <div class="output-box">
                 <div class="title-button-container">
-                    <div class="output-title">Mahjong Competition Rule Stadard Type Theory</div>
+                    <div class="output-title">Mahjong Competition Rule Standard Type Theory</div>
                     <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">Fold ▲</button>
                 </div>
                 <div class="output-context" id="output-gb"></div>
@@ -189,7 +189,7 @@
             </div>
             <div class="output-box">
                 <div class="title-button-container">
-                    <div class="output-title">Riichi Competition Rule Stadard Type Theory</div>
+                    <div class="output-title">Riichi Competition Rule Standard Type Theory</div>
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">Fold ▲</button>
                 </div>
                 <div class="output-context" id="output-jp"></div>
@@ -261,7 +261,7 @@
             window.onload = function () {
                 randomInput();
             };
-            const lang = "cn";
+            const lang = "en";
         </script>
     </body>
 </html>

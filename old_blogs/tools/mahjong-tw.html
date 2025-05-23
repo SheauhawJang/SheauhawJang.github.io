@@ -1,65 +1,63 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-TW">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>麻将牌理向听数计算器</title>
+        <title>麻將牌理向聽數計算機</title>
         <link rel="stylesheet" href="mahjong.css" />
     </head>
 
     <body>
         <div class="language-bar">
-        <a>简体中文</a>
-        <a href="mahjong-tw.html">繁體中文</a>
-        <a href="mahjong-ja.html">日本語</a>
-        <a href="mahjong-en.html">English</a>
+            <a href="mahjong.html">简体中文</a>
+            <a>繁體中文</a>
+            <a href="mahjong-ja.html">日本語</a>
+            <a href="mahjong-en.html">English</a>
         </div>
-        <h1>麻将牌理向听数计算器</h1>
+        <h1>麻將牌理向聽數計算機</h1>
         <div class="section">
             <div class="title-button-container">
-                <label for="inputText">请输入手牌</label>
-                <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">打开输入面板 ▼</button>
+                <label for="inputText">請輸入手牌</label>
+                <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">開啟輸入面板 ▼</button>
             </div>
             <div class="input-area" id="textInput">
                 <input type="text" id="inputText" placeholder="例如：1112345678999mE" />
                 <div class="input-note-wrapper">
-                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">显示输入说明 ▼</button>
+                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">顯示輸入說明 ▼</button>
                     <div class="input-note" id="inputNote" style="display: none">
-                        输入栏支持以下格式，以下格式可混合使用：
+                        輸入欄支援以下格式，以下格式可混合使用：
                         <ol style="margin-top: 0">
                             <li>
-                                天凤格式：序数牌使用序数(阿拉伯数字)＋颜色(小写字母)表示，其中：<b>万=m</b>，<b>索/条=s</b>，<b>筒/饼=p</b>。字牌之<b>东南西北白发中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母后缀的相邻牌可以只保留最右侧牌的字母后缀。
+                                天鳳格式：序數牌使用序數(阿拉伯數字)＋顏色(小寫字母)表示，其中：<b>萬=m</b>，<b>索/條=s</b>，<b>筒/餅=p</b>。字牌之<b>東南西北白發中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母後綴的相鄰牌可以只保留最右側牌的字母後綴。
                             </li>
-                            <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
+                            <li>國標小助手格式：序數牌同「天鳳格式」，字牌之<b>東南西北白發中</b>依次使用大寫字母<b>ESWNPFC</b>表示。</li>
+                            <li>英文麻將印刷格式：序數牌同「天鳳格式」，字牌之<b>東南西北</b>依次使用大寫字母<b>ESWN</b>表示，<b>白=Wh</b>，<b>發=G</b>，<b>中=R</b>。</li>
+                            <li>漢語拼音格式：同天鳳格式。惟<b>萬=w</b>，<b>餅/筒=b</b>。</li>
                             <li>
-                                英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。
+                                採譜記號格式：萬字使用漢數字<b>一二三四五六七八九</b>表示，筒子/餅子使用帶圈數字<b>①②③④⑤⑥⑦⑧⑨</b>表示，索子/條子使用全形數字<b>１２３４５６７８９</b>表示，字牌使用對應漢字表示。
                             </li>
-                            <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
-                            <li>
-                                采谱记号格式：万字使用汉数字<b>一二三四五六七八九</b>表示，筒子/饼子使用带圈数字<b>①②③④⑤⑥⑦⑧⑨</b>表示，索子/条子使用全角数字<b>１２３４５６７８９</b>表示，字牌使用对应汉字表示。
-                            </li>
-                            <li>Unicode格式：使用Unicode U+1F000 至 U+1F02B 的字符表示对应的牌。</li>
+                            <li>Unicode格式：使用Unicode U+1F000 至 U+1F02B 的字符表示對應的牌。</li>
                         </ol>
                         <p>
-                            关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻将把花牌视作百搭牌，本计算器的花牌无此功能，如有需要请转化为专门的百搭牌。<br />
+                            關於花牌：<b>春夏秋冬梅蘭菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻將把花牌視作百搭牌，本計算器的花牌無此功能，如有需要請轉化為專門的百搭牌。<br />
                         </p>
-                        关于百搭牌：
+                        關於百搭牌：
                         <ul style="margin-top: 0">
                             <li>
                                 不定向百搭牌
                                 <img
                                     src="./cards/a1j.gif"
                                     style="vertical-align: middle"
-                                />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。（部分地方麻将可能称为癞子或者混儿）
+                                />：可以視作任何一張序數牌或字牌。使用<b>1j/J</b>表示。（部分地方麻將可能稱為癩子或者混兒）
                             </li>
-                            <li>万字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
-                            <li>饼子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以视作任何一张筒子/饼子。使用<b>3j/ip/ib</b>表示。</li>
-                            <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以视作任何一张索子/条子。使用<b>4j/is</b>表示。</li>
-                            <li>数牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌。使用<b>5j</b>表示。</li>
-                            <li>风牌百搭牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：可以视作<b>东南西北</b>中的任何一张。使用<b>6j</b>表示。</li>
-                            <li>三元百搭牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：可以视作<b>白发中</b>中的任何一张。使用<b>7j</b>表示。</li>
-                            <li>字牌百搭牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
-                            <li>花牌百搭牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
+                            <li>萬字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以視作任何一張萬字。使用<b>2j/im/iw</b>表示。</li>
+                            <li>餅子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以視作任何一張筒子/餅子。使用<b>3j/ip/ib</b>表示。</li>
+                            <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以視作任何一張索子/條子。使用<b>4j/is</b>表示。</li>
+                            <li>數牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：可以視作任何一張序數牌。使用<b>5j</b>表示。</li>
+                            <li>風牌百搭牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：可以視作<b>東南西北</b>中的任何一張。使用<b>6j</b>表示。</li>
+                            <li>三元百搭牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：可以視作<b>白發中</b>中的任何一張。使用<b>7j</b>表示。</li>
+                            <li>字牌百搭牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：可以視作任何一張字牌。使用<b>8j/iz</b>表示。</li>
+                            <li>花牌百搭牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：可以視作任何一張花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
                         </ul>
                     </div>
                 </div>
@@ -156,8 +154,8 @@
                 </div>
             </div>
             <div style="text-align: center">
-                <button onclick="processInput()" class="random-button">计算</button>
-                <button onclick="randomInput()" class="random-button">随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌</button>
+                <button onclick="processInput()" class="random-button">計算</button>
+                <button onclick="randomInput()" class="random-button">隨機生成 <input type="number" id="randomCardCount" value="17" min="1" max="99" /> 張牌</button>
             </div>
             <div style="display: none" id="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
@@ -166,7 +164,7 @@
             <div class="output-box">
                 <div class="title-button-container">
                     <div class="output-title">一般型牌理</div>
-                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
+                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">摺疊 ▲</button>
                 </div>
                 <div class="output-context" id="output-std"></div>
                 <div class="output-context" id="brief-output-std" style="display: none"></div>
@@ -174,8 +172,17 @@
             </div>
             <div class="output-box">
                 <div class="title-button-container">
-                    <div class="output-title">国标麻将标准型牌理</div>
-                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
+                    <div class="output-title">港式台灣麻將牌理</div>
+                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">摺疊 ▲</button>
+                </div>
+                <div class="output-context" id="output-tw"></div>
+                <div class="output-context" id="brief-output-tw" style="display: none"></div>
+                <div class="output-time" id="time-output-tw"></div>
+            </div>
+            <div class="output-box">
+                <div class="title-button-container">
+                    <div class="output-title">國標麻將標準型牌理</div>
+                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">摺疊 ▲</button>
                 </div>
                 <div class="output-context" id="output-gb"></div>
                 <div class="output-context" id="brief-output-gb" style="display: none"></div>
@@ -183,26 +190,16 @@
             </div>
             <div class="output-box">
                 <div class="title-button-container">
-                    <div class="output-title">立直麻将标准型牌理</div>
-                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">折叠 ▲</button>
+                    <div class="output-title">立直麻將標準型牌理</div>
+                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">摺疊 ▲</button>
                 </div>
                 <div class="output-context" id="output-jp"></div>
                 <div class="output-context" id="brief-output-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-jp"></div>
             </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">港式台湾麻将牌理</div>
-                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">折叠 ▲</button>
-                </div>
-                <div class="output-context" id="output-tw"></div>
-                <div class="output-context" id="brief-output-tw" style="display: none"></div>
-                <div class="output-time" id="time-output-tw"></div>
-            </div>
         </div>
         <div class="section title-button-container">
             <div class="output-time">v4.1</div>
-            <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
@@ -210,16 +207,16 @@
             let tiles, tids;
             function tilesInfo(tcnt) {
                 const meld = Math.floor(tcnt / 3);
-                let output = `${tcnt} 张手牌\n`;
+                let output = `${tcnt} 張手牌\n`;
                 switch (tcnt % 3) {
                     case 1:
-                        output += `3n+1 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
+                        output += `3n+1 型: 和牌需要 ${meld} 個面子和 ${1} 個雀頭`;
                         break;
                     case 2:
-                        output += `3n+2 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
+                        output += `3n+2 型: 和牌需要 ${meld} 個面子和 ${1} 個雀頭`;
                         break;
                     case 0:
-                        output += `3n 型: 和牌需要 ${meld} 个面子和 ${0} 个雀头`;
+                        output += `3n 型: 和牌需要 ${meld} 個面子和 ${0} 個雀頭`;
                         break;
                 }
                 return output;
@@ -233,14 +230,14 @@
                 if (!isVisible) drawInputCards();
                 board.style.display = isVisible ? "none" : "block";
                 text.style.display = isVisible ? "block" : "none";
-                button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
+                button.textContent = isVisible ? "開啟輸入面板 ▼" : "關閉輸入面板 ▲";
             }
             function toggleNote() {
                 const note = document.getElementById("inputNote");
                 const button = document.getElementById("inputNoteButton");
                 const isVisible = note.style.display !== "none";
                 note.style.display = isVisible ? "none" : "block";
-                button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
+                button.textContent = isVisible ? "顯示輸入說明 ▼" : "隱藏輸入說明 ▲";
             }
             function toggleOutput(i) {
                 const ids = ["output-std", "output-gb", "output-jp", "output-tw"];
@@ -250,13 +247,13 @@
                 const v = d.style.display !== "none";
                 d.style.display = v ? "none" : "block";
                 s.style.display = v ? "block" : "none";
-                b.textContent = v ? "展开 ▼" : "折叠 ▲";
+                b.textContent = v ? "展開 ▼" : "摺疊 ▲";
             }
             let ipids;
             window.onload = function () {
                 randomInput();
             };
-            const lang = "cn";
+            const lang = "tw";
         </script>
     </body>
 </html>

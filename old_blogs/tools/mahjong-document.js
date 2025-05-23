@@ -64,7 +64,6 @@ function processInput() {
                 break;
         }
     };
-    console.log(lang);
     worker.postMessage({ task, tiles, tcnt, full_tcnt, lang });
 }
 function randomInput() {

@@ -10,7 +10,7 @@
     <body>
         <div class="language-bar">
             <a href="mahjong.html">简体中文</a>
-            <a href="mahjong-tw.html">繁體中文</a>
+            <a href="mahjong-tw.html">正體中文</a>
             <a href="mahjong-ja.html">日本語</a>
             <a>English</a>
         </div>
@@ -168,6 +168,7 @@
             <div style="display: none" id="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
                 <div class="card-container" id="output-pic"></div>
+                <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
             </div>
             <div class="output-box">
                 <div class="title-button-container">
@@ -212,7 +213,6 @@
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
         <script>
-            let tiles, tids;
             function tilesInfo(tcnt) {
                 const meld = Math.floor(tcnt / 3);
                 let output = `${tcnt} tiles\n`;
@@ -257,7 +257,6 @@
                 s.style.display = v ? "block" : "none";
                 b.textContent = v ? "Expand ▼" : "Fold ▲";
             }
-            let ipids;
             window.onload = function () {
                 randomInput();
             };

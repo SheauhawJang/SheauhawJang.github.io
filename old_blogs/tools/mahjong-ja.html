@@ -10,7 +10,7 @@
     <body>
         <div class="language-bar">
             <a href="mahjong.html">简体中文</a>
-            <a href="mahjong-tw.html">繁體中文</a>
+            <a href="mahjong-tw.html">正體中文</a>
             <a>日本語</a>
             <a href="mahjong-en.html">English</a>
         </div>
@@ -170,6 +170,7 @@
             </div>
             <div style="display: none" id="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
+                <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
                 <div class="card-container" id="output-pic"></div>
             </div>
             <div class="output-box">
@@ -205,8 +206,8 @@
                     <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">収納 ▲</button>
                 </div>
                 <div class="output-context" id="output-tw"></div>
-                <div class="output-context" id="brief-output-tw" style="display: none"></div>
                 <div class="output-time" id="time-output-tw"></div>
+                <div class="output-context" id="brief-output-tw" style="display: none"></div>
             </div>
         </div>
         <div class="section title-button-container">
@@ -215,7 +216,6 @@
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
         <script>
-            let tiles, tids;
             function tilesInfo(tcnt) {
                 const meld = Math.floor(tcnt / 3);
                 let output = `${tcnt} 枚手牌\n`;
@@ -260,7 +260,6 @@
                 s.style.display = v ? "block" : "none";
                 b.textContent = v ? "展開 ▼" : "収納 ▲";
             }
-            let ipids;
             window.onload = function () {
                 randomInput();
             };

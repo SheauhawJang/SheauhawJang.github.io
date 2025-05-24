@@ -1,3 +1,4 @@
+let aids;
 function processInput() {
     if (worker) {
         worker.terminate();
@@ -10,15 +11,21 @@ function processInput() {
         document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`;
     }
     const input = document.getElementById("inputText").value;
-    let splitans = split(input);
-    tiles = splitans.tiles;
-    tids = splitans.ids;
-    let tcnt = 0;
-    for (let i = 0; i < sizeAT; ++i) tcnt += tiles[i];
+    aids = splitTiles(input);
+    let tids = aids[0];
+    let bids = aids[2];
+    let tiles = getTiles(tids);
+    let subtiles = getTiles(bids);
+    for (let i = 0; i < aids[1].length; ++i) {
+        const ids = aids[1][i].content;
+        for (let j = 0; j < ids.length; ++j) ++subtiles[ids[i].id];
+    }
+    let tcnt = tids.length;
     let full_tcnt = tcnt;
     if (tcnt % 3 === 1) ++full_tcnt;
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
-    document.getElementById("output-pic").innerHTML = tilesImage(tids);
+    document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
+    document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, true);
     document.getElementById("output-box-head").style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
@@ -90,29 +97,52 @@ function randomInput() {
     drawInputCards();
     processInput();
 }
-function cardLargeImage(i, width = 5) {
-    return `<div class="card-div" style="width: ${width}%;"><div class="card-overlay"></div><img src="./cards/${cardName(tids[i])}.gif" onclick="discard(${i})"></div>`;
+function cardLargeImage(tids, i, width, link) {
+    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}<img src="./cards/${cardName(tids[i])}.gif"${link ? ` onclick="discard(${i})"` : ""}></div>`;
+}
+function cardLargeImageRotated(id, width, cnt) {
+    return `<div class="card-div" style="width: ${width * 129 / 80}%;"><img src="./cards/${cnt === 2 ? 'k' : 'r'}${cardName(id)}.gif"></div>`;
+}
+function backcardImage(width) {
+    return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.gif"></div>`
+}
+function emptycardImage(width) {
+    return `<div class="card-div" style="width: ${width / 5}%;"></div>`
+}
+function joinHand(ids) {
+    let handname = [];
+    for (let i = 0; i < ids.length; ++i) {
+        handname.push(cardName(ids[i]));
+        if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+    }
+    return handname.join("");
 }
 function discard(i) {
-    const id = tids[i].id;
+    let tids = aids[0];
+    let bids = aids[2];
+    let tiles = getTiles([...tids, ...bids]);
+    for (let i = 0; i < aids[1].length; ++i) {
+        const ids = aids[1][i].content;
+        for (let j = 0; j < ids.length; ++j) ++tiles[ids[i].id];
+    }
     let mount = [];
-    for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i]; ++j) mount.push(i);
+    for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[j]; ++j) mount.push(i);
     if (mount.length === 0) return;
-    --tiles[id];
     tids.splice(i, 1);
     tids.sort((a, b) => a.id - b.id);
     tids.push({ id: mount[Math.floor(Math.random() * mount.length)] });
-    let handname = [];
-    for (let i = 0; i < tids.length; ++i) {
-        handname.push(cardName(tids[i]));
-        if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+    let newInput = joinHand(tids);
+    for (let i = 0; i < aids[1].length; ++i) {
+        const partInput = joinHand(aids[1][i].content);
+        if (aids[1][i].concealed) newInput += `[${partInput}]`;
+        else newInput += `<${partInput}>`;
     }
-    let newInput = handname.join("");
+    newInput += `(${joinHand(bids)})`;
     document.getElementById("inputText").value = newInput;
     drawInputCards();
     processInput();
 }
-function tilesImage() {
+function tilesImage(tids, bonus) {
     let output = "";
     let width = 5;
     let max_card = 35;
@@ -122,14 +152,54 @@ function tilesImage() {
     }
     if (tids.length >= max_card) width = 100 / max_card;
     else if (tids.length >= 100 / width) width = 100 / tids.length;
-    for (let i = 0; i < tids.length; ++i) output += cardLargeImage(i, width);
+    if (bonus) width *= 0.5;
+    for (let i = 0; i < tids.length; ++i) output += cardLargeImage(tids, i, width, !bonus);
     return output;
 }
+function subtilesImage(sids, tcnt) {
+    let output = "";
+    let width = 5;
+    let max_card = 35;
+    if (window.matchMedia("screen and (max-width: 512px)").matches) {
+        width = 7;
+        max_card = 20;
+    }
+    if (tcnt >= max_card) width = 100 / max_card;
+    else if (tcnt >= 100 / width) width = 100 / tcnt;
+    for (let i = 0; i < sids.length; ++i) {
+        output += emptycardImage(width);
+        if (sids[i].concealed) {
+            for (let j = 0; j < sids[i].content.length; ++j) {
+                if (j === 0 || j === sids[i].content.length - 1) output += backcardImage(width);
+                else output += cardLargeImage(sids[i].content, j, width, false);
+            }
+        } else {
+            let rid = 0, skip = -1;
+            let rcnt = 0;
+            for (let j = 0; j < sids[i].content.length; ++j) 
+                if (sids[i].content[j].rotate) 
+                    if (rcnt < 1) rid = j, ++rcnt; 
+                    else {
+                        skip = j, ++rcnt;
+                        break;
+                    }
+            for (let j = 0; j < sids[i].content.length; ++j) {
+                if (j === skip) continue;
+                else if (j === rid) output += cardLargeImageRotated(sids[i].content[j], width, rcnt);
+                else output += cardLargeImage(sids[i].content, j, width, false); 
+            }
+        }
+    }
+        console.log(output);
+    return output;
+}
+// Input Panel Functions
+let ipids;
 function cardInputImage(i, width) {
     return `<div class="card-div" style="width: ${width};"><div class="card-overlay"></div><img src="./cards/${cardName(ipids[i])}.gif" onclick="removeInput(${i})"></div>`;
 }
 function drawInputCards() {
-    ipids = split(document.getElementById("inputText").value).ids;
+    ipids = splitTiles(document.getElementById("inputText").value);
     let div = document.getElementById("input-pic");
     let output = "";
     let width = `${400 / 14}px`;

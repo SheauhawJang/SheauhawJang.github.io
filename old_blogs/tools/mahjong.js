@@ -98,22 +98,50 @@ function cardName(ip) {
     else if (id >= 42 && id < 51) ans = `${id - 41}j`;
     return ans;
 }
-function split(s) {
-    s = Array.from(s);
+function getTiles(ids) {
     let tiles = Array(sizeAT).fill(0);
+    for (let i = 0; i < ids.length; ++i) ++tiles[ids[i].id];
+    return tiles;
+}
+function splitKernel(s) {
+    s = Array.from(s);
     let ids = [];
-    for (let i = 0; i < s.length; ++i)
-        if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") ids.push(id("Wh")), (i = i + 1);
-        else if (s[i] >= "a" && s[i] <= "z") {
+    let rotate = false;
+    for (let i = 0; i < s.length; ++i) {
+        if (s[i] === "_") rotate = true;
+        if (s[i] >= "a" && s[i] <= "z") {
             let tids = [];
             for (let j = i - 1; j >= 0; --j)
                 if ((s[j] >= "0" && s[j] <= "9") || s[j] === "i") tids.push(id(s[j] + s[i]));
+                else if (tids.length > 0 && s[j] === "_") tids[tids.length - 1].rotate = true;
                 else break;
             for (let j = tids.length - 1; j >= 0; --j) ids.push(tids[j]);
-        } else ids.push(id(s[i]));
+            continue;
+        }
+        if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") ids.push(id("Wh")), (i = i + 1);
+        else ids.push(id(s[i]));
+        if (rotate) (ids[ids.length - 1].rotate = true), (rotate = false);
+    }
     let valid_ids = [];
-    for (let i = 0; i < ids.length; ++i) if ("id" in ids[i]) ++tiles[ids[i].id], valid_ids.push(ids[i]);
-    return { tiles, ids: valid_ids };
+    for (let i = 0; i < ids.length; ++i) if ("id" in ids[i]) valid_ids.push(ids[i]);
+    return valid_ids;
+}
+function splitTiles(s) {
+    const regex = /(\(([^)]+)\)|\[([^\]]+)\]|<([^>]+)>)/g;
+    const subtiles = [];
+    const bonus = [];
+    for (const match of s.matchAll(regex)) {
+        const [, , round, square, angle] = match;
+        if (round) {
+            bonus.push(round);
+            continue;
+        }
+        const concealed = square ? true : false;
+        const content = square || angle;
+        subtiles.push({ content: splitKernel(content), concealed });
+    }
+    s = s.replace(regex, ' ');
+    return [splitKernel(s), subtiles, splitKernel(bonus.join(' '))];
 }
 // Check left, left+1, left+2 can be a sequence or not
 const SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -546,7 +574,7 @@ function OrphanMeldStep(tiles) {
         let rid = id;
         if (tcp[id]);
         else if (tcp[JokerA[id]]) rid = JokerA[id];
-        else if (tcp[JokerB[id]]) rid = JokerB[id]; 
+        else if (tcp[JokerB[id]]) rid = JokerB[id];
         else continue;
         --tcp[rid];
         ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss);
@@ -1117,8 +1145,7 @@ function OrphanMeldOutput(tiles) {
         save.add(rid);
         --tiles[rid];
         let rt = [];
-        for (let j = 0; j < sizeAT; ++j) 
-            for (let r = 0; r < tiles[j]; ++r) rt.push(j);
+        for (let j = 0; j < sizeAT; ++j) for (let r = 0; r < tiles[j]; ++r) rt.push(j);
         if (isMeld(rt)) ots.push([...head, [rid], rt]);
         ++tiles[rid];
     }
@@ -1126,25 +1153,22 @@ function OrphanMeldOutput(tiles) {
 }
 function Buda16Output(tiles) {
     let ot = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1], [-1]];
-    tiles = tiles.slice();    
-    for (let i = 0; i < 27; ++i) 
-        if (tiles[i]) ot[Math.floor(i / 9)][Math.floor(i % 9 / 3)] = i, --tiles[i];
-    for (let i = 27; i <= 30; ++i)
-        if (tiles[i]) ot[3][i - 27] = i, --tiles[i];
-    for (let i = 31; i <= 33; ++i)
-        if (tiles[i]) ot[4][i - 31] = i, --tiles[i];
+    tiles = tiles.slice();
+    for (let i = 0; i < 27; ++i) if (tiles[i]) (ot[Math.floor(i / 9)][Math.floor((i % 9) / 3)] = i), --tiles[i];
+    for (let i = 27; i <= 30; ++i) if (tiles[i]) (ot[3][i - 27] = i), --tiles[i];
+    for (let i = 31; i <= 33; ++i) if (tiles[i]) (ot[4][i - 31] = i), --tiles[i];
     const t_joker_a = [43, 44, 45, 47, 48];
-    for (let i = 0; i < 5; ++i) 
-        for (let j = 0; j < ot[i].length; ++j) 
+    for (let i = 0; i < 5; ++i)
+        for (let j = 0; j < ot[i].length; ++j)
             if (tiles[t_joker_a[i]] === 0) break;
-            else if (ot[i][j] === -1) ot[i][j] = t_joker_a[i], --tiles[t_joker_a[i]];
+            else if (ot[i][j] === -1) (ot[i][j] = t_joker_a[i]), --tiles[t_joker_a[i]];
     const t_joker_b = [46, 46, 46, 49, 49];
-    for (let i = 0; i < 5; ++i) 
-        for (let j = 0; j < ot[i].length; ++j) 
+    for (let i = 0; i < 5; ++i)
+        for (let j = 0; j < ot[i].length; ++j)
             if (ot[i][j] === -1) {
                 let rid = tiles[t_joker_b[i]] ? t_joker_b[i] : JokerC;
-                ot[i][j] = rid, --tiles[rid];
-            } 
+                (ot[i][j] = rid), --tiles[rid];
+            }
     for (let j = 0; j < sizeAT; ++j) if (tiles[j]) ot[5][0] = j;
     return ot;
 }

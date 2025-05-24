@@ -243,6 +243,12 @@ html {
     background-color: #e06f6c;
 }
 
+.subkey-button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
 .win-grid {
     display: grid;
     grid-template-columns: auto 1fr;

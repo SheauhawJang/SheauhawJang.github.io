@@ -139,6 +139,7 @@ html {
     cursor: pointer;
     margin-bottom: 8px;
     padding: 0;
+    white-space: nowrap;
 }
 
 .toggle-button:hover {

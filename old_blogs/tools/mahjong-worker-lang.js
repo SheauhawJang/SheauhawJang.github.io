@@ -71,7 +71,7 @@ const ja_loc = {
     shiliubudaxing: "十六不塔形",
 }
 const en_loc = {
-    dai: "Waiting",
+    dai: "Wait",
     mei: "tiles",
     haoxing: "Good shape",
     yuxing: "Bad shape",
@@ -80,7 +80,7 @@ const en_loc = {
     da: "Discard",
     hepai: "Win",
     tingpai: "Ready",
-    xiangting: "Shantens",
+    xiangting: "Steps to win",
     hepaichaijie: "Winning tiles division",
     windvd_else_head: "And other",
     windvd_else_tail: "winning tiles dividing ways.",

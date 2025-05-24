@@ -161,7 +161,6 @@ html {
 .card-div {
     position: relative;
     display: inline-block;
-    cursor: pointer;
     vertical-align: bottom;
 }
 
@@ -169,6 +168,10 @@ html {
     display: block;
     width: 100%;
     height: auto;
+}
+
+.card-div .clickable {
+    cursor: pointer;
 }
 
 .card-div .card-overlay {
@@ -213,6 +216,11 @@ html {
     margin-top: 1%;
 }
 
+.input-mainkey .card-container {
+    margin-top: 1%;
+    text-align: right;
+}
+
 .input-card-button {
     width: 7.5%;
     cursor: pointer;
@@ -222,8 +230,8 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 5px;
+    margin-top: 5px;
 }
 
 .subkey-button {
@@ -350,6 +358,7 @@ html {
 
     .input-subkeys {
         margin-top: 0;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
     }
 }

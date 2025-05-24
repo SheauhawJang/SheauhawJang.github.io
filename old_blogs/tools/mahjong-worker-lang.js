@@ -76,7 +76,7 @@ const en_loc = {
     haoxing: "Good shape",
     yuxing: "Bad shape",
     haoxinglyu: "Good shape rate",
-    bu: "Foul",
+    bu: "Replace",
     da: "Discard",
     hepai: "Win",
     tingpai: "Ready",

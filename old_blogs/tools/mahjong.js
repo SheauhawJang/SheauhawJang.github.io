@@ -18,6 +18,10 @@ const NAME_TO_ID = Object.freeze({
     "🀦": 34, "🀧": 35, "🀨": 36, "🀩": 37, "🀢": 38, "🀣": 39, "🀥": 40, "🀤": 41,
     "🀪": 42, "🀫": 50
 });
+function pmod(a, b) {
+    const ans = a % b;
+    return ans * b < 0 ? ans + b : ans;
+}
 function id(name) {
     const dictid = NAME_TO_ID[name];
     if (dictid >= 0 && dictid < sizeAT) return { id: dictid };
@@ -108,37 +112,36 @@ function splitKernel(s) {
     let ids = [];
     let rotate = false;
     for (let i = 0; i < s.length; ++i) {
-        if (s[i] === "_") rotate = true;
         if (s[i] >= "a" && s[i] <= "z") {
             let tids = [];
             for (let j = i - 1; j >= 0; --j)
                 if ((s[j] >= "0" && s[j] <= "9") || s[j] === "i") tids.push(id(s[j] + s[i]));
-                else if (tids.length > 0 && s[j] === "_") tids[tids.length - 1].rotate = true;
                 else break;
             for (let j = tids.length - 1; j >= 0; --j) ids.push(tids[j]);
             continue;
         }
         if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") ids.push(id("Wh")), (i = i + 1);
         else ids.push(id(s[i]));
-        if (rotate) (ids[ids.length - 1].rotate = true), (rotate = false);
     }
     let valid_ids = [];
     for (let i = 0; i < ids.length; ++i) if ("id" in ids[i]) valid_ids.push(ids[i]);
     return valid_ids;
 }
 function splitTiles(s) {
-    const regex = /(\(([^)]+)\)|\[([^\]]+)\]|<([^>]+)>)/g;
+    const regex = /(\(([^)]+)\)|\[([^\]]+)\])/g;
     const subtiles = [];
     const bonus = [];
     for (const match of s.matchAll(regex)) {
-        const [, , round, square, angle] = match;
+        const [, , round, square] = match;
         if (round) {
             bonus.push(round);
             continue;
+        } else {
+            const parts = square.split(',');
+            const ans = splitKernel(parts[0]);
+            ans.type = Number(parts[1]) || 0;
+            subtiles.push(ans);
         }
-        const concealed = square ? true : false;
-        const content = square || angle;
-        subtiles.push({ content: splitKernel(content), concealed });
     }
     s = s.replace(regex, ' ');
     return [splitKernel(s), subtiles, splitKernel(bonus.join(' '))];
@@ -654,9 +657,9 @@ function Buda16Step(tiles) {
     }
     return step;
 }
-function CountWaitingCards(tiles, ans) {
+function CountWaitingCards(tiles, subtiles, ans) {
     let cnt = 0;
-    for (let i = 0; i < ans.length; ++i) cnt += Math.max(4 - tiles[ans[i]], 0);
+    for (let i = 0; i < ans.length; ++i) cnt += Math.max(4 - tiles[ans[i]] - subtiles[ans[i]], 0);
     return cnt;
 }
 function checkGoodWaiting(tiles, stepf) {
@@ -1206,6 +1209,11 @@ function isTri(tids) {
     if (tids.length !== 3) return false;
     const [a, b, c] = tids;
     return isJokerEqual(a, b) && isJokerEqual(a, c) && isJokerEqual(b, c);
+}
+function isQuad(tids) {
+    if (tids.length !== 4) return false;
+    for (let i = 0; i < 4; ++i) for (let j = i + 1; j < 4; ++j) if (!isJokerEqual(tids[i], tids[j])) return false;
+    return true;
 }
 function isMeld(tids) {
     return isSeq(tids) || isTri(tids);

@@ -17,12 +17,14 @@ function processInput() {
     let tiles = getTiles(tids);
     let subtiles = getTiles(bids);
     for (let i = 0; i < aids[1].length; ++i) {
-        const ids = aids[1][i].content;
-        for (let j = 0; j < ids.length; ++j) ++subtiles[ids[i].id];
+        const ids = aids[1][i];
+        for (let j = 0; j < ids.length; ++j) ++subtiles[ids[j].id];
     }
     let tcnt = tids.length;
     let full_tcnt = tcnt;
     if (tcnt % 3 === 1) ++full_tcnt;
+    const subcnt = aids[1].length;
+    console.log(subcnt);
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, true);
@@ -57,13 +59,13 @@ function processInput() {
         switch (task) {
             case 0:
             case 1:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, dvd });
+                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, dvd });
                 break;
             case 2:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save, step13, dvd, dvd7, dvd13 });
+                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13 });
                 break;
             case 3:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, step, save, dvd });
+                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd });
                 break;
             case 4:
                 worker.terminate();
@@ -71,7 +73,7 @@ function processInput() {
                 break;
         }
     };
-    worker.postMessage({ task, tiles, tcnt, full_tcnt, lang });
+    worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, lang });
 }
 function randomInput() {
     function shuffle(array) {
@@ -98,16 +100,18 @@ function randomInput() {
     processInput();
 }
 function cardLargeImage(tids, i, width, link) {
-    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}<img src="./cards/${cardName(tids[i])}.gif"${link ? ` onclick="discard(${i})"` : ""}></div>`;
+    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}<img src="./cards/${cardName(tids[i])}.gif"${
+        link ? ` onclick="discard(${i})" class="clickable"` : ""
+    }></div>`;
 }
 function cardLargeImageRotated(id, width, cnt) {
-    return `<div class="card-div" style="width: ${width * 129 / 80}%;"><img src="./cards/${cnt === 2 ? 'k' : 'r'}${cardName(id)}.gif"></div>`;
+    return `<div class="card-div" style="width: ${(width * 120) / 80}%;"><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(id)}.gif"></div>`;
 }
 function backcardImage(width) {
-    return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.gif"></div>`
+    return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.png"></div>`;
 }
 function emptycardImage(width) {
-    return `<div class="card-div" style="width: ${width / 5}%;"></div>`
+    return `<div class="card-div" style="width: ${width / 5}%;"></div>`;
 }
 function joinHand(ids) {
     let handname = [];
@@ -122,23 +126,16 @@ function discard(i) {
     let bids = aids[2];
     let tiles = getTiles([...tids, ...bids]);
     for (let i = 0; i < aids[1].length; ++i) {
-        const ids = aids[1][i].content;
+        const ids = aids[1][i];
         for (let j = 0; j < ids.length; ++j) ++tiles[ids[i].id];
     }
     let mount = [];
-    for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[j]; ++j) mount.push(i);
+    for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i]; ++j) mount.push(i);
     if (mount.length === 0) return;
     tids.splice(i, 1);
     tids.sort((a, b) => a.id - b.id);
     tids.push({ id: mount[Math.floor(Math.random() * mount.length)] });
-    let newInput = joinHand(tids);
-    for (let i = 0; i < aids[1].length; ++i) {
-        const partInput = joinHand(aids[1][i].content);
-        if (aids[1][i].concealed) newInput += `[${partInput}]`;
-        else newInput += `<${partInput}>`;
-    }
-    newInput += `(${joinHand(bids)})`;
-    document.getElementById("inputText").value = newInput;
+    remakeInput(aids);
     drawInputCards();
     processInput();
 }
@@ -156,6 +153,20 @@ function tilesImage(tids, bonus) {
     for (let i = 0; i < tids.length; ++i) output += cardLargeImage(tids, i, width, !bonus);
     return output;
 }
+function getUnifiedType(s) {
+    let t = s.type;
+    if (s.length >= 4) return pmod(t, 8);
+    return Math.min(Math.max(t, 1), 3);
+}
+function getRotatedLocation(t, l) {
+    let rloc = t % 4;
+    if (rloc === 3) {
+        rloc = l;
+        if (t > 3) --rloc;
+    }
+    --rloc;
+    return rloc;
+}
 function subtilesImage(sids, tcnt) {
     let output = "";
     let width = 5;
@@ -168,50 +179,103 @@ function subtilesImage(sids, tcnt) {
     else if (tcnt >= 100 / width) width = 100 / tcnt;
     for (let i = 0; i < sids.length; ++i) {
         output += emptycardImage(width);
-        if (sids[i].concealed) {
-            for (let j = 0; j < sids[i].content.length; ++j) {
-                if (j === 0 || j === sids[i].content.length - 1) output += backcardImage(width);
-                else output += cardLargeImage(sids[i].content, j, width, false);
-            }
-        } else {
-            let rid = 0, skip = -1;
-            let rcnt = 0;
-            for (let j = 0; j < sids[i].content.length; ++j) 
-                if (sids[i].content[j].rotate) 
-                    if (rcnt < 1) rid = j, ++rcnt; 
-                    else {
-                        skip = j, ++rcnt;
-                        break;
-                    }
-            for (let j = 0; j < sids[i].content.length; ++j) {
-                if (j === skip) continue;
-                else if (j === rid) output += cardLargeImageRotated(sids[i].content[j], width, rcnt);
-                else output += cardLargeImage(sids[i].content, j, width, false); 
-            }
+        let t = getUnifiedType(sids[i]);
+        if (t % 4 === 0)
+            for (let j = 0; j < sids[i].length; ++j)
+                if (j === 0 || j === sids[i].length - 1) output += backcardImage(width);
+                else output += cardLargeImage(sids[i], j, width, false);
+        else {
+            let rloc = getRotatedLocation(t, sids[i].length);
+            let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
+            if (seq) output += cardLargeImageRotated(sids[i][rloc], width, 1);
+            for (let j = 0; j < sids[i].length; ++j)
+                if (j === rloc)
+                    if (seq) continue;
+                    else if (t > 3) output += cardLargeImageRotated(sids[i][j++], width, 2);
+                    else output += cardLargeImageRotated(sids[i][j], width, 1);
+                else output += cardLargeImage(sids[i], j, width, false);
         }
     }
-        console.log(output);
     return output;
 }
 // Input Panel Functions
 let ipids;
-function cardInputImage(i, width) {
-    return `<div class="card-div" style="width: ${width};"><div class="card-overlay"></div><img src="./cards/${cardName(ipids[i])}.gif" onclick="removeInput(${i})"></div>`;
+function cardInputImage(ids, i, j, width, unit) {
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/${cardName(
+        ids[i]
+    )}.gif" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
+}
+function cardInputImageRotated(ids, i, j, width, unit, cnt) {
+    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(
+        ids[i]
+    )}.gif" onclick="removeInput(${i}, ${j}, 1)" class="clickable"></div>`;
+}
+function backcardInputImage(i, j, width, unit) {
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
+}
+function emptycardInputImage(width, unit) {
+    return `<div class="card-div" style="width: ${width / 5}${unit};"></div>`;
 }
 function drawInputCards() {
     ipids = splitTiles(document.getElementById("inputText").value);
-    let div = document.getElementById("input-pic");
+    const div = document.getElementById("input-pic");
     let output = "";
-    let width = `${400 / 14}px`;
-    let height = `${(400 * 129) / 14 / 80}px`;
+    let width = 400 / 14;
+    let height = (400 * 171) / 14 / 80;
+    let sheight = (400 * 129) / 14 / 80;
+    let rheight = 0;
+    let unit = "px";
     if (window.matchMedia("screen and (max-width: 512px)").matches) {
-        width = `${100 / 20}%`;
-        height = `${(100 * 129) / 20 / 80}%`;
+        width = 100 / 20;
+        height = (100 * 171) / 20 / 80;
+        sheight = (100 * 129) / 20 / 80;
+        unit = "%";
     }
-    for (let i = 0; i < ipids.length; ++i) output += cardInputImage(i, width);
-    if (ipids.length === 0) div.style.paddingTop = height;
-    else div.style.paddingTop = "0";
+    const tids = ipids[0];
+    for (let i = 0; i < tids.length; ++i) (output += cardInputImage(tids, i, -1, width, unit)), (rheight = sheight);
+    const sids = ipids[1];
+    for (let i = 0; i < sids.length; ++i) {
+        output += emptycardInputImage(width, unit);
+        let t = getUnifiedType(sids[i]);
+        if (t % 4 === 0) {
+            for (let j = 0; j < sids[i].length; ++j)
+                if (j === 0 || j === sids[i].length - 1) output += backcardInputImage(j, i, width, unit);
+                else output += cardInputImage(sids[i], j, i, width, unit);
+            rheight = Math.max(rheight, sheight);
+        } else {
+            let rloc = getRotatedLocation(t, sids[i].length);
+            let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
+            if (seq) output += cardInputImageRotated(sids[i], rloc, i, width, unit, 1);
+            for (let j = 0; j < sids[i].length; ++j)
+                if (j === rloc)
+                    if (seq) continue;
+                    else if (t > 3) output += cardInputImageRotated(sids[i], j++, i, width, unit, 2);
+                    else output += cardInputImageRotated(sids[i], j, i, width, unit, 1);
+                else output += cardInputImage(sids[i], j, i, width, unit, false);
+            if (t > 3) rheight = height;
+            else rheight = Math.max(rheight, sheight);
+        }
+    }
+    div.style.paddingTop = `${height - rheight}${unit}`;
     div.innerHTML = output;
+    output = "";
+    const bdiv = document.getElementById("input-pic-bonus");
+    const bids = ipids[2];
+    for (let i = 0; i < bids.length; ++i) output += cardInputImage(bids, i, -2, width * 0.75, unit);
+    if (bids.length === 0) bdiv.style.paddingTop = `${sheight * 0.75}${unit}`;
+    else bdiv.style.paddingTop = "0";
+    bdiv.innerHTML = output;
+    document.getElementById("subkey_chi").disabled = !isSeq(tids.slice(-3).map((a) => a.id).sort((a, b) => a - b));
+}
+function remakeInput(ipids) {
+    let newInput = joinHand(ipids[0]);
+    for (let i = 0; i < ipids[1].length; ++i) {
+        const partInput = joinHand(ipids[1][i]);
+        if (ipids[1][i].type) newInput += `[${partInput},${ipids[1][i].type}]`;
+        else newInput += `[${partInput}]`;
+    }
+    if (ipids[2].length > 0) newInput += `(${joinHand(ipids[2])})`;
+    document.getElementById("inputText").value = newInput;
 }
 function addInput(i) {
     if (typeof i === "number") i = { id: i };
@@ -219,14 +283,26 @@ function addInput(i) {
     document.getElementById("inputText").value += cardName(i);
     drawInputCards();
 }
-function removeInput(i) {
-    ipids.splice(i, 1);
-    let handname = [];
-    for (let i = 0; i < ipids.length; ++i) {
-        handname.push(cardName(ipids[i]));
-        if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+function removeInput(i, j, k) {
+    if (j === -1) {
+        ipids[0].splice(i, 1);
+    } else if (j === -2) {
+        // ipids[0].push(ipids[2][i]);
+        ipids[2].splice(i, 1);
+    } else {
+        let t = getUnifiedType(ipids[1][j]);
+        if (t % 4 === 0 || k === 1) {
+            // for (let i = 0; i < ipids[1][j].length; ++i) ipids[0].push(ipids[1][j][i]);
+            ipids[1].splice(j, 1);
+        } else {
+            let nt = 2;
+            if (i < 1) nt = 1;
+            else if (i === ipids[1][j].length - 1) nt = 3;
+            if (t > 3) nt += 4;
+            ipids[1][j].type = nt;
+        }
     }
-    document.getElementById("inputText").value = handname.join("");
+    remakeInput(ipids);
     drawInputCards();
 }
 function clearInput() {
@@ -234,12 +310,40 @@ function clearInput() {
     drawInputCards();
 }
 function sortInput() {
-    ipids.sort((a, b) => a.id - b.id);
-    let handname = [];
-    for (let i = 0; i < ipids.length; ++i) {
-        handname.push(cardName(ipids[i]));
-        if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+    ipids[0].sort((a, b) => a.id - b.id);
+    remakeInput(ipids);
+    drawInputCards();
+}
+function subtileInput(t, k) {
+    switch (t) {
+        default:
+            ipids[1].push(ipids[0].slice(-3));
+            ipids[0].splice(-3);
+            break;
+        case 1:
+            if (isTri(ipids[0].slice(-3).map((a) => a.id))) {
+                ipids[1].push(ipids[0].slice(-3));
+                ipids[0].splice(-3);
+            } else {
+                ipids[1].push(Array(3).fill(ipids[0].at(-1)));
+                ipids[0].pop();
+            }
+            break;
+        case 2: 
+            if (isQuad(ipids[0].slice(-4).map((a) => a.id))) {
+                ipids[1].push(ipids[0].slice(-4));
+                ipids[0].splice(-4);
+            } else {
+                ipids[1].push(Array(4).fill(ipids[0].at(-1)));
+                ipids[0].pop();
+            }
+            ipids[1].at(-1).type = k;
+            break;
+        case 3:
+            ipids[2].push(ipids[0].at(-1));
+            ipids[0].pop();
+            break;
     }
-    document.getElementById("inputText").value = handname.join("");
+    remakeInput(ipids);
     drawInputCards();
 }

@@ -80,7 +80,7 @@ const en_loc = {
     da: "Discard",
     hepai: "Win",
     tingpai: "Ready",
-    xiangting: "Steps to win",
+    xiangting: "steps to win",
     hepaichaijie: "Winning tiles division",
     windvd_else_head: "And other",
     windvd_else_tail: "winning tiles dividing ways.",

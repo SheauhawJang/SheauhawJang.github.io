@@ -197,7 +197,7 @@ function GBSeqBind(s) {
             }
             GBSeqBind2(s, a, b, ans);
         }
-    if (seqsave.size > 10000000) seqsave.clear(), console.log("trisave cleared");
+    if (seqsave.size > 1000000) seqsave.clear(), console.log("trisave cleared");
     seqsave.set(key, ans);
     return ans;
 }
@@ -295,7 +295,7 @@ function GBTriBind(s, orphan, pon, st) {
             }
             GBTriBind2(s, orphan, a, b, ans, pon, st);
         }
-    if (trisave.size > 10000000) trisave.clear(), console.log("trisave cleared");
+    if (trisave.size > 1000000) trisave.clear(), console.log("trisave cleared");
     trisave.set(key, ans);
     return ans;
 }
@@ -575,8 +575,8 @@ function PreAllMelds(aids) {
         } else {
             for (let j = 0; j < sizeUT; ++j) {
                 if (canBeReal(j, wfc)) {
-                    submeld[i].push(wfc.length === 3 ? tri[i] : quad[i]);
-                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[i]);
+                    submeld[i].push(wfc.length === 3 ? tri[j] : quad[j]);
+                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[j]);
                 }
             }
             if (wfc.length === 4)

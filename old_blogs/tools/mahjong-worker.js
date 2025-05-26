@@ -365,7 +365,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 const predict_t = Math.round(t * m / cm);
                 const rate = cm / m * 100;
                 let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`
-                postMessage({ debug, output: `${gans.val}番\n` });
+                postMessage({ debug, output: `至少${gans.val}番\n` });
             }
         }
         itots((ots) => itsubots((subots) => cal(ots, subots)));

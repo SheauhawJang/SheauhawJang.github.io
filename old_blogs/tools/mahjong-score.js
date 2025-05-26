@@ -570,7 +570,7 @@ function GBStart(aids, substeps, save, gw, mw, wt, info) {
                 for (let j = 0; j < sizeUT; ++j) {
                     if (canBeReal(j, wfc)) {
                         submeld[i].push(Array(wfc.length).fill(j));
-                        if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[j].push([j, j + 1, j + 2]);
+                        if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push([j, j + 1, j + 2]);
                     }
                 }
                 if (wfc.length === 4)

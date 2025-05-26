@@ -64,6 +64,8 @@ function processInput() {
         switch (task) {
             case 2:
                 if (Math.min(...substeps[task]) === -1) {
+                    document.getElementById("time-output-score-gb").textContent = "Ready to start!";
+                    document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("score-gb").style.display = 'block';
                     gb_worker = null;
                     gb_worker_info = { aids, substeps: substeps[task], save: save[task] };
@@ -368,6 +370,7 @@ function processGBScore() {
         gb_worker.terminate();
         gb_worker = null;
     }
+    document.getElementById("time-output-score-gb").textContent = "Calculating......";
     const gw = Number(document.querySelector('input[name="score-gb-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-gb-local-wind"]:checked').value);
     const wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked').value);
@@ -378,6 +381,7 @@ function processGBScore() {
         gb_worker.terminate();
         gb_worker = null;
         document.getElementById("output-score-gb").innerHTML = e.data.result;
+        document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     }
     const { aids, substeps, save } = gb_worker_info;
     gb_worker.postMessage({ task: "gb-score", aids, substeps, save, gw, mw, wt, info });

@@ -501,7 +501,7 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
         for (let i = 0; i < n; ++i) ++v, f.push(75);
     }
     if (melds.length >= 5 && !must_wuzi && isMask(melds, NoHonorArray)) ++v, f.push(76);
-    if (!must_menqing && aids[1].length === ek)
+    if (melds.length >= 5 && !must_menqing && aids[1].length === ek)
         if (zm) (v += 4), f.push(56);
         else (v += 2), f.push(62);
     else if (zm === 80) ++v, f.push(zm);
@@ -581,30 +581,34 @@ function GBStart(aids, substeps, save, gw, mw, wt, info) {
         let listen_cnt = save.waiting[wint].ans.length;
         if (aids[0].length === 2 && ck === 0) (listen_cnt = 999), (infov += 6), infof.push(52);
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === aids[1].length) listen_cnt = 999;
+        console.time("cartesianProduct");
         let subots = cartesianProduct(submeld);
-        const { dvd } = realdvd(getTiles(aids[0]), aids[0].length);
+        console.timeLog("cartesianProduct");
+        const { cnt, dvd } = realdvd(getTiles(aids[0]), aids[0].length);
         const nm = Math.floor(aids[0].length / 3);
         const np = aids[0].length % 3 ? 1 : 0;
-        let melds = [],
-            head = [];
-        let ots = [];
+        let melds = [];
+        let sze = 0;
+        let ots = Array(cnt).fill(null);
         function dfs(i, dpi) {
-            if (melds.length === nm && head.length === np) {
-                ots.push([...melds, ...head]);
+            if (melds.length === nm + np) {
+                ots[sze++] = melds.slice();
                 return;
             }
             const ans = dvd[dpi];
             for (let j = 0; j < ans.nxt.length; ++j) {
                 const n = ans.nxt[j];
-                for (let p = 0; p < n.p; ++p) head.push([i, i]);
+                for (let p = 0; p < n.p; ++p) melds.push([i, i]);
                 for (let s = 0; s < n.s; ++s) melds.push([i, i + 1, i + 2]);
                 for (let k = 0; k < n.k; ++k) melds.push([i, i, i]);
                 dfs(i + 1, n.dpi);
-                for (let p = 0; p < n.p; ++p) head.pop();
-                for (let m = 0; m < n.s + n.k; ++m) melds.pop();
+                for (let m = 0; m < n.p + n.s + n.k; ++m) melds.pop();
             }
         }
+        console.time("dfs");
         dfs(0, 0);
+        console.timeLog("dfs");
+        const st = new Date();
         for (let i = 0; i < ots.length; ++i) {
             for (let j = 0; j < subots.length; ++j) {
                 let cp = 0;

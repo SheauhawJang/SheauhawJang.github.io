@@ -504,7 +504,7 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
     if (!must_menqing && aids[1].length === ek)
         if (zm) (v += 4), f.push(56);
         else (v += 2), f.push(62);
-    else if (zm === 80) ++v, v.push(zm);
+    else if (zm === 80) ++v, f.push(zm);
     const hog = countHog(melds);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {
@@ -517,14 +517,13 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
         seq = seq.sort((a, b) => a - b);
         tri = tri.sort((a, b) => a - b);
         let orphan = Array(tri.length).fill(0);
-        if (yaojiuke)
-            for (let i = 0; i < orphan.length; ++i)
-                if (OrphanArray[tri[i]])
-                    if (mw === gw && mw === tri[i]) (orphan[i] = 83), (v += 4);
-                    else if (mw === tri[i]) (orphan[i] = 61), (v += 2);
-                    else if (gw === tri[i]) (orphan[i] = 60), (v += 2);
-                    else if (tri >= 31) (orphan[i] = 59), (v += 2);
-                    else (orphan[i] = 73), ++v;
+        for (let i = 0; i < orphan.length; ++i)
+            if (OrphanArray[tri[i]])
+                if (mw === gw && mw === tri[i]) (orphan[i] = 83), (v += 4);
+                else if (mw === tri[i]) (orphan[i] = 61), (v += 2);
+                else if (gw === tri[i]) (orphan[i] = 60), (v += 2);
+                else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
+                else if (yaojiuke) (orphan[i] = 73), ++v;
         const seqans = GBSeqBind(seq);
         const trians = GBTriBind(tri, orphan, has_pengpeng, can_shuangtong);
         v += seqans.val + trians.val;

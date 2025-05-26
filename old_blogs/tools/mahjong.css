@@ -291,7 +291,7 @@ html {
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 0px 10px;
-    align-items: end;
+    align-items: center;
 }
 
 .output-option-group {
@@ -308,6 +308,7 @@ input[type="checkbox"] {
 
 .score-button {
     margin-top: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 

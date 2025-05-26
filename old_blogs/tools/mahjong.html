@@ -210,9 +210,9 @@
             <div class="output-box" id="score-gb" style="display: none;">
                 <div class="title-button-container">
                     <div class="output-title">国标麻将算番器</div>
-                    <button class="toggle-button" id="toggle-score-gb" onclick="toggleOutput(4)">折叠 ▲</button>
+                    <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">折叠 ▲</button>
                 </div>
-                <div class="output-options">
+                <div class="output-options" id="options-output-score-gb">
                     <span>圈风</span>
                     <div class="output-option-group">
                         <label><input type="radio" name="score-gb-global-wind" value="27" checked>东</label>
@@ -240,11 +240,11 @@
                         <label><input type="checkbox" name="score-gb-wininfo" value="58">和绝张</label>
                     </div>
                     <button onclick="processGBScore()" class="score-button">计算</button>
-                    <div class="output-time" id="time-output-score-gb">Ready to start!</div>
+                    <span>警告：本算番计算器不考虑不得相同原则。正常情况下不会导致番数不正确，如遇规则警察请自行鉴别。</span>
                 </div>
-                警告：本算番计算器不考虑不得相同原则。正常情况下不考虑不得相同原则不会导致番数不正确，但是可能导致番种名称不正确，如遇规则警察请自行鉴别。
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
+                <div class="output-time" id="time-output-score-gb">Ready to start!</div>
             </div>
         </div>
         <div class="section title-button-container">
@@ -292,9 +292,11 @@
                 const d = document.getElementById(ids[i]);
                 const b = document.getElementById("toggle-" + ids[i]);
                 const s = document.getElementById("brief-" + ids[i]);
+                const o = document.getElementById("options-" + ids[i]);
                 const v = d.style.display !== "none";
                 d.style.display = v ? "none" : "block";
                 s.style.display = v ? "block" : "none";
+                if (o) o.style.display = v ? "none" : "grid";
                 b.textContent = v ? "展开 ▼" : "折叠 ▲";
             }
             window.onload = function () {

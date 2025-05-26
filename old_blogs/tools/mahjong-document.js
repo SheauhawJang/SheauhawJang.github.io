@@ -385,7 +385,8 @@ function processGBScore() {
         }
         gb_worker.terminate();
         gb_worker = null;
-        document.getElementById("output-score-gb").innerHTML = e.data.result;
+        document.getElementById("output-score-gb").innerHTML = e.data.result.output;
+        document.getElementById("brief-output-score-gb").innerHTML = e.data.result.brief;
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     }
     const { aids, substeps, save } = gb_worker_info;

@@ -328,10 +328,10 @@ function GetFanDiv(fan) {
     fans[60] += fans[83];
     fans[61] += fans[83];
     let fanopt = []
-    for (let i = 1; i <= 83; ++i) {
-        if (fans[i]) fanopt.push(`<div class="devided-waiting-brief">${loc[`GB_FANNAME_${i}`]} ${GBScoreArray[i]}${loc.GB_FAN_unit}${fans[i] > 1 ? `×${fans[i]}` : ""}</div>`);
+    for (let i = 1; i <= 82; ++i) {
+        if (fans[i]) fanopt.push(`<tr><td style="text-align: left">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]}${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
     }
-    return `<div class="fan-names">${fanopt.join('')}</div>`;
+    return `${table_head}${fanopt.join('')}${table_tail}`;
 }
 function GBScore(aids, substeps, save, gw, mw, wt, info) {
     let infov = 0;
@@ -340,7 +340,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         if (wt) (infov += 8), infof.push((wt = 45));
         else (info += 8), infof.push(44);
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
-    if (info.includes(47) && !wt) (infov += 8), infof.push(47);
+    if (!info.includes(44) && info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1).id;
     let gans = { val: 0, fan: [] };
@@ -349,7 +349,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         if (err === 1) return loc.subtile_error_1;
         if (err === 2) return loc.subtile_error_2;
         let listen_cnt = save.waiting[wint].ans.length;
-        if (aids[0].length === 2 && ck === 0) (listen_cnt = 999), (infov += 6), infof.push(52);
+        if (aids[0].length === 2 && ck === 0 && !wt) (listen_cnt = 999), (infov += 6), infof.push(52);
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === aids[1].length) listen_cnt = 999;
         const m = nots * nsubots;
         let cm = 0;
@@ -379,14 +379,14 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 const predict_t = Math.round(t * m / cm);
                 const rate = cm / m * 100;
                 let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`
-                postMessage({ debug, output: `至少${gans.val}番\n${GetFanDiv(gans.fan)}` });
+                postMessage({ debug, output: `${loc.at_least}${gans.val}${loc.GB_FAN_unit}\n${GetFanDiv(gans.fan)}` });
             }
         }
         itots((ots) => itsubots((subots) => cal(ots, subots)));
     }
-    output = `${gans.val}番\n${GetFanDiv(gans.fan)}`;
+    output = `${gans.val}${loc.GB_FAN_unit}\n${GetFanDiv(gans.fan)}`;
     console.log(gans.fan);
-    return output;
+    return { output, brief: `${gans.val}${loc.GB_FAN_unit}` };
 }
 self.onmessage = function (e) {
     if (e.data.lang) setLoc(e.data.lang);

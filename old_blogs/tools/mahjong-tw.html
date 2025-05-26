@@ -150,13 +150,13 @@
                     <div class="input-subkeys">
                         <button onclick="clearInput()" class="subkey-button">清空</button>
                         <button onclick="sortInput()" class="subkey-button">理牌</button>
-                        <button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button">退格</button>
+                        <button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty">退格</button>
                         <button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi">吃</button>
-                        <button onclick="subtileInput(1)" class="subkey-button">碰</button>
-                        <button onclick="subtileInput(2, 1)" class="subkey-button">明槓</button>
-                        <button onclick="subtileInput(2, 5)" class="subkey-button">加槓</button>
-                        <button onclick="subtileInput(2, 0)" class="subkey-button">暗槓</button>
-                        <button onclick="subtileInput(3)" class="subkey-button">補花</button>
+                        <button onclick="subtileInput(1)" class="subkey-button enabled-no-flower">碰</button>
+                        <button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower">明槓</button>
+                        <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">加槓</button>
+                        <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">暗槓</button>
+                        <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">補花</button>
                     </div>
                 </div>
             </div>

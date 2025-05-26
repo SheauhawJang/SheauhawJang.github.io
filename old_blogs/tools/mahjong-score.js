@@ -595,6 +595,7 @@ function PreAllMelds(aids) {
                 if (aids[1][i].type % 4 === 0) ++ck;
                 else ++ek;
         }
+        if (submeld[i].length === 0) return { err: 2 };
         nsubots *= submeld[i].length;
     }
     const { cnt, dvd } = realdvd(getTiles(aids[0]), aids[0].length);

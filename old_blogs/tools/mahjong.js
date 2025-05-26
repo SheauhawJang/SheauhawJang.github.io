@@ -1215,3 +1215,6 @@ function canBeReal(i, tids) {
     for (let j = 0; j < tids.length; ++j) if (!isJokerEqual(i, tids[j])) return false;
     return true;
 }
+function isFlower(id) {
+    return (id >= 34 && id < 42) || id == 50;
+}

@@ -282,6 +282,10 @@ function drawInputCards() {
             .map((a) => a.id)
             .sort((a, b) => a - b)
     );
+    const noflower = document.getElementsByClassName("enabled-no-flower");
+    for (let i = 0; i < noflower.length; ++i) noflower[i].disabled = tids.length === 0 || isFlower(tids.at(-1).id);
+    const noempty = document.getElementsByClassName("enable-no-empty");
+    for (let i = 0; i < noempty.length; ++i) noempty[i].disabled = tids.length === 0;
 }
 function remakeInput(ipids) {
     let newInput = joinHand(ipids[0]);

@@ -52,7 +52,7 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             return 0;
         });
         for (const { cnt, bcnt, gcnt, id } of cnts) {
-            const verb = (id >= 34 && id < 42) || id == 50 ? loc.bu : loc.da;
+            const verb = isFlower(id) ? loc.bu : loc.da;
             if (gcnt !== undefined) {
                 const ratio = (gcnt / cnt) * 100;
                 result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` + `<td class="devided-waiting-td">` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td></tr>`;
@@ -358,7 +358,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         ans.fan = [...ans.fan, ...infof];
         if (ans.val + infov > gans.val) gans = ans;
         ++cm;
-        if (!(cm & 131071)) {
+        if (!(cm & 524287)) {
             const t = new Date() - st;
             const predict_t = Math.round((t * m) / cm);
             const rate = (cm / m) * 100;
@@ -370,8 +370,8 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     if (substeps[0] === -1) {
         const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
         const { err, itots, itsubots, ek, ck } = p0;
-        if (err === 1) return loc.subtile_error_1;
-        if (err === 2) return loc.subtile_error_2;
+        if (err === 1) return { output: loc.subtile_error_1, brief: "" };
+        if (err === 2) return { output: loc.subtile_error_2, brief: "" };
         if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (listen_cnt = 999), (infov += 6), infof.push(52);
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) listen_cnt = 999;
         itots((ots) => itsubots((subots) => cal(ots, subots, ck, ek)));

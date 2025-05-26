@@ -161,13 +161,13 @@
                     <div class="input-subkeys">
                         <button onclick="clearInput()" class="subkey-button">クリア</button>
                         <button onclick="sortInput()" class="subkey-button">理牌</button>
-                        <button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button">削除</button>
+                        <button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty">削除</button>
                         <button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi">チー</button>
-                        <button onclick="subtileInput(1)" class="subkey-button">ポン</button>
-                        <button onclick="subtileInput(2, 1)" class="subkey-button">大明槓</button>
-                        <button onclick="subtileInput(2, 5)" class="subkey-button">加槓</button>
-                        <button onclick="subtileInput(2, 0)" class="subkey-button">暗槓</button>
-                        <button onclick="subtileInput(3)" class="subkey-button">抜き</button>
+                        <button onclick="subtileInput(1)" class="subkey-button enabled-no-flower">ポン</button>
+                        <button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower">大明槓</button>
+                        <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">加槓</button>
+                        <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">暗槓</button>
+                        <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">抜き</button>
                     </div>
                 </div>
             </div>

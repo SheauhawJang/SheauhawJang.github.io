@@ -320,23 +320,69 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
     return { output, substep };
 }
 function GBScore(aids, substeps, save, gw, mw, wt, info) {
-    const ans = GBStart(aids, substeps, save, gw, mw, wt, info);
-    if (ans.err) {
-        return ans.err;
+    let infov = 0;
+    let infof = [];
+    if (info.includes(44))
+        if (wt) (infov += 8), infof.push((wt = 45));
+        else (info += 8), infof.push(44);
+    if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
+    if (info.includes(47) && !wt) (infov += 8), infof.push(47);
+    else if (info.includes(58)) (infov += 4), infof.push(58);
+    const wint = aids[0].at(-1).id;
+    let gans = { val: 0, fan: [] };
+    if (substeps[0] === -1) {
+        const { err, itots, itsubots, nots, nsubots, ek, ck } = PreAllMelds(aids);
+        if (err === 1) return loc.subtile_error_1;
+        if (err === 2) return loc.subtile_error_2;
+        let listen_cnt = save.waiting[wint].ans.length;
+        if (aids[0].length === 2 && ck === 0) (listen_cnt = 999), (infov += 6), infof.push(52);
+        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === aids[1].length) listen_cnt = 999;
+        const m = nots * nsubots;
+        let cm = 0;
+        const st = new Date();
+        function cal(ots, subots) {
+            let cp = 0;
+            let wintf = 0;
+            for (let k = 0; k < ots.length; ++k)
+                if (ots[k].length === 3 && !isSeq(ots[k])) ++cp;
+                else {
+                    if (wintf) continue;
+                    if (ots[k].length === 2) {
+                        if (isJokerEqual(ots[k][0], wint)) wintf = 79;
+                    } else if (isJokerEqual(ots[k][0], wint)) wintf = 77;
+                    else if (isJokerEqual(ots[k][1], wint)) wintf = 78;
+                    else if (isJokerEqual(ots[k][0], wint)) wintf = 77;
+                }
+            if (!wt && !wintf) --cp;
+            let ans = GBKernel([...ots, subots], aids, ck, ek, cp, mw, gw, wt);
+            if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
+            ans.val += infov;
+            ans.fan = [...ans.fan, ...infof];
+            if (ans.val + infov > gans.val) gans = ans;
+            ++cm;
+            if (!(cm & 131071)) {
+                const t = new Date() - st;
+                const predict_t = Math.round(t * m / cm);
+                const rate = cm / m * 100;
+                let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`
+                postMessage({ debug });
+            }
+        }
+        itots((ots) => itsubots((subots) => cal(ots, subots)));
     }
-    output = `${ans.val}番\n`;
-    console.log(ans.fan);
+    output = `${gans.val}番\n`;
+    console.log(gans.fan);
     let fans = new Array(84).fill(0);
-    for (let i = 0; i < ans.fan.length; ++i) {
-        if (ans.fan[i] > 0) ++fans[ans.fan[i]];
-        else --fans[-ans.fan[i]];
+    for (let i = 0; i < gans.fan.length; ++i) {
+        if (gans.fan[i] > 0) ++fans[gans.fan[i]];
+        else --fans[-gans.fan[i]];
     }
     let fanopt = []
     for (let i = 1; i <= 83; ++i) {
         for (let j = 0; j < fans[i]; ++j) fanopt.push(loc[`GB_FANNAME_${i}`]);
     }
     output += fanopt.join(',') + "\n";
-    console.log(ans.fan);
+    console.log(gans.fan);
     return output;
 }
 self.onmessage = function (e) {

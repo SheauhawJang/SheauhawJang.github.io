@@ -378,6 +378,10 @@ function processGBScore() {
     info = Array.from(info).map((x) => Number(x.value));
     gb_worker = new Worker("mahjong-worker.js");
     gb_worker.onmessage = function (e) {
+        if ('debug' in e.data) {
+            document.getElementById("time-output-score-gb").textContent = e.data.debug;
+            return;
+        }
         gb_worker.terminate();
         gb_worker = null;
         document.getElementById("output-score-gb").innerHTML = e.data.result;

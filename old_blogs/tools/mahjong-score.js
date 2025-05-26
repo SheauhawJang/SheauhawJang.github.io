@@ -515,8 +515,6 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
             else if (isSeq(melds[i])) seq.push(Math.min(...melds[i]));
             else tri.push(melds[i][0]);
         seq = seq.sort((a, b) => a - b);
-        console.log(seq);
-        console.log(ThreeMixedShiftOne(seq[0], seq[1], seq[3]));
         tri = tri.sort((a, b) => a - b);
         let orphan = Array(tri.length).fill(0);
         for (let i = 0; i < orphan.length; ++i)
@@ -533,23 +531,33 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
     }
     return { val: v, fan: f };
 }
-function cartesianProduct(arrays) {
-    if (arrays.length === 0) return [[]];
-    const [first, ...rest] = arrays;
-    const restProduct = cartesianProduct(rest);
-    return first.flatMap((item) => restProduct.map((prod) => [item, ...prod]));
+function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i = 0) {
+    if (arrays.length === i) {
+        g(prefix);
+        return;
+    }
+    const currect = arrays[i];
+    for (let j = 0; j < currect.length; ++j) {
+        prefix[i] = currect[j];
+        cartesianProduct(g, arrays, prefix, i + 1);
+    }
 }
 function PreAllMelds(aids) {
+    let seq = Array.from({ length: 25 }, (_, i) => [i, i + 1, i + 2]);
+    let tri = Array.from({ length: sizeUT }, (_, i) => [i, i, i]);
+    let quad = Array.from({ length: sizeUT }, (_, i) => [i, i, i, i]);
+    let pair = Array.from({ length: sizeUT }, (_, i) => [i, i]);
     let submeld = Array(aids[1].length)
         .fill(null)
         .map(() => []);
     let ek = 0,
         ck = 0;
+    let nsubots = 1;
     for (let i = 0; i < aids[1].length; ++i) {
         let wfc = aids[1][i].map((x) => x.id);
-        if (wfc.length > 4 || wfc.length < 3) return { err: 0 };
+        if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
         if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
-        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 1 };
+        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
         if (isSeq(wfc)) {
             if (wfc[2] < sizeUT) submeld[i].push(wfc);
             else {
@@ -561,82 +569,35 @@ function PreAllMelds(aids) {
         } else {
             for (let j = 0; j < sizeUT; ++j) {
                 if (canBeReal(j, wfc)) {
-                    submeld[i].push(Array(wfc.length).fill(j));
-                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push([j, j + 1, j + 2]);
+                    submeld[i].push(wfc.length === 3 ? tri[i] : quad[i]);
+                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[i]);
                 }
             }
             if (wfc.length === 4)
                 if (aids[1][i].type % 4 === 0) ++ck;
                 else ++ek;
         }
+        nsubots *= submeld[i].length;
     }
-    console.time("cartesianProduct");
-    let subots = cartesianProduct(submeld);
-    console.timeLog("cartesianProduct");
-    console.log(subots.length);
     const { cnt, dvd } = realdvd(getTiles(aids[0]), aids[0].length);
     const nmp = Math.floor(aids[0].length / 3) + (aids[0].length % 3 ? 1 : 0);
-    let melds = [];
-    let sze = 0;
-    let ots = Array(cnt).fill(null);
-    function dfs(i, dpi) {
-        if (melds.length === nmp) {
-            ots[sze++] = melds.slice();
+    let melds = Array(nmp).fill(null);
+    let msze = 0;
+    function dfs(f, i = 0, dpi = 0) {
+        if (msze === nmp) {
+            f(melds);
             return;
         }
         const ans = dvd[dpi];
         for (let j = 0; j < ans.nxt.length; ++j) {
             const n = ans.nxt[j];
-            for (let p = 0; p < n.p; ++p) melds.push([i, i]);
-            for (let s = 0; s < n.s; ++s) melds.push([i, i + 1, i + 2]);
-            for (let k = 0; k < n.k; ++k) melds.push([i, i, i]);
-            dfs(i + 1, n.dpi);
-            for (let m = 0; m < n.p + n.s + n.k; ++m) melds.pop();
+            for (let p = 0; p < n.p; ++p) melds[msze++] = pair[i];
+            for (let s = 0; s < n.s; ++s) melds[msze++] = seq[i];
+            for (let k = 0; k < n.k; ++k) melds[msze++] = tri[i];
+            dfs(f, i + 1, n.dpi);
+            msze -= n.p + n.s + n.k;
         }
     }
-    console.time("dfs");
-    dfs(0, 0);
-    console.timeLog("dfs");
-    return { subots, ots, ck, ek };
-}
-function GBStart(aids, substeps, save, gw, mw, wt, info) {
-    let infov = 0;
-    let infof = [];
-    if (info.includes(44))
-        if (wt) (infov += 8), infof.push((wt = 45));
-        else (info += 8), infof.push(44);
-    if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
-    if (info.includes(47) && !wt) (infov += 8), infof.push(47);
-    else if (info.includes(58)) (infov += 4), infof.push(58);
-    const wint = aids[0].at(-1).id;
-    let gans = { val: 0, fan: [] };
-    if (substeps[0] === -1) {
-        const { ots, subots, ek, ck } = PreAllMelds(aids);
-        let listen_cnt = save.waiting[wint].ans.length;
-        if (aids[0].length === 2 && ck === 0) (listen_cnt = 999), (infov += 6), infof.push(52);
-        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === aids[1].length) listen_cnt = 999;
-        for (let i = 0; i < ots.length; ++i) {
-            for (let j = 0; j < subots.length; ++j) {
-                let cp = 0;
-                let wintf = 0;
-                for (let k = 0; k < ots[i].length; ++k)
-                    if (ots[i][k].length === 3 && !isSeq(ots[i][k])) ++cp;
-                    else {
-                        if (wintf) continue;
-                        if (ots[i][k].length === 2) {
-                            if (isJokerEqual(ots[i][k][0], wint)) wintf = 79;
-                        } else if (isJokerEqual(ots[i][k][0], wint)) wintf = 77;
-                        else if (isJokerEqual(ots[i][k][1], wint)) wintf = 78;
-                        else if (isJokerEqual(ots[i][k][0], wint)) wintf = 77;
-                    }
-                if (!wt && !wintf) --cp;
-                let ans = GBKernel([...ots[i], ...subots[j]], aids, ck, ek, cp, mw, gw, wt);
-                if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
-                ans.val += infov;
-                ans.fan = [...ans.fan, ...infof];
-                if (ans.val + infov > gans.val) gans = ans;
-            }
-        }
-    }
-    return gans;
+    console.log(cnt, nsubots);
+    return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
 }

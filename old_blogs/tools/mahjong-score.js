@@ -548,39 +548,40 @@ function GBStart(aids, substeps, save, gw, mw, wt, info) {
     if (info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1).id;
-    let listen_cnt = save.waiting[wint].ans.length;
-    if (aids[0].length === 2) (listen_cnt = 999), (infov += 6), infof.push(52);
-    let gans = { val: 0 };
+    let gans = { val: 0, fan: [] };
     if (substeps[0] === -1) {
         let submeld = Array(aids[1].length)
             .fill(null)
             .map(() => []);
+        let ek = 0, ck = 0;
         for (let i = 0; i < aids[1].length; ++i) {
-            let wfc = aids[1][i];
-            if (wfc.length > 4 || wfc.length < 3) return {};
-            if (wfc.length === 3) wfc = wfc.slice().sort((a, b) => a - b);
-            if (!isMeld(wfc) && !isQuad(wfc)) return {};
+            let wfc = aids[1][i].map((x) => x.id);
+            if (wfc.length > 4 || wfc.length < 3) return { err: 0 };
+            if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
+            if (!isMeld(wfc) && !isQuad(wfc)) return { err: 1 };
             if (isSeq(wfc)) {
                 if (wfc[2] < sizeUT) submeld[i].push(wfc);
                 else {
-                    const [a, b, c] = wfc;
+                    const [a, b] = wfc;
                     if (isSeq([a - 1, a, b])) submeld[i].push([a - 1, a, b]);
                     if (isSeq([a, b, b + 1])) submeld[i].push([a, b, b + 1]);
                     if (isSeq([a, a + 1, b])) submeld[i].push([a, a + 1, b]);
                 }
             } else {
-                let nxti;
-                for (let i = 0; i < sizeUT; i = nxti) {
-                    if (canBeReal(i, wfc)) {
-                        for (nxti = i; JokerA[i] === JokerA[nxti]; ++nxti) {
-                            submeld[nxti].push(Array(wfc.length).fill(nxti));
-                            submeld[nxti].at(-1).type = aids[1][i].type;
-                            if (wfc.length === 3 && SeqCheck(nxti)) submeld[nxti].push([nxti, nxti + 1, nxti + 2]);
-                        }
+                for (let j = 0; j < sizeUT; ++j) {
+                    if (canBeReal(j, wfc)) {
+                        submeld[i].push(Array(wfc.length).fill(j));
+                        if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[j].push([j, j + 1, j + 2]);
                     }
                 }
+                if (wfc.length === 4)
+                    if (aids[1][i].type % 4 === 0) ++ck;
+                    else ++ek;
             }
         }
+        let listen_cnt = save.waiting[wint].ans.length;
+        if (aids[0].length === 2 && ck === 0) (listen_cnt = 999), (infov += 6), infof.push(52);
+        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === aids[1].length) listen_cnt = 999;
         let subots = cartesianProduct(submeld);
         const { dvd } = realdvd(getTiles(aids[0]), aids[0].length);
         const nm = Math.floor(aids[0].length / 3);
@@ -607,12 +608,6 @@ function GBStart(aids, substeps, save, gw, mw, wt, info) {
         dfs(0, 0);
         for (let i = 0; i < ots.length; ++i) {
             for (let j = 0; j < subots.length; ++j) {
-                let ck = 0;
-                let ek = 0;
-                for (let k = 0; k < subots[j].length; ++k)
-                    if (subots[j][k] === 4) 
-                        if (subots[j][k].type % 4 === 0) ++ck;
-                        else ++ek;
                 let cp = 0;
                 let wintf = 0;
                 for (let k = 0; k < ots[i].length; ++k)

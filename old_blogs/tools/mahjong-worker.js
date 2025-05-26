@@ -321,6 +321,9 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
 }
 function GBScore(aids, substeps, save, gw, mw, wt, info) {
     const ans = GBStart(aids, substeps, save, gw, mw, wt, info);
+    if (ans.err) {
+        return ans.err;
+    }
     output = `${ans.val}番\n`;
     let fans = new Array(84).fill(0);
     for (let i = 0; i < ans.fan.length; ++i) {

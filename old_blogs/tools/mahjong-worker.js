@@ -20,14 +20,7 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             const gcnt = CountWaitingCards(tiles, subtiles, gans);
             const cnt = gcnt + bcnt;
             const ratio = (gcnt / cnt) * 100;
-            result +=
-                `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td>` +
-                `<td class="devided-waiting-td">` +
-                `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` +
-                `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` +
-                `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` +
-                `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` +
-                `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td>`;
+            result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td>` + `<td class="devided-waiting-td">` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` + `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td>`;
         } else {
             const cnt = CountWaitingCards(tiles, subtiles, ans);
             result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
@@ -62,18 +55,8 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             const verb = (id >= 34 && id < 42) || id == 50 ? loc.bu : loc.da;
             if (gcnt !== undefined) {
                 const ratio = (gcnt / cnt) * 100;
-                result +=
-                    `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` +
-                    `<td class="devided-waiting-td">` +
-                    `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` +
-                    `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` +
-                    `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` +
-                    `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` +
-                    `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td></tr>`;
-            } else
-                result +=
-                    `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` +
-                    `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+                result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` + `<td class="devided-waiting-td">` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td></tr>`;
+            } else result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` + `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
         return { output: table_head + result + table_tail, ans: { waiting: save, subchecks } };
     }
@@ -115,7 +98,8 @@ function JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd) {
     table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step4)}</td></tr>`;
     postMessage({ output: table_head + table + table_tail });
     let stepJP = step4;
-    let step7 = Infinity, step13 = Infinity;
+    let step7 = Infinity,
+        step13 = Infinity;
     if (full_tcnt === 14 && subcnt === 0) {
         step7 = PairStep(tiles, true);
         table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(step7)}</td></tr>`;
@@ -175,7 +159,9 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
     let stepGB = step;
     table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step)}</td></tr>`;
     postMessage({ output: table_head + table + table_tail });
-    let step7 = Infinity, step16 = Infinity, stepkd = Infinity;
+    let step7 = Infinity,
+        step16 = Infinity,
+        stepkd = Infinity;
     if (full_tcnt === 14 && subcnt === 0) {
         step7 = PairStep(tiles, false);
         table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(step7)}</td></tr>`;
@@ -256,7 +242,9 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
     let stepTW = step;
     table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step)}</td></tr>`;
     postMessage({ output: table_head + table + table_tail });
-    let step13 = Infinity, step16 = Infinity, stepnico = Infinity;
+    let step13 = Infinity,
+        step16 = Infinity,
+        stepnico = Infinity;
     if (full_tcnt === 17 && subcnt === 0) {
         stepnico = NiconicoStep(tiles);
         table += `<tr><td style="padding-left: 0px;">${loc.niconico}${loc.colon}</td><td>${getWaitingType(stepnico)}</td></tr>`;
@@ -321,17 +309,16 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
 }
 function GetFanDiv(fan) {
     let fans = new Array(84).fill(0);
-    for (let i = 0; i < fan.length; ++i) {
+    for (let i = 0; i < fan.length; ++i)
         if (fan[i] > 0) ++fans[fan[i]];
         else --fans[-fan[i]];
-    }
+
     fans[60] += fans[83];
     fans[61] += fans[83];
-    let fanopt = []
-    for (let i = 1; i <= 82; ++i) {
-        if (fans[i]) fanopt.push(`<tr><td style="text-align: left">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]}${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
-    }
-    return `${table_head}${fanopt.join('')}${table_tail}`;
+    let fanopt = [];
+    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td style="text-align: left">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]}${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
+
+    return `${table_head}${fanopt.join("")}${table_tail}`;
 }
 function GBScore(aids, substeps, save, gw, mw, wt, info) {
     let infov = 0;
@@ -376,17 +363,18 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             ++cm;
             if (!(cm & 131071)) {
                 const t = new Date() - st;
-                const predict_t = Math.round(t * m / cm);
-                const rate = cm / m * 100;
-                let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`
+                const predict_t = Math.round((t * m) / cm);
+                const rate = (cm / m) * 100;
+                let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
                 postMessage({ debug, output: `${loc.at_least}${gans.val}${loc.GB_FAN_unit}\n${GetFanDiv(gans.fan)}` });
             }
         }
         itots((ots) => itsubots((subots) => cal(ots, subots)));
     }
-    output = `${gans.val}${loc.GB_FAN_unit}\n${GetFanDiv(gans.fan)}`;
+    let ptchange = wt ? `自家+${gans.val * 3 + 24}，他家-${gans.val + 8}` : `自家+${gans.val + 24}，铳家-${gans.val + 8}，他家-8`;
+    outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
     console.log(gans.fan);
-    return { output, brief: `${gans.val}${loc.GB_FAN_unit}` };
+    return { output: outputs.join(""), brief: outputs[0] };
 }
 self.onmessage = function (e) {
     if (e.data.lang) setLoc(e.data.lang);

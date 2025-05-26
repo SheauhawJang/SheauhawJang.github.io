@@ -136,14 +136,14 @@ function splitTiles(s) {
             bonus.push(round);
             continue;
         } else {
-            const parts = square.split(',');
+            const parts = square.split(",");
             const ans = splitKernel(parts[0]);
             ans.type = Number(parts[1]) || 0;
             subtiles.push(ans);
         }
     }
-    s = s.replace(regex, ' ');
-    return [splitKernel(s), subtiles, splitKernel(bonus.join(' '))];
+    s = s.replace(regex, " ");
+    return [splitKernel(s), subtiles, splitKernel(bonus.join(" "))];
 }
 // Check left, left+1, left+2 can be a sequence or not
 const SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -818,13 +818,7 @@ function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
     return { ans, gans, checked: discheck.some(Boolean) };
 }
 function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
-    discheck ??= [
-        step === substep[0],
-        tcnt === 14 && step === substep[1],
-        tcnt === 14 && step === substep[2],
-        tcnt === 14 && step === substep[3],
-        tcnt >= 9 && step === substep[4],
-    ];
+    discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2], tcnt === 14 && step === substep[3], tcnt >= 9 && step === substep[4]];
     const nstep = Math.max(step, 0);
     function waiting(tiles, step, d, g, s) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, false) < step) return true;
@@ -869,7 +863,7 @@ function prepareDvd(nm, np, tiles) {
         ldDvd[ldi + 3] = ldDvd[ldi + 2] * (tiles[JokerA[i]] + 1);
         let mui = 0,
             muj = 0;
-        if (SeqCheck(i - 1)) mui = tiles[i], muj = tiles[i + 1];
+        if (SeqCheck(i - 1)) (mui = tiles[i]), (muj = tiles[i + 1]);
         if (SeqCheck(i - 2)) mui = tiles[i];
         ldDvd[ldi + 4] = ldDvd[ldi + 3] * (muj + 1);
         ldDvd[ldi + 5] = ldDvd[ldi + 4] * (mui + 1);

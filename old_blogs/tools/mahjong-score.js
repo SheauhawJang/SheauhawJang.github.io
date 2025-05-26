@@ -434,9 +434,10 @@ function isPengpeng(melds) {
 }
 function countHog(melds) {
     let tiles = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds.length; ++i) if (melds[i].length < 4) 
-        if (melds[i].length === 1) tiles[melds[i][0]] += 3;
-        else for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length < 4)
+            if (melds[i].length === 1) tiles[melds[i][0]] += 3;
+            else for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
     let cnt = 0;
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
@@ -564,7 +565,7 @@ function PreAllMelds(aids) {
         if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
         if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
         if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
-        if (isSeq(wfc)) {
+        if (isSeq(wfc))
             if (wfc[2] < sizeUT) submeld[i].push(wfc);
             else {
                 const [a, b] = wfc;
@@ -572,13 +573,12 @@ function PreAllMelds(aids) {
                 if (isSeq([a, b, b + 1])) submeld[i].push([a, b, b + 1]);
                 if (isSeq([a, a + 1, b])) submeld[i].push([a, a + 1, b]);
             }
-        } else {
-            for (let j = 0; j < sizeUT; ++j) {
+        else {
+            for (let j = 0; j < sizeUT; ++j)
                 if (canBeReal(j, wfc)) {
                     submeld[i].push(wfc.length === 3 ? tri[j] : quad[j]);
                     if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[j]);
                 }
-            }
             if (wfc.length === 4)
                 if (aids[1][i].type % 4 === 0) ++ck;
                 else ++ek;

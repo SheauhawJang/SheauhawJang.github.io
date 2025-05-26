@@ -449,7 +449,7 @@ function countHog(melds) {
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
 }
-function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
+function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -524,13 +524,22 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
     if (!skip_bind) {
         let seq = [],
             tri = [];
+        let nt = 0, wt = 0, dt = 0, h;
         for (let i = 0; i < melds.length; ++i)
-            if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
-            else if (melds[i].length === 3) seq.push(melds[i][0]);
-            else tri.push(melds[i][0]);
+            if (melds[i].length === 3) seq.push(melds[i][0]);
+            else {
+                if (melds[i].length === 2) tri.push(GetHeadFromId(h = melds[i][0]));
+                else tri.push(melds[i][0]);
+                if (melds[i][0] < 27) ++nt;
+                else if (melds[i][0] < 31) ++wt;
+                else ++dt;
+            }
+        if (h < 27) --nt;
+        let predict_v = Math.max(seq.length - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + Math.max(wt - 1, 0) * 30 + Math.max(dt - 1, 0) * 44;
+        if (v + predict_v <= gans) return { val: 0, fan: [] };
+        let orphan = Array(tri.length).fill(0);
         seq = seq.sort((a, b) => a - b);
         tri = tri.sort((a, b) => a - b);
-        let orphan = Array(tri.length).fill(0);
         for (let i = 0; i < orphan.length; ++i)
             if (OrphanArray[tri[i]])
                 if (mw === gw && mw === tri[i]) (orphan[i] = 83), (v += 4);

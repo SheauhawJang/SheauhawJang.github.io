@@ -352,7 +352,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 else if (isJokerEqual(ots[k][2], wint)) wintf = 77;
             }
         if (wint && !wt && !wintf) --cp;
-        let ans = GBKernel([...ots, ...subots, ...others], aids, ck, ek, cp, mw, gw, wt);
+        let ans = GBKernel([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, mw, gw, wt);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan = [...ans.fan, ...infof];

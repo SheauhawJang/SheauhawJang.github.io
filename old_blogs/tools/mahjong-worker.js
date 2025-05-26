@@ -329,15 +329,17 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (!info.includes(44) && info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
-    const wint = aids[0].at(-1).id;
+    //if (aids[0].length === 0) return { output: "", outputs: "" };
+    const wint = aids[0].at(-1)?.id;
     let gans = { val: 0, fan: [] };
     if (substeps[0] === -1) {
+        const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
         const { err, itots, itsubots, nots, nsubots, ek, ck } = PreAllMelds(aids);
         if (err === 1) return loc.subtile_error_1;
         if (err === 2) return loc.subtile_error_2;
-        let listen_cnt = save.waiting[wint].ans.length;
-        if (aids[0].length === 2 && ck === 0 && !wt) (listen_cnt = 999), (infov += 6), infof.push(52);
-        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === aids[1].length) listen_cnt = 999;
+        let listen_cnt = save.waiting[wint]?.ans.length ?? 999;
+        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (listen_cnt = 999), (infov += 6), infof.push(52);
+        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) listen_cnt = 999;
         const m = nots * nsubots;
         let cm = 0;
         const st = new Date();
@@ -354,7 +356,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                     else if (isJokerEqual(ots[k][1], wint)) wintf = 78;
                     else if (isJokerEqual(ots[k][0], wint)) wintf = 77;
                 }
-            if (!wt && !wintf) --cp;
+            if (wint && !wt && !wintf) --cp;
             let ans = GBKernel([...ots, ...subots], aids, ck, ek, cp, mw, gw, wt);
             if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
             ans.val += infov;
@@ -370,6 +372,12 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             }
         }
         itots((ots) => itsubots((subots) => cal(ots, subots)));
+        if (gans.val === 0 && nmp >= 5) {
+            gans.val = 8;
+            gans.fan = [43];
+        }
+        gans.val += aids[2].length;
+        gans.fan.push(...Array(aids[2].length).fill(81));
     }
     let ptchange = wt ? `自家+${gans.val * 3 + 24}，他家-${gans.val + 8}` : `自家+${gans.val + 24}，铳家-${gans.val + 8}，他家-8`;
     outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];

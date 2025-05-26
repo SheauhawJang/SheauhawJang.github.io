@@ -388,37 +388,44 @@ function ninegate(melds, tiles, wintile) {
     return true;
 }
 // prettier-ignore
+let seq = Array.from({ length: 25 }, (_, i) => [i, i + 1, i + 2]);
+let tri = Array.from({ length: sizeUT }, (_, i) => [i]);
+let quad = Array.from({ length: sizeUT }, (_, i) => [i, i, i, i]);
+let pair = Array.from({ length: sizeUT }, (_, i) => [i, i]);
 const PureDoubleDragon = [
-    [[0, 1, 2], [0, 1, 2], [6, 7, 8], [6, 7, 8], [4, 4]],
-    [[9, 10, 11], [9, 10, 11], [15, 16, 17], [15, 16, 17], [13, 13]],
-    [[18, 19, 20], [18, 19, 20], [24, 25, 26], [24, 25, 26], [22, 22]],
+    [seq[0], seq[0], seq[6], seq[6], pair[4]],
+    [seq[9], seq[9], seq[15], seq[15], pair[13]],
+    [seq[18], seq[18], seq[24], seq[24], pair[22]],
 ].map(normalize);
 // prettier-ignore
 const MixedDoubleDragon = [
-    [[0, 1, 2], [0, 1, 2], [15, 16, 17], [15, 16, 17], [22, 22]],
-    [[0, 1, 2], [0, 1, 2], [24, 25, 26], [24, 25, 26], [13, 13]],
-    [[9, 10, 11], [9, 10, 11], [6, 7, 8], [6, 7, 8], [22, 22]],
-    [[9, 10, 11], [9, 10, 11], [24, 25, 26], [24, 25, 26], [4, 4]],
-    [[18, 19, 20], [18, 19, 20], [6, 7, 8], [6, 7, 8], [13, 13]],
-    [[18, 19, 20], [18, 19, 20], [15, 16, 17], [15, 16, 17], [4, 4]],
+    [seq[0], seq[0], seq[15], seq[15], pair[22]],
+    [seq[0], seq[0], seq[24], seq[24], pair[13]],
+    [seq[9], seq[9], seq[6], seq[6], pair[22]],
+    [seq[9], seq[9], seq[24], seq[24], pair[4]],
+    [seq[18], seq[18], seq[6], seq[6], pair[13]],
+    [seq[18], seq[18], seq[15], seq[15], pair[4]],
 ].map(normalize);
+function compareArray(a, b) {
+    if (a.length !== b.length) return a.length - b.length;
+    for (let i = 0; i < a.length; ++i) if (a[i] !== b[i]) return a[i] - b[i];
+    return 0;
+}
 function normalize(arr) {
-    return arr
-        .map((sub) => [...sub].sort((a, b) => a - b)) // sort each sub-array
-        .sort((a, b) => a.join(",").localeCompare(b.join(",")));
+    return arr.sort(compareArray);
 }
 function deepArrayEqual(na, nb) {
     if (na.length !== nb.length) return false;
-    return na.every((sub, i) => sub.length === nb[i].length && sub.every((x, j) => x === nb[i][j]));
+    for (let i = 0; i < na.length; ++i) if (compareArray(na[i], nb[i])) return false;
+    return true;
 }
 function isPureDoubleDragon(melds) {
-    const normal = normalize(melds);
-    for (let i = 0; i < PureDoubleDragon.length; ++i) if (deepArrayEqual(normal, PureDoubleDragon[i])) return true;
+    normalize(melds);
+    for (let i = 0; i < PureDoubleDragon.length; ++i) if (deepArrayEqual(melds, PureDoubleDragon[i])) return true;
     return false;
 }
 function isMixedDoubleDragon(melds) {
-    const normal = normalize(melds);
-    for (let i = 0; i < MixedDoubleDragon.length; ++i) if (deepArrayEqual(normal, MixedDoubleDragon[i])) return true;
+    for (let i = 0; i < MixedDoubleDragon.length; ++i) if (deepArrayEqual(melds, MixedDoubleDragon[i])) return true;
     return false;
 }
 function isPinghe(melds) {
@@ -550,10 +557,6 @@ function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i
     }
 }
 function PreAllMelds(aids) {
-    let seq = Array.from({ length: 25 }, (_, i) => [i, i + 1, i + 2]);
-    let tri = Array.from({ length: sizeUT }, (_, i) => [i]);
-    let quad = Array.from({ length: sizeUT }, (_, i) => [i, i, i, i]);
-    let pair = Array.from({ length: sizeUT }, (_, i) => [i, i]);
     let submeld = Array(aids[1].length)
         .fill(null)
         .map(() => []);

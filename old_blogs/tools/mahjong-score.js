@@ -315,6 +315,7 @@ function isMask(melds, mask) {
     return true;
 }
 function isSameColor(melds) {
+    console.log(melds);
     let color = -1;
     for (let i = 0; i < melds.length; ++i) {
         if (melds[i][0] >= 27) return false;
@@ -537,6 +538,7 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
 }
 function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i = 0) {
     if (arrays.length === i) {
+        console.log(prefix);
         g(prefix);
         return;
     }

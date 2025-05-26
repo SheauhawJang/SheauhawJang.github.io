@@ -372,7 +372,9 @@ function countLack(melds) {
 function ninegate(melds, tiles, wintile) {
     if (!isSameColor(melds)) return false;
     const light = Array(9).fill(0);
-    for (let i = 0; i < melds.length; ++i) for (let j = 0; j < melds[i].length; ++j) ++light[melds[i][j] % 9];
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length === 1) light[melds[i][0] % 9] += 3;
+        else for (let j = 0; j < melds[i].length; ++j) ++light[melds[i][j] % 9];
     if (light[0] < 3 || light[8] < 3) return false;
     for (let i = 1; i < 8; ++i) if (light[i] !== 1 && light[i] !== 2) return false;
     tiles = tiles.slice();
@@ -421,16 +423,18 @@ function isPinghe(melds) {
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 2) {
             if (melds[i][0] >= 27) return false;
-        } else if (!isSeq(melds[i])) return false;
+        } else if (melds[i].length !== 3) return false;
     return true;
 }
 function isPengpeng(melds) {
-    for (let i = 0; i < melds.length; ++i) if (isSeq(melds[i])) return false;
+    for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) return false;
     return true;
 }
 function countHog(melds) {
     let tiles = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds.length; ++i) if (melds[i].length < 4) for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
+    for (let i = 0; i < melds.length; ++i) if (melds[i].length < 4) 
+        if (melds[i].length === 1) tiles[melds[i][0]] += 3;
+        else for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
     let cnt = 0;
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
@@ -512,7 +516,7 @@ function GBKernel(melds, aids, ck, ek, cp, mw, gw, zm) {
             tri = [];
         for (let i = 0; i < melds.length; ++i)
             if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
-            else if (isSeq(melds[i])) seq.push(Math.min(...melds[i]));
+            else if (melds[i].length === 3) seq.push(melds[i][0]);
             else tri.push(melds[i][0]);
         seq = seq.sort((a, b) => a - b);
         tri = tri.sort((a, b) => a - b);
@@ -544,7 +548,7 @@ function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i
 }
 function PreAllMelds(aids) {
     let seq = Array.from({ length: 25 }, (_, i) => [i, i + 1, i + 2]);
-    let tri = Array.from({ length: sizeUT }, (_, i) => [i, i, i]);
+    let tri = Array.from({ length: sizeUT }, (_, i) => [i]);
     let quad = Array.from({ length: sizeUT }, (_, i) => [i, i, i, i]);
     let pair = Array.from({ length: sizeUT }, (_, i) => [i, i]);
     let submeld = Array(aids[1].length)

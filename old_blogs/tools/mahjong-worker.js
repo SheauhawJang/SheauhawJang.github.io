@@ -384,7 +384,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     }
     let ptchange = wt ? `自家+${gans.val * 3 + 24}，他家-${gans.val + 8}` : `自家+${gans.val + 24}，铳家-${gans.val + 8}，他家-8`;
     outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
-    console.log(gans.fan);
+    console.log(filter_cnt, gans.fan);
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 self.onmessage = function (e) {

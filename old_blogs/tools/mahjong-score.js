@@ -88,6 +88,8 @@ function AddMeldAndOrphan(s, o, x, y) {
 }
 const seqsave = new Map();
 const trisave = new Map();
+const ColorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4];
+const NumberArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6];
 function FourSame(a, b, c, d) {
     return a === b && b === c && c === d;
 }
@@ -106,18 +108,18 @@ function ThreeShift(a, b, c) {
     return b - a === c - b;
 }
 function MixedStraight(a, b, c) {
-    let [ca, cb, cc] = [a, b, c].map((x) => Math.floor(x / 9)).sort((a, b) => a - b);
-    let [na, nb, nc] = [a, b, c].map((x) => x % 9).sort((a, b) => a - b);
+    let [ca, cb, cc] = [a, b, c].map((x) => ColorArray[x]).sort((a, b) => a - b);
+    let [na, nb, nc] = [a, b, c].map((x) => NumberArray[x]).sort((a, b) => a - b);
     return ca === 0 && cb === 1 && cc === 2 && na === 0 && nb === 3 && nc === 6;
 }
 function ThreeMixedSame(a, b, c) {
-    let [ca, cb, cc] = [a, b, c].map((x) => Math.floor(x / 9)).sort((a, b) => a - b);
-    let [na, nb, nc] = [a, b, c].map((x) => x % 9);
+    let [ca, cb, cc] = [a, b, c].map((x) => ColorArray[x]).sort((a, b) => a - b);
+    let [na, nb, nc] = [a, b, c].map((x) => NumberArray[x]);
     return ca === 0 && cb === 1 && cc === 2 && na === nb && nb === nc;
 }
 function ThreeMixedShiftOne(a, b, c) {
-    let [ca, cb, cc] = [a, b, c].map((x) => Math.floor(x / 9)).sort((a, b) => a - b);
-    let [na, nb, nc] = [a, b, c].map((x) => x % 9).sort((a, b) => a - b);
+    let [ca, cb, cc] = [a, b, c].map((x) => ColorArray[x]).sort((a, b) => a - b);
+    let [na, nb, nc] = [a, b, c].map((x) => NumberArray[x]).sort((a, b) => a - b);
     return ca === 0 && cb === 1 && cc === 2 && na + 1 === nb && nb + 1 === nc;
 }
 function Distance(a, b, dis) {
@@ -172,7 +174,7 @@ function GBSeqBind2(s, a, b, ans) {
     let f = 0;
     let vs = [s[a], s[b]];
     if (vs[0] === vs[1]) (m = 1), (vs = [vs[0]]), (f = 69);
-    else if (vs[0] % 9 === vs[1] % 9) (m = 1), (f = 70);
+    else if (NumberArray[vs[0]] === NumberArray[vs[1]]) (m = 1), (f = 70);
     else if (Distance(...vs, 6)) (m = 1), (f = 72); // Old Young Set
     else if (Distance(...vs, 3)) (m = 1), (f = 71); // Consecutive 6
     if (m) {
@@ -271,7 +273,7 @@ function GBTriBind2(s, orphan, a, b, ans, pon, st) {
     if (vs[0] >= 31 && vs[1] >= 31 && vs[1] < sizeUT) {
         (m = 6), (f = [54]);
         for (let i = 0; i < os.length; ++i) if (os[i] === 59) (m -= 2), f.push(-os[i]), (os[i] = 0);
-    } else if (st && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && vs[0] % 9 === vs[1] % 9))) (m = 2), (f = [65]);
+    } else if (st && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && NumberArray[vs[0]] === NumberArray[vs[1]]))) (m = 2), (f = [65]);
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b]);
         const p = RemoveMeldByIndex(orphan, [a, b]);
@@ -313,16 +315,18 @@ const EvenArray = [0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0
 const HonorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1];
 const NoHonorArray = HonorArray.map((x) => 1 - x);
 function isMask(melds, mask) {
-    for (let i = 0; i < melds.length; ++i) for (let j = 0; j < melds[i].length; ++j) if (!mask[melds[i][j]]) return false;
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length < 3) { 
+            if (!mask[melds[i][0]]) return false; 
+        } else if (melds[i].length === 3) for (let j = 0; j < melds[i].length; ++j) if (!mask[melds[i][j]]) return false;
     return true;
 }
 function isSameColor(melds) {
     let color = -1;
     for (let i = 0; i < melds.length; ++i) {
         if (melds[i][0] >= 27) return false;
-        const cij = Math.floor(melds[i][0] / 9);
-        if (color < 0) color = cij;
-        else if (cij != color) return false;
+        if (color < 0) color = ColorArray[melds[i][0]];
+        else if (ColorArray[melds[i][0]] !== color) return false;
     }
     return true;
 }
@@ -331,7 +335,7 @@ function isContains5(melds) {
         let contains = false;
         for (let j = 0; !contains && j < melds[i].length; ++j) {
             if (melds[i][j] >= 27) return false;
-            if (melds[i][j] % 9 === 4) contains = true;
+            if (NumberArray[melds[i][j]] === 4) contains = true;
         }
         if (!contains) return false;
     }
@@ -341,50 +345,45 @@ function isSameColorWithHonor(melds) {
     let color = -1;
     for (let i = 0; i < melds.length; ++i) {
         if (melds[i][0] >= 27) continue;
-        const cij = Math.floor(melds[i][0] / 9);
-        if (color < 0) color = cij;
-        else if (cij != color) return false;
+        if (color < 0) color = ColorArray[melds[i][0]];
+        else if (ColorArray[melds[i][0]] !== color) return false;
     }
     return true;
 }
 function isFiveColors(melds) {
     let arr = Array(5).fill(false);
-    for (let i = 0; i < melds.length; ++i) {
-        let c;
-        if (melds[i][0] < 27) Math.floor(melds[i][0] / 9);
-        else if (melds[i][0] <= 30) c = 3;
-        else c = 4;
-        arr[c] = true;
-    }
+    for (let i = 0; i < melds.length; ++i) arr[ColorArray[melds[i][0]]] = true;
     return arr.every(Boolean);
 }
 function isContains19(melds) {
     for (let i = 0; i < melds.length; ++i) {
         let contains = false;
-        for (let j = 0; !contains && j < melds[i].length; ++j) if (melds[i][j] >= 27 || melds[i][j] % 9 === 0 || melds[i][j] % 9 === 8) contains = true;
+        for (let j = 0; !contains && j < melds[i].length; ++j) if (melds[i][j] >= 27 || NumberArray[melds[i][j]] === 0 || NumberArray[melds[i][j]] === 8) contains = true;
         if (!contains) return false;
     }
     return true;
 }
 function countLack(melds) {
     let arr = Array(3).fill(false);
-    for (let i = 0; i < melds.length; ++i) if (melds[i][0] < 27) arr[Math.floor(melds[i][0] / 9)] = true;
+    for (let i = 0; i < melds.length; ++i) if (melds[i][0] < 27) arr[ColorArray[melds[i][0]]] = true;
     return 3 - arr.filter(Boolean).length;
 }
 function ninegate(melds, tiles, wintile) {
     if (!isSameColor(melds)) return false;
     const light = Array(9).fill(0);
+    const color = melds[0][0] - NumberArray[melds[0][0]];
     for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length === 1) light[melds[i][0] % 9] += 3;
-        else for (let j = 0; j < melds[i].length; ++j) ++light[melds[i][j] % 9];
+        if (melds[i].length === 1) light[NumberArray[melds[i][0]]] += 3;
+        else for (let j = 0; j < melds[i].length; ++j) ++light[NumberArray[melds[i][j]]];
     if (light[0] < 3 || light[8] < 3) return false;
     for (let i = 1; i < 8; ++i) if (light[i] !== 1 && light[i] !== 2) return false;
-    tiles = tiles.slice();
-    --tiles[wintile];
-    for (let i = 0; i < 27; ++i)
-        if (i % 9 === 0 || i % 9 === 8) {
-            if (tiles[i] > 3) return false;
-        } else if (tiles[i] > 1) return false;
+    for (let i = 0; i < 9; ++i) {
+        let cnt = tiles[i + color];
+        if (i === wintile) --cnt;
+        if (i === 0 || i === 8) {
+            if (cnt > 3) return false;
+        } else if (cnt > 1) return false;
+    }
     return true;
 }
 // prettier-ignore
@@ -449,6 +448,7 @@ function countHog(melds) {
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
 }
+let filter_cnt = 0;
 function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     let f = [];
     let v = 0;
@@ -476,8 +476,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     else if (ek) ++v, f.push(74);
     if (ck + cp >= 4) {
         (v += 64), f.push(12);
-        if (melds.length === 5) must_pengpeng = true;
-        must_menqing = true;
+        if (melds.length === 5) must_pengpeng = true, must_menqing = true;
     } else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
     if (melds.length >= 5 && isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
@@ -537,6 +536,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
         if (h < 27) --nt;
         let predict_v = Math.max(seq.length - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + Math.max(wt - 1, 0) * 30 + Math.max(dt - 1, 0) * 44;
         if (v + predict_v <= gans) return { val: 0, fan: [] };
+        ++filter_cnt;
         let orphan = Array(tri.length).fill(0);
         seq = seq.sort((a, b) => a - b);
         tri = tri.sort((a, b) => a - b);

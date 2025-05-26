@@ -109,7 +109,7 @@ const cn_loc = {
     GB_FANNAME_83: "连风刻",
     subtile_error_1: "固定面子长度错误",
     subtile_error_2: "固定面子无法组成顺子、刻子或杠子",
-    GB_FAN_unit: "番";
+    GB_FAN_unit: "番",
 }
 const tw_loc = {
     wait: "待",

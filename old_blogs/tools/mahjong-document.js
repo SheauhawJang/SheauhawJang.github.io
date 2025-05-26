@@ -64,8 +64,9 @@ function processInput() {
         switch (task) {
             case 2:
                 if (Math.min(...substeps[task]) === -1) {
-                    document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     document.getElementById("output-score-gb").textContent = "";
+                    document.getElementById("brief-output-score-gb").textContent = "";
+                    document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     document.getElementById("score-gb").style.display = 'block';
                     gb_worker = null;
                     gb_worker_info = { aids, substeps: substeps[task], save: save[task] };
@@ -370,6 +371,8 @@ function processGBScore() {
         gb_worker.terminate();
         gb_worker = null;
     }
+    document.getElementById("output-score-gb").textContent = "";
+    document.getElementById("brief-output-score-gb").textContent = "";
     document.getElementById("time-output-score-gb").textContent = "Calculating......";
     const gw = Number(document.querySelector('input[name="score-gb-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-gb-local-wind"]:checked').value);

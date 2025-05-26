@@ -380,6 +380,7 @@ function processGBScore() {
     gb_worker.onmessage = function (e) {
         if ('debug' in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
+            document.getElementById("output-score-gb").innerHTML = e.data.output;
             return;
         }
         gb_worker.terminate();

@@ -186,7 +186,7 @@ function GBSeqBind2(s, a, b, ans) {
     }
 }
 function GBSeqBind(s) {
-    const key = s.join(",");
+    const key = JSON.stringify(s);
     if (seqsave.has(key)) return seqsave.get(key);
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a)
@@ -197,6 +197,7 @@ function GBSeqBind(s) {
             }
             GBSeqBind2(s, a, b, ans);
         }
+    if (seqsave.size > 10000000) seqsave.clear(), console.log("trisave cleared");
     seqsave.set(key, ans);
     return ans;
 }
@@ -283,7 +284,7 @@ function GBTriBind2(s, orphan, a, b, ans, pon, st) {
     }
 }
 function GBTriBind(s, orphan, pon, st) {
-    const key = s.join(",") + "|" + orphan.join(",");
+    const key = JSON.stringify({ s, orphan, pon, st });
     if (trisave.has(key)) return trisave.get(key);
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a)
@@ -294,6 +295,7 @@ function GBTriBind(s, orphan, pon, st) {
             }
             GBTriBind2(s, orphan, a, b, ans, pon, st);
         }
+    if (trisave.size > 10000000) trisave.clear(), console.log("trisave cleared");
     trisave.set(key, ans);
     return ans;
 }

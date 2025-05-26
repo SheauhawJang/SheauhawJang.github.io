@@ -344,7 +344,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             let cp = 0;
             let wintf = 0;
             for (let k = 0; k < ots.length; ++k)
-                if (ots[k].length === 3 && !isSeq(ots[k])) ++cp;
+                if (ots[k].length === 1) ++cp;
                 else {
                     if (wintf) continue;
                     if (ots[k].length === 2) {
@@ -382,7 +382,6 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         for (let j = 0; j < fans[i]; ++j) fanopt.push(loc[`GB_FANNAME_${i}`]);
     }
     output += fanopt.join(',') + "\n";
-    console.log(gans.fan);
     return output;
 }
 self.onmessage = function (e) {

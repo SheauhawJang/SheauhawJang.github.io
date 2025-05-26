@@ -319,6 +319,20 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
     ).output;
     return { output, substep };
 }
+function GetFanDiv(fan) {
+    let fans = new Array(84).fill(0);
+    for (let i = 0; i < fan.length; ++i) {
+        if (fan[i] > 0) ++fans[fan[i]];
+        else --fans[-fan[i]];
+    }
+    fans[60] += fans[83];
+    fans[61] += fans[83];
+    let fanopt = []
+    for (let i = 1; i <= 83; ++i) {
+        if (fans[i]) fanopt.push(`<div class="devided-waiting-brief">${loc[`GB_FANNAME_${i}`]} ${GBScoreArray[i]}${loc.GB_FAN_unit}${fans[i] > 1 ? `×${fans[i]}` : ""}</div>`);
+    }
+    return `<div class="fan-names">${fanopt.join('')}</div>`;
+}
 function GBScore(aids, substeps, save, gw, mw, wt, info) {
     let infov = 0;
     let infof = [];
@@ -365,23 +379,13 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 const predict_t = Math.round(t * m / cm);
                 const rate = cm / m * 100;
                 let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`
-                postMessage({ debug, output: `至少${gans.val}番\n` });
+                postMessage({ debug, output: `至少${gans.val}番\n${GetFanDiv(gans.fan)}` });
             }
         }
         itots((ots) => itsubots((subots) => cal(ots, subots)));
     }
-    output = `${gans.val}番\n`;
+    output = `${gans.val}番\n${GetFanDiv(gans.fan)}`;
     console.log(gans.fan);
-    let fans = new Array(84).fill(0);
-    for (let i = 0; i < gans.fan.length; ++i) {
-        if (gans.fan[i] > 0) ++fans[gans.fan[i]];
-        else --fans[-gans.fan[i]];
-    }
-    let fanopt = []
-    for (let i = 1; i <= 83; ++i) {
-        for (let j = 0; j < fans[i]; ++j) fanopt.push(loc[`GB_FANNAME_${i}`]);
-    }
-    output += fanopt.join(',') + "\n";
     return output;
 }
 self.onmessage = function (e) {

@@ -1,4 +1,5 @@
 importScripts("mahjong.js");
+importScripts("mahjong-score.js");
 importScripts("mahjong-worker-lang.js");
 const table_head = '<table style="border-collapse: collapse; padding: 0px">';
 const table_tail = "</table>";
@@ -167,7 +168,7 @@ function JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd) {
         (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g),
         () => JPPrecheck(tiles, stepJP, substep, full_tcnt)
     ).output;
-    return { output, step13, dvd7, dvd13 };
+    return { output, substep, dvd7, dvd13 };
 }
 function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13) {
     let table = "";
@@ -239,15 +240,16 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
     const substep = [step, step7, step13, step16, stepkd];
-    output += printWaiting(
+    const r = printWaiting(
         tiles,
         tcnt,
         full_tcnt,
         subtiles,
         (d, g, f) => GBWaiting(tiles, stepGB, substep, full_tcnt, f(save.waiting), d, g),
         () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks)
-    ).output;
-    return { output };
+    );
+    output += r.output;
+    return { output, substep, save: r.ans };
 }
 function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
     let table = "";
@@ -315,29 +317,53 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
         (d, g, f) => TWWaiting(tiles, stepTW, substep, full_tcnt, f(save.waiting), d, g),
         () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks)
     ).output;
-    return { output };
+    return { output, substep };
+}
+function GBScore(aids, substeps, save, gw, mw, wt, info) {
+    const ans = GBStart(aids, substeps, save, gw, mw, wt, info);
+    output = `${ans.val}番\n`;
+    let fans = new Array(84).fill(0);
+    for (let i = 0; i < ans.fan.length; ++i) {
+        if (ans.fan[i] > 0) ++fans[ans.fan[i]];
+        else --fans[-ans.fan[i]];
+    }
+    let fanopt = []
+    for (let i = 1; i <= 83; ++i) {
+        for (let j = 0; j < fans[i]; ++j) fanopt.push(loc[`GB_FANNAME_${i}`]);
+    }
+    output += fanopt.join(',') + "\n";
+    console.log(ans.fan);
+    return output;
 }
 self.onmessage = function (e) {
     if (e.data.lang) setLoc(e.data.lang);
-    let { task, tiles, tcnt, full_tcnt, subtiles, subcnt } = e.data;
+    let task = e.data.task;
     let result;
     const st = new Date();
     switch (task) {
-        case 0:
+        case 0: {
+            let { tiles, tcnt, full_tcnt, subtiles, subcnt } = e.data;
             result = normalStep(tiles, tcnt, full_tcnt, subtiles, subcnt);
             break;
-        case 1:
-            result = JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, e.data.dvd);
+        }
+        case 1: {
+            let { tiles, tcnt, full_tcnt, subtiles, subcnt, dvd } = e.data;
+            result = JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd);
             break;
+        }
         case 2: {
-            let { step, save, step13, dvd, dvd7, dvd13 } = e.data;
+            let { tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13 } = e.data;
             result = GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13);
             break;
         }
         case 3: {
-            let { step, save, dvd } = e.data;
+            let { tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd } = e.data;
             result = TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd);
             break;
+        }
+        case "gb-score": {
+            let { aids, substeps, save, gw, mw, wt, info } = e.data;
+            result = GBScore(aids, substeps, save, gw, mw, wt, info);
         }
     }
     const ed = new Date();

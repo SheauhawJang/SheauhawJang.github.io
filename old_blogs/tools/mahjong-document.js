@@ -1,4 +1,5 @@
 let aids;
+let worker = null;
 function processInput() {
     if (worker) {
         worker.terminate();
@@ -9,6 +10,12 @@ function processInput() {
         document.getElementById(document_element_ids[i]).innerHTML = "";
         document.getElementById("brief-" + document_element_ids[i]).innerHTML = "";
         document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`;
+    }
+    const document_scores_ids = ["score-gb"];
+    const workers_scores = [gb_worker];
+    for (let i = 0; i < document_scores_ids.length; ++i) {
+        document.getElementById(document_scores_ids[i]).style.display = 'none';
+        if (workers_scores[i]) workers_scores[i].terminate();
     }
     const input = document.getElementById("inputText").value;
     aids = splitTiles(input);
@@ -24,16 +31,15 @@ function processInput() {
     let full_tcnt = tcnt;
     if (tcnt % 3 === 1) ++full_tcnt;
     const subcnt = aids[1].length;
-    console.log(subcnt);
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, true);
     document.getElementById("output-box-head").style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
-    let step, step13;
-    let save;
+    let save = Array(4);
     let dvd, dvd7, dvd13;
+    let substeps = Array(4);
     worker.onmessage = function (e) {
         if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
         if ("output" in e.data) {
@@ -45,15 +51,23 @@ function processInput() {
         document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`;
         switch (task) {
             case 0:
-                step = result.step;
-                save = result.save;
+                substeps[0] = result.step;
                 dvd = result.dvd;
                 break;
             case 1:
-                step13 = result.step13;
                 dvd7 = result.dvd7;
                 dvd13 = result.dvd13;
                 break;
+        }
+        if (task > 0) substeps[task] = result.substep;
+        save[task] = result.save;
+        switch (task) {
+            case 2:
+                if (Math.min(...substeps[task]) === -1) {
+                    document.getElementById("score-gb").style.display = 'block';
+                    gb_worker = null;
+                    gb_worker_info = { aids, substeps: substeps[task], save: save[task] };
+                }
         }
         ++task;
         switch (task) {
@@ -62,10 +76,10 @@ function processInput() {
                 worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, dvd });
                 break;
             case 2:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13 });
+                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step: substeps[0], save: save[0], step13: substeps[1][2], dvd, dvd7, dvd13 });
                 break;
             case 3:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd });
+                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step: substeps[0], save: save[0], dvd });
                 break;
             case 4:
                 worker.terminate();
@@ -100,9 +114,7 @@ function randomInput() {
     processInput();
 }
 function cardLargeImage(tids, i, width, link) {
-    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}<img src="./cards/${cardName(tids[i])}.gif"${
-        link ? ` onclick="discard(${i})" class="clickable"` : ""
-    }></div>`;
+    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}<img src="./cards/${cardName(tids[i])}.gif"${link ? ` onclick="discard(${i})" class="clickable"` : ""}></div>`;
 }
 function cardLargeImageRotated(id, width, cnt) {
     return `<div class="card-div" style="width: ${(width * 120) / 80}%;"><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(id)}.gif"></div>`;
@@ -201,14 +213,10 @@ function subtilesImage(sids, tcnt) {
 // Input Panel Functions
 let ipids;
 function cardInputImage(ids, i, j, width, unit) {
-    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/${cardName(
-        ids[i]
-    )}.gif" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
 }
 function cardInputImageRotated(ids, i, j, width, unit, cnt) {
-    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(
-        ids[i]
-    )}.gif" onclick="removeInput(${i}, ${j}, 1)" class="clickable"></div>`;
+    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 1)" class="clickable"></div>`;
 }
 function backcardInputImage(i, j, width, unit) {
     return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
@@ -265,7 +273,12 @@ function drawInputCards() {
     if (bids.length === 0) bdiv.style.paddingTop = `${sheight * 0.75}${unit}`;
     else bdiv.style.paddingTop = "0";
     bdiv.innerHTML = output;
-    document.getElementById("subkey_chi").disabled = !isSeq(tids.slice(-3).map((a) => a.id).sort((a, b) => a - b));
+    document.getElementById("subkey_chi").disabled = !isSeq(
+        tids
+            .slice(-3)
+            .map((a) => a.id)
+            .sort((a, b) => a - b)
+    );
 }
 function remakeInput(ipids) {
     let newInput = joinHand(ipids[0]);
@@ -329,7 +342,7 @@ function subtileInput(t, k) {
                 ipids[0].pop();
             }
             break;
-        case 2: 
+        case 2:
             if (isQuad(ipids[0].slice(-4).map((a) => a.id))) {
                 ipids[1].push(ipids[0].slice(-4));
                 ipids[0].splice(-4);
@@ -346,4 +359,26 @@ function subtileInput(t, k) {
     }
     remakeInput(ipids);
     drawInputCards();
+}
+// Score workers
+let gb_worker = null;
+let gb_worker_info;
+function processGBScore() {
+    if (gb_worker) {
+        gb_worker.terminate();
+        gb_worker = null;
+    }
+    const gw = Number(document.querySelector('input[name="score-gb-global-wind"]:checked').value);
+    const mw = Number(document.querySelector('input[name="score-gb-local-wind"]:checked').value);
+    const wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked').value);
+    let info = document.querySelectorAll('input[name="score-gb-wininfo"]:checked');
+    info = Array.from(info).map((x) => Number(x.value));
+    gb_worker = new Worker("mahjong-worker.js");
+    gb_worker.onmessage = function (e) {
+        gb_worker.terminate();
+        gb_worker = null;
+        document.getElementById("output-score-gb").innerHTML = e.data.result;
+    }
+    const { aids, substeps, save } = gb_worker_info;
+    gb_worker.postMessage({ task: "gb-score", aids, substeps, save, gw, mw, wt, info });
 }

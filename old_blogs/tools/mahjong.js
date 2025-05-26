@@ -110,7 +110,6 @@ function getTiles(ids) {
 function splitKernel(s) {
     s = Array.from(s);
     let ids = [];
-    let rotate = false;
     for (let i = 0; i < s.length; ++i) {
         if (s[i] >= "a" && s[i] <= "z") {
             let tids = [];
@@ -288,7 +287,7 @@ function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = d
     INF = nm * 3 + np * 2 - 1;
     for (let i = 0; i < sizeUT; ++i) {
         tiles[i] = Math.min(tiles[i], glmt);
-        const km = Math.floor(Math.max(tiles[i] - 8, 0) / 3);
+        const km = Math.min(Math.floor(Math.max(tiles[i] - 8, 0) / 3), nm - em);
         (nm -= km), (tiles[i] -= km * 3);
     }
     if (glmt !== Infinity) {
@@ -870,8 +869,8 @@ function prepareDvd(nm, np, tiles) {
         ldDvd[ldi + 3] = ldDvd[ldi + 2] * (tiles[JokerA[i]] + 1);
         let mui = 0,
             muj = 0;
-        if (SeqCheck(i - 1)) mui = muj = tiles[i + 1];
-        if (SeqCheck(i - 2)) mui += tiles[i];
+        if (SeqCheck(i - 1)) mui = tiles[i], muj = tiles[i + 1];
+        if (SeqCheck(i - 2)) mui = tiles[i];
         ldDvd[ldi + 4] = ldDvd[ldi + 3] * (muj + 1);
         ldDvd[ldi + 5] = ldDvd[ldi + 4] * (mui + 1);
         ldDvd[ldi + 6] = ldDvd[ldi + 5] * (np + 1);
@@ -1217,4 +1216,8 @@ function isQuad(tids) {
 }
 function isMeld(tids) {
     return isSeq(tids) || isTri(tids);
+}
+function canBeReal(i, tids) {
+    for (let j = 0; j < tids.length; ++j) if (!isJokerEqual(i, tids[j])) return false;
+    return true;
 }

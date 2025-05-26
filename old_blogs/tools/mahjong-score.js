@@ -215,7 +215,7 @@ function GBTriBind4(s, orphan, a, b, c, d, ans, pon, st) {
         if (vs[0] < 27) (m = 48), (f = [15]);
         else {
             (m = 88), (f = [1, ...os.map((a) => -a)]);
-            for (let i = 0; i < os.length; ++i) m -= os[i] === 73 ? 1 : os[i] === 161 ? 4 : os[i] ? 2 : 0;
+            for (let i = 0; i < os.length; ++i) m -= os[i] === 73 ? 1 : os[i] === 83 ? 4 : os[i] ? 2 : 0;
             os = [0, 0, 0, 0];
         }
         if (pon) (m -= 6), f.push(-49), (pon = false);
@@ -608,7 +608,6 @@ function GBStart(aids, substeps, save, gw, mw, wt, info) {
         console.time("dfs");
         dfs(0, 0);
         console.timeLog("dfs");
-        const st = new Date();
         for (let i = 0; i < ots.length; ++i) {
             for (let j = 0; j < subots.length; ++j) {
                 let cp = 0;

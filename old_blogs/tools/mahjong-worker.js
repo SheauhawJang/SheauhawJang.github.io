@@ -325,6 +325,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         return ans.err;
     }
     output = `${ans.val}番\n`;
+    console.log(ans.fan);
     let fans = new Array(84).fill(0);
     for (let i = 0; i < ans.fan.length; ++i) {
         if (ans.fan[i] > 0) ++fans[ans.fan[i]];

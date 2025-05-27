@@ -115,7 +115,7 @@ const cn_loc = {
     other_player: "他家",
     loser: "铳家",
     observer: "旁家",
-    comma, "，",
+    comma: "，",
 }
 const tw_loc = {
     wait: "待",

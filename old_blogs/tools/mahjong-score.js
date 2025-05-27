@@ -586,7 +586,86 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, til
                 else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
                 else if (yaojiuke) (orphan[i] = 73), ++v;
         const seqans = GBSeqBind(seq);
-        const trians = GBTriBind(tri, orphan, has_pengpeng, can_shuangtong);
+        const trians = GBTriBind(tri, orphan, fourteen_type && has_pengpeng, can_shuangtong);
+        v += seqans.val + trians.val;
+        f = [...f, ...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)];
+    }
+    return { val: v, fan: f };
+}
+function GBKnittedDragon(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, tiles, marr = flattenMeld(melds)) {
+    let f = [];
+    let v = 0;
+    let must_hunyise = false;
+    let must_qingyise = false;
+    let must_menqing = false;
+    let must_pengpeng = false;
+    let must_quandai = false;
+    let must_hun19 = false;
+    let must_pinghe = false;
+    let must_duan1 = false;
+    let must_wuzi = false;
+    let must_quemen = false;
+    let yaojiuke = true;
+    let can_shuangtong = true;
+    let skip_bind = false;
+    const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
+    if (ck + ek >= 4) {
+        (v += 88), f.push(5);
+    } else if (ck + ek === 3) (v += 32), f.push(17);
+    else if (ck === 2) (v += 6), f.push(53);
+    else if (ek === 2) (v += 4), f.push(57);
+    else if (ck + ek === 2) (v += 5), f.push(82);
+    else if (ck) (v += 2), f.push(67);
+    else if (ek) ++v, f.push(74);
+    if (ck + cp >= 4) {
+        (v += 64), f.push(12);
+    } else if (ck + cp === 3) (v += 16), f.push(33);
+    else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
+    if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
+        if (zimo) (v += 4), f.push(56);
+        else (v += 2), f.push(62);
+    else if (zimo === 80) ++v, f.push(zimo);
+    let predict_v = 56 + predictHog(melds);
+    if (!skip_bind) {
+        let sq = 0,
+            nt = 0,
+            wt = 0,
+            dt = 0;
+        for (let i = 0; i < melds.length; ++i)
+            if (melds[i].length === 3) ++sq;
+            else if (melds[i][0] >= 31) ++dt;
+            else if (melds[i][0] >= 27) ++wt;
+            else if (melds[i].length !== 2) ++nt;
+        predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
+    }
+    predict_v = Math.max(predict_v, 64);
+    if (v + predict_v <= gans) return { val: 0, fan: [] };
+    ++filter_cnt;
+    if (isFiveColors(melds)) (v += 6), f.push(51);
+    if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
+    if (must_pinghe) must_wuzi = true;
+    if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
+    const hog = countHog(melds);
+    for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
+    if (!skip_bind) {
+        let seq = [],
+            tri = [];
+        for (let i = 0; i < melds.length; ++i)
+            if (melds[i].length === 3) seq.push(melds[i][0]);
+            else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
+            else tri.push(melds[i][0]);
+        let orphan = Array(tri.length).fill(0);
+        seq = seq.sort((a, b) => a - b);
+        tri = tri.sort((a, b) => a - b);
+        for (let i = 0; i < orphan.length; ++i)
+            if (OrphanArray[tri[i]])
+                if (my_wind === global_wind && my_wind === tri[i]) (orphan[i] = 83), (v += 4);
+                else if (my_wind === tri[i]) (orphan[i] = 61), (v += 2);
+                else if (global_wind === tri[i]) (orphan[i] = 60), (v += 2);
+                else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
+                else if (yaojiuke) (orphan[i] = 73), ++v;
+        const seqans = GBSeqBind(seq);
+        const trians = GBTriBind(tri, orphan, false, true);
         v += seqans.val + trians.val;
         f = [...f, ...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)];
     }

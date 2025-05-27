@@ -347,7 +347,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         postMessage({ debug, output: `${loc.at_least}${gans.val + aids[2].length}${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
     }
     const tiles = getTiles(aids[0]);
-    function cal(ots, subots, ck, ek, others = []) {
+    function cal(ots, subots, ck, ek, f, other = []) {
         let cp = 0;
         let wintf = 0;
         for (let k = 0; k < ots.length; ++k)
@@ -361,7 +361,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 else if (isJokerEqual(ots[k][2], wint)) wintf = 77;
             }
         if (wint && !wt && !wintf) --cp;
-        let ans = GBKernel([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, mw, gw, wt, tiles);
+        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, mw, gw, wt, tiles);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan = [...ans.fan, ...infof];
@@ -393,7 +393,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
         if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (listen_cnt = 999), (infov += 6), infof.push(52);
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) listen_cnt = 999;
-        itots((ots) => itsubots((subots) => cal(ots, subots, ck, ek)));
+        itots((ots) => itsubots((subots) => cal(ots, subots, ck, ek, GBKernel)));
         if (gans.val === 0 && nmp >= 5) {
             gans.val = 8;
             gans.fan = [43];

@@ -465,9 +465,10 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     let yaojiuke = true;
     let can_shuangtong = true;
     let skip_bind = false;
+    const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
     if (ck + ek >= 4) {
         (v += 88), f.push(5);
-        if (melds.length === 5) must_pengpeng = true;
+        if (fourteen_type) must_pengpeng = true;
     } else if (ck + ek === 3) (v += 32), f.push(17);
     else if (ck === 2) (v += 6), f.push(53);
     else if (ek === 2) (v += 4), f.push(57);
@@ -476,14 +477,14 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     else if (ek) ++v, f.push(74);
     if (ck + cp >= 4) {
         (v += 64), f.push(12);
-        if (melds.length === 5) must_pengpeng = true, must_menqing = true;
+        if (fourteen_type) must_pengpeng = true, must_menqing = true;
     } else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
     if (melds.length >= 5 && isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
-    if (melds.length === 5 && aids[1].length === 0 && ninegate(melds, getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
+    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
     if (melds.length >= 5 && isMask(melds, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
     if (melds.length >= 5 && isMask(melds, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
-    if (melds.length === 5 && isPureDoubleDragon(melds)) (v += 64), f.push(13), (must_qingyise = true), (must_pinghe = true), (skip_bind = true);
+    if (fourteen_type && isPureDoubleDragon(melds)) (v += 64), f.push(13), (must_qingyise = true), (must_pinghe = true), (skip_bind = true);
     if (melds.length >= 5 && !must_hun19 && isMask(melds, OrphanArray)) (v += 32), f.push(18), (must_hun19 = true);
     if (must_hun19) (must_pengpeng = true), (must_quandai = true), (yaojiuke = false);
     if (melds.length >= 5 && isMask(melds, EvenArray)) (v += 24), f.push(21), (must_pengpeng = true), (must_duan1 = true);
@@ -496,7 +497,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     if (melds.length >= 5)
         if (isMask(melds, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
         else if (isMask(melds, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
-    if (melds.length === 5 && isMixedDoubleDragon(melds)) (v += 16), f.push(29), (must_pinghe = true), (skip_bind = true);
+    if (fourteen_type && isMixedDoubleDragon(melds)) (v += 16), f.push(29), (must_pinghe = true), (skip_bind = true);
     if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
     if (melds.length >= 5 && isMask(melds, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);

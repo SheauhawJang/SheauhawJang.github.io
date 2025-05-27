@@ -113,8 +113,9 @@ const cn_loc = {
     at_least: "至少",
     winner: "自家",
     other_player: "他家",
-    lose_player: "铳家",
+    loser: "铳家",
     observer: "旁家",
+    comma, "，",
 }
 const tw_loc = {
     wait: "待",

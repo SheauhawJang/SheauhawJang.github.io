@@ -482,9 +482,16 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
     if (melds.length >= 5 && isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
+    if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
+        if (zm) (v += 4), f.push(56);
+        else (v += 2), f.push(62);
+    else if (zm === 80) ++v, f.push(zm);
+    const hog = countHog(melds);
+    for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (melds.length >= 5 && isMask(melds, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
     if (melds.length >= 5 && isMask(melds, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
     if (fourteen_type && isPureDoubleDragon(melds)) (v += 64), f.push(13), (must_qingyise = true), (must_pinghe = true), (skip_bind = true);
+    if (fourteen_type && isMixedDoubleDragon(melds)) (v += 16), f.push(29), (must_pinghe = true), (skip_bind = true);
     if (melds.length >= 5 && !must_hun19 && isMask(melds, OrphanArray)) (v += 32), f.push(18), (must_hun19 = true);
     if (must_hun19) (must_pengpeng = true), (must_quandai = true), (yaojiuke = false);
     if (melds.length >= 5 && isMask(melds, EvenArray)) (v += 24), f.push(21), (must_pengpeng = true), (must_duan1 = true);
@@ -497,8 +504,18 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     if (melds.length >= 5)
         if (isMask(melds, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
         else if (isMask(melds, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
-    if (fourteen_type && isMixedDoubleDragon(melds)) (v += 16), f.push(29), (must_pinghe = true), (skip_bind = true);
     if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
+    let predict_v = 22;
+    if (!skip_bind) {
+        let sq = 0, nt = 0, wt = 0, dt = 0, h = 34;
+        for (let i = 0; i < melds.length; ++i)
+            if (melds[i].length === 3) ++sq;
+            else if (melds[i][0] >= 31) ++dt;
+            else if (melds[i][0] >= 27) ++wt;
+            else if (melds[i].length !== 2) ++nt;
+        predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + Math.max(wt - 1, 0) * 30 + Math.max(dt - 1, 0) * 44;
+    }
+    if (v + predict_v <= gans) return { val: 0, fan: [] };
     if (melds.length >= 5 && isMask(melds, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
     if (must_hunyise) must_quemen = true;
@@ -515,29 +532,13 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
         for (let i = 0; i < n; ++i) ++v, f.push(75);
     }
     if (melds.length >= 5 && !must_wuzi && isMask(melds, NoHonorArray)) ++v, f.push(76);
-    if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
-        if (zm) (v += 4), f.push(56);
-        else (v += 2), f.push(62);
-    else if (zm === 80) ++v, f.push(zm);
-    console.log(melds.length, must_menqing, aids[1].length, ck);
-    const hog = countHog(melds);
-    for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {
         let seq = [],
             tri = [];
-        let nt = 0, wt = 0, dt = 0, h;
         for (let i = 0; i < melds.length; ++i)
             if (melds[i].length === 3) seq.push(melds[i][0]);
-            else {
-                if (melds[i].length === 2) tri.push(GetHeadFromId(h = melds[i][0]));
-                else tri.push(melds[i][0]);
-                if (melds[i][0] < 27) ++nt;
-                else if (melds[i][0] < 31) ++wt;
-                else ++dt;
-            }
-        if (h < 27) --nt;
-        let predict_v = Math.max(seq.length - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + Math.max(wt - 1, 0) * 30 + Math.max(dt - 1, 0) * 44;
-        if (v + predict_v <= gans) return { val: 0, fan: [] };
+            else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
+            else tri.push(melds[i][0]);
         ++filter_cnt;
         let orphan = Array(tri.length).fill(0);
         seq = seq.sort((a, b) => a - b);

@@ -718,14 +718,14 @@ function GB7Pairs(tids) {
         for (let i = 0; i < ot.length; ++i) {
             let tc = -1;
             if (ot[i][0] < sizeUT) tc = ColorArray[ot[i][0]], ++nbs[NumberArray[ot[i][0]]];
-            else if (JokerColor[ot[i][0]]) tc = JokerColor[ot[i][0]];
+            else if (JokerColor[ot[i][0]] !== undefined) tc = JokerColor[ot[i][0]];
             else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
             else if (ot[i][0] === 49) return undefined;
             if (tc > 3) return undefined;
             if (c === -1) c = tc;
             else if (c !== tc) return undefined;
         }
-        let maxp = -1, minp = 9; 
+        let maxp = -1, minp = 9;
         for (let i = 0; i < 9; ++i) if (nbs[i] > 1) return undefined; else if (nbs[i]) maxp = Math.max(maxp, i), minp = Math.min(minp, i);
         if (maxp - minp >= 7) return undefined;
         let ans = { val: 88, fan: [6] };
@@ -733,7 +733,7 @@ function GB7Pairs(tids) {
         return ans;
     }
     const sp = isShiftPairs();
-    if (sp && sp.val >= gans.val) return sp;
+    if (sp && sp.val > gans.val) return sp;
     return gans;
 }
 function PreAllMelds(aids) {

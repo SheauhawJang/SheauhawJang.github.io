@@ -79,7 +79,7 @@ function AddMeldAndOrphan(s, o, x, y) {
         r = t.length;
     while (l + 1 !== r) {
         const mid = (l + r) >> 1;
-        if (t[mid] < x) l = mid;
+        if (t[mid] < x || (t[mid] === x && p[mid] < y)) l = mid;
         else r = mid;
     }
     t.splice(r, 0, x);
@@ -88,13 +88,11 @@ function AddMeldAndOrphan(s, o, x, y) {
 }
 const seqsave = new Map();
 const trisave = new Map();
-const ColorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4];
-const NumberArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6];
 function FourSame(a, b, c, d) {
     return a === b && b === c && c === d;
 }
 function FourShift(a, b, c, d) {
-    if (JokerA[a] !== JokerA[d]) return false;
+    if (ColorArray[a] !== ColorArray[d]) return false;
     const x = b - a,
         y = c - b,
         z = d - c;
@@ -104,7 +102,7 @@ function ThreeSame(a, b, c) {
     return a === b && b === c;
 }
 function ThreeShift(a, b, c) {
-    if (JokerA[a] !== JokerA[c]) return false;
+    if (ColorArray[a] !== ColorArray[c]) return false;
     return b - a === c - b;
 }
 function MixedStraight(a, b, c) {
@@ -123,15 +121,15 @@ function ThreeMixedShiftOne(a, b, c) {
     return ca === 0 && cb === 1 && cc === 2 && na + 1 === nb && nb + 1 === nc;
 }
 function Distance(a, b, dis) {
-    if (JokerA[a] !== JokerA[b]) return false;
+    if (ColorArray[a] !== ColorArray[b]) return false;
     return Math.abs(b - a) === dis;
 }
 function FourShiftOne(a, b, c, d) {
-    if (JokerA[a] !== JokerA[d]) return false;
+    if (ColorArray[a] !== ColorArray[d]) return false;
     return a + 1 === b && b + 1 === c && c + 1 === d;
 }
 function ThreeShiftOne(a, b, c) {
-    if (JokerA[a] !== JokerA[c]) return false;
+    if (ColorArray[a] !== ColorArray[c]) return false;
     return a + 1 === b && b + 1 === c;
 }
 function GBSeqBind4(s, a, b, c, d, ans) {
@@ -191,14 +189,21 @@ function GBSeqBind(s) {
     const key = JSON.stringify(s);
     if (seqsave.has(key)) return seqsave.get(key);
     let ans = { val: 0, fan: [] };
-    for (let a = 0; a < s.length; ++a)
+    for (let a = 0; a < s.length; ++a) {
+        if (a - 1 >= 0 && s[a] === s[a - 1]) continue;
         for (let b = a + 1; b < s.length; ++b) {
+            if (b - 1 > a && s[b] === s[b - 1]) continue;
             for (let c = b + 1; c < s.length; ++c) {
-                for (let d = c + 1; d < s.length; ++d) GBSeqBind4(s, a, b, c, d, ans);
+                if (c - 1 > b && s[c] === s[c - 1]) continue;
+                for (let d = c + 1; d < s.length; ++d) {
+                    if (d - 1 > c && s[d] === s[d - 1]) continue;
+                    GBSeqBind4(s, a, b, c, d, ans);
+                }
                 GBSeqBind3(s, a, b, c, ans);
             }
             GBSeqBind2(s, a, b, ans);
         }
+    }
     if (seqsave.size > 1000000) seqsave.clear(), console.log("trisave cleared");
     seqsave.set(key, ans);
     return ans;
@@ -289,14 +294,21 @@ function GBTriBind(s, orphan, pon, st) {
     const key = JSON.stringify({ s, orphan, pon, st });
     if (trisave.has(key)) return trisave.get(key);
     let ans = { val: 0, fan: [] };
-    for (let a = 0; a < s.length; ++a)
+    for (let a = 0; a < s.length; ++a) {
+        if (a - 1 >= 0 && s[a] === s[a - 1] && orphan[a] === orphan[a - 1]) continue;
         for (let b = a + 1; b < s.length; ++b) {
+            if (b - 1 > a && s[b] === s[b - 1] && orphan[b] === orphan[b - 1]) continue;
             for (let c = b + 1; c < s.length; ++c) {
-                for (let d = c + 1; d < s.length; ++d) GBTriBind4(s, orphan, a, b, c, d, ans, pon, st);
+                if (c - 1 > b && s[c] === s[c - 1] && orphan[c] === orphan[c - 1]) continue;
+                for (let d = c + 1; d < s.length; ++d) {
+                    if (d - 1 > c && s[d] === s[d - 1] && orphan[d] === orphan[d - 1]) continue;
+                    GBTriBind4(s, orphan, a, b, c, d, ans, pon, st);
+                }
                 GBTriBind3(s, orphan, a, b, c, ans, pon, st);
             }
             GBTriBind2(s, orphan, a, b, ans, pon, st);
         }
+    }
     if (trisave.size > 1000000) trisave.clear(), console.log("trisave cleared");
     trisave.set(key, ans);
     return ans;
@@ -316,8 +328,8 @@ const HonorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 const NoHonorArray = HonorArray.map((x) => 1 - x);
 function isMask(melds, mask) {
     for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length !== 3) { 
-            if (!mask[melds[i][0]]) return false; 
+        if (melds[i].length !== 3) {
+            if (!mask[melds[i][0]]) return false;
         } else if (melds[i].length === 3) for (let j = 0; j < melds[i].length; ++j) if (!mask[melds[i][j]]) return false;
     return true;
 }
@@ -371,7 +383,7 @@ function countLack(melds) {
 function ninegate(melds, tiles, wintile) {
     if (!isSameColor(melds)) return false;
     const light = Array(9).fill(0);
-    const color = melds[0][0] - NumberArray[melds[0][0]];
+    const color = ColorFirstArray[ColorArray[melds[0][0]]];
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 1) light[NumberArray[melds[i][0]]] += 3;
         else for (let j = 0; j < melds[i].length; ++j) ++light[NumberArray[melds[i][j]]];
@@ -443,13 +455,22 @@ function countHog(melds) {
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length < 4)
             if (melds[i].length === 1) tiles[melds[i][0]] += 3;
+            else if (melds[i].length === 2) tiles[melds[i][0]] += 2;
             else for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
     let cnt = 0;
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
 }
+const windmax = [0, 4, 8, 24, 88];
+const dragonmax = [0, 2, 6, 88];
+function getWindPredict(x) {
+    return x <= 4 ? windmax[x] : 88 + (x - 4) * 30;
+}
+function getDragonPredict(x) {
+    return x <= 3 ? dragonmax[x] : 88 + (x - 3) * 44;
+}
 let filter_cnt = 0;
-function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
+function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -477,15 +498,15 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     else if (ek) ++v, f.push(74);
     if (ck + cp >= 4) {
         (v += 64), f.push(12);
-        if (fourteen_type) must_pengpeng = true, must_menqing = true;
+        if (fourteen_type) (must_pengpeng = true), (must_menqing = true);
     } else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
     if (melds.length >= 5 && isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
     if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
-        if (zm) (v += 4), f.push(56);
+        if (zimo) (v += 4), f.push(56);
         else (v += 2), f.push(62);
-    else if (zm === 80) ++v, f.push(zm);
+    else if (zimo === 80) ++v, f.push(zimo);
     const hog = countHog(melds);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (melds.length >= 5 && isMask(melds, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
@@ -504,25 +525,29 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
     if (melds.length >= 5)
         if (isMask(melds, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
         else if (isMask(melds, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
-    if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
-    let predict_v = 22;
+    let predict_v = 30;
     if (!skip_bind) {
-        let sq = 0, nt = 0, wt = 0, dt = 0, h = 34;
+        let sq = 0,
+            nt = 0,
+            wt = 0,
+            dt = 0;
         for (let i = 0; i < melds.length; ++i)
             if (melds[i].length === 3) ++sq;
             else if (melds[i][0] >= 31) ++dt;
             else if (melds[i][0] >= 27) ++wt;
             else if (melds[i].length !== 2) ++nt;
-        predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + Math.max(wt - 1, 0) * 30 + Math.max(dt - 1, 0) * 44;
+        predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
     }
     if (v + predict_v <= gans) return { val: 0, fan: [] };
+    ++filter_cnt;
+    if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
     if (melds.length >= 5 && isMask(melds, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
     if (must_hunyise) must_quemen = true;
     let has_pengpeng = false;
     if (melds.length >= 5 && !must_pengpeng && isPengpeng(melds)) (v += 6), f.push(49), (has_pengpeng = true);
     if (isFiveColors(melds)) (v += 6), f.push(51);
-    if (melds.length >= 5 && isContains19(melds)) if (!must_quandai) (v += 4), f.push(55);
+    if (melds.length >= 5 && !must_quandai && isContains19(melds)) (v += 4), f.push(55);
     if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
     if (must_pinghe) must_wuzi = true;
     if (melds.length >= 5 && !must_duan1 && isMask(melds, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
@@ -539,15 +564,14 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
             if (melds[i].length === 3) seq.push(melds[i][0]);
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
             else tri.push(melds[i][0]);
-        ++filter_cnt;
         let orphan = Array(tri.length).fill(0);
         seq = seq.sort((a, b) => a - b);
         tri = tri.sort((a, b) => a - b);
         for (let i = 0; i < orphan.length; ++i)
             if (OrphanArray[tri[i]])
-                if (mw === gw && mw === tri[i]) (orphan[i] = 83), (v += 4);
-                else if (mw === tri[i]) (orphan[i] = 61), (v += 2);
-                else if (gw === tri[i]) (orphan[i] = 60), (v += 2);
+                if (my_wind === global_wind && my_wind === tri[i]) (orphan[i] = 83), (v += 4);
+                else if (my_wind === tri[i]) (orphan[i] = 61), (v += 2);
+                else if (global_wind === tri[i]) (orphan[i] = 60), (v += 2);
                 else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
                 else if (yaojiuke) (orphan[i] = 73), ++v;
         const seqans = GBSeqBind(seq);
@@ -567,6 +591,131 @@ function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i
         prefix[i] = currect[j];
         cartesianProduct(g, arrays, prefix, i + 1);
     }
+}
+function GB7Pairs(tids) {
+    const ot = PairOutput(getTiles(tids));
+    function leastProduct(f, prefix = Array(7).fill(-1), count = Array(sizeUT).fill(0), i = 0) {
+        if (i === 7) {
+            f(prefix, count);
+            return;
+        }
+        function next(j) {
+            prefix[i] = j;
+            ++count[j];
+            leastProduct(f, prefix, count, i + 1);
+            --count[j];
+        }
+        if (ot[i][0] < sizeUT) {
+            next(ot[i][0]);
+            return;
+        }
+        const [l, r] = JokerRange[ot[i][0]];
+        let shadow = -1;
+        for (let j = l; j < r; ++j) {
+            if (count[j]) shadow = j;
+            if (count[j] % 2 === 1) break;
+        }
+        if (shadow >= 0) next(shadow);
+        else for (let j = l; j < r; ++j) next(j);
+    }
+    let gans = { val: 0, fan: [] };
+    function pairKernel(a, tiles) {
+        let v = 24;
+        let f = [19];
+        let must_hunyise = false;
+        let must_qingyise = false;
+        let must_hun19 = false;
+        let must_duan1 = false;
+        let must_wuzi = false;
+        let must_quemen = false;
+        const melds = a.map((x) => [x]);
+        if (isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
+        if (isMask(melds, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
+        if (isMask(melds, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
+        if (!must_hun19 && isMask(melds, OrphanArray)) (v += 32), f.push(18);
+        if (!must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
+        if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
+        if (isMask(melds, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
+        else if (isMask(melds, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
+        if (isMask(melds, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
+        if (isMask(melds, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
+        else if (isMask(melds, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
+        if (isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
+        if (isMask(melds, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
+        if (!must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
+        if (must_hunyise) must_quemen = true;
+        if (!must_duan1 && isMask(melds, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
+        if (must_duan1) must_wuzi = true;
+        if (!must_quemen) {
+            const n = countLack(melds);
+            for (let i = 0; i < n; ++i) ++v, f.push(75);
+        }
+        if (!must_wuzi && isMask(melds, NoHonorArray)) ++v, f.push(76);
+        let hog = 0;
+        for (let i = 0; i < sizeUT; ++i) hog += Math.floor(tiles[i] / 2);
+        for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
+        if (v > gans.val) (gans.val = v), (gans.fan = f);
+    }
+    leastProduct(pairKernel);
+    let arr = Array(5).fill(0);
+    let cot = ot.map((x) => x[0]);
+    for (let i = 0; i < cot.length; ++i) {
+        if (cot[i] < sizeUT) ++arr[ColorArray[cot[i]]];
+        else if (JokerColor[cot[i]]) ++arr[JokerColor[cot[i]]];
+    }
+    for (let i = 0; i < cot.length; ++i) {
+        if (cot[i] === 46) {
+            let u = false;
+            for (let j = 0; !u && j < 3; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
+        } else if (cot[i] === 48) {
+            let u = false;
+            for (let j = 3; !u && j < 5; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
+        } else if (cot[i] === JokerC) {
+            let u = false;
+            for (let j = 3; !u && j < 5; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
+        }
+    }
+    if (arr.every(Boolean)) {
+        let v = 24 + 6, f = [19, 51];
+        let hun19 = true;
+        for (let i = 0; hun19 && i < cot.length; ++i) if (cot[i] < sizeUT && NumberArray[cot[i]] !== 0 && NumberArray[cot[i]] !== 8) hun19 = false;
+        if (hun19) (v += 32), f.push(18);
+        let tiles = Array(sizeUT).fill(0);
+        for (let i = 0; i < cot.length; ++i) {
+            if (cot[i] < sizeUT) ++tiles[cot[i]];
+            else {
+                let u = false;
+                const [l, r] = JokerRange[ot[i][0]];
+                for (let j = l; !u && j < r; ++j) if (tiles[cot[i]] % 1 === 0) ++tiles[cot[i]], u = true;
+                if (!u) ++tiles[l];
+            }
+        }
+        let hog = 0;
+        for (let i = 0; i < sizeUT; ++i) hog += Math.floor(tiles[i] / 2);
+        for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
+        if (v > gans.val) (gans.val = v), (gans.fan = f);
+    }
+    function isShiftPairs()
+    {
+        let c = -1;
+        let minp = 9, maxp = -1;
+        for (let i = 0; i < ot.length; ++i) {
+            let tc = -1;
+            if (ot[i][0] < sizeUT) tc = ColorArray[ot[i][0]], minp = Math.min(minp, NumberArray[ot[i][0]]), maxp = Math.max(maxp, NumberArray[ot[i][0]]);
+            else if (JokerColor[ot[i][0]]) tc = JokerColor[ot[i][0]];
+            else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
+            else if (ot[i][0] === 48) return undefined;
+            if (c === -1) c = tc;
+            else if (c !== tc) return undefined;
+        }
+        if (maxp - minp >= 7) return undefined;
+        let ans = { val: 88, fan: [6] };
+        if (minp > 0 && maxp < 8) ans.val += 2, ans.fan.push(68);
+        return ans;
+    }
+    const sp = isShiftPairs();
+    if (sp && sp.val > gans.val) return sp;
+    return gans;
 }
 function PreAllMelds(aids) {
     let submeld = Array(aids[1].length)

@@ -160,6 +160,13 @@ let vst = [];
 const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, -1];
 const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, -1];
 const JokerC = 42;
+const CJokerA = [43, 44, 45, 47, 48];
+const CJokerB = [46, 46, 46, 49, 49];
+const ColorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4];
+const ColorFirstArray = [0, 9, 18, 27, 31, 34];
+const NumberArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6];
+const JokerColor = { 43: 0, 44: 1, 45: 2, 47: 3, 48: 4 }
+const JokerRange = { 42: [0, sizeUT], 43: [0, 9], 44: [9, 18], 45: [18, 27], 46: [0, 27], 47: [27, 31], 48: [31, 34], 49: [27, 34] }
 function prepareStep(nm, np, tiles) {
     ldStep = Array(sizeUT * 7);
     let sizeStep = 0;
@@ -632,10 +639,9 @@ function Buda16Step(tiles) {
             --pmiss[4];
             break;
         }
-    const joker = [43, 44, 45, 47, 48];
     for (let i = 0; i < 5; ++i) {
-        miss[i] = Math.max(miss[i] - tiles[joker[i]], 0);
-        pmiss[i] = Math.max(pmiss[i] - tiles[joker[i]], 0);
+        miss[i] = Math.max(miss[i] - tiles[CJokerA[i]], 0);
+        pmiss[i] = Math.max(pmiss[i] - tiles[CJokerA[i]], 0);
     }
     let step = Infinity;
     for (let pi = 0; pi < 5; ++pi) {
@@ -1153,16 +1159,14 @@ function Buda16Output(tiles) {
     for (let i = 0; i < 27; ++i) if (tiles[i]) (ot[Math.floor(i / 9)][Math.floor((i % 9) / 3)] = i), --tiles[i];
     for (let i = 27; i <= 30; ++i) if (tiles[i]) (ot[3][i - 27] = i), --tiles[i];
     for (let i = 31; i <= 33; ++i) if (tiles[i]) (ot[4][i - 31] = i), --tiles[i];
-    const t_joker_a = [43, 44, 45, 47, 48];
     for (let i = 0; i < 5; ++i)
         for (let j = 0; j < ot[i].length; ++j)
-            if (tiles[t_joker_a[i]] === 0) break;
-            else if (ot[i][j] === -1) (ot[i][j] = t_joker_a[i]), --tiles[t_joker_a[i]];
-    const t_joker_b = [46, 46, 46, 49, 49];
+            if (tiles[CJokerA[i]] === 0) break;
+            else if (ot[i][j] === -1) (ot[i][j] = CJokerA[i]), --tiles[CJokerA[i]];
     for (let i = 0; i < 5; ++i)
         for (let j = 0; j < ot[i].length; ++j)
             if (ot[i][j] === -1) {
-                let rid = tiles[t_joker_b[i]] ? t_joker_b[i] : JokerC;
+                let rid = tiles[CJokerB[i]] ? CJokerB[i] : JokerC;
                 (ot[i][j] = rid), --tiles[rid];
             }
     for (let j = 0; j < sizeAT; ++j) if (tiles[j]) ot[5][0] = j;

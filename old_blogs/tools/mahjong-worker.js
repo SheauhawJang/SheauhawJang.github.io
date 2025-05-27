@@ -338,6 +338,14 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         p0 = PreAllMelds(aids);
         m = p0.nots * p0.nsubots;
     }
+    if (substeps[1] === -1) ++m;
+    function postDebugInfo() {
+        const t = new Date() - st;
+        const predict_t = Math.round((t * m) / cm);
+        const rate = (cm / m) * 100;
+        let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
+        postMessage({ debug, output: `${loc.at_least}${gans.val + aids[2].length}${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
+    }
     function cal(ots, subots, ck, ek, others = []) {
         let cp = 0;
         let wintf = 0;
@@ -358,13 +366,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         ans.fan = [...ans.fan, ...infof];
         if (ans.val + infov > gans.val) gans = ans;
         ++cm;
-        if (!(cm & 524287)) {
-            const t = new Date() - st;
-            const predict_t = Math.round((t * m) / cm);
-            const rate = (cm / m) * 100;
-            let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
-            postMessage({ debug, output: `${loc.at_least}${gans.val + aids[2].length}${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
-        }
+        if (!(cm & 524287)) postDebugInfo();
     }
     const st = new Date();
     if (substeps[0] === -1) {
@@ -379,9 +381,17 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             gans.val = 8;
             gans.fan = [43];
         }
-        gans.val += aids[2].length;
-        gans.fan.push(...Array(aids[2].length).fill(81));
+        postDebugInfo();
     }
+    if (substeps[1] === -1) {
+        const pans = GB7Pairs(aids[0]);
+        if (pans.val > gans.val) gans = pans;
+        console.log("Seven Pairs", pans.val, pans.fan);
+        ++cm;
+        postDebugInfo();
+    }
+    gans.val += aids[2].length;
+    gans.fan.push(...Array(aids[2].length).fill(81));
     let ptchange = wt ? `自家+${gans.val * 3 + 24}，他家-${gans.val + 8}` : `自家+${gans.val + 24}，铳家-${gans.val + 8}，他家-8`;
     outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
     console.log(filter_cnt, gans.fan);

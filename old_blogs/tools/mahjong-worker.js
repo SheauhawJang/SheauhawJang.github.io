@@ -325,7 +325,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     let infof = [];
     if (info.includes(44))
         if (wt) (infov += 8), infof.push((wt = 45));
-        else (info += 8), infof.push(44);
+        else (infov += 8), infof.push(44);
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (!info.includes(44) && info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
@@ -370,6 +370,22 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         if (!(cm & 524287)) postDebugInfo();
     }
     const st = new Date();
+    if (substeps[1] === -1) {
+        let pans = GB7Pairs(aids[0]);
+        pans.val += infov;
+        pans.fan = [...pans.fan, ...infof];
+        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (pans.val > gans.val) gans = pans;
+        ++cm;
+        postDebugInfo();
+    }
+    if (substeps[2] === -1) {
+        let pans = { val: 88 + infov, fan: [7, ...infof] };
+        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (pans.val > gans.val) gans = pans;
+        ++cm;
+        postDebugInfo();
+    }
     if (substeps[0] === -1) {
         const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
         const { err, itots, itsubots, ek, ck } = p0;
@@ -382,23 +398,6 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             gans.val = 8;
             gans.fan = [43];
         }
-        postDebugInfo();
-    }
-    if (substeps[1] === -1) {
-        let pans = GB7Pairs(aids[0]);
-        pans.val += infov;
-        pans.fan = [...pans.fan, ...infof];
-        if (wt === 80) ++pans.val, pans.fan.push(80);
-        if (pans.val > gans.val) gans = pans;
-        console.log("Seven Pairs", pairs_filer, pans.val, pans.fan);
-        ++cm;
-        postDebugInfo();
-    }
-    if (substeps[2] === -1) {
-        let pans = { val: 88 + infov, fan: [7, ...infof] };
-        if (wt === 80) ++pans.val, pans.fan.push(80);
-        if (pans.val > gans.val) gans = pans;
-        ++cm;
         postDebugInfo();
     }
     gans.val += aids[2].length;

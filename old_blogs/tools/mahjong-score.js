@@ -515,10 +515,11 @@ function GBKernel(melds, gans, aids, ck, ek, cp, mw, gw, zm) {
         for (let i = 0; i < n; ++i) ++v, f.push(75);
     }
     if (melds.length >= 5 && !must_wuzi && isMask(melds, NoHonorArray)) ++v, f.push(76);
-    if (melds.length >= 5 && !must_menqing && aids[1].length === ek)
+    if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
         if (zm) (v += 4), f.push(56);
         else (v += 2), f.push(62);
     else if (zm === 80) ++v, f.push(zm);
+    console.log(melds.length, must_menqing, aids[1].length, ck);
     const hog = countHog(melds);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {

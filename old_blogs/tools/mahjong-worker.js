@@ -387,7 +387,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         let pans = GB7Pairs(aids[0]);
         pans.val += infov;
         pans.fan = [...pans.fan, ...infof];
-        if (wt === 80) pans.val += 2, pans.fan.push(80);
+        if (wt === 80) ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         console.log("Seven Pairs", pairs_filer, pans.val, pans.fan);
         ++cm;

@@ -339,6 +339,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         m = p0.nots * p0.nsubots;
     }
     if (substeps[1] === -1) ++m;
+    if (substeps[2] === -1) ++m;
     function postDebugInfo() {
         const t = new Date() - st;
         const predict_t = Math.round((t * m) / cm);
@@ -393,9 +394,16 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         ++cm;
         postDebugInfo();
     }
+    if (substeps[2] === -1) {
+        let pans = { val: 88 + infov, fan: [7, ...infof] };
+        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (pans.val > gans.val) gans = pans;
+        ++cm;
+        postDebugInfo();
+    }
     gans.val += aids[2].length;
     gans.fan.push(...Array(aids[2].length).fill(81));
-    let ptchange = wt ? `自家+${gans.val * 3 + 24}，他家-${gans.val + 8}` : `自家+${gans.val + 24}，铳家-${gans.val + 8}，他家-8`;
+    let ptchange = wt ? `${loc.winner}+${gans.val * 3 + 24}${loc.comma}${loc.other_player}-${gans.val + 8}` : `${loc.winner}+${gans.val + 24}${loc.comma}${loc.loser}-${gans.val + 8}${loc.comma}${loc.observer}-8`;
     outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
     console.log(filter_cnt, gans.fan);
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };

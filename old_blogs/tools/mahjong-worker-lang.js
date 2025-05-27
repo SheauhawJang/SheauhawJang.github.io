@@ -111,6 +111,10 @@ const cn_loc = {
     subtile_error_2: "固定面子无法组成顺子、刻子或杠子",
     GB_FAN_unit: "番",
     at_least: "至少",
+    winner: "自家",
+    other_player: "他家",
+    lose_player: "铳家",
+    observer: "旁家",
 }
 const tw_loc = {
     wait: "待",

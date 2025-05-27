@@ -592,11 +592,13 @@ function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i
         cartesianProduct(g, arrays, prefix, i + 1);
     }
 }
+let pairs_filer = 0;
 function GB7Pairs(tids) {
     const ot = PairOutput(getTiles(tids));
     function leastProduct(f, prefix = Array(7).fill(-1), count = Array(sizeUT).fill(0), i = 0) {
         if (i === 7) {
             f(prefix, count);
+            ++pairs_filer;
             return;
         }
         function next(j) {

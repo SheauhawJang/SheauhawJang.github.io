@@ -365,9 +365,9 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan = [...ans.fan, ...infof];
-        if (ans.val + infov > gans.val) gans = ans;
+        if (ans.val > gans.val) gans = ans;
         ++cm;
-        if (!(cm & 1048575)) postDebugInfo();
+        if (!(cm & 1048575)) postDebugInfo(); 
     }
     const st = new Date();
     if (substeps[1] === -1) {

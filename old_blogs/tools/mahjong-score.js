@@ -541,6 +541,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, til
             else if (melds[i][0] >= 27) ++wt;
             else if (melds[i].length !== 2) ++nt;
         predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
+        if (wt === 1 && dt === 4) console.log(v, predict_v, gans);
     }
     predict_v = Math.max(predict_v, 64);
     if (v + predict_v <= gans) return { val: 0, fan: [] };
@@ -677,7 +678,7 @@ function GB7Pairs(tids) {
     let cot = ot.map((x) => x[0]);
     for (let i = 0; i < cot.length; ++i) {
         if (cot[i] < sizeUT) ++arr[ColorArray[cot[i]]];
-        else if (JokerColor[cot[i]] !== undefined) ++arr[JokerColor[cot[i]]];
+        else if (cot[i] in JokerColor) ++arr[JokerColor[cot[i]]];
     }
     for (let i = 0; i < cot.length; ++i) {
         if (cot[i] === 46) {
@@ -718,7 +719,7 @@ function GB7Pairs(tids) {
         for (let i = 0; i < ot.length; ++i) {
             let tc = -1;
             if (ot[i][0] < sizeUT) tc = ColorArray[ot[i][0]], ++nbs[NumberArray[ot[i][0]]];
-            else if (JokerColor[ot[i][0]] !== undefined) tc = JokerColor[ot[i][0]];
+            else if (ot[i][0] in JokerColor) tc = JokerColor[ot[i][0]];
             else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
             else if (ot[i][0] === 49) return undefined;
             if (tc > 3) return undefined;

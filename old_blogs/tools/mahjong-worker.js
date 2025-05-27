@@ -329,7 +329,6 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (!info.includes(44) && info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
-    //if (aids[0].length === 0) return { output: "", outputs: "" };
     const wint = aids[0].at(-1)?.id;
     let listen_cnt = save.waiting[wint]?.ans.length ?? 999;
     let gans = { val: 0, fan: [] };
@@ -347,6 +346,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
         postMessage({ debug, output: `${loc.at_least}${gans.val + aids[2].length}${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
     }
+    const tiles = getTiles(aids[0]);
     function cal(ots, subots, ck, ek, others = []) {
         let cp = 0;
         let wintf = 0;
@@ -361,13 +361,13 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 else if (isJokerEqual(ots[k][2], wint)) wintf = 77;
             }
         if (wint && !wt && !wintf) --cp;
-        let ans = GBKernel([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, mw, gw, wt);
+        let ans = GBKernel([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, mw, gw, wt, tiles);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan = [...ans.fan, ...infof];
         if (ans.val + infov > gans.val) gans = ans;
         ++cm;
-        if (!(cm & 524287)) postDebugInfo();
+        if (!(cm & 1048575)) postDebugInfo();
     }
     const st = new Date();
     if (substeps[1] === -1) {
@@ -404,7 +404,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     gans.fan.push(...Array(aids[2].length).fill(81));
     let ptchange = wt ? `${loc.winner}+${gans.val * 3 + 24}${loc.comma}${loc.other_player}-${gans.val + 8}` : `${loc.winner}+${gans.val + 24}${loc.comma}${loc.loser}-${gans.val + 8}${loc.comma}${loc.observer}-8`;
     outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
-    console.log(filter_cnt, gans.fan);
+    console.log(filter_cnt, pairs_filer, part_time, gans.fan);
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 self.onmessage = function (e) {

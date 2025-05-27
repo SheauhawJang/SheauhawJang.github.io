@@ -326,11 +326,15 @@ const L5Array = [1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 
 const EvenArray = [0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 const HonorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1];
 const NoHonorArray = HonorArray.map((x) => 1 - x);
-function isMask(melds, mask) {
+function flattenMeld(melds) {
+    let ans = [];
     for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length !== 3) {
-            if (!mask[melds[i][0]]) return false;
-        } else if (melds[i].length === 3) for (let j = 0; j < melds[i].length; ++j) if (!mask[melds[i][j]]) return false;
+        if (melds[i].length !== 3) ans.push(melds[i][0]);
+        else for (let j = 0; j < melds[i].length; ++j) ans.push(melds[i][j]);
+    return ans;
+}
+function isMask(melds, mask) {
+    for (let i = 0; i < melds.length; ++i) if (!mask[melds[i]]) return false;
     return true;
 }
 function isSameColor(melds) {
@@ -370,7 +374,7 @@ function isFiveColors(melds) {
 function isContains19(melds) {
     for (let i = 0; i < melds.length; ++i) {
         let contains = false;
-        for (let j = 0; !contains && j < melds[i].length; ++j) if (melds[i][j] >= 27 || NumberArray[melds[i][j]] === 0 || NumberArray[melds[i][j]] === 8) contains = true;
+        for (let j = 0; !contains && j < melds[i].length; ++j) if (OrphanArray[melds[i][j]]) contains = true;
         if (!contains) return false;
     }
     return true;
@@ -382,13 +386,7 @@ function countLack(melds) {
 }
 function ninegate(melds, tiles, wintile) {
     if (!isSameColor(melds)) return false;
-    const light = Array(9).fill(0);
     const color = ColorFirstArray[ColorArray[melds[0][0]]];
-    for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length === 1) light[NumberArray[melds[i][0]]] += 3;
-        else for (let j = 0; j < melds[i].length; ++j) ++light[NumberArray[melds[i][j]]];
-    if (light[0] < 3 || light[8] < 3) return false;
-    for (let i = 1; i < 8; ++i) if (light[i] !== 1 && light[i] !== 2) return false;
     for (let i = 0; i < 9; ++i) {
         let cnt = tiles[i + color];
         if (i === wintile) --cnt;
@@ -396,6 +394,12 @@ function ninegate(melds, tiles, wintile) {
             if (cnt > 3) return false;
         } else if (cnt > 1) return false;
     }
+    const light = Array(9).fill(0);
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length === 1) light[NumberArray[melds[i][0]]] += 3;
+        else for (let j = 0; j < melds[i].length; ++j) ++light[NumberArray[melds[i][j]]];
+    if (light[0] < 3 || light[8] < 3) return false;
+    for (let i = 1; i < 8; ++i) if (light[i] !== 1 && light[i] !== 2) return false;
     return true;
 }
 // prettier-ignore
@@ -461,6 +465,14 @@ function countHog(melds) {
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
 }
+function predictHog(melds) {
+    let cnt = 0;
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length < 4)
+            if (melds[i].length === 1) cnt += 3;
+            else cnt += melds[i].length;
+    return Math.floor(cnt / 4);
+}
 const windmax = [0, 4, 8, 24, 88];
 const dragonmax = [0, 2, 6, 88];
 function getWindPredict(x) {
@@ -470,7 +482,8 @@ function getDragonPredict(x) {
     return x <= 3 ? dragonmax[x] : 88 + (x - 3) * 44;
 }
 let filter_cnt = 0;
-function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo) {
+let part_time = Array(8).fill(0);
+function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, tiles, marr = flattenMeld(melds)) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -501,31 +514,22 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo) {
         if (fourteen_type) (must_pengpeng = true), (must_menqing = true);
     } else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
-    if (melds.length >= 5 && isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
-    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
+    if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
+    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
     if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
         if (zimo) (v += 4), f.push(56);
         else (v += 2), f.push(62);
     else if (zimo === 80) ++v, f.push(zimo);
-    const hog = countHog(melds);
-    for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
-    if (melds.length >= 5 && isMask(melds, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
-    if (melds.length >= 5 && isMask(melds, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
-    if (fourteen_type && isPureDoubleDragon(melds)) (v += 64), f.push(13), (must_qingyise = true), (must_pinghe = true), (skip_bind = true);
-    if (fourteen_type && isMixedDoubleDragon(melds)) (v += 16), f.push(29), (must_pinghe = true), (skip_bind = true);
-    if (melds.length >= 5 && !must_hun19 && isMask(melds, OrphanArray)) (v += 32), f.push(18), (must_hun19 = true);
-    if (must_hun19) (must_pengpeng = true), (must_quandai = true), (yaojiuke = false);
-    if (melds.length >= 5 && isMask(melds, EvenArray)) (v += 24), f.push(21), (must_pengpeng = true), (must_duan1 = true);
-    if (melds.length >= 5 && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
-    if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
+    if (melds.length >= 5 && isMask(marr, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
+    if (melds.length >= 5 && isMask(marr, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
     if (melds.length >= 5)
-        if (isMask(melds, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
-        else if (isMask(melds, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
-    if (melds.length >= 5 && isMask(melds, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
+        if (isMask(marr, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
+        else if (isMask(marr, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
+    if (melds.length >= 5 && isMask(marr, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
     if (melds.length >= 5)
-        if (isMask(melds, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
-        else if (isMask(melds, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
-    let predict_v = 30;
+        if (isMask(marr, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
+        else if (isMask(marr, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
+    let predict_v = 56 + predictHog(melds);
     if (!skip_bind) {
         let sq = 0,
             nt = 0,
@@ -538,10 +542,18 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo) {
             else if (melds[i].length !== 2) ++nt;
         predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
     }
+    predict_v = Math.max(predict_v, 64);
     if (v + predict_v <= gans) return { val: 0, fan: [] };
     ++filter_cnt;
+    if (fourteen_type && isPureDoubleDragon(melds)) (v += 64), f.push(13), (must_qingyise = true), (must_pinghe = true), (skip_bind = true);
+    if (fourteen_type && isMixedDoubleDragon(melds)) (v += 16), f.push(29), (must_pinghe = true), (skip_bind = true);
+    if (melds.length >= 5 && !must_hun19 && isMask(marr, OrphanArray)) (v += 32), f.push(18), (must_hun19 = true);
+    if (must_hun19) (must_pengpeng = true), (must_quandai = true), (yaojiuke = false);
+    if (melds.length >= 5 && isMask(marr, EvenArray)) (v += 24), f.push(21), (must_pengpeng = true), (must_duan1 = true);
+    if (melds.length >= 5 && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
+    if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
     if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
-    if (melds.length >= 5 && isMask(melds, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
+    if (melds.length >= 5 && isMask(marr, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
     if (must_hunyise) must_quemen = true;
     let has_pengpeng = false;
@@ -550,13 +562,15 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo) {
     if (melds.length >= 5 && !must_quandai && isContains19(melds)) (v += 4), f.push(55);
     if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
     if (must_pinghe) must_wuzi = true;
-    if (melds.length >= 5 && !must_duan1 && isMask(melds, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
+    if (melds.length >= 5 && !must_duan1 && isMask(marr, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
     if (must_duan1) must_wuzi = true;
     if (melds.length >= 5 && !must_quemen) {
         const n = countLack(melds);
         for (let i = 0; i < n; ++i) ++v, f.push(75);
     }
-    if (melds.length >= 5 && !must_wuzi && isMask(melds, NoHonorArray)) ++v, f.push(76);
+    if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
+    const hog = countHog(melds);
+    for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {
         let seq = [],
             tri = [];
@@ -631,28 +645,28 @@ function GB7Pairs(tids) {
         let must_wuzi = false;
         let must_quemen = false;
         const melds = a.map((x) => [x]);
-        if (isMask(melds, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
-        if (isMask(melds, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
-        if (isMask(melds, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
-        if (!must_hun19 && isMask(melds, OrphanArray)) (v += 32), f.push(18);
+        if (isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
+        if (isMask(a, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
+        if (isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
+        if (!must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18);
         if (!must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
         if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
-        if (isMask(melds, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
-        else if (isMask(melds, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
-        if (isMask(melds, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
-        if (isMask(melds, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
-        else if (isMask(melds, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
+        if (isMask(a, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
+        else if (isMask(a, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
+        if (isMask(a, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
+        if (isMask(a, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
+        else if (isMask(a, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
         if (isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
-        if (isMask(melds, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
+        if (isMask(a, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
         if (!must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
         if (must_hunyise) must_quemen = true;
-        if (!must_duan1 && isMask(melds, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
+        if (!must_duan1 && isMask(a, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
         if (must_duan1) must_wuzi = true;
         if (!must_quemen) {
             const n = countLack(melds);
             for (let i = 0; i < n; ++i) ++v, f.push(75);
         }
-        if (!must_wuzi && isMask(melds, NoHonorArray)) ++v, f.push(76);
+        if (!must_wuzi && isMask(a, NoHonorArray)) ++v, f.push(76);
         let hog = 0;
         for (let i = 0; i < sizeUT; ++i) hog += Math.floor(tiles[i] / 2);
         for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
@@ -669,7 +683,7 @@ function GB7Pairs(tids) {
         if (cot[i] === 46) {
             let u = false;
             for (let j = 0; !u && j < 3; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
-        } else if (cot[i] === 48) {
+        } else if (cot[i] === 49) {
             let u = false;
             for (let j = 3; !u && j < 5; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
         } else if (cot[i] === JokerC) {
@@ -680,7 +694,7 @@ function GB7Pairs(tids) {
     if (arr.every(Boolean)) {
         let v = 24 + 6, f = [19, 51];
         let hun19 = true;
-        for (let i = 0; hun19 && i < cot.length; ++i) if (cot[i] < sizeUT && NumberArray[cot[i]] !== 0 && NumberArray[cot[i]] !== 8) hun19 = false;
+        for (let i = 0; hun19 && i < cot.length; ++i) if (cot[i] < sizeUT && !OrphanArray[cot[i]]) hun19 = false;
         if (hun19) (v += 32), f.push(18);
         let tiles = Array(sizeUT).fill(0);
         for (let i = 0; i < cot.length; ++i) {
@@ -700,23 +714,26 @@ function GB7Pairs(tids) {
     function isShiftPairs()
     {
         let c = -1;
-        let minp = 9, maxp = -1;
+        let nbs = Array(9).fill(0);
         for (let i = 0; i < ot.length; ++i) {
             let tc = -1;
-            if (ot[i][0] < sizeUT) tc = ColorArray[ot[i][0]], minp = Math.min(minp, NumberArray[ot[i][0]]), maxp = Math.max(maxp, NumberArray[ot[i][0]]);
+            if (ot[i][0] < sizeUT) tc = ColorArray[ot[i][0]], ++nbs[NumberArray[ot[i][0]]];
             else if (JokerColor[ot[i][0]]) tc = JokerColor[ot[i][0]];
             else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
-            else if (ot[i][0] === 48) return undefined;
+            else if (ot[i][0] === 49) return undefined;
+            if (tc > 3) return undefined;
             if (c === -1) c = tc;
             else if (c !== tc) return undefined;
         }
+        let maxp = -1, minp = 9; 
+        for (let i = 0; i < 9; ++i) if (nbs[i] > 1) return undefined; else if (nbs[i]) maxp = Math.max(maxp, i), minp = Math.min(minp, i);
         if (maxp - minp >= 7) return undefined;
         let ans = { val: 88, fan: [6] };
         if (minp > 0 && maxp < 8) ans.val += 2, ans.fan.push(68);
         return ans;
     }
     const sp = isShiftPairs();
-    if (sp && sp.val > gans.val) return sp;
+    if (sp && sp.val >= gans.val) return sp;
     return gans;
 }
 function PreAllMelds(aids) {
@@ -771,7 +788,6 @@ function PreAllMelds(aids) {
             msze -= n.p + n.s + n.k;
         }
     }
-    console.log(cnt, nsubots);
     return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
 }
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];

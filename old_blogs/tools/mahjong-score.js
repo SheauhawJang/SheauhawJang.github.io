@@ -541,7 +541,6 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, til
             else if (melds[i][0] >= 27) ++wt;
             else if (melds[i].length !== 2) ++nt;
         predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
-        if (wt === 1 && dt === 4) console.log(v, predict_v, gans);
     }
     predict_v = Math.max(predict_v, 64);
     if (v + predict_v <= gans) return { val: 0, fan: [] };

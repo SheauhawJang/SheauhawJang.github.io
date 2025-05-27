@@ -677,7 +677,7 @@ function GB7Pairs(tids) {
     let cot = ot.map((x) => x[0]);
     for (let i = 0; i < cot.length; ++i) {
         if (cot[i] < sizeUT) ++arr[ColorArray[cot[i]]];
-        else if (JokerColor[cot[i]]) ++arr[JokerColor[cot[i]]];
+        else if (JokerColor[cot[i]] !== undefined) ++arr[JokerColor[cot[i]]];
     }
     for (let i = 0; i < cot.length; ++i) {
         if (cot[i] === 46) {

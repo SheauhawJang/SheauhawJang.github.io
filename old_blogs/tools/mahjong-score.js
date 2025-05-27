@@ -414,12 +414,9 @@ const PureDoubleDragon = [
 ].map(normalize);
 // prettier-ignore
 const MixedDoubleDragon = [
-    [seq[0], seq[0], seq[15], seq[15], pair[22]],
-    [seq[0], seq[0], seq[24], seq[24], pair[13]],
-    [seq[9], seq[9], seq[6], seq[6], pair[22]],
-    [seq[9], seq[9], seq[24], seq[24], pair[4]],
-    [seq[18], seq[18], seq[6], seq[6], pair[13]],
-    [seq[18], seq[18], seq[15], seq[15], pair[4]],
+    [seq[0], seq[6], seq[9], seq[15], pair[22]],
+    [seq[0], seq[6], seq[18], seq[24], pair[13]],
+    [seq[9], seq[15], seq[18], seq[24], pair[4]],
 ].map(normalize);
 function compareArray(a, b) {
     if (a.length !== b.length) return a.length - b.length;

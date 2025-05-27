@@ -316,7 +316,7 @@ const HonorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 const NoHonorArray = HonorArray.map((x) => 1 - x);
 function isMask(melds, mask) {
     for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length < 3) { 
+        if (melds[i].length !== 3) { 
             if (!mask[melds[i][0]]) return false; 
         } else if (melds[i].length === 3) for (let j = 0; j < melds[i].length; ++j) if (!mask[melds[i][j]]) return false;
     return true;

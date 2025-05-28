@@ -538,7 +538,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
         (v += 64), f.push(12);
         if (fourteen_type) (must_pengpeng = true), (must_menqing = true);
     } else if (ck + cp === 3) (v += 16), f.push(33);
-    else if (ck + cp === 2 && !(ck === 2 && ek === 0))) (v += 2), f.push(66);
+    else if (ck + cp === 2 && !(ck === 2 && ek === 0)) (v += 2), f.push(66);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);

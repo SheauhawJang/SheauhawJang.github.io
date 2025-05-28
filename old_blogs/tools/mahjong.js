@@ -667,7 +667,7 @@ function CountWaitingCards(tiles, subtiles, ans) {
     for (let i = 0; i < ans.length; ++i) cnt += Math.max(4 - tiles[ans[i]] - subtiles[ans[i]], 0);
     return cnt;
 }
-function checkGoodWaiting(tiles, stepf) {
+function checkGoodWaiting(tiles, stepf, i) {
     for (let ia = 0; ia < sizeAT; ++ia) {
         if (!tiles[ia]) continue;
         --tiles[ia];
@@ -797,8 +797,8 @@ function makeAns(step, tiles, f, ff) {
         ++tiles[i];
         const iw = ff(i);
         if (iw)
-            if (step === 1 && tiles[i] < 4)
-                if (checkGoodWaiting(tiles, f)) gans.push(i);
+            if (step === 1 && tiles[i] <= 4)
+                if (checkGoodWaiting(tiles, f, i)) gans.push(i);
                 else ans.push(i);
             else ans.push(i);
         --tiles[i];

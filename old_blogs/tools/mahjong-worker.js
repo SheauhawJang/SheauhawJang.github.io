@@ -175,7 +175,7 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
         stepGB = Math.min(stepGB, step16);
     }
     if (full_tcnt >= 9) {
-        stepkd = KDragonStep(tiles, tcnt);
+        stepkd = KnitDragonStep(tiles, tcnt);
         table += `<tr><td style="padding-left: 0px;">${loc.zuhelongxing}${loc.colon}</td><td>${getWaitingType(stepkd)}</td></tr>`;
         postMessage({ output: table_head + table + table_tail });
         stepGB = Math.min(stepGB, stepkd);
@@ -212,7 +212,7 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
         if (stepkd === -1) {
             let opt_size = 10 - odvd.length;
             if (step === -1) --opt_size;
-            const ans = KDragonOutput(tiles, full_tcnt, opt_size);
+            const ans = KnitDragonOutput(tiles, full_tcnt, opt_size);
             cnt += ans.cnt;
             odvd = [...odvd, ...ans.ots.map((a) => `<div class="waiting-brief">${loc.zuhelongxing}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`)];
         }
@@ -332,13 +332,29 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     const wint = aids[0].at(-1)?.id;
     let listen_cnt = save.waiting[wint]?.ans.length ?? 999;
     let gans = { val: 0, fan: [] };
-    let cm = 0, m = 0, p0;
-    if (substeps[0] === -1) {
-        p0 = PreAllMelds(aids);
-        m = p0.nots * p0.nsubots;
-    }
+    let cm = 0, m = 0, p = Array(7).fill(null);
+    const tiles = getTiles(aids[0]);
+    if (substeps[0] === -1) p[6] = PreAllMelds(aids);
     if (substeps[1] === -1) ++m;
     if (substeps[2] === -1) ++m;
+    if (substeps[4] === -1) {
+        for (let i = 0; i < 6; ++i) {
+            let tcp = tiles.slice();
+            let win = true;
+            for (let j = 0; j < 9; ++j) {
+                const id = KnitDragonSave[i][j];
+                let rid = getRealId(tcp, id);
+                if (rid === -1) {
+                    win = false;
+                    break;
+                }
+                --tcp[rid];
+            }
+            if (!win) continue;
+            p[i] = PreAllMelds(aids, tcp, aids[0].length - 9);
+        }
+    }
+    for (let i = 0; i < 7; ++i) if (p[i]) m += p[i].nots * p[i].nsubots;
     function postDebugInfo() {
         const t = new Date() - st;
         const predict_t = Math.round((t * m) / cm);
@@ -346,8 +362,11 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
         postMessage({ debug, output: `${loc.at_least}${gans.val + aids[2].length}${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
     }
-    const tiles = getTiles(aids[0]);
-    function cal(ots, subots, ck, ek, f, other = []) {
+    function inMelds(melds, x) {
+        for (let i = 0; i < melds.length; ++i) for (let j = 0; j < melds[i].length; ++j) if (isJokerEqual(melds[i][j], x)) return true;
+        return false;
+    }
+    function cal(ots, subots, ck, ek, f, others = []) {
         let cp = 0;
         let wintf = 0;
         for (let k = 0; k < ots.length; ++k)
@@ -360,8 +379,8 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 else if (isJokerEqual(ots[k][1], wint)) wintf = 78;
                 else if (isJokerEqual(ots[k][2], wint)) wintf = 77;
             }
-        if (wint && !wt && !wintf) --cp;
-        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, mw, gw, wt, tiles);
+        if (wint && !wt && !wintf && !inMelds(others, wint)) --cp;
+        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan = [...ans.fan, ...infof];
@@ -386,9 +405,49 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         ++cm;
         postDebugInfo();
     }
+    if (substeps[3] === -1) {
+        let pans = { val: 12, fan: [34] };
+        let tcp = tiles.slice();
+        let seven_stars = true;
+        for (let i = 27; i < 34; ++i) {
+            let rid = getRealId(tcp, i);
+            if (rid === -1) {
+                seven_stars = false;
+                break;
+            }
+            --tcp[rid];
+        }
+        if (seven_stars) pans = { val: 24, fan: [20] };
+        else {
+            for (let i = 0; i < 6; ++i) {
+                let tcp = tiles.slice();
+                let win = true;
+                for (let j = 0; j < 9; ++j) {
+                    const id = KnitDragonSave[i][j];
+                    let rid = getRealId(tcp, id);
+                    if (rid === -1) {
+                        win = false;
+                        break;
+                    }
+                    --tcp[rid];
+                }
+                if (win) {
+                    pans.val += 12;
+                    pans.fan.push(35);
+                    break;
+                }
+            }
+        }
+        pans.val += infov;
+        pans.fan = [...pans.fan, ...infof];
+        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (pans.val > gans.val) gans = pans;
+        ++cm;
+        postDebugInfo();
+    }
     if (substeps[0] === -1) {
         const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
-        const { err, itots, itsubots, ek, ck } = p0;
+        const { err, itots, itsubots, ek, ck } = p[6];
         if (err === 1) return { output: loc.subtile_error_1, brief: "" };
         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
         if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (listen_cnt = 999), (infov += 6), infof.push(52);
@@ -399,6 +458,17 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             gans.fan = [43];
         }
         postDebugInfo();
+    }
+    if (substeps[4] === -1) {
+        for (let i = 0; i < 6; ++i) {
+            if (!p[i]) continue;
+            const { err, itots, itsubots, ek, ck } = p[i];
+            if (err === 1) return { output: loc.subtile_error_1, brief: "" };
+            if (err === 2) return { output: loc.subtile_error_2, brief: "" };
+            const other = [KnitDragonSave[i].slice(0, 3), KnitDragonSave[i].slice(3, 6), KnitDragonSave[i].slice(6, 9)]
+            itots((ots) => itsubots((subots) => cal(ots, subots, ck, ek, GBKnitDragon, other)));
+            postDebugInfo();
+        }
     }
     gans.val += aids[2].length;
     gans.fan.push(...Array(aids[2].length).fill(81));

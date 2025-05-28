@@ -484,8 +484,8 @@ function OrphanStep(tiles) {
     return ans - tiles[JokerC];
 }
 // Creation of Knitted Dragon
-let KDragonSave = Array.from({ length: 6 }, () => Array(9).fill(0));
-function KDragonCreate() {
+let KnitDragonSave = Array.from({ length: 6 }, () => Array(9).fill(0));
+function KnitDragonCreate() {
     // dragonOffset contains all possible permutations (6 permutations for 3 elements)
     const dragonOffsets = [
         [0, 1, 2],
@@ -500,10 +500,10 @@ function KDragonCreate() {
             const di = Math.floor(j / 3);
             const dj = j % 3;
             const id = di * 9 + dragonOffsets[i][di] + dj * 3;
-            KDragonSave[i][j] = id;
+            KnitDragonSave[i][j] = id;
         }
 }
-KDragonCreate();
+KnitDragonCreate();
 // Special Check for Bukao
 function Bukao16Count(tiles) {
     let ans = 0;
@@ -511,7 +511,7 @@ function Bukao16Count(tiles) {
         let count = 0;
         let tcp = tiles.slice();
         for (let j = 0; j < 9; ++j) {
-            const id = KDragonSave[i][j];
+            const id = KnitDragonSave[i][j];
             ++count;
             if (tiles[id]);
             else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
@@ -530,13 +530,13 @@ function Bukao16Count(tiles) {
     return ans + tiles[JokerC];
 }
 // Special Check for Knitted Dragon
-function KDragonStep(tiles, tcnt) {
+function KnitDragonStep(tiles, tcnt) {
     let ans = Infinity;
     for (let i = 0; i < 6; ++i) {
         let miss = 0;
         let tcp = tiles.slice();
         for (let j = 0; j < 9; ++j) {
-            const id = KDragonSave[i][j];
+            const id = KnitDragonSave[i][j];
             if (tcp[id]) --tcp[id];
             else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
@@ -547,13 +547,13 @@ function KDragonStep(tiles, tcnt) {
     }
     return ans;
 }
-function KDragonStepCheck(tiles, maxstep, tcnt) {
+function KnitDragonStepCheck(tiles, maxstep, tcnt) {
     let ans = Infinity;
     for (let i = 0; i < 6; ++i) {
         let miss = 0;
         let tcp = tiles.slice();
         for (let j = 0; j < 9; ++j) {
-            const id = KDragonSave[i][j];
+            const id = KnitDragonSave[i][j];
             if (tcp[id]) --tcp[id];
             else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
@@ -759,8 +759,8 @@ function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
         initGetchecks(tiles, (i) => (getchecks[i][3] = tcnt - 1 - Bukao16Count(tiles) < nstep));
     }
     if (tcnt >= 9 && nstep >= substep[4]) {
-        initDischecks(tiles, (i) => (dischecks[i][4] = KDragonStepCheck(tiles, nstep + 1, tcnt)));
-        initGetchecks(tiles, (i) => (getchecks[i][4] = KDragonStepCheck(tiles, nstep, tcnt)));
+        initDischecks(tiles, (i) => (dischecks[i][4] = KnitDragonStepCheck(tiles, nstep + 1, tcnt)));
+        initGetchecks(tiles, (i) => (getchecks[i][4] = KnitDragonStepCheck(tiles, nstep, tcnt)));
     }
     return { dischecks, getchecks };
 }
@@ -831,7 +831,7 @@ function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
         else if (discheck[3] && (!g || g[3]) && tcnt - 1 - Bukao16Count(tiles) < step) return true;
         else if (discheck[0] && (!g || g[0]) && (s ?? StepCheck(tiles, step, tcnt - d, tcnt))) return true;
-        else if (discheck[4] && (!g || g[4]) && KDragonStepCheck(tiles, step, tcnt)) return true;
+        else if (discheck[4] && (!g || g[4]) && KnitDragonStepCheck(tiles, step, tcnt)) return true;
     }
     const saveWaiting = Array(sizeUT).fill(false);
     if (nstep >= substep[0]) {
@@ -1042,7 +1042,7 @@ function Bukao16Output(tiles) {
         let rot = [[], [], [], [], []];
         let count = 0;
         for (let j = 0; j < 9; ++j) {
-            const id = KDragonSave[i][j];
+            const id = KnitDragonSave[i][j];
             let rid = getRealId(tcp, id);
             if (rid === -1) continue;
             ++count;
@@ -1063,7 +1063,7 @@ function Bukao16Output(tiles) {
     }
     return ots;
 }
-function KDragonOutput(tiles, full_tcnt, opt_size) {
+function KnitDragonOutput(tiles, full_tcnt, opt_size) {
     let ots = Array(6)
         .fill(null)
         .map(() => []);
@@ -1074,7 +1074,7 @@ function KDragonOutput(tiles, full_tcnt, opt_size) {
         let win = true;
         let head = [[], [], []];
         for (let j = 0; j < 9; ++j) {
-            const id = KDragonSave[i][j];
+            const id = KnitDragonSave[i][j];
             let rid = getRealId(tcp, id);
             if (rid === -1) {
                 win = false;

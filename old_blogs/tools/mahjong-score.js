@@ -326,7 +326,7 @@ const L5Array = [1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 
 const EvenArray = [0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 const HonorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1];
 const NoHonorArray = HonorArray.map((x) => 1 - x);
-function flattenMeld(melds) {
+function flattenMelds(melds) {
     let ans = [];
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length !== 3) ans.push(melds[i][0]);
@@ -478,9 +478,37 @@ function getWindPredict(x) {
 function getDragonPredict(x) {
     return x <= 3 ? dragonmax[x] : 88 + (x - 3) * 44;
 }
+function predictBind(melds) {
+    let sq = 0,
+        nt = 0,
+        wt = 0,
+        dt = 0;
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length === 3) ++sq;
+        else if (melds[i][0] >= 31) ++dt;
+        else if (melds[i][0] >= 27) ++wt;
+        else if (melds[i].length !== 2) ++nt;
+    return Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
+}
+function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, can73 = true) {
+    let v = 0;
+    seq = seq.sort((a, b) => a - b);
+    tri = tri.sort((a, b) => a - b);
+    let orphan = Array(tri.length).fill(0);
+    for (let i = 0; i < orphan.length; ++i)
+        if (OrphanArray[tri[i]])
+            if (wind61 === wind60 && wind61 === tri[i]) (orphan[i] = 83), (v += 4);
+            else if (wind61 === tri[i]) (orphan[i] = 61), (v += 2);
+            else if (wind60 === tri[i]) (orphan[i] = 60), (v += 2);
+            else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
+            else if (can73) (orphan[i] = 73), ++v;
+    const seqans = GBSeqBind(seq);
+    const trians = GBTriBind(tri, orphan, has49, can65);
+    return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
+}
 let filter_cnt = 0;
 let part_time = Array(8).fill(0);
-function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, tiles, marr = flattenMeld(melds)) {
+function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -511,6 +539,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, til
         if (fourteen_type) (must_pengpeng = true), (must_menqing = true);
     } else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
+    const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
     if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
@@ -527,18 +556,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, til
         if (isMask(marr, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
         else if (isMask(marr, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
     let predict_v = 56 + predictHog(melds);
-    if (!skip_bind) {
-        let sq = 0,
-            nt = 0,
-            wt = 0,
-            dt = 0;
-        for (let i = 0; i < melds.length; ++i)
-            if (melds[i].length === 3) ++sq;
-            else if (melds[i][0] >= 31) ++dt;
-            else if (melds[i][0] >= 27) ++wt;
-            else if (melds[i].length !== 2) ++nt;
-        predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
-    }
+    if (!skip_bind) predict_v += predictBind(melds);
     predict_v = Math.max(predict_v, 64);
     if (v + predict_v <= gans) return { val: 0, fan: [] };
     ++filter_cnt;
@@ -575,72 +593,37 @@ function GBKernel(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, til
             if (melds[i].length === 3) seq.push(melds[i][0]);
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
             else tri.push(melds[i][0]);
-        let orphan = Array(tri.length).fill(0);
-        seq = seq.sort((a, b) => a - b);
-        tri = tri.sort((a, b) => a - b);
-        for (let i = 0; i < orphan.length; ++i)
-            if (OrphanArray[tri[i]])
-                if (my_wind === global_wind && my_wind === tri[i]) (orphan[i] = 83), (v += 4);
-                else if (my_wind === tri[i]) (orphan[i] = 61), (v += 2);
-                else if (global_wind === tri[i]) (orphan[i] = 60), (v += 2);
-                else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
-                else if (yaojiuke) (orphan[i] = 73), ++v;
-        const seqans = GBSeqBind(seq);
-        const trians = GBTriBind(tri, orphan, fourteen_type && has_pengpeng, can_shuangtong);
-        v += seqans.val + trians.val;
-        f = [...f, ...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)];
+        const bind = calculateBind(seq, tri, wind60, wind61, fourteen_type && has_pengpeng, can_shuangtong, yaojiuke);
+        v += bind.val;
+        f = [...f, ...bind.fan];
     }
     return { val: v, fan: f };
 }
-function GBKnittedDragon(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zimo, tiles, marr = flattenMeld(melds)) {
-    let f = [];
-    let v = 0;
-    let must_hunyise = false;
-    let must_qingyise = false;
-    let must_menqing = false;
-    let must_pengpeng = false;
-    let must_quandai = false;
-    let must_hun19 = false;
+function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo) {
+    let f = [35];
+    let v = 12;
     let must_pinghe = false;
-    let must_duan1 = false;
     let must_wuzi = false;
-    let must_quemen = false;
-    let yaojiuke = true;
-    let can_shuangtong = true;
     let skip_bind = false;
-    const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
-    if (ck + ek >= 4) {
-        (v += 88), f.push(5);
-    } else if (ck + ek === 3) (v += 32), f.push(17);
+    if (ck + ek >= 4) (v += 88), f.push(5);
+    else if (ck + ek === 3) (v += 32), f.push(17);
     else if (ck === 2) (v += 6), f.push(53);
     else if (ek === 2) (v += 4), f.push(57);
     else if (ck + ek === 2) (v += 5), f.push(82);
     else if (ck) (v += 2), f.push(67);
     else if (ek) ++v, f.push(74);
-    if (ck + cp >= 4) {
-        (v += 64), f.push(12);
-    } else if (ck + cp === 3) (v += 16), f.push(33);
+    if (ck + cp >= 4) (v += 64), f.push(12);
+    else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && ck !== 2) (v += 2), f.push(66);
-    if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
+    if (melds.length >= 5 && aids[1].length === ck)
         if (zimo) (v += 4), f.push(56);
         else (v += 2), f.push(62);
     else if (zimo === 80) ++v, f.push(zimo);
-    let predict_v = 56 + predictHog(melds);
-    if (!skip_bind) {
-        let sq = 0,
-            nt = 0,
-            wt = 0,
-            dt = 0;
-        for (let i = 0; i < melds.length; ++i)
-            if (melds[i].length === 3) ++sq;
-            else if (melds[i][0] >= 31) ++dt;
-            else if (melds[i][0] >= 27) ++wt;
-            else if (melds[i].length !== 2) ++nt;
-        predict_v = Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
-    }
-    predict_v = Math.max(predict_v, 64);
+    let predict_v = 6 + predictHog(melds);
+    if (!skip_bind) predict_v += predictBind(melds);
     if (v + predict_v <= gans) return { val: 0, fan: [] };
     ++filter_cnt;
+    const marr = flattenMelds(melds);
     if (isFiveColors(melds)) (v += 6), f.push(51);
     if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
     if (must_pinghe) must_wuzi = true;
@@ -651,23 +634,12 @@ function GBKnittedDragon(melds, gans, aids, ck, ek, cp, my_wind, global_wind, zi
         let seq = [],
             tri = [];
         for (let i = 0; i < melds.length; ++i)
-            if (melds[i].length === 3) seq.push(melds[i][0]);
+            if (isSeq(melds[i][0])) seq.push(melds[i][0]); 
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
-            else tri.push(melds[i][0]);
-        let orphan = Array(tri.length).fill(0);
-        seq = seq.sort((a, b) => a - b);
-        tri = tri.sort((a, b) => a - b);
-        for (let i = 0; i < orphan.length; ++i)
-            if (OrphanArray[tri[i]])
-                if (my_wind === global_wind && my_wind === tri[i]) (orphan[i] = 83), (v += 4);
-                else if (my_wind === tri[i]) (orphan[i] = 61), (v += 2);
-                else if (global_wind === tri[i]) (orphan[i] = 60), (v += 2);
-                else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
-                else if (yaojiuke) (orphan[i] = 73), ++v;
-        const seqans = GBSeqBind(seq);
-        const trians = GBTriBind(tri, orphan, false, true);
-        v += seqans.val + trians.val;
-        f = [...f, ...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)];
+            else if (melds[i].length !== 3) tri.push(melds[i][0]);
+        const bind = calculateBind(seq, tri, wind60, wind61);
+        v += bind.val;
+        f = [...f, ...bind.fan];
     }
     return { val: v, fan: f };
 }
@@ -768,7 +740,8 @@ function GB7Pairs(tids) {
         }
     }
     if (arr.every(Boolean)) {
-        let v = 24 + 6, f = [19, 51];
+        let v = 24 + 6,
+            f = [19, 51];
         let hun19 = true;
         for (let i = 0; hun19 && i < cot.length; ++i) if (cot[i] < sizeUT && !OrphanArray[cot[i]]) hun19 = false;
         if (hun19) (v += 32), f.push(18);
@@ -778,7 +751,7 @@ function GB7Pairs(tids) {
             else {
                 let u = false;
                 const [l, r] = JokerRange[ot[i][0]];
-                for (let j = l; !u && j < r; ++j) if (tiles[cot[i]] % 1 === 0) ++tiles[cot[i]], u = true;
+                for (let j = l; !u && j < r; ++j) if (tiles[cot[i]] % 1 === 0) ++tiles[cot[i]], (u = true);
                 if (!u) ++tiles[l];
             }
         }
@@ -787,13 +760,12 @@ function GB7Pairs(tids) {
         for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
         if (v > gans.val) (gans.val = v), (gans.fan = f);
     }
-    function isShiftPairs()
-    {
+    function isShiftPairs() {
         let c = -1;
         let nbs = Array(9).fill(0);
         for (let i = 0; i < ot.length; ++i) {
             let tc = -1;
-            if (ot[i][0] < sizeUT) tc = ColorArray[ot[i][0]], ++nbs[NumberArray[ot[i][0]]];
+            if (ot[i][0] < sizeUT) (tc = ColorArray[ot[i][0]]), ++nbs[NumberArray[ot[i][0]]];
             else if (ot[i][0] in JokerColor) tc = JokerColor[ot[i][0]];
             else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
             else if (ot[i][0] === 49) return undefined;
@@ -801,18 +773,21 @@ function GB7Pairs(tids) {
             if (c === -1) c = tc;
             else if (c !== tc) return undefined;
         }
-        let maxp = -1, minp = 9;
-        for (let i = 0; i < 9; ++i) if (nbs[i] > 1) return undefined; else if (nbs[i]) maxp = Math.max(maxp, i), minp = Math.min(minp, i);
+        let maxp = -1,
+            minp = 9;
+        for (let i = 0; i < 9; ++i)
+            if (nbs[i] > 1) return undefined;
+            else if (nbs[i]) (maxp = Math.max(maxp, i)), (minp = Math.min(minp, i));
         if (maxp - minp >= 7) return undefined;
         let ans = { val: 88, fan: [6] };
-        if (minp > 0 && maxp < 8) ans.val += 2, ans.fan.push(68);
+        if (minp > 0 && maxp < 8) (ans.val += 2), ans.fan.push(68);
         return ans;
     }
     const sp = isShiftPairs();
     if (sp && sp.val > gans.val) return sp;
     return gans;
 }
-function PreAllMelds(aids) {
+function PreAllMelds(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].length) {
     let submeld = Array(aids[1].length)
         .fill(null)
         .map(() => []);
@@ -845,8 +820,8 @@ function PreAllMelds(aids) {
         if (submeld[i].length === 0) return { err: 2 };
         nsubots *= submeld[i].length;
     }
-    const { cnt, dvd } = realdvd(getTiles(aids[0]), aids[0].length);
-    const nmp = Math.floor(aids[0].length / 3) + (aids[0].length % 3 ? 1 : 0);
+    const { cnt, dvd } = realdvd(tiles, full_tcnt);
+    const nmp = Math.floor(full_tcnt / 3) + (full_tcnt % 3 ? 1 : 0);
     let melds = Array(nmp).fill(null);
     let msze = 0;
     function dfs(f, i = 0, dpi = 0) {

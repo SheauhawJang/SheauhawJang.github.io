@@ -548,7 +548,7 @@ function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, ca
             else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
             else if (can73) (orphan[i] = 73), ++v;
     const seqans = GBSeqBind(seq);
-    const trians = GBTriBind(tri, orphan, has49, can65 ? 1024 : 0);
+    const trians = GBTriBind(tri, orphan, has49, can65 ? 0 : 1024);
     return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
 }
 let filter_cnt = 0;

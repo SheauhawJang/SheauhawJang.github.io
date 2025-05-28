@@ -316,7 +316,7 @@ function GetFanDiv(fan) {
     fans[60] += fans[83];
     fans[61] += fans[83];
     let fanopt = [];
-    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td style="text-align: left">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]}${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
+    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td style="text-align: left">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
 
     return `${table_head}${fanopt.join("")}${table_tail}`;
 }
@@ -360,7 +360,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         const predict_t = Math.round((t * m) / cm);
         const rate = (cm / m) * 100;
         let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
-        postMessage({ debug, output: `${loc.at_least}${gans.val + aids[2].length}${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
+        postMessage({ debug, output: `${loc.at_least} ${gans.val + aids[2].length} ${loc.GB_FAN_unit}\n${GetFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}` });
     }
     function inMelds(melds, x) {
         for (let i = 0; i < melds.length; ++i) for (let j = 0; j < melds[i].length; ++j) if (isJokerEqual(melds[i][j], x)) return true;
@@ -472,8 +472,8 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     }
     gans.val += aids[2].length;
     gans.fan.push(...Array(aids[2].length).fill(81));
-    let ptchange = wt ? `${loc.winner}+${gans.val * 3 + 24}${loc.comma}${loc.other_player}-${gans.val + 8}` : `${loc.winner}+${gans.val + 24}${loc.comma}${loc.loser}-${gans.val + 8}${loc.comma}${loc.observer}-8`;
-    outputs = [`${gans.val}${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
+    let ptchange = wt ? `${loc.winner} +${gans.val * 3 + 24}${loc.comma}${loc.other_player} -${gans.val + 8}` : `${loc.winner} +${gans.val + 24}${loc.comma}${loc.loser} -${gans.val + 8}${loc.comma}${loc.observer} -8`;
+    outputs = [`${gans.val} ${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
     console.log(filter_cnt, pairs_filer, part_time, gans.fan);
     console.log(seq_miss, seq_total, seq_miss / seq_total);
     console.log(tri_miss, tri_total, tri_miss / tri_total);

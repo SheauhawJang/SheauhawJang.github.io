@@ -132,15 +132,21 @@ function ThreeShiftOne(a, b, c) {
     if (ColorArray[a] !== ColorArray[c]) return false;
     return a + 1 === b && b + 1 === c;
 }
-function GBSeqBind4(s, a, b, c, d, ans) {
+function GBSeqBind4(s, a, b, c, d, ans, msk) {
     let m = 0;
     let f = [];
+    let tmsk = 0;
     let vs = [s[a], s[b], s[c], s[d]];
-    if (FourSame(...vs)) (m = 42), (vs = [vs[0]]), (f = [14, -64, -64, -64]);
-    else if (FourShift(...vs)) (m = 32), (f = [16]);
+    if (!(msk & 1) && FourSame(...vs)) (m = 42), (vs = [vs[0]]), (f = [14, -64, -64, -64]), (tmsk = 1);
+    else if (!(msk & 2) && FourShift(...vs)) (m = 32), (f = [16]), (tmsk = 2);
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b, c, d]);
-        const r = vs.map((v) => GBSeqBind(AddMeld(t, v)));
+        const rr = GBSeqBind(t, msk);
+        if (rr.val + m > ans.val) {
+            ans.val = rr.val + m;
+            ans.fan = [f, ...rr.fan];
+        }
+        const r = vs.map((v) => GBSeqBind(AddMeld(t, v), msk | tmsk));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + m > ans.val) {
                 ans.val = r[i].val + m;
@@ -148,18 +154,26 @@ function GBSeqBind4(s, a, b, c, d, ans) {
             }
     }
 }
-function GBSeqBind3(s, a, b, c, ans) {
+function GBSeqBind3(s, a, b, c, ans, msk) {
     let m = 0;
     let f = 0;
+    let tmsk = 0;
     let vs = [s[a], s[b], s[c]];
-    if (ThreeSame(...vs)) (m = 24), (vs = [vs[0]]), (f = 23);
-    else if (ThreeShift(...vs)) (m = 16), (f = vs[1] - vs[0] === 3 ? 28 : 30);
-    else if (MixedStraight(...vs)) (m = 8), (f = 39);
-    else if (ThreeMixedSame(...vs)) (m = 8), (f = 41);
-    else if (ThreeMixedShiftOne(...vs)) (m = 6), (f = 50);
+    if (!(msk & 4) && ThreeSame(...vs)) (m = 24), (vs = [vs[0]]), (f = 23), (tmsk = 4);
+    else if (ThreeShift(...vs)) {
+        if (vs[1] - vs[0] === 3 && !(msk & 8)) (m = 16), (f = 28), (tmsk = 8);
+        else if (vs[1] - vs[0] < 3 && !msk & 2048) (m = 16), (f = 30), (tmsk = 2048);
+    } else if (!(msk & 16) && MixedStraight(...vs)) (m = 8), (f = 39), (tmsk = 16);
+    else if (!(msk & 32) && ThreeMixedSame(...vs)) (m = 8), (f = 41), (tmsk = 32);
+    else if (!(msk & 64) && ThreeMixedShiftOne(...vs)) (m = 6), (f = 50), (tmsk = 64);
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b, c]);
-        const r = vs.map((v) => GBSeqBind(AddMeld(t, v)));
+        const rr = GBSeqBind(t, msk);
+        if (rr.val + m > ans.val) {
+            ans.val = rr.val + m;
+            ans.fan = [f, ...rr.fan];
+        }
+        const r = vs.map((v) => GBSeqBind(AddMeld(t, v), msk | tmsk));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + m > ans.val) {
                 ans.val = r[i].val + m;
@@ -167,17 +181,23 @@ function GBSeqBind3(s, a, b, c, ans) {
             }
     }
 }
-function GBSeqBind2(s, a, b, ans) {
+function GBSeqBind2(s, a, b, ans, msk) {
     let m = 0;
     let f = 0;
+    let tmsk = 0;
     let vs = [s[a], s[b]];
-    if (vs[0] === vs[1]) (m = 1), (vs = [vs[0]]), (f = 69);
-    else if (NumberArray[vs[0]] === NumberArray[vs[1]]) (m = 1), (f = 70);
-    else if (Distance(...vs, 6)) (m = 1), (f = 72); // Old Young Set
-    else if (Distance(...vs, 3)) (m = 1), (f = 71); // Consecutive 6
+    if (!(msk & 128) && vs[0] === vs[1]) (m = 1), (vs = [vs[0]]), (f = 69), (tmsk = 128);
+    else if (!(msk & 256) && NumberArray[vs[0]] === NumberArray[vs[1]]) (m = 1), (f = 70), (tmsk = 256);
+    else if (!(msk & 512) && Distance(...vs, 6)) (m = 1), (f = 72), (tmsk = 512); // Old Young Set
+    else if (!(msk & 1024) && Distance(...vs, 3)) (m = 1), (f = 71), (tmsk = 1024); // Consecutive 6
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b]);
-        const r = vs.map((v) => GBSeqBind(AddMeld(t, v)));
+        const rr = GBSeqBind(t, msk);
+        if (rr.val + m > ans.val) {
+            ans.val = rr.val + m;
+            ans.fan = [f, ...rr.fan];
+        }
+        const r = vs.map((v) => GBSeqBind(AddMeld(t, v), msk | tmsk));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + m > ans.val) {
                 ans.val = r[i].val + m;
@@ -185,9 +205,13 @@ function GBSeqBind2(s, a, b, ans) {
             }
     }
 }
-function GBSeqBind(s) {
-    const key = JSON.stringify(s);
+let seq_miss = 0,
+    seq_total = 0;
+function GBSeqBind(s, msk = 0) {
+    ++seq_total;
+    const key = JSON.stringify({ s, msk });
     if (seqsave.has(key)) return seqsave.get(key);
+    ++seq_miss;
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a) {
         if (a - 1 >= 0 && s[a] === s[a - 1]) continue;
@@ -197,11 +221,11 @@ function GBSeqBind(s) {
                 if (c - 1 > b && s[c] === s[c - 1]) continue;
                 for (let d = c + 1; d < s.length; ++d) {
                     if (d - 1 > c && s[d] === s[d - 1]) continue;
-                    GBSeqBind4(s, a, b, c, d, ans);
+                    GBSeqBind4(s, a, b, c, d, ans, msk);
                 }
-                GBSeqBind3(s, a, b, c, ans);
+                GBSeqBind3(s, a, b, c, ans, msk);
             }
-            GBSeqBind2(s, a, b, ans);
+            GBSeqBind2(s, a, b, ans, msk);
         }
     }
     if (seqsave.size > 1000000) seqsave.clear(), console.log("trisave cleared");
@@ -214,27 +238,33 @@ function GetHeadFromId(id) {
 function GetIdFromHead(head) {
     return head / sizeAT - 1;
 }
-function GBTriBind4(s, orphan, a, b, c, d, ans, pon, st) {
+function GBTriBind4(s, orphan, a, b, c, d, ans, pon, msk) {
     let m = 0;
     let f = [];
+    let tmsk = 0;
     const vs = [s[a], s[b], s[c], s[d]];
     let os = [orphan[a], orphan[b], orphan[c], orphan[d]];
     if (FourShiftOne(...vs)) {
-        if (vs[0] < 27) (m = 48), (f = [15]);
-        else {
-            (m = 88), (f = [1, ...os.map((a) => -a)]);
+        if (!(msk & 1) && vs[0] < 27) (m = 48), (f = [15]), (tmsk = 1);
+        else if (!(msk & 2)) {
+            (m = 88), (f = [1, ...os.map((a) => -a)]), (tmsk = 2);
             for (let i = 0; i < os.length; ++i) m -= os[i] === 73 ? 1 : os[i] === 83 ? 4 : os[i] ? 2 : 0;
             os = [0, 0, 0, 0];
         }
         if (pon) (m -= 6), f.push(-49), (pon = false);
-    } else if (vs[3] >= sizeAT && vs[0] >= 27 && FourShiftOne(...[vs[0], vs[1], vs[2], GetIdFromHead(vs[3])].sort((a, b) => a - b))) {
-        (m = 64), (f = [9]);
+    } else if (!(msk & 4) && vs[3] >= sizeAT && vs[0] >= 27 && FourShiftOne(...[vs[0], vs[1], vs[2], GetIdFromHead(vs[3])].sort((a, b) => a - b))) {
+        (m = 64), (f = [9]), (tmsk = 4);
         for (let i = 0; i < os.length; ++i) if (os[i] === 73) --m, f.push(-os[i]), (os[i] = 0);
     }
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b, c, d]);
         const p = RemoveMeldByIndex(orphan, [a, b, c, d]);
-        const r = [0, 1, 2, 3].map((i) => GBTriBind(...AddMeldAndOrphan(t, p, vs[i], os[i]), pon, st));
+        const rr = GBTriBind(t, p, pon, msk);
+        if (rr.val + m > ans.val) {
+            ans.val = rr.val + m;
+            ans.fan = [...f, ...rr.fan];
+        }
+        const r = [0, 1, 2, 3].map((i) => GBTriBind(...AddMeldAndOrphan(t, p, vs[i], os[i]), pon, msk | tmsk));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + m > ans.val) {
                 ans.val = r[i].val + m;
@@ -242,27 +272,33 @@ function GBTriBind4(s, orphan, a, b, c, d, ans, pon, st) {
             }
     }
 }
-function GBTriBind3(s, orphan, a, b, c, ans, pon, st) {
+function GBTriBind3(s, orphan, a, b, c, ans, pon, msk) {
     let m = 0;
     let f = [];
+    let tmsk = 0;
     const vs = [s[a], s[b], s[c]];
     let os = [orphan[a], orphan[b], orphan[c]];
-    if (vs[0] >= 31 && ThreeShiftOne(...vs)) {
-        (m = 88), (f = [2]);
+    if (!(msk & 8) && vs[0] >= 31 && ThreeShiftOne(...vs)) {
+        (m = 88), (f = [2]), (tmsk = 8);
         for (let i = 0; i < os.length; ++i) if (os[i] === 59) (m -= 2), f.push(-os[i]), (os[i] = 0);
-    } else if (vs[2] >= sizeAT && vs[0] >= 31 && ThreeShiftOne(...[vs[0], vs[1], GetIdFromHead(vs[2])].sort((a, b) => a - b))) {
-        (m = 64), (f = [10]);
+    } else if (!(msk & 16) && vs[2] >= sizeAT && vs[0] >= 31 && ThreeShiftOne(...[vs[0], vs[1], GetIdFromHead(vs[2])].sort((a, b) => a - b))) {
+        (m = 64), (f = [10]), (tmsk = 16);
         for (let i = 0; i < os.length; ++i) if (os[i] === 59) (m -= 2), f.push(-os[i]), (os[i] = 0);
-    } else if (vs[0] < 27 && ThreeShiftOne(...vs)) (m = 24), (f = [24]);
-    else if (ThreeMixedSame(...vs)) (m = 16), (f = [32]);
-    else if (Math.min(...vs) >= 27 && Math.max(...vs) <= 30) {
-        (m = 12), (f = [38]);
+    } else if (!(msk & 32) && vs[0] < 27 && ThreeShiftOne(...vs)) (m = 24), (f = [24]), (tmsk = 32);
+    else if (!(msk & 64) && ThreeMixedSame(...vs)) (m = 16), (f = [32]), (tmsk = 64);
+    else if (!(msk & 128) && Math.min(...vs) >= 27 && Math.max(...vs) <= 30) {
+        (m = 12), (f = [38]), (tmsk = 128);
         for (let i = 0; i < os.length; ++i) if (os[i] === 73) --m, f.push(-os[i]), (os[i] = 0);
-    } else if (ThreeMixedShiftOne(...vs)) (m = 8), (f = [42]);
+    } else if (!(msk & 256) && ThreeMixedShiftOne(...vs)) (m = 8), (f = [42]), (tmsk = 256);
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b, c]);
         const p = RemoveMeldByIndex(orphan, [a, b, c]);
-        const r = [0, 1, 2].map((i) => GBTriBind(...AddMeldAndOrphan(t, p, vs[i], os[i]), pon, st));
+        const rr = GBTriBind(t, p, pon, msk);
+        if (rr.val + m > ans.val) {
+            ans.val = rr.val + m;
+            ans.fan = [...f, ...rr.fan];
+        }
+        const r = [0, 1, 2].map((i) => GBTriBind(...AddMeldAndOrphan(t, p, vs[i], os[i]), pon, msk | tmsk));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + m > ans.val) {
                 ans.val = r[i].val + m;
@@ -270,19 +306,25 @@ function GBTriBind3(s, orphan, a, b, c, ans, pon, st) {
             }
     }
 }
-function GBTriBind2(s, orphan, a, b, ans, pon, st) {
+function GBTriBind2(s, orphan, a, b, ans, pon, msk) {
     let m = 0;
     let f = [];
+    let tmsk = 0;
     const vs = [s[a], s[b]];
     let os = [orphan[a], orphan[b]];
-    if (vs[0] >= 31 && vs[1] >= 31 && vs[1] < sizeUT) {
-        (m = 6), (f = [54]);
+    if (!(msk & 512) && vs[0] >= 31 && vs[1] >= 31 && vs[1] < sizeUT) {
+        (m = 6), (f = [54]), (tmsk = 512);
         for (let i = 0; i < os.length; ++i) if (os[i] === 59) (m -= 2), f.push(-os[i]), (os[i] = 0);
-    } else if (st && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && NumberArray[vs[0]] === NumberArray[vs[1]]))) (m = 2), (f = [65]);
+    } else if (!(msk & 1024) && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && NumberArray[vs[0]] === NumberArray[vs[1]]))) (m = 2), (f = [65]), (tmsk = 1024);
     if (m) {
         const t = RemoveMeldByIndex(s, [a, b]);
         const p = RemoveMeldByIndex(orphan, [a, b]);
-        const r = [0, 1].map((i) => GBTriBind(...AddMeldAndOrphan(t, p, vs[i], os[i]), pon, st));
+        const rr = GBTriBind(t, p, pon, msk);
+        if (rr.val + m > ans.val) {
+            ans.val = rr.val + m;
+            ans.fan = [...f, ...rr.fan];
+        }
+        const r = [0, 1].map((i) => GBTriBind(...AddMeldAndOrphan(t, p, vs[i], os[i]), pon, msk | tmsk));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + m > ans.val) {
                 ans.val = r[i].val + m;
@@ -290,9 +332,12 @@ function GBTriBind2(s, orphan, a, b, ans, pon, st) {
             }
     }
 }
-function GBTriBind(s, orphan, pon, st) {
-    const key = JSON.stringify({ s, orphan, pon, st });
-    if (trisave.has(key)) return trisave.get(key);
+let tri_miss = 0,
+    tri_total = 0;
+function GBTriBind(s, orphan, pon, msk) {
+    ++tri_total;
+    const key = JSON.stringify({ s, orphan, pon, msk });
+    ++tri_miss;
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a) {
         if (a - 1 >= 0 && s[a] === s[a - 1] && orphan[a] === orphan[a - 1]) continue;
@@ -302,11 +347,11 @@ function GBTriBind(s, orphan, pon, st) {
                 if (c - 1 > b && s[c] === s[c - 1] && orphan[c] === orphan[c - 1]) continue;
                 for (let d = c + 1; d < s.length; ++d) {
                     if (d - 1 > c && s[d] === s[d - 1] && orphan[d] === orphan[d - 1]) continue;
-                    GBTriBind4(s, orphan, a, b, c, d, ans, pon, st);
+                    GBTriBind4(s, orphan, a, b, c, d, ans, pon, msk);
                 }
-                GBTriBind3(s, orphan, a, b, c, ans, pon, st);
+                GBTriBind3(s, orphan, a, b, c, ans, pon, msk);
             }
-            GBTriBind2(s, orphan, a, b, ans, pon, st);
+            GBTriBind2(s, orphan, a, b, ans, pon, msk);
         }
     }
     if (trisave.size > 1000000) trisave.clear(), console.log("trisave cleared");
@@ -503,7 +548,7 @@ function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, ca
             else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
             else if (can73) (orphan[i] = 73), ++v;
     const seqans = GBSeqBind(seq);
-    const trians = GBTriBind(tri, orphan, has49, can65);
+    const trians = GBTriBind(tri, orphan, has49, can65 ? 1024 : 0);
     return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
 }
 let filter_cnt = 0;
@@ -634,7 +679,7 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo) {
         let seq = [],
             tri = [];
         for (let i = 0; i < melds.length; ++i)
-            if (isSeq(melds[i][0])) seq.push(melds[i][0]); 
+            if (isSeq(melds[i][0])) seq.push(melds[i][0]);
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
             else if (melds[i].length !== 3) tri.push(melds[i][0]);
         const bind = calculateBind(seq, tri, wind60, wind61);

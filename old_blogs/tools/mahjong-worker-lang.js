@@ -466,7 +466,7 @@ const en_loc = {
     GB_FANNAME_83: "Prevalent and Seat Wind",
     subtile_error_1: "The length of open meld is wrong",
     subtile_error_2: "Open meld cannot be convert to chow, pung or kang",
-    GB_FAN_unit: "Point",
+    GB_FAN_unit: "Points",
     at_least: "At least",
     winner: "Winner",
     other_player: "Non-winner",

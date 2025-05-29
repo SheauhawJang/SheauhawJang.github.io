@@ -474,7 +474,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     gans.fan.push(...Array(aids[2].length).fill(81));
     let ptchange = wt ? `${loc.winner} +${gans.val * 3 + 24}${loc.comma}${loc.other_player} -${gans.val + 8}` : `${loc.winner} +${gans.val + 24}${loc.comma}${loc.loser} -${gans.val + 8}${loc.comma}${loc.observer} -8`;
     outputs = [`${gans.val} ${loc.GB_FAN_unit}`, "\n", GetFanDiv(gans.fan), ptchange];
-    console.log(filter_cnt, pairs_filer, part_time, gans.fan);
+    console.log(filter_cnt, pairs_filer, gans.fan);
     console.log(seq_miss, seq_total, seq_miss / seq_total);
     console.log(tri_miss, tri_total, tri_miss / tri_total);
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };

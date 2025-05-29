@@ -178,7 +178,7 @@ function GBSeqBind3(s, ma, a, b, c, ans) {
     if (!(msk & 4) && ThreeSame(...vs)) (v = 24), (vs = [vs[0]]), (f = 23), (tmsk = 4);
     else if (ThreeShift(...vs)) {
         if (vs[1] - vs[0] === 3 && !(msk & 8)) (v = 16), (f = 28), (tmsk = 8);
-        else if (vs[1] - vs[0] < 3 && !msk & 2048) (v = 16), (f = 30), (tmsk = 2048);
+        else if (vs[1] - vs[0] < 3 && !(msk & 2048)) (v = 16), (f = 30), (tmsk = 2048);
     } else if (!(msk & 16) && MixedStraight(...vs)) (v = 8), (f = 39), (tmsk = 16);
     else if (!(msk & 32) && ThreeMixedSame(...vs)) (v = 8), (f = 41), (tmsk = 32);
     else if (!(msk & 64) && ThreeMixedShiftOne(...vs)) (v = 6), (f = 50), (tmsk = 64);
@@ -557,7 +557,6 @@ function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, ca
     return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
 }
 let filter_cnt = 0;
-let part_time = Array(8).fill(0);
 function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     let f = [];
     let v = 0;

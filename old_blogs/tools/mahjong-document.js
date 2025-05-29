@@ -397,5 +397,5 @@ function processGBScore() {
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     }
     const { aids, substeps, save } = gb_worker_info;
-    gb_worker.postMessage({ task: "gb-score", aids, substeps, save, gw, mw, wt, info });
+    gb_worker.postMessage({ task: "gb-score", aids, substeps, save, gw, mw, wt, info, lang });
 }

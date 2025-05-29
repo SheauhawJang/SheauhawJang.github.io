@@ -291,13 +291,15 @@
                 button.textContent = isVisible ? "Show input instructions ▼" : "Hide input instructions ▲";
             }
             function toggleOutput(i) {
-                const ids = ["output-std", "output-gb", "output-jp", "output-tw"];
+                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb"];
                 const d = document.getElementById(ids[i]);
                 const b = document.getElementById("toggle-" + ids[i]);
                 const s = document.getElementById("brief-" + ids[i]);
+                const o = document.getElementById("options-" + ids[i]);
                 const v = d.style.display !== "none";
                 d.style.display = v ? "none" : "block";
                 s.style.display = v ? "block" : "none";
+                if (o) o.style.display = v ? "none" : "grid";
                 b.textContent = v ? "Expand ▼" : "Fold ▲";
             }
             window.onload = function () {

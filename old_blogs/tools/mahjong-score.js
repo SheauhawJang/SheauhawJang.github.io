@@ -224,13 +224,13 @@ function GBSeqBind(s, ma = Array(s.length).fill(0)) {
     ++seq_miss;
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a) {
-        if (a - 1 >= 0 && s[a] === s[a - 1]) continue;
+        if (a - 1 >= 0 && s[a] === s[a - 1] && ma[a] === ma[a - 1]) continue;
         for (let b = a + 1; b < s.length; ++b) {
-            if (b - 1 > a && s[b] === s[b - 1]) continue;
+            if (b - 1 > a && s[b] === s[b - 1] && ma[b] === ma[b - 1]) continue;
             for (let c = b + 1; c < s.length; ++c) {
-                if (c - 1 > b && s[c] === s[c - 1]) continue;
+                if (c - 1 > b && s[c] === s[c - 1] && ma[c] === ma[c - 1]) continue;
                 for (let d = c + 1; d < s.length; ++d) {
-                    if (d - 1 > c && s[d] === s[d - 1]) continue;
+                    if (d - 1 > c && s[d] === s[d - 1] && ma[d] === ma[d - 1]) continue;
                     GBSeqBind4(s, ma, a, b, c, d, ans);
                 }
                 GBSeqBind3(s, ma, a, b, c, ans);
@@ -345,13 +345,13 @@ function GBTriBind(s, op, ma, pon) {
     ++tri_miss;
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a) {
-        if (a - 1 >= 0 && s[a] === s[a - 1] && op[a] === op[a - 1]) continue;
+        if (a - 1 >= 0 && s[a] === s[a - 1] && op[a] === op[a - 1] && ma[a] === ma[a - 1]) continue;
         for (let b = a + 1; b < s.length; ++b) {
-            if (b - 1 > a && s[b] === s[b - 1] && op[b] === op[b - 1]) continue;
+            if (b - 1 > a && s[b] === s[b - 1] && op[b] === op[b - 1] && ma[b] === ma[b - 1]) continue;
             for (let c = b + 1; c < s.length; ++c) {
-                if (c - 1 > b && s[c] === s[c - 1] && op[c] === op[c - 1]) continue;
+                if (c - 1 > b && s[c] === s[c - 1] && op[c] === op[c - 1] && ma[c] === ma[c - 1]) continue;
                 for (let d = c + 1; d < s.length; ++d) {
-                    if (d - 1 > c && s[d] === s[d - 1] && op[d] === op[d - 1]) continue;
+                    if (d - 1 > c && s[d] === s[d - 1] && op[d] === op[d - 1] && ma[d] === ma[d - 1]) continue;
                     GBTriBind4(s, op, ma, a, b, c, d, ans, pon);
                 }
                 GBTriBind3(s, op, ma, a, b, c, ans, pon);

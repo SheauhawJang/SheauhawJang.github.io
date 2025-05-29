@@ -220,7 +220,6 @@ let seq_miss = 0,
 function GBSeqBind(s, ma = Array(s.length).fill(0)) {
     ++seq_total;
     const key = JSON.stringify({ s, ma });
-    console.log(key);
     if (seqsave.has(key)) return seqsave.get(key);
     ++seq_miss;
     let ans = { val: 0, fan: [] };
@@ -342,6 +341,7 @@ let tri_miss = 0,
 function GBTriBind(s, op, ma, pon) {
     ++tri_total;
     const key = JSON.stringify({ s, op, ma, pon });
+    if (trisave.has(key)) return trisave.get(key);
     ++tri_miss;
     let ans = { val: 0, fan: [] };
     for (let a = 0; a < s.length; ++a) {

@@ -987,6 +987,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         else ++yakuman, f.push(46);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, PureOrphanArray)) ++yakuman, f.push(45);
+    if (melds.length >= 5 && isMask(marr, GreenArray)) ++yakuman, f.push(44);
     if (melds.length >= 5 && ck + ek >= 4) ++yakuman, f.push(43);
     let windcount = Array(4).fill(0);
     let dragoncount = Array(3).fill(0);

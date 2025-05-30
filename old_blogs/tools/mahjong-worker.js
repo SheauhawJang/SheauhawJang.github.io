@@ -568,14 +568,14 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
     else 
         if (mw === 27) score = realpt(gans.val * 6);
         else score = realpt(gans.val * 4);
-    if (exinfo !== "") exinfo = loc.brace_left + exinfo + loc.brace_right;
+    if (tsumo) exinfo = loc.brace_left + exinfo + loc.brace_right;
     const ptchange = `+${score} ${exinfo}`;
     const namebrace = name === "" ? name : `${loc.brace_left}${name}${loc.brace_right}`;
     const fanfuinfo = gans.yakuman ? name : `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit} ${namebrace}`;
     const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq);
     const opts = [fanfuinfo, fanfudiv, ptchange];
     console.log(use_time, gans.fan);
-    return { output: opts.join(''), brief: `${fanfuinfo} ${loc.brace_left}${ptchange}${loc.brace_right}` };
+    return { output: opts.join(''), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
 }
 self.onmessage = function (e) {
     if (e.data.lang) setLoc(e.data.lang);

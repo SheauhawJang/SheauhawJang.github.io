@@ -947,8 +947,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let listen_type = 0;
     let bilisten = false;
     let koutsufu = [];
-    let reduce_mid = -1;
-    let reduce_19 = -1;
+    let epmid = -1;
+    let ep19 = -1;
     const tb = buildHand(tiles, ta, wint);
     for (let i = 0; i < hcnt; ++i) {
         if (melds[i].length === 2) {
@@ -965,14 +965,14 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             }
         } else {
             const o = OrphanArray[melds[i][0]];
-            if (!o && reduce_mid === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) reduce_mid = koutsufu.length;
-            if (reduce_mid === -1 && reduce_19 === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) reduce_19 = koutsufu.length;
+            if (!o && epmid === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) epmid = koutsufu.length;
+            if (o && epmid === -1 && ep19 === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) ep19 = koutsufu.length;
             koutsufu.push((o ? 3 : 2));
         }
     }
     let cp = koutsufu.length;
-    if (reduce_mid === -1) reduce_mid = reduce_19;
-    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) koutsufu[reduce_mid] ^= 2, --cp;
+    if (epmid === -1) epmid = ep19;
+    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) koutsufu[epmid] ^= 2, --cp;
     for (let i = hcnt; i < melds.length; ++i) {
         if (melds[i].length === 1) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0));
         else if (melds[i].length === 4) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0) | 4 | (aids[1][i - hcnt].type % 4 === 0 ? 2 : 0));

@@ -970,7 +970,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     }
     let cp = koutsufu.length;
     if (reduce_middle === -1) reduce_middle = 0;
-    if (!listen_type && !bilisten && koutsufu.length > 0) koutsufu[reduce_middle] ^= 2, --cp;
+    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) koutsufu[reduce_middle] ^= 2, --cp;
     for (let i = hcnt; i < melds.length; ++i) {
         if (melds[i].length === 1) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0));
         else if (melds[i].length === 4) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0) | 4 | (aids[1][i - hcnt].type % 4 === 0 ? 2 : 0));

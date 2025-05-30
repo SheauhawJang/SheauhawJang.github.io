@@ -959,7 +959,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
                 else bilisten = true;
             } else if (canBeListen(tiles, ta, tb, melds[i][1], wint) && !listen_type) listen_type = 18;
             else if (canBeListen(tiles, ta, tb, melds[i][2], wint)) {
-                if (NumberArray[melds[i][2]] === 3) listen_type ||= 17;
+                if (NumberArray[melds[i][2]] === 2) listen_type ||= 17;
                 else bilisten = true;
             }
         } else {

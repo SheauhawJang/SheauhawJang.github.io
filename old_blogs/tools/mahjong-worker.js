@@ -546,7 +546,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
             else if (ans.yakuman === gans.yakuman) 
                 if (ans.valfan > gans.valfan) gans = ans;
                 else if (ans.valfan === gans.valfan)
-                    if (ans.valfus > gans.valfus) gans = ans;
+                    if (ans.realfus > gans.realfus) gans = ans;
         ++cm;
         if (!(cm & 1048575)) postDebugInfo(); 
     }

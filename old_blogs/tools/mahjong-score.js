@@ -1012,9 +1012,11 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         if (listen_type) valfus += 2, fus.push(listen_type);
         if (tsumo) valfus += 2, fus.push(11);
     }
+    const realfus = valfus;
     valfus = Math.ceil(valfus / 10) * 10;
+    if (!mq && valfus < 30) valfus = 30;
     if (infoans.yakuman > 0) f = [...f, ...infoans.fan];
-    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, fus };
+    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus };
     if (gans.yakuman > 0) return eans_jp;
     f.push(...infoans.fan);
     let must_hunyise = false;
@@ -1059,13 +1061,13 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     v += tri[33], f.push(...Array(tri[33]).fill(9));
     if (melds.length >= 5 && isMask(marr, NoOrphanArray)) ++v, f.push(4);
     if (mq && tsumo) ++v, f.push(2);
-    if (v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, valfus, fus, print: "counted_yakuman" };
-    if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, valfus, fus, print: "sanbaiman" };
-    if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, valfus, fus, print: "baiman" };
-    if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, valfus, fus, print: "haneman" };
+    if (v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "counted_yakuman" };
+    if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "sanbaiman" };
+    if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "baiman" };
+    if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "haneman" };
     let pt = valfus * (1 << 2 + v);
-    if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, valfus, fus, print: "mangan" };
-    return { val: pt, yakuman, valfan: v, fan: f, valfus, fus };
+    if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "mangan" };
+    return { val: pt, yakuman, valfan: v, fan: f, valfus, realfus, fus };
 }
 const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 5, 6, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 36, 41, 30, 40]
 const PrintPriority = Array(48);

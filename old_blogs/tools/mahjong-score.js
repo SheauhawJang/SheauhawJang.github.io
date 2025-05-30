@@ -55,9 +55,9 @@ function kernelRealDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0,
         }
     return dvd[dpi].cnt;
 }
-function RemoveMeldsByIndex(s, v) {
+function RemoveMeldsByIndex(s, v, skipi) {
     const t = s.slice();
-    for (let i = v.length - 1; i >= 0; --i) t.splice(v[i], 1);
+    for (let i = v.length - 1; i >= 0; --i) if (i !== skipi) t.splice(v[i], 1);
     return t;
 }
 function AddMeld(s, x) {
@@ -148,14 +148,18 @@ function ThreeShiftOne(a, b, c) {
     if (ColorArray[a] !== ColorArray[c]) return false;
     return a + 1 === b && b + 1 === c;
 }
+function containsUndefined(x) {
+    for (let i = 0; i < x.length; ++i) if (x[i] === undefined) return true;
+    return false;
+}
 function GBSeqBind4(s, ma, a, b, c, d, ans) {
     let v = 0;
     let f = [];
     let tmsk = 0;
-    let vs = [s[a], s[b], s[c], s[d]];
+    const vs = [s[a], s[b], s[c], s[d]];
     const ms = [ma[a], ma[b], ma[c], ma[d]];
     const msk = ma[a] | ma[b] | ma[c] | ma[d];
-    if (!(msk & 1) && FourSame(...vs)) (v = 42), (vs = [vs[0]]), (f = [14, -64, -64, -64]), (tmsk = 1);
+    if (!(msk & 1) && FourSame(...vs)) (v = 42), (f = [14, -64, -64, -64]), (tmsk = 1);
     else if (!(msk & 2) && FourShift(...vs)) (v = 32), (f = [16]), (tmsk = 2);
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c, d]);
@@ -172,10 +176,10 @@ function GBSeqBind3(s, ma, a, b, c, ans) {
     let v = 0;
     let f = 0;
     let tmsk = 0;
-    let vs = [s[a], s[b], s[c]];
+    const vs = [s[a], s[b], s[c]];
     const ms = [ma[a], ma[b], ma[c]];
     const msk = ma[a] | ma[b] | ma[c];
-    if (!(msk & 4) && ThreeSame(...vs)) (v = 24), (vs = [vs[0]]), (f = 23), (tmsk = 4);
+    if (!(msk & 4) && ThreeSame(...vs)) (v = 24), (f = 23), (tmsk = 4);
     else if (ThreeShift(...vs)) {
         if (vs[1] - vs[0] === 3 && !(msk & 8)) (v = 16), (f = 28), (tmsk = 8);
         else if (vs[1] - vs[0] < 3 && !(msk & 2048)) (v = 16), (f = 30), (tmsk = 2048);
@@ -197,10 +201,10 @@ function GBSeqBind2(s, ma, a, b, ans) {
     let v = 0;
     let f = 0;
     let tmsk = 0;
-    let vs = [s[a], s[b]];
+    const vs = [s[a], s[b]];
     const ms = [ma[a], ma[b]];
     const msk = ma[a] | ma[b];
-    if (!(msk & 128) && vs[0] === vs[1]) (v = 1), (vs = [vs[0]]), (f = 69), (tmsk = 128);
+    if (!(msk & 128) && vs[0] === vs[1]) (v = 1), (f = 69), (tmsk = 128);
     else if (!(msk & 256) && NumberArray[vs[0]] === NumberArray[vs[1]]) (v = 1), (f = 70), (tmsk = 256);
     else if (!(msk & 512) && Distance(...vs, 6)) (v = 1), (f = 72), (tmsk = 512); // Old Young Set
     else if (!(msk & 1024) && Distance(...vs, 3)) (v = 1), (f = 71), (tmsk = 1024); // Consecutive 6
@@ -208,7 +212,7 @@ function GBSeqBind2(s, ma, a, b, ans) {
         const t = RemoveMeldsByIndex(s, [a, b]);
         const m = RemoveMeldsByIndex(ma, [a, b]);
         const r = [0, 1].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk)));
-        for (let i = 0; i < r.length; ++i) 
+        for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
                 ans.fan = [f, ...r[i].fan];
@@ -216,10 +220,11 @@ function GBSeqBind2(s, ma, a, b, ans) {
     }
 }
 let seq_miss = 0,
-    seq_total = 0;
+    seq_total = 0,
+    seq_time = 0;
 function GBSeqBind(s, ma = Array(s.length).fill(0)) {
     ++seq_total;
-    const key = JSON.stringify({ s, ma });
+    const key = `${s.join(",")}|${ma.join(",")}`;
     if (seqsave.has(key)) return seqsave.get(key);
     ++seq_miss;
     let ans = { val: 0, fan: [] };
@@ -238,8 +243,12 @@ function GBSeqBind(s, ma = Array(s.length).fill(0)) {
             GBSeqBind2(s, ma, a, b, ans);
         }
     }
-    if (seqsave.size > 1000000) seqsave.clear(), console.log("trisave cleared");
-    seqsave.set(key, ans);
+    try {
+        seqsave.set(key, ans);
+    } catch {
+        seqsave.clear();
+        console.warn("seqsave cleared");
+    }
     return ans;
 }
 function GetHeadFromId(id) {
@@ -263,7 +272,7 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon) {
             for (let i = 0; i < os.length; ++i) v -= os[i] === 73 ? 1 : os[i] === 83 ? 4 : os[i] ? 2 : 0;
             os = [0, 0, 0, 0];
         }
-        if (pon) (v -= 6), f.push(-49), (pon = false);
+        if (pon) (v -= 6), f.push(-48), (pon = false);
     } else if (!(msk & 4) && vs[3] >= sizeAT && vs[0] >= 27 && FourShiftOne(...[vs[0], vs[1], vs[2], GetIdFromHead(vs[3])].sort((a, b) => a - b))) {
         (v = 64), (f = [9]), (tmsk = 4);
         for (let i = 0; i < os.length; ++i) if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
@@ -340,7 +349,7 @@ let tri_miss = 0,
     tri_total = 0;
 function GBTriBind(s, op, ma, pon) {
     ++tri_total;
-    const key = JSON.stringify({ s, op, ma, pon });
+    const key = `${s.join(",")}|${op.join(",")}|${ma.join(",")}|${pon}`;
     if (trisave.has(key)) return trisave.get(key);
     ++tri_miss;
     let ans = { val: 0, fan: [] };
@@ -359,8 +368,12 @@ function GBTriBind(s, op, ma, pon) {
             GBTriBind2(s, op, ma, a, b, ans, pon);
         }
     }
-    if (trisave.size > 1000000) trisave.clear(), console.log("trisave cleared");
-    trisave.set(key, ans);
+    try {
+        trisave.set(key, ans);
+    } catch {
+        trisave.clear();
+        console.warn("trisave cleared");
+    }
     return ans;
 }
 const GreenArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0];
@@ -434,9 +447,8 @@ function countLack(melds) {
     for (let i = 0; i < melds.length; ++i) if (melds[i][0] < 27) arr[ColorArray[melds[i][0]]] = true;
     return 3 - arr.filter(Boolean).length;
 }
-function ninegate(melds, tiles, wintile) {
-    if (!isSameColor(melds)) return false;
-    const color = ColorFirstArray[ColorArray[melds[0][0]]];
+function ninegateListen(color, tiles, wintile) {
+    if (wintile === undefined) return true;
     for (let i = 0; i < 9; ++i) {
         let cnt = tiles[i + color];
         if (i === wintile) --cnt;
@@ -444,6 +456,12 @@ function ninegate(melds, tiles, wintile) {
             if (cnt > 3) return false;
         } else if (cnt > 1) return false;
     }
+    return true;
+}
+function ninegate(melds, tiles, wintile) {
+    if (!isSameColor(melds)) return false;
+    const color = ColorFirstArray[ColorArray[melds[0][0]]];
+    if (!ninegateListen(color, tiles, wintile)) return false;
     const light = Array(9).fill(0);
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 1) light[NumberArray[melds[i][0]]] += 3;
@@ -557,6 +575,94 @@ function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, ca
     return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
 }
 let filter_cnt = 0;
+function buildHand(tiles, ta, wint) {
+    if (wint < sizeUT) return undefined;
+    let tb = Array(7).fill(0);
+    for (let i = 0; i < sizeUT; ++i) tb[ColorArray[i]] += ta[i] - tiles[i];
+    tb[0] -= tiles[43], tb[1] -= tiles[44], tb[2] -= tiles[45];
+    tb[3] -= tiles[47], tb[4] -= tiles[48];
+    tb[5] = tb[0] + tb[1] + tb[2] - tiles[46];
+    tb[6] = tb[3] + tb[4] - tiles[49];
+    return tb;
+}
+function canBeListen(tiles, ta, tb, x, wint) {
+    if (wint < sizeUT) return x === wint;
+    switch (wint) {
+        case 42: return ta[x] > tiles[x] && tb[ColorArray[x]] && tb[5 + HonorArray[x]];
+        case 43: case 44: case 45: case 47: case 48: return JokerA[x] === wint && ta[x] > tiles[x];
+        case 46: case 49: return JokerB[x] === wint && ta[x] > tiles[x] && tb[ColorArray[x]];
+    }
+    return false;
+}
+function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i = 0) {
+    if (arrays.length === i) {
+        g(prefix);
+        return;
+    }
+    const currect = arrays[i];
+    for (let j = 0; j < currect.length; ++j) {
+        prefix[i] = currect[j];
+        cartesianProduct(g, arrays, prefix, i + 1);
+    }
+}
+function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].length, ota = Array(sizeUT).fill(0)) {
+    let submeld = Array(aids[1].length)
+        .fill(null)
+        .map(() => []);
+    let ek = 0,
+        ck = 0;
+    let nsubots = 1;
+    for (let i = 0; i < aids[1].length; ++i) {
+        let wfc = aids[1][i].map((x) => x.id);
+        if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
+        if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
+        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
+        if (isSeq(wfc))
+            if (wfc[2] < sizeUT) submeld[i].push(wfc);
+            else {
+                const [a, b] = wfc;
+                if (isSeq([a - 1, a, b])) submeld[i].push([a - 1, a, b]);
+                if (isSeq([a, b, b + 1])) submeld[i].push([a, b, b + 1]);
+                if (isSeq([a, a + 1, b])) submeld[i].push([a, a + 1, b]);
+            }
+        else {
+            for (let j = 0; j < sizeUT; ++j)
+                if (canBeReal(j, wfc)) {
+                    submeld[i].push(wfc.length === 3 ? tri[j] : quad[j]);
+                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[j]);
+                }
+            if (wfc.length === 4)
+                if (aids[1][i].type % 4 === 0) ++ck;
+                else ++ek;
+        }
+        if (submeld[i].length === 0) return { err: 2 };
+        nsubots *= submeld[i].length;
+    }
+    const { cnt, dvd } = realdvd(tiles, full_tcnt);
+    const nmp = Math.floor(full_tcnt / 3) + (full_tcnt % 3 ? 1 : 0);
+    let melds = Array(nmp).fill(null);
+    let msze = 0;
+    function dfs(f, i = 0, dpi = 0) {
+        if (msze === nmp) {
+            f(melds, ota);
+            return;
+        }
+        const ans = dvd[dpi];
+        for (let j = 0; j < ans.nxt.length; ++j) {
+            const n = ans.nxt[j];
+            for (let p = 0; p < n.p; ++p) melds[msze++] = pair[i];
+            for (let s = 0; s < n.s; ++s) melds[msze++] = seq[i];
+            for (let k = 0; k < n.k; ++k) melds[msze++] = tri[i];
+            ota[i] += n.p * 2 + n.s + n.k * 3;
+            if (n.s) ota[i + 1] += n.s, ota[i + 2] += n.s;
+            dfs(f, i + 1, n.dpi);
+            msze -= n.p + n.s + n.k;
+            ota[i] -= n.p * 2 + n.s + n.k * 3;
+            if (n.s) ota[i + 1] -= n.s, ota[i + 2] -= n.s;
+        }
+    }
+    return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
+}
 function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     let f = [];
     let v = 0;
@@ -618,10 +724,10 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
     if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
     if (melds.length >= 5 && isMask(marr, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
-    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
-    if (must_hunyise) must_quemen = true;
     let has_pengpeng = false;
-    if (melds.length >= 5 && !must_pengpeng && isPengpeng(melds)) (v += 6), f.push(49), (has_pengpeng = true);
+    if (melds.length >= 5 && !must_pengpeng && isPengpeng(melds)) (v += 6), f.push(48), (has_pengpeng = true);
+    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true);
+    if (must_hunyise) must_quemen = true;
     if (isFiveColors(melds)) (v += 6), f.push(51);
     if (melds.length >= 5 && !must_quandai && isContains19(melds)) (v += 4), f.push(55);
     if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
@@ -692,21 +798,10 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo) {
     }
     return { val: v, fan: f };
 }
-function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i = 0) {
-    if (arrays.length === i) {
-        g(prefix);
-        return;
-    }
-    const currect = arrays[i];
-    for (let j = 0; j < currect.length; ++j) {
-        prefix[i] = currect[j];
-        cartesianProduct(g, arrays, prefix, i + 1);
-    }
-}
 let pairs_filer = 0;
 function GB7Pairs(tids) {
     const ot = PairOutput(getTiles(tids));
-    function leastProduct(f, prefix = Array(7).fill(-1), count = Array(sizeUT).fill(0), i = 0) {
+    function pairLeastProduct(f, prefix = Array(7).fill(-1), count = Array(sizeUT).fill(0), i = 0) {
         if (i === 7) {
             f(prefix, count);
             ++pairs_filer;
@@ -715,7 +810,7 @@ function GB7Pairs(tids) {
         function next(j) {
             prefix[i] = j;
             ++count[j];
-            leastProduct(f, prefix, count, i + 1);
+            pairLeastProduct(f, prefix, count, i + 1);
             --count[j];
         }
         if (ot[i][0] < sizeUT) {
@@ -755,7 +850,7 @@ function GB7Pairs(tids) {
         else if (isMask(a, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
         if (isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
         if (isMask(a, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
-        if (!must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(48), (must_hunyise = true);
+        if (!must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true);
         if (must_hunyise) must_quemen = true;
         if (!must_duan1 && isMask(a, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
         if (must_duan1) must_wuzi = true;
@@ -769,7 +864,7 @@ function GB7Pairs(tids) {
         for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
         if (v > gans.val) (gans.val = v), (gans.fan = f);
     }
-    leastProduct(pairKernel);
+    pairLeastProduct(pairKernel);
     let arr = Array(5).fill(0);
     let cot = ot.map((x) => x[0]);
     for (let i = 0; i < cot.length; ++i) {
@@ -836,58 +931,142 @@ function GB7Pairs(tids) {
     if (sp && sp.val > gans.val) return sp;
     return gans;
 }
-function PreAllMelds(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].length) {
-    let submeld = Array(aids[1].length)
-        .fill(null)
-        .map(() => []);
-    let ek = 0,
-        ck = 0;
-    let nsubots = 1;
-    for (let i = 0; i < aids[1].length; ++i) {
-        let wfc = aids[1][i].map((x) => x.id);
-        if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
-        if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
-        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
-        if (isSeq(wfc))
-            if (wfc[2] < sizeUT) submeld[i].push(wfc);
-            else {
-                const [a, b] = wfc;
-                if (isSeq([a - 1, a, b])) submeld[i].push([a - 1, a, b]);
-                if (isSeq([a, b, b + 1])) submeld[i].push([a, b, b + 1]);
-                if (isSeq([a, a + 1, b])) submeld[i].push([a, a + 1, b]);
-            }
-        else {
-            for (let j = 0; j < sizeUT; ++j)
-                if (canBeReal(j, wfc)) {
-                    submeld[i].push(wfc.length === 3 ? tri[j] : quad[j]);
-                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[j]);
-                }
-            if (wfc.length === 4)
-                if (aids[1][i].type % 4 === 0) ++ck;
-                else ++ek;
-        }
-        if (submeld[i].length === 0) return { err: 2 };
-        nsubots *= submeld[i].length;
-    }
-    const { cnt, dvd } = realdvd(tiles, full_tcnt);
-    const nmp = Math.floor(full_tcnt / 3) + (full_tcnt % 3 ? 1 : 0);
-    let melds = Array(nmp).fill(null);
-    let msze = 0;
-    function dfs(f, i = 0, dpi = 0) {
-        if (msze === nmp) {
-            f(melds);
-            return;
-        }
-        const ans = dvd[dpi];
-        for (let j = 0; j < ans.nxt.length; ++j) {
-            const n = ans.nxt[j];
-            for (let p = 0; p < n.p; ++p) melds[msze++] = pair[i];
-            for (let s = 0; s < n.s; ++s) melds[msze++] = seq[i];
-            for (let k = 0; k < n.k; ++k) melds[msze++] = tri[i];
-            dfs(f, i + 1, n.dpi);
-            msze -= n.p + n.s + n.k;
-        }
-    }
-    return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
-}
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
+const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0 };
+let use_time = 0;
+function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta) {
+    let f = [];
+    let v = infoans.valfan,
+        yakuman = infoans.yakuman;
+    let head = -1;
+    const mq = melds.length >= 5 && aids[1].length === ck;
+    const wint = aids[0].at(-1).id;
+    let valfus = 20, fus = [8];
+    if (mq && !tsumo) valfus += 10, fus = [9];
+    const hcnt = Math.ceil(aids[0].length / 3);
+    let listen_type = 0;
+    let bilisten = false;
+    let koutsufu = [];
+    let reduce_middle = -1;
+    const tb = buildHand(tiles, ta, wint);
+    for (let i = 0; i < hcnt; ++i) {
+        if (melds[i].length === 2) {
+            if (canBeListen(tiles, ta, tb, melds[i][0], wint)) listen_type = 19;
+            head = melds[i][0];
+        } else if (melds[i].length === 3) {
+            if (canBeListen(tiles, ta, tb, melds[i][0], wint)) {
+                if (NumberArray[melds[i][0]] === 6) listen_type ||= 17;
+                else bilisten = true;
+            } else if (canBeListen(tiles, ta, tb, melds[i][1], wint) && !listen_type) listen_type = 18;
+            else if (canBeListen(tiles, ta, tb, melds[i][2], wint)) {
+                if (NumberArray[melds[i][2]] === 3) listen_type ||= 17;
+                else bilisten = true;
+            }
+        } else {
+            const o = OrphanArray[melds[i][0]];
+            if (!o && reduce_middle === -1) reduce_middle = koutsufu.length;
+            koutsufu.push((o ? 3 : 2));
+        }
+    }
+    let cp = koutsufu.length;
+    if (reduce_middle === -1) reduce_middle = 0;
+    if (!listen_type && !bilisten && koutsufu.length > 0) koutsufu[reduce_middle] ^= 2, --cp;
+    for (let i = hcnt; i < melds.length; ++i) {
+        if (melds[i].length === 1) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0));
+        else if (melds[i].length === 4) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0) | 4 | (aids[1][i - hcnt].type % 4 === 0 ? 2 : 0));
+    }
+    for (let i = 0; i < koutsufu.length; ++i) valfus += JPFuArray[koutsufu[i]];
+    fus.push(...koutsufu);
+    if (head === wind5) valfus += 2, fus.push(12);
+    if (head === wind6) valfus += 2, fus.push(13);
+    if (head === 31) valfus += 2, fus.push(14);
+    if (head === 32) valfus += 2, fus.push(15);
+    if (head === 33) valfus += 2, fus.push(16);
+    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds))
+        if (ninegateListen(ColorFirstArray[melds[0][0]], tiles ?? getTiles(aids[0]), wint)) (yakuman += 2), f.push(47);
+        else ++yakuman, f.push(46);
+    const marr = flattenMelds(melds);
+    if (melds.length >= 5 && isMask(marr, PureOrphanArray)) ++yakuman, f.push(45);
+    if (melds.length >= 5 && ck + ek >= 4) ++yakuman, f.push(43);
+    let windcount = Array(4).fill(0);
+    let dragoncount = Array(3).fill(0);
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length !== 2) 
+            if (ColorArray[melds[i][0]] === 3) ++windcount[melds[i][0] - 27];
+            else if (ColorArray[melds[i][0]] === 4) ++dragoncount[melds[i][0] - 31];
+    const bgwind = Math.min(...windcount);
+    yakuman += bgwind * 2, f.push(...Array(bgwind).fill(41));
+    if (ColorArray[head] === 3) {
+        ++windcount[head - 27];
+        if (Math.min(...windcount) > bgwind) ++yakuman, f.push(42);
+    }
+    if (melds.length >= 5 && isMask(marr, HonorArray)) ++yakuman, f.push(39);
+    const bgdragon = Math.min(...dragoncount);
+    yakuman += bgdragon, f.push(...Array(bgdragon).fill(38));
+    if (ck + cp >= 4)
+        if (head !== -1 && canBeListen(tiles, ta, tb, head, wint)) (yakuman += 2), f.push(35);
+        else ++yakuman, f.push(34);
+    if (fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
+    else {
+        if (listen_type) valfus += 2, fus.push(listen_type);
+        if (tsumo) valfus += 2, fus.push(11);
+    }
+    valfus = Math.ceil(valfus / 10) * 10;
+    if (infoans.yakuman > 0) f = [...f, ...infoans.fan];
+    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, fus };
+    if (gans.yakuman > 0) return eans_jp;
+    f.push(...infoans.fan);
+    let must_hunyise = false;
+    let must_quandai = false;
+    if (melds.length >= 5 && isSameColor(melds)) v += mq ? 6 : 5, f.push(31), must_hunyise = true;
+    let seq = Array(25).fill(0);
+    for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) ++seq[melds[i][0]];
+    if (mq) {
+        let beikou = 0;
+        for (let i = 0; i < 25; ++i) beikou += Math.floor(seq[i] / 2);
+        const b1 = beikou % 2, b2 = Math.floor(beikou / 2);
+        v += b1 + 3 * b2, f.push(...Array(b2).fill(29));
+        if (b1) f.push(11);
+    }
+    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) v += mq ? 3 : 2, f.push(28);
+    if (melds.length >= 5 && isMask(marr, OrphanArray)) v += 2, f.push(25), must_quandai = true;
+    if (melds.length >= 5 && isContains19(melds))
+        if (isMask(marr, NoHonorArray)) v += mq ? 3 : 2, f.push(27);
+        else if (!must_quandai) v += mq ? 2 : 1, f.push(24);
+    if (ColorArray[head] === 4) {
+        ++dragoncount[head - 31];
+        if (Math.min(...dragoncount) > bgdragon) v += 2, f.push(26);
+    }
+    if (ck + ek === 3) v += 2, f.push(23);
+    if (ck + cp === 3) v += 2, f.push(22);
+    let itsu = 0;
+    for (let i = 0; i < 3; ++i) itsu += Math.min(seq[i * 9], seq[i * 9 + 3], seq[i * 9 + 6]);
+    v += itsu * (mq ? 2 : 1), f.push(...Array(itsu).fill(21));
+    let tri = Array(sizeUT).fill(0);
+    for (let i = 0; i < melds.length; ++i) if (melds[i].length !== 3 && melds[i].length !== 2) ++tri[melds[i][0]];
+    let toukou = 0;
+    for (let i = 0; i < 9; ++i) toukou += Math.min(tri[i], tri[i + 9], tri[i + 18]);
+    v += toukou * 2, f.push(...Array(toukou).fill(20));
+    let sanshoku = 0;
+    for (let i = 0; i < 7; ++i) sanshoku += Math.min(seq[i], seq[i + 9], seq[i + 18]);
+    v += sanshoku * (mq ? 2 : 1), f.push(...Array(sanshoku).fill(19));
+    if (melds.length >= 5 && isPengpeng(melds)) v += 2, f.push(18);
+    v += tri[wind5], f.push(...Array(tri[wind5]).fill(5));
+    v += tri[wind6], f.push(...Array(tri[wind6]).fill(6));
+    v += tri[31], f.push(...Array(tri[31]).fill(7));
+    v += tri[32], f.push(...Array(tri[32]).fill(8));
+    v += tri[33], f.push(...Array(tri[33]).fill(9));
+    if (melds.length >= 5 && isMask(marr, NoOrphanArray)) ++v, f.push(4);
+    if (mq && tsumo) ++v, f.push(2);
+    if (v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, valfus, fus, print: "counted_yakuman" };
+    if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, valfus, fus, print: "sanbaiman" };
+    if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, valfus, fus, print: "baiman" };
+    if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, valfus, fus, print: "haneman" };
+    let pt = valfus * (1 << 2 + v);
+    if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, valfus, fus, print: "mangan" };
+    return { val: pt, yakuman, valfan: v, fan: f, valfus, fus };
+}
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 5, 6, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 36, 41, 30, 40]
+const PrintPriority = Array(48);
+const JPScoreArray = [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2];
+const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2];

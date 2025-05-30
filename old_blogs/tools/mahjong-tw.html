@@ -164,7 +164,7 @@
                 <button onclick="processInput()" class="random-button">計算</button>
                 <button onclick="randomInput()" class="random-button">隨機生成 <input type="number" id="randomCardCount" value="17" min="1" max="99" /> 張牌</button>
             </div>
-            <div style="display: none" id="output-box-head">
+            <div class="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
                 <div class="card-container" id="output-pic"></div>
                 <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
@@ -207,7 +207,7 @@
             </div>
             <div class="output-box" id="score-gb" style="display: none;">
                 <div class="title-button-container">
-                    <div class="output-title">國標麻將番數計算器</div>
+                    <div class="output-title">國標麻將台數計算器</div>
                     <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">摺疊 ▲</button>
                 </div>
                 <div class="output-options" id="options-output-score-gb">

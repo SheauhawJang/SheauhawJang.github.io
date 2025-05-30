@@ -312,6 +312,14 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
+.output-box-head {
+    display: none;
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    z-index: 1000;
+}
+
 @media screen and (max-width: 512px) {
     body {
         padding: 6px;

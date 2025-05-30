@@ -166,7 +166,7 @@
                 <button onclick="processInput()" class="random-button">计算</button>
                 <button onclick="randomInput()" class="random-button">随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌</button>
             </div>
-            <div style="display: none" id="output-box-head">
+            <div class="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
                 <div class="card-container" id="output-pic"></div>
                 <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
@@ -244,6 +244,50 @@
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
                 <div class="output-time" id="time-output-score-gb">Ready to start!</div>
+            </div>
+            <div class="output-box" id="score-jp">
+                <div class="title-button-container">
+                    <div class="output-title">立直麻将点数计算器</div>
+                    <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">折叠 ▲</button>
+                </div>
+                <div class="output-options" id="options-output-score-jp">
+                    <span>场风</span>
+                    <div class="output-option-group">
+                        <label><input type="radio" name="score-jp-global-wind" value="27" checked>东</label>
+                        <label><input type="radio" name="score-jp-global-wind" value="28">南</label>
+                        <label><input type="radio" name="score-jp-global-wind" value="29">西</label>
+                        <label><input type="radio" name="score-jp-global-wind" value="30">北</label>
+                    </div>
+                    <span>自风</span>
+                    <div class="output-option-group">
+                        <label><input type="radio" name="score-jp-local-wind" value="27" checked>东</label>
+                        <label><input type="radio" name="score-jp-local-wind" value="28">南</label>
+                        <label><input type="radio" name="score-jp-local-wind" value="29">西</label>
+                        <label><input type="radio" name="score-jp-local-wind" value="30">北</label>
+                    </div>
+                    <span>和牌方式</span>
+                    <div class="output-option-group">
+                        <label><input type="radio" name="score-jp-wintype" value="0" checked>荣和</label>
+                        <label><input type="radio" name="score-jp-wintype" value="1">自摸</label>
+                    </div>
+                    <span>立直状态</span>
+                    <div class="output-option-group">
+                        <label><input type="checkbox" name="score-jp-wininfo" value="1">立直</label>
+                        <label><input type="checkbox" name="score-jp-wininfo" value="16">双立直</label>
+                        <label><input type="checkbox" name="score-jp-wininfo" value="3">一发</label>
+                    </div>
+                    <span>和牌状态</span>
+                    <div class="output-option-group">
+                        <label><input type="checkbox" name="score-jp-wininfo" value="32">第一巡目</label>
+                        <label><input type="checkbox" name="score-jp-wininfo" value="13">最后一张</label>
+                        <label><input type="checkbox" name="score-jp-wininfo" value="12">岭上开花</label>
+                        <label><input type="checkbox" name="score-jp-wininfo" value="15">抢杠</label>
+                    </div>
+                    <button onclick="processJPScore()" class="score-button">计算</button>
+                </div>
+                <div class="output-context" id="output-score-jp"></div>
+                <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
+                <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
         </div>
         <div class="section title-button-container">

@@ -11,11 +11,13 @@ function processInput() {
         document.getElementById("brief-" + document_element_ids[i]).innerHTML = "";
         document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`;
     }
-    const document_scores_ids = ["score-gb"];
-    const workers_scores = [gb_worker];
+    const document_scores_ids = ["score-gb", "score-jp"];
+    const workers_scores = [gb_worker, jp_worker];
     for (let i = 0; i < document_scores_ids.length; ++i) {
-        document.getElementById(document_scores_ids[i]).style.display = 'none';
-        if (workers_scores[i]) workers_scores[i].terminate();
+        try {
+            document.getElementById(document_scores_ids[i]).style.display = "none";
+            if (workers_scores[i]) workers_scores[i].terminate();
+        } catch {}
     }
     const input = document.getElementById("inputText").value;
     aids = splitTiles(input);
@@ -34,7 +36,7 @@ function processInput() {
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, true);
-    document.getElementById("output-box-head").style.display = "block";
+    document.getElementsByClassName("output-box-head")[0].style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
     let save = Array(4);
@@ -62,12 +64,23 @@ function processInput() {
         if (task > 0) substeps[task] = result.substep;
         save[task] = result.save;
         switch (task) {
+            case 1:
+                if (Math.min(...substeps[task]) === -1) {
+                    try {
+                        document.getElementById("output-score-jp").textContent = "";
+                        document.getElementById("brief-output-score-jp").textContent = "";
+                        document.getElementById("time-output-score-jp").textContent = "Ready to start!";
+                        document.getElementById("score-jp").style.display = "block";
+                        jp_worker = null;
+                        jp_worker_info = { aids, substeps: substeps[task] };
+                    } catch {}
+                }
             case 2:
                 if (Math.min(...substeps[task]) === -1) {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
-                    document.getElementById("score-gb").style.display = 'block';
+                    document.getElementById("score-gb").style.display = "block";
                     gb_worker = null;
                     gb_worker_info = { aids, substeps: substeps[task], save: save[task] };
                 }
@@ -385,7 +398,7 @@ function processGBScore() {
     info = Array.from(info).map((x) => Number(x.value));
     gb_worker = new Worker("mahjong-worker.js");
     gb_worker.onmessage = function (e) {
-        if ('debug' in e.data) {
+        if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
             document.getElementById("output-score-gb").innerHTML = e.data.output;
             return;
@@ -395,7 +408,38 @@ function processGBScore() {
         document.getElementById("output-score-gb").innerHTML = e.data.result.output;
         document.getElementById("brief-output-score-gb").innerHTML = e.data.result.brief;
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
-    }
+    };
     const { aids, substeps, save } = gb_worker_info;
     gb_worker.postMessage({ task: "gb-score", aids, substeps, save, gw, mw, wt, info, lang });
+}
+let jp_worker = null;
+let jp_worker_info;
+function processJPScore() {
+    if (jp_worker) {
+        jp_worker.terminate();
+        jp_worker = null;
+    }
+    document.getElementById("output-score-jp").textContent = "";
+    document.getElementById("brief-output-score-jp").textContent = "";
+    document.getElementById("time-output-score-jp").textContent = "Calculating......";
+    const gw = Number(document.querySelector('input[name="score-jp-global-wind"]:checked').value);
+    const mw = Number(document.querySelector('input[name="score-jp-local-wind"]:checked').value);
+    const wt = Number(document.querySelector('input[name="score-jp-wintype"]:checked').value);
+    let info = document.querySelectorAll('input[name="score-jp-wininfo"]:checked');
+    info = Array.from(info).map((x) => Number(x.value));
+    jp_worker = new Worker("mahjong-worker.js");
+    jp_worker.onmessage = function (e) {
+        if ("debug" in e.data) {
+            document.getElementById("time-output-score-jp").textContent = e.data.debug;
+            document.getElementById("output-score-jp").innerHTML = e.data.output;
+            return;
+        }
+        jp_worker.terminate();
+        jp_worker = null;
+        document.getElementById("output-score-jp").innerHTML = e.data.result.output;
+        document.getElementById("brief-output-score-jp").innerHTML = e.data.result.brief;
+        document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
+    };
+    const { aids, substeps } = jp_worker_info;
+    jp_worker.postMessage({ task: "jp-score", aids, substeps, gw, mw, wt, info, lang });
 }

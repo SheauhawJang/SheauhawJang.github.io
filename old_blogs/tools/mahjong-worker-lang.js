@@ -318,7 +318,7 @@ const tw_loc = {
     subtile_error_1: "固定面子長度錯誤",
     subtile_error_2: "固定面子無法組成順子、刻子或槓子",
     GB_FAN_unit: "台",
-    at_least: "和牌方",
+    at_least: "至少",
     winner: "未和牌方",
     other_player: "和牌方",
     loser: "點炮方",

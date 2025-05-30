@@ -533,7 +533,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
             else infoans.fan.push(14), ++infoans.valfan;
         if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
     }
-    let gans = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0 };
+    let gans = eans_jp;
     const tiles = getTiles(aids[0]);
     let cm = 0, m = 0;
     const st = new Date();

@@ -932,7 +932,7 @@ function GB7Pairs(tids) {
     return gans;
 }
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
-const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0 };
+const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realfus: 0 };
 let use_time = 0;
 function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta) {
     let f = [];
@@ -947,7 +947,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let listen_type = 0;
     let bilisten = false;
     let koutsufu = [];
-    let reduce_middle = -1;
+    let reduce_mid = -1;
+    let reduce_19 = -1;
     const tb = buildHand(tiles, ta, wint);
     for (let i = 0; i < hcnt; ++i) {
         if (melds[i].length === 2) {
@@ -964,13 +965,14 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             }
         } else {
             const o = OrphanArray[melds[i][0]];
-            if (!o && reduce_middle === -1) reduce_middle = koutsufu.length;
+            if (!o && reduce_mid === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) reduce_mid = koutsufu.length;
+            if (reduce_mid === -1 && reduce_19 === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) reduce_19 = koutsufu.length;
             koutsufu.push((o ? 3 : 2));
         }
     }
     let cp = koutsufu.length;
-    if (reduce_middle === -1) reduce_middle = 0;
-    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) koutsufu[reduce_middle] ^= 2, --cp;
+    if (reduce_mid === -1) reduce_mid = reduce_19;
+    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) koutsufu[reduce_mid] ^= 2, --cp;
     for (let i = hcnt; i < melds.length; ++i) {
         if (melds[i].length === 1) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0));
         else if (melds[i].length === 4) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0) | 4 | (aids[1][i - hcnt].type % 4 === 0 ? 2 : 0));

@@ -115,7 +115,7 @@ function JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd) {
     if (step4 == stepJP) stepTypeJP.push(loc.normal);
     if (step7 === stepJP) stepTypeJP.push(loc.pair7);
     if (step13 === stepJP) stepTypeJP.push(loc.kokushi);
-    output += ` ${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
+    output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
@@ -187,7 +187,7 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
     if (step13 === stepGB) stepTypeGB.push(loc.orphan13);
     if (step16 === stepGB) stepTypeGB.push(loc.quanbukaoxing);
     if (stepkd == stepGB) stepTypeGB.push(loc.zuhelongxing);
-    output += ` ${loc.brace_left}${stepTypeGB.join(loc.slash)}${loc.brace_right}\n`;
+    output += `${loc.brace_left}${stepTypeGB.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
@@ -265,7 +265,7 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
     if (stepnico == stepTW) stepTypeTW.push(loc.niconico);
     if (step13 == stepTW) stepTypeTW.push(loc.orphan13);
     if (step16 == stepTW) stepTypeTW.push(loc.shiliubudaxing);
-    output += ` ${loc.brace_left}${stepTypeTW.join(loc.slash)}${loc.brace_right}\n`;
+    output += `${loc.brace_left}${stepTypeTW.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
@@ -482,7 +482,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     console.log(filter_cnt, pairs_filer, gans.fan);
     console.log(seq_miss, seq_total, seq_miss / seq_total, seq_time);
     console.log(tri_miss, tri_total, tri_miss / tri_total);
-    return { output: outputs.join(""), brief: `${outputs[0]} ${loc.brace_left}${outputs[3]}${loc.brace_right}` };
+    return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 function JPPrintName(yakuman, printname) {
     if (yakuman > 12) return `${yakuman} ${loc.times_n}${loc.yakuman}`;
@@ -528,7 +528,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan;
         if (info.includes(3)) infoans.fan.push(3), ++infoans.valfan;
         if (info.includes(12) && tsumo) infoans.fan.push(12), ++infoans.valfan;
-        else if (info.includes(13)) 
+        if (info.includes(13)) 
             if (tsumo) infoans.fan.push(13), ++infoans.valfan;
             else infoans.fan.push(14), ++infoans.valfan;
         if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
@@ -571,7 +571,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
     if (tsumo) exinfo = loc.brace_left + exinfo + loc.brace_right;
     const ptchange = `+${score} ${exinfo}`;
     const namebrace = name === "" ? name : `${loc.brace_left}${name}${loc.brace_right}`;
-    const fanfuinfo = gans.yakuman ? name : `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit} ${namebrace}`;
+    const fanfuinfo = gans.yakuman ? name : `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit}${namebrace}`;
     const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq);
     const opts = [fanfuinfo, fanfudiv, ptchange];
     console.log(use_time, gans.fan);

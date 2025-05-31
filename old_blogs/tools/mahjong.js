@@ -148,7 +148,6 @@ function splitTiles(s) {
         }
     }
     s = s.replace(regex, " ");
-    console.log(dora);
     return [splitKernel(s), subtiles, splitKernel(bonus.join(" ")), splitKernel(dora.join(" ")), splitKernel(ura.join(" "))];
 }
 // Check left, left+1, left+2 can be a sequence or not

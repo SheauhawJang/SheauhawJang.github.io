@@ -24,7 +24,7 @@ function processInput() {
     let tids = aids[0];
     let bids = aids[2];
     let tiles = getTiles(tids);
-    let subtiles = getTiles(bids);
+    let subtiles = getTiles([...aids[2], ...aids[3], ...aids[4]]);
     for (let i = 0; i < aids[1].length; ++i) {
         const ids = aids[1][i];
         for (let j = 0; j < ids.length; ++j) ++subtiles[ids[j].id];
@@ -283,12 +283,27 @@ function drawInputCards() {
     div.style.paddingTop = `${height - rheight}${unit}`;
     div.innerHTML = output;
     output = "";
-    const bdiv = document.getElementById("input-pic-bonus");
+    const bonusd = document.getElementById("input-pic-bonus");
     const bids = ipids[2];
     for (let i = 0; i < bids.length; ++i) output += cardInputImage(bids, i, -2, width * 0.75, unit);
-    if (bids.length === 0) bdiv.style.paddingTop = `${sheight * 0.75}${unit}`;
-    else bdiv.style.paddingTop = "0";
-    bdiv.innerHTML = output;
+    if (bids.length === 0) bonusd.style.paddingTop = `${sheight * 0.75}${unit}`;
+    else bonusd.style.paddingTop = "0";
+    bonusd.innerHTML = output;
+    try
+    {
+    output = "";
+    const dorap = document.getElementById("input-pic-dorap");
+    const dorapids = ipids[3];
+    for (let i = 0; i < dorapids.length; ++i) output += cardInputImage(dorapids, i, -3, width * 0.75, unit);
+    for (let i = dorapids.length; i < 5; ++i) output += backcardInputImage(i, -3, width * 0.75, unit);
+    dorap.innerHTML = output;
+    output = "";
+    const urap = document.getElementById("input-pic-urap");
+    const urapids = ipids[4];
+    for (let i = 0; i < urapids.length; ++i) output += cardInputImage(urapids, i, -4, width * 0.75, unit);
+    for (let i = urapids.length; i < 5; ++i) output += backcardInputImage(i, -4, width * 0.75, unit);
+    urap.innerHTML = output;
+    } catch {}
     document.getElementById("subkey_chi").disabled = !isSeq(
         tids
             .slice(-3)
@@ -308,6 +323,7 @@ function remakeInput(ipids) {
         else newInput += `[${partInput}]`;
     }
     if (ipids[2].length > 0) newInput += `(${joinHand(ipids[2])})`;
+    if (ipids[3].length > 0 || ipids[4].length > 0) newInput += `<${joinHand(ipids[3])},${joinHand(ipids[4])}>`;
     document.getElementById("inputText").value = newInput;
 }
 function addInput(i) {
@@ -319,9 +335,9 @@ function addInput(i) {
 function removeInput(i, j, k) {
     if (j === -1) {
         ipids[0].splice(i, 1);
-    } else if (j === -2) {
+    } else if (j <= -2) {
         // ipids[0].push(ipids[2][i]);
-        ipids[2].splice(i, 1);
+        ipids[-j].splice(i, 1);
     } else {
         let t = getUnifiedType(ipids[1][j]);
         if (t % 4 === 0 || k === 1) {

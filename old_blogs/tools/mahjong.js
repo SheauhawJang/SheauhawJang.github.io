@@ -127,23 +127,29 @@ function splitKernel(s) {
     return valid_ids;
 }
 function splitTiles(s) {
-    const regex = /(\(([^)]+)\)|\[([^\]]+)\])/g;
+    const regex = /(\(([^)]+)\)|\[([^\]]+)\]|<([^>]+)>)/g;
     const subtiles = [];
     const bonus = [];
+    const dora = [], ura = [];
     for (const match of s.matchAll(regex)) {
-        const [, , round, square] = match;
+        const [, , round, square, angle] = match;
         if (round) {
             bonus.push(round);
             continue;
-        } else {
+        } else if (square) {
             const parts = square.split(",");
             const ans = splitKernel(parts[0]);
             ans.type = Number(parts[1]) || 0;
             subtiles.push(ans);
+        } else {
+            const parts = angle.split(",");
+            dora.push(parts[0]);
+            if (parts.length > 1) ura.push(parts[1]);
         }
     }
     s = s.replace(regex, " ");
-    return [splitKernel(s), subtiles, splitKernel(bonus.join(" "))];
+    console.log(dora);
+    return [splitKernel(s), subtiles, splitKernel(bonus.join(" ")), splitKernel(dora.join(" ")), splitKernel(ura.join(" "))];
 }
 // Check left, left+1, left+2 can be a sequence or not
 const SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];

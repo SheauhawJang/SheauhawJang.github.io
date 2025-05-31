@@ -579,8 +579,8 @@ function buildHand(tiles, ta, wint) {
     if (wint < sizeUT) return undefined;
     let tb = Array(7).fill(0);
     for (let i = 0; i < sizeUT; ++i) tb[ColorArray[i]] += ta[i] - tiles[i];
-    tb[0] -= tiles[43], tb[1] -= tiles[44], tb[2] -= tiles[45];
-    tb[3] -= tiles[47], tb[4] -= tiles[48];
+    (tb[0] -= tiles[43]), (tb[1] -= tiles[44]), (tb[2] -= tiles[45]);
+    (tb[3] -= tiles[47]), (tb[4] -= tiles[48]);
     tb[5] = tb[0] + tb[1] + tb[2] - tiles[46];
     tb[6] = tb[3] + tb[4] - tiles[49];
     return tb;
@@ -588,9 +588,17 @@ function buildHand(tiles, ta, wint) {
 function canBeListen(tiles, ta, tb, x, wint) {
     if (wint < sizeUT) return x === wint;
     switch (wint) {
-        case 42: return ta[x] > tiles[x] && tb[ColorArray[x]] && tb[5 + HonorArray[x]];
-        case 43: case 44: case 45: case 47: case 48: return JokerA[x] === wint && ta[x] > tiles[x];
-        case 46: case 49: return JokerB[x] === wint && ta[x] > tiles[x] && tb[ColorArray[x]];
+        case 42:
+            return ta[x] > tiles[x] && tb[ColorArray[x]] && tb[5 + HonorArray[x]];
+        case 43:
+        case 44:
+        case 45:
+        case 47:
+        case 48:
+            return JokerA[x] === wint && ta[x] > tiles[x];
+        case 46:
+        case 49:
+            return JokerB[x] === wint && ta[x] > tiles[x] && tb[ColorArray[x]];
     }
     return false;
 }
@@ -654,11 +662,11 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
             for (let s = 0; s < n.s; ++s) melds[msze++] = seq[i];
             for (let k = 0; k < n.k; ++k) melds[msze++] = tri[i];
             ota[i] += n.p * 2 + n.s + n.k * 3;
-            if (n.s) ota[i + 1] += n.s, ota[i + 2] += n.s;
+            if (n.s) (ota[i + 1] += n.s), (ota[i + 2] += n.s);
             dfs(f, i + 1, n.dpi);
             msze -= n.p + n.s + n.k;
             ota[i] -= n.p * 2 + n.s + n.k * 3;
-            if (n.s) ota[i + 1] -= n.s, ota[i + 2] -= n.s;
+            if (n.s) (ota[i + 1] -= n.s), (ota[i + 2] -= n.s);
         }
     }
     return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
@@ -934,15 +942,16 @@ function GB7Pairs(tids) {
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
 const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realfus: 0 };
 let use_time = 0;
-function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta) {
+function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras = Array(sizeAT).fill(0), uras = Array(sizeAT).fill(0), nuki = Array(sizeAT).fill(0)) {
     let f = [];
     let v = infoans.valfan,
         yakuman = infoans.yakuman;
     let head = -1;
     const mq = melds.length >= 5 && aids[1].length === ck;
     const wint = aids[0].at(-1).id;
-    let valfus = 20, fus = [8];
-    if (mq && !tsumo) valfus += 10, fus = [9];
+    let valfus = 20,
+        fus = [8];
+    if (mq && !tsumo) (valfus += 10), (fus = [9]);
     const hcnt = Math.ceil(aids[0].length / 3);
     let listen_type = 0;
     let bilisten = false;
@@ -967,23 +976,23 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             const o = OrphanArray[melds[i][0]];
             if (!o && epmid === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) epmid = koutsufu.length;
             if (o && epmid === -1 && ep19 === -1 && canBeListen(tiles, ta, tb, melds[i][0], wint)) ep19 = koutsufu.length;
-            koutsufu.push((o ? 3 : 2));
+            koutsufu.push(o ? 3 : 2);
         }
     }
     let cp = koutsufu.length;
     if (epmid === -1) epmid = ep19;
-    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) koutsufu[epmid] ^= 2, --cp;
+    if (!tsumo && !listen_type && !bilisten && koutsufu.length > 0) (koutsufu[epmid] ^= 2), --cp;
     for (let i = hcnt; i < melds.length; ++i) {
-        if (melds[i].length === 1) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0));
+        if (melds[i].length === 1) koutsufu.push(OrphanArray[melds[i][0]] ? 1 : 0);
         else if (melds[i].length === 4) koutsufu.push((OrphanArray[melds[i][0]] ? 1 : 0) | 4 | (aids[1][i - hcnt].type % 4 === 0 ? 2 : 0));
     }
     for (let i = 0; i < koutsufu.length; ++i) valfus += JPFuArray[koutsufu[i]];
     fus.push(...koutsufu);
-    if (head === wind5) valfus += 2, fus.push(12);
-    if (head === wind6) valfus += 2, fus.push(13);
-    if (head === 31) valfus += 2, fus.push(14);
-    if (head === 32) valfus += 2, fus.push(15);
-    if (head === 33) valfus += 2, fus.push(16);
+    if (head === wind5) (valfus += 2), fus.push(12);
+    if (head === wind6) (valfus += 2), fus.push(13);
+    if (head === 31) (valfus += 2), fus.push(14);
+    if (head === 32) (valfus += 2), fus.push(15);
+    if (head === 33) (valfus += 2), fus.push(16);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds))
         if (ninegateListen(ColorFirstArray[melds[0][0]], tiles ?? getTiles(aids[0]), wint)) (yakuman += 2), f.push(47);
         else ++yakuman, f.push(46);
@@ -994,25 +1003,25 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let windcount = Array(4).fill(0);
     let dragoncount = Array(3).fill(0);
     for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length !== 2) 
+        if (melds[i].length !== 2)
             if (ColorArray[melds[i][0]] === 3) ++windcount[melds[i][0] - 27];
             else if (ColorArray[melds[i][0]] === 4) ++dragoncount[melds[i][0] - 31];
     const bgwind = Math.min(...windcount);
-    yakuman += bgwind * 2, f.push(...Array(bgwind).fill(41));
+    (yakuman += bgwind * 2), f.push(...Array(bgwind).fill(41));
     if (ColorArray[head] === 3) {
         ++windcount[head - 27];
         if (Math.min(...windcount) > bgwind) ++yakuman, f.push(42);
     }
     if (melds.length >= 5 && isMask(marr, HonorArray)) ++yakuman, f.push(39);
     const bgdragon = Math.min(...dragoncount);
-    yakuman += bgdragon, f.push(...Array(bgdragon).fill(38));
+    (yakuman += bgdragon), f.push(...Array(bgdragon).fill(38));
     if (ck + cp >= 4)
         if (head !== -1 && canBeListen(tiles, ta, tb, head, wint)) (yakuman += 2), f.push(35);
         else ++yakuman, f.push(34);
     if (mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
-        if (listen_type) valfus += 2, fus.push(listen_type);
-        if (tsumo) valfus += 2, fus.push(11);
+        if (listen_type) (valfus += 2), fus.push(listen_type);
+        if (tsumo) (valfus += 2), fus.push(11);
     }
     const realfus = valfus;
     valfus = Math.ceil(valfus / 10) * 10;
@@ -1023,139 +1032,275 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     f.push(...infoans.fan);
     let must_hunyise = false;
     let must_quandai = false;
-    if (melds.length >= 5 && isSameColor(melds)) v += mq ? 6 : 5, f.push(31), must_hunyise = true;
+    if (melds.length >= 5 && isSameColor(melds)) (v += mq ? 6 : 5), f.push(31), (must_hunyise = true);
     let seq = Array(25).fill(0);
     for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) ++seq[melds[i][0]];
     if (mq) {
         let beikou = 0;
         for (let i = 0; i < 25; ++i) beikou += Math.floor(seq[i] / 2);
-        const b1 = beikou % 2, b2 = Math.floor(beikou / 2);
-        v += b1 + 3 * b2, f.push(...Array(b2).fill(29));
+        const b1 = beikou % 2,
+            b2 = Math.floor(beikou / 2);
+        (v += b1 + 3 * b2), f.push(...Array(b2).fill(29));
         if (b1) f.push(11);
     }
-    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) v += mq ? 3 : 2, f.push(28);
-    if (melds.length >= 5 && isMask(marr, OrphanArray)) v += 2, f.push(25), must_quandai = true;
+    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += mq ? 3 : 2), f.push(28);
+    if (melds.length >= 5 && isMask(marr, OrphanArray)) (v += 2), f.push(25), (must_quandai = true);
     if (melds.length >= 5 && isContains19(melds))
-        if (isMask(marr, NoHonorArray)) v += mq ? 3 : 2, f.push(27);
-        else if (!must_quandai) v += mq ? 2 : 1, f.push(24);
+        if (isMask(marr, NoHonorArray)) (v += mq ? 3 : 2), f.push(27);
+        else if (!must_quandai) (v += mq ? 2 : 1), f.push(24);
     if (ColorArray[head] === 4) {
         ++dragoncount[head - 31];
-        if (Math.min(...dragoncount) > bgdragon) v += 2, f.push(26);
+        if (Math.min(...dragoncount) > bgdragon) (v += 2), f.push(26);
     }
-    if (ck + ek === 3) v += 2, f.push(23);
-    if (ck + cp === 3) v += 2, f.push(22);
+    if (ck + ek === 3) (v += 2), f.push(23);
+    if (ck + cp === 3) (v += 2), f.push(22);
     let itsu = 0;
     for (let i = 0; i < 3; ++i) itsu += Math.min(seq[i * 9], seq[i * 9 + 3], seq[i * 9 + 6]);
-    v += itsu * (mq ? 2 : 1), f.push(...Array(itsu).fill(21));
+    (v += itsu * (mq ? 2 : 1)), f.push(...Array(itsu).fill(21));
     let tri = Array(sizeUT).fill(0);
     for (let i = 0; i < melds.length; ++i) if (melds[i].length !== 3 && melds[i].length !== 2) ++tri[melds[i][0]];
     let toukou = 0;
     for (let i = 0; i < 9; ++i) toukou += Math.min(tri[i], tri[i + 9], tri[i + 18]);
-    v += toukou * 2, f.push(...Array(toukou).fill(20));
+    (v += toukou * 2), f.push(...Array(toukou).fill(20));
     let sanshoku = 0;
     for (let i = 0; i < 7; ++i) sanshoku += Math.min(seq[i], seq[i + 9], seq[i + 18]);
-    v += sanshoku * (mq ? 2 : 1), f.push(...Array(sanshoku).fill(19));
-    if (melds.length >= 5 && isPengpeng(melds)) v += 2, f.push(18);
-    v += tri[wind5], f.push(...Array(tri[wind5]).fill(5));
-    v += tri[wind6], f.push(...Array(tri[wind6]).fill(6));
-    v += tri[31], f.push(...Array(tri[31]).fill(7));
-    v += tri[32], f.push(...Array(tri[32]).fill(8));
-    v += tri[33], f.push(...Array(tri[33]).fill(9));
+    (v += sanshoku * (mq ? 2 : 1)), f.push(...Array(sanshoku).fill(19));
+    if (melds.length >= 5 && isPengpeng(melds)) (v += 2), f.push(18);
+    (v += tri[wind5]), f.push(...Array(tri[wind5]).fill(5));
+    (v += tri[wind6]), f.push(...Array(tri[wind6]).fill(6));
+    (v += tri[31]), f.push(...Array(tri[31]).fill(7));
+    (v += tri[32]), f.push(...Array(tri[32]).fill(8));
+    (v += tri[33]), f.push(...Array(tri[33]).fill(9));
     if (melds.length >= 5 && isMask(marr, NoOrphanArray)) ++v, f.push(4);
     if (mq && tsumo) ++v, f.push(2);
-    if (v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "counted_yakuman" };
-    if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "sanbaiman" };
-    if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "baiman" };
-    if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "haneman" };
-    let pt = valfus * (1 << 2 + v);
-    if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "mangan" };
-    return { val: pt, yakuman, valfan: v, fan: f, valfus, realfus, fus };
+    let gd = 0, gu = 0;
+    for (let i = 0; i < sizeUT; ++i) gd += (ta[i] + nuki[i]) * doras[i], gu += (ta[i] + nuki[i]) * uras[i];
+    for (let i = 42; i < 50; ++i) {
+        if (doras[i] === 0 && uras[i] == 0) continue;
+        const [l, r] = JokerRange[i];
+        let cnt = 0;
+        for (let j = l; j < r; ++j) if (ta[j] + nuki[j] > cnt) cnt = ta[j] + nuki[j];
+        gd += cnt * doras[i], gu += cnt * uras[i];
+    }
+    v += gd + gu;
+    if (v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
+    if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
+    if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
+    if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
+    let pt = valfus * (1 << (2 + v));
+    if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
+    return { val: pt, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus };
 }
-function JP7Pairs(tids, infoans, tsumo) {
+function PairSelect(cot, ad, au, mask) {
+    let d = 0,
+        u = 0;
+    let backup = Array(7).fill([0, 0, 0]);
+    for (let i = 0; i < 7; ++i) if (cot[i] < sizeUT) (d += ad[cot[i]]), (u += au[cot[i]]), (backup[i] = [cot[i], ad[cot[i]], au[cot[i]]]), (ad[cot[i]] = au[cot[i]] = 0);
+    for (let i = 0; i < 7; ++i)
+        if (cot[i] >= sizeUT) {
+            let sj = -1,
+                sdu = 0;
+            const [jl, jr] = JokerRange[cot[i]];
+            for (let j = jl; j < jr; ++j) if (!mask || mask[j]) if (ad[j] + au[j] > sdu) (sj = j), (sdu = ad[j] + au[j]);
+            if (sj > 0) (d += ad[sj]), (u += au[sj]), (backup[i] = [sj, ad[sj], au[sj]]), (ad[sj] = au[sj] = 0);
+        }
+    for (let i = 0; i < 7; ++i) {
+        const [j, d, u] = backup[i];
+        ad[j] += d;
+        au[j] += u;
+    }
+    d *= 2, u *= 2;
+    return { d, u };
+}
+function PairSameColor(cot) {
+    let color = -1;
+    for (let i = 0; i < 7; ++i) {
+        let tcolor = -1;
+        if (cot[i] < sizeUT) {
+            if (HonorArray[cot[i]]) return null;
+            tcolor = ColorArray[cot[i]];
+        } else if (cot[i] >= 47) return null;
+        else if (cot[i] in JokerColor) tcolor = JokerColor[cot[i]];
+        if (tcolor === -1) continue;
+        if (color === -1) color = tcolor;
+        else if (color !== tcolor) return null;
+    }
+    return color;
+}
+function PairSameColorWithHonor(cot) {
+    let color = -1;
+    for (let i = 0; i < 7; ++i) {
+        let tcolor = -1;
+        if (cot[i] < sizeUT) {
+            if (HonorArray[cot[i]]) continue;
+            tcolor = ColorArray[cot[i]];
+        } else if (cot[i] >= 47) continue;
+        else if (cot[i] in JokerColor) tcolor = JokerColor[cot[i]];
+        if (tcolor === -1) continue;
+        if (color === -1) color = tcolor;
+        else if (color !== tcolor) return null;
+    }
+    return color;
+}
+function PairHun19Array(cot) {
+    let count19 = Array(3).fill(0);
+    let numcnt = 0;
+    for (let i = 0; i < 7; ++i) {
+        if (cot[i] < sizeUT) {
+            if (HonorArray[cot[i]]) continue;
+            if (NumberArray[cot[i]] === 0 || NumberArray[cot[i]] === 8) ++count19[ColorArray[cot[i]]];
+            else return undefined;
+        } else if (cot[i] >= 47) continue;
+        else if (cot[i] in JokerColor) ++count19[JokerColor[cot[i]]];
+        else if (cot[i] === 46) ++numcnt;
+    }
+    return [...count19, numcnt];
+}
+function getPointedDora(x) {
+    if (x >= sizeUT) return x;
+    if (ColorArray[x] === ColorArray[x + 1]) return x + 1;
+    return ColorFirstArray[ColorArray[x]];
+}
+function getDoraPointer(x) {
+    if (x >= sizeUT) return x;
+    if (ColorArray[x] === ColorArray[x - 1]) return x - 1;
+    return ColorFirstArray[ColorArray[x] + 1] - 1;
+}
+const SameColorArray = [ColorArray.map((x) => (x === 0 ? 1 : 0)), ColorArray.map((x) => (x === 1 ? 1 : 0)), ColorArray.map((x) => (x === 2 ? 1 : 0))];
+const SameColorWithHonorsArray = [ColorArray.map((x, i) => (x === 0 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 || HonorArray[i] ? 1 : 0))];
+const SameColorNoOrphanArray = [ColorArray.map((x, i) => (x === 0 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 && !OrphanArray[i] ? 1 : 0))];
+const SameColorAllOrphanHonorsArray = [SameColorWithHonorsArray[0].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[1].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[2].map((x, i) => x && OrphanArray[i])];
+function selectMaxPairs(cot, doras, uras, tan19, sc, scwh, hun19, hunhun) {
+    let v = 0, f = [];
+    let { d, u } = PairSelect(cot, doras, uras);
+    v = d + u;
+    if (tan19) {
+        const { d: ad, u: au } = PairSelect(cot, doras, uras, NoOrphanArray);
+        if (ad + au + 1 > v) v = ad + au + 1, d = ad, u = au, f = [4];
+    }
+    if (sc !== null) {
+        let l = 0, r = 3;
+        if (sc !== -1) l = sc, r = l + 1;
+        for (let i = l; i < r; ++i) { 
+            const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorArray[i]);
+            if (ad + au + 6 > v) v = ad + au + 6, d = ad, u = au, f = [31];
+            if (tan19) {
+                const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorNoOrphanArray[i]);
+                if (ad + au + 7 > v) v = ad + au + 7, d = ad, u = au, f = [4, 31];
+            }
+        }
+    }
+    if (scwh !== null) {
+        let l = 0, r = 3;
+        if (scwh !== -1) l = scwh, r = l + 1;
+        for (let i = l; i < r; ++i) { 
+            const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorWithHonorsArray[i]);
+            if (ad + au + 3 > v) v = ad + au + 3, d = ad, u = au, f = [28];
+            if (hunhun) {
+                const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorAllOrphanHonorsArray[i]);
+                if (ad + au + 5 > v) v = ad + au + 5, d = ad, u = au, f = [25, 28];
+            }
+        }
+    }
+    if (hun19) {
+        const { d: ad, u: au } = PairSelect(cot, doras, uras, OrphanArray);
+        if (ad + au + 2 > v) v = ad + au + 2, d = ad, u = au, f = [25];
+    }
+    return { v, f, d, u };
+}
+function JP7Pairs(tids, infoans, tsumo, doras = Array(sizeAT).fill(0), uras = Array(sizeAT).fill(0), nuki = Array(sizeAT).fill(0)) {
     const ot = PairOutput(getTiles(tids));
     let cot = ot.map((x) => x[0]);
     let tsuiso = true;
-    for (let i = 0; tsuiso && i < 7; ++i) 
+    for (let i = 0; tsuiso && i < 7; ++i)
         if (cot[i] < sizeUT && NoHonorArray[cot[i]]) tsuiso = false;
         else if (cot[i] >= 43 && cot[i] <= 46) tsuiso = false;
-    const valfus = 25, realfus = 25, fus = [10];
-    let v = 0, f = [], yakuman = infoans.yakuman;
-    if (tsuiso) yakuman += 2, f = [40];
-    if (infoans.yakuman > 0) f.push(...infoans.fan);
-    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus };
+    const valfus = 25,
+        realfus = 25,
+        fus = [10];
+    let gv = 0,
+        gf = [],
+        yakuman = infoans.yakuman;
+    if (tsuiso) (yakuman += 2), (gf = [40]);
+    if (infoans.yakuman > 0) gf.push(...infoans.fan);
+    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: gv, fan: gf, valfus, realfus, fus };
     let tan19 = true;
-    for (let i = 0; tan19 && i < 7; ++i) 
+    for (let i = 0; tan19 && i < 7; ++i)
         if (cot[i] < sizeUT && OrphanArray[cot[i]]) tan19 = false;
         else if (cot[i] >= 47) tan19 = false;
-    if (tan19 && v < 1) v = 1, f = [4];
-    function PairSameColor(cot) {
-        let color = -1;
-        for (let i = 0; i < 7; ++i) {
-            let tcolor = -1;
-            if (cot[i] < sizeUT) {
-                if (HonorArray[cot[i]]) return false;
-                tcolor = ColorArray[cot[i]];
+    const sc = PairSameColor(cot);
+    const scwh = PairSameColorWithHonor(cot);
+    const c19 = PairHun19Array(cot);
+    const hun19 = c19 && c19[0] <= 2 && c19[1] <= 2 && c19[2] <= 2 && c19[0] + c19[1] + c19[2] + c19[3] <= 6;
+    const hunhun = c19 && c19[0] + c19[1] + c19[2] + c19[3] <= 2;
+    let gd = 0, gu = 0;
+    for (let im = 0; im < 9; ++im) {
+        doras[im] += doras[43];
+        uras[im] += doras[43];
+        for (let ip = 9; ip < 18; ++ip) {
+            doras[ip] += doras[44];
+            uras[ip] += doras[44];
+            for (let is = 18; is < 27; ++is) {
+                doras[is] += doras[45];
+                uras[is] += doras[45];
+                const qs = [im, ip, is];
+                for (let iq = 0; iq < 3; ++iq) {
+                    doras[qs[iq]] += doras[46];
+                    uras[qs[iq]] += doras[46];
+                    for (let iw = 27; iw <= 30; ++iw) {
+                        doras[iw] += doras[47];
+                        uras[iw] += doras[47];
+                        for (let ig = 31; ig <= 33; ++ig) {
+                            doras[ig] += doras[48];
+                            uras[ig] += doras[48];
+                            const zs = [iw, ig];
+                            for (let iz = 0; iz < 2; ++iz) {
+                                doras[zs[iz]] += doras[49];
+                                uras[zs[iz]] += doras[49];
+                                const as = [qs[iq], zs[iz]];
+                                for (let i = 0; i < 2; ++i) {
+                                    doras[as[i]] += doras[42];
+                                    uras[as[i]] += doras[42];
+                                    let { v, f, d, u } = selectMaxPairs(cot, doras, uras, tan19, sc, scwh, hun19, hunhun);
+                                    let nd = 0, nu = 0;
+                                    for (let i = 0; i < sizeUT; ++i) nd += nuki[i] * doras[i], nu += nuki[i] * uras[i];
+                                    v += nd + nu, d += nd, u += nu;
+                                    if (v > gv) gv = v, gf = f, gd = d, gu = u;
+                                    doras[as[i]] -= doras[42];
+                                    uras[as[i]] -= doras[42];
+                                }
+                                doras[zs[iz]] -= doras[49];
+                                uras[zs[iz]] -= doras[49];
+                            }
+                            doras[ig] -= doras[48];
+                            uras[ig] -= doras[48];
+                        }
+                        doras[iw] -= doras[47];
+                        uras[iw] -= doras[47];
+                    }
+                    doras[qs[iq]] -= doras[46];
+                    uras[qs[iq]] -= doras[46];
+                }
+                doras[is] -= doras[45];
+                uras[is] -= doras[45];
             }
-            else if (cot[i] >= 47) return false;
-            else if (cot[i] in JokerColor) tcolor = JokerColor[cot[i]]; 
-            if (tcolor === -1) continue;
-            if (color === -1) color = tcolor;
-            else if (color !== tcolor) return false;
+            doras[ip] -= doras[44];
+            uras[ip] -= doras[44];
         }
-        return true;
+        doras[im] -= doras[43];
+        uras[im] -= doras[43];
     }
-    let sc = PairSameColor(cot);
-    if (sc && v < 6) v = 6, f = [31];
-    if (sc && tan19 && v < 7) v = 7, f = [4, 31];
-    function PairSameColorWithHonor(cot) {
-        let color = -1;
-        for (let i = 0; i < 7; ++i) {
-            let tcolor = -1;
-            if (cot[i] < sizeUT) {
-                if (HonorArray[cot[i]]) continue;
-                tcolor = ColorArray[cot[i]];
-            }
-            else if (cot[i] >= 47) continue;
-            else if (cot[i] in JokerColor) tcolor = JokerColor[cot[i]]; 
-            if (tcolor === -1) continue;
-            if (color === -1) color = tcolor;
-            else if (color !== tcolor) return false;
-        }
-        return true;
-    }
-    let scwh = PairSameColorWithHonor(cot);
-    if (scwh && v < 3) v = 3, f = [28];
-    function canHun19(cot) {
-        let count19 = Array(3).fill(0);
-        let numcnt = 0;
-        for (let i = 0; i < 7; ++i) {
-            if (cot[i] < sizeUT) {
-                if (HonorArray[cot[i]]) continue;
-                if (NumberArray[cot[i]] === 0 || NumberArray[cot[i]] === 8) ++count19[ColorArray[cot[i]]];
-                else return false;
-            }
-            else if (cot[i] >= 47) continue;
-            else if (cot[i] in JokerColor) ++count19[JokerColor[cot[i]]];
-            else if (cot[i] === 46) ++numcnt;
-        }
-        return [...count19, numcnt];
-    }
-    let c19 = canHun19(cot);
-    let hun19 = c19[0] <= 2 && c19[1] <= 2 && c19[2] <= 2 && c19[0] + c19[1] + c19[2] + c19[3] <= 6;
-    let hunhun = c19[0] + c19[1] + c19[2] + c19[3] <= 2;
-    if (hun19 && v < 2) v = 2, f = [25];
-    if (hunhun && v < 5) v = 5, f = [25, 28];
-    v += 2, f.push(17);
-    v += infoans.valfan, f.push(...infoans.fan);
-    if (tsumo) ++v, f.push(2);
-    if (v >= 13) return { val: 8000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "counted_yakuman" };
-    if (v >= 11) return { val: 6000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "sanbaiman" };
-    if (v >= 8) return { val: 4000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "baiman" };
-    if (v >= 6) return { val: 3000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "haneman" };
-    let pt = valfus * (1 << 2 + v);
-    if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "mangan" };
-    return { val: pt, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus };
+    (gv += 2), gf.push(17);
+    (gv += infoans.valfan), gf.push(...infoans.fan);
+    if (tsumo) ++gv, gf.push(2);
+    if (gv >= 13) return { val: 8000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
+    if (gv >= 11) return { val: 6000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
+    if (gv >= 8) return { val: 4000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
+    if (gv >= 6) return { val: 3000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
+    let pt = valfus * (1 << (2 + gv));
+    if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
+    return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40]
-const JPScoreArray = [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2];
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40, 48, 49, 50, 51];
+const JPScoreArray = [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, 1, 1, 1];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2];

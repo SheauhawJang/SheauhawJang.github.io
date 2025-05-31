@@ -503,17 +503,24 @@ function JPGetFuName(i) {
     ];
     return opts.join('');
 }
-function JPFanFuDiv(fan, fus, mq) {
+function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     let fans = new Array(48).fill(0);
     for (let i = 0; i < fan.length; ++i)
         if (fan[i] > 0) ++fans[fan[i]];
+    fans.push(d, u, aka, nuki);
     let fanopt = [];
-    for (let i = 0; i < 47; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td style="text-align: left">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
+    for (let i = 0; i < 51; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td style="text-align: left">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
     let fusopt = fus.map((i) => `<tr><td style="text-align: left">${JPGetFuName(i)}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
     return `<div style="display: flex; gap: 20px; align-items: flex-start;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
 }
 function JPScore(aids, substeps, gw, mw, tsumo, info) {
     let infoans = { fan: [], valfan: 0, yakuman: 0 };
+    let riichi = info.includes(16) || info.includes(1);
+    let aka = 0;
+    for (let i = 0; i < aids[0].length; ++i) if ('sp' in aids[0][i]) ++aka;
+    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ('sp' in aids[1][i][j]) ++aka;
+    for (let i = 0; i < aids[2].length; ++i) if ('sp' in aids[2][i]) ++aka;
+    let nukicnt = aids[2].length;
     if (info.includes(32)) {
         if (tsumo) 
             if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
@@ -529,14 +536,23 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
             if (tsumo) infoans.fan.push(13), ++infoans.valfan;
             else infoans.fan.push(14), ++infoans.valfan;
         if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
+        infoans.valfan += aka + nukicnt;
     }
+    if (infoans.yakuman) aka = nukicnt = 0;
     let gans = eans_jp;
     const tiles = getTiles(aids[0]);
     let cm = 0, m = 0;
+    const p = MeldsPermutation(aids);
+    let mq = aids[1].length === 0;
+    const nukis = getTiles(aids[2]);
+    let doras = getTiles(aids[3]);
+    let uras = getTiles(riichi ? aids[4] : []);
+    doras = doras.map((_, i) => doras[getDoraPointer(i)]);
+    uras = uras.map((_, i) => uras[getDoraPointer(i)]);
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
     function cal(ots, ota, subots, ck, ek) {
-        const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota);
+        const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis);
         if (ans.val > gans.val) gans = ans;
         else if (ans.val === gans.val)
             if (ans.yakuman > gans.yakuman) gans = ans;
@@ -547,8 +563,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         ++cm;
         if (!(cm & 1048575)) postDebugInfo(); 
     }
-    let mq = aids[1].length === 0;
-    if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo);
+    if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis);
     if (substeps[2] === -1) {
         let tcp = tiles.slice();
         --tcp[aids[0].at(-1).id];
@@ -565,7 +580,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
     }
     if (substeps[0] === -1) {
-        const { err, itots, itsubots, ek, ck, nots, nsubots } = MeldsPermutation(aids);
+        const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
         m = nots * nsubots;
         mq = ck === aids[1].length;
         if (err === 1) return { output: loc.subtile_error_1, brief: "" };
@@ -585,7 +600,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
     const ptchange = `+${score} ${exinfo}`;
     const namebrace = name === "" ? name : `${loc.brace_left}${name}${loc.brace_right}`;
     const fanfuinfo = gans.yakuman ? name : `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit}${namebrace}`;
-    const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq);
+    const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq, gans.dora ?? 0, gans.ura ?? 0, aka, nukicnt);
     const opts = [fanfuinfo, fanfudiv, ptchange];
     return { output: opts.join(''), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
 }

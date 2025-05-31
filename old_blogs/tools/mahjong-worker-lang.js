@@ -184,7 +184,7 @@ const cn_loc = {
     JP_FUNAME_16: "雀头-中",
     JP_FUNAME_17: "边张",
     JP_FUNAME_18: "坎张",
-    JP_FUNAME_19: "单吊",
+    JP_FUNAME_19: "单骑",
     yakuman: "役满",
     times_2: "两倍",
     times_3: "三倍",

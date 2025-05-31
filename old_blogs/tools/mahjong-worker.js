@@ -479,9 +479,6 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     gans.fan.push(...Array(aids[2].length).fill(81));
     let ptchange = wt ? `${loc.winner} +${gans.val * 3 + 24}${loc.comma}${loc.other_player} -${gans.val + 8}` : `${loc.winner} +${gans.val + 24}${loc.comma}${loc.loser} -${gans.val + 8}${loc.comma}${loc.observer} -8`;
     outputs = [`${gans.val} ${loc.GB_FAN_unit}`, "\n", GBFanDiv(gans.fan), ptchange];
-    console.log(filter_cnt, pairs_filer, gans.fan);
-    console.log(seq_miss, seq_total, seq_miss / seq_total, seq_time);
-    console.log(tri_miss, tri_total, tri_miss / tri_total);
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 function JPPrintName(yakuman, printname) {
@@ -528,7 +525,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan;
         if (info.includes(3)) infoans.fan.push(3), ++infoans.valfan;
         if (info.includes(12) && tsumo) infoans.fan.push(12), ++infoans.valfan;
-        if (info.includes(13)) 
+        else if (info.includes(13)) 
             if (tsumo) infoans.fan.push(13), ++infoans.valfan;
             else infoans.fan.push(14), ++infoans.valfan;
         if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
@@ -539,7 +536,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
     function cal(ots, ota, subots, ck, ek) {
-        let ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota);
+        const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota);
         if (ans.val > gans.val) gans = ans;
         else if (ans.val === gans.val)
             if (ans.yakuman > gans.yakuman) gans = ans;
@@ -551,6 +548,22 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         if (!(cm & 1048575)) postDebugInfo(); 
     }
     let mq = aids[1].length === 0;
+    if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo);
+    if (substeps[2] === -1) {
+        let tcp = tiles.slice();
+        --tcp[aids[0].at(-1).id];
+        let listen_13 = true;
+        for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {
+            const rid = getRealId(tcp, Orphan13Array[i]);
+            if (rid === -1) listen_13 = false;
+            else --tcp[rid];
+        }
+        const yakuman = (listen_13 ? 2 : 1) + infoans.yakuman;
+        let f = [listen_13 ? 37 : 36];
+        if (infoans.yakuman > 0) f.push(infoans.fan);
+        const valfan = 0, valfus = 20, realfus = 20, fus = [8], pt = yakuman * 8000;
+        if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
+    }
     if (substeps[0] === -1) {
         const { err, itots, itsubots, ek, ck, nots, nsubots } = MeldsPermutation(aids);
         m = nots * nsubots;
@@ -574,7 +587,6 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
     const fanfuinfo = gans.yakuman ? name : `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit}${namebrace}`;
     const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq);
     const opts = [fanfuinfo, fanfudiv, ptchange];
-    console.log(use_time, gans.fan);
     return { output: opts.join(''), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
 }
 self.onmessage = function (e) {

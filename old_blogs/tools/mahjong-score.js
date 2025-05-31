@@ -1009,7 +1009,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (ck + cp >= 4)
         if (head !== -1 && canBeListen(tiles, ta, tb, head, wint)) (yakuman += 2), f.push(35);
         else ++yakuman, f.push(34);
-    if (fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
+    if (mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
         if (listen_type) valfus += 2, fus.push(listen_type);
         if (tsumo) valfus += 2, fus.push(11);
@@ -1017,7 +1017,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     const realfus = valfus;
     valfus = Math.ceil(valfus / 10) * 10;
     if (!mq && valfus < 30) valfus = 30;
-    if (infoans.yakuman > 0) f = [...f, ...infoans.fan];
+    if (infoans.yakuman > 0) f.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus };
     if (gans.yakuman > 0) return eans_jp;
     f.push(...infoans.fan);
@@ -1071,7 +1071,91 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, valfus, realfus, fus, print: "mangan" };
     return { val: pt, yakuman, valfan: v, fan: f, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 5, 6, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 36, 41, 30, 40]
-const PrintPriority = Array(48);
+function JP7Pairs(tids, infoans, tsumo) {
+    const ot = PairOutput(getTiles(tids));
+    let cot = ot.map((x) => x[0]);
+    let tsuiso = true;
+    for (let i = 0; tsuiso && i < 7; ++i) 
+        if (cot[i] < sizeUT && NoHonorArray[cot[i]]) tsuiso = false;
+        else if (cot[i] >= 43 && cot[i] <= 46) tsuiso = false;
+    const valfus = 25, realfus = 25, fus = [10];
+    let v = 0, f = [], yakuman = infoans.yakuman;
+    if (tsuiso) yakuman += 2, f = [40];
+    if (infoans.yakuman > 0) f.push(...infoans.fan);
+    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus };
+    let tan19 = true;
+    for (let i = 0; tan19 && i < 7; ++i) 
+        if (cot[i] < sizeUT && OrphanArray[cot[i]]) tan19 = false;
+        else if (cot[i] >= 47) tan19 = false;
+    if (tan19 && v < 1) v = 1, f = [4];
+    function PairSameColor(cot) {
+        let color = -1;
+        for (let i = 0; i < 7; ++i) {
+            let tcolor = -1;
+            if (cot[i] < sizeUT) {
+                if (HonorArray[cot[i]]) return false;
+                tcolor = ColorArray[cot[i]];
+            }
+            else if (cot[i] >= 47) return false;
+            else if (cot[i] in JokerColor) tcolor = JokerColor[cot[i]]; 
+            if (tcolor === -1) continue;
+            if (color === -1) color = tcolor;
+            else if (color !== tcolor) return false;
+        }
+        return true;
+    }
+    let sc = PairSameColor(cot);
+    if (sc && v < 6) v = 6, f = [31];
+    if (sc && tan19 && v < 7) v = 7, f = [4, 31];
+    function PairSameColorWithHonor(cot) {
+        let color = -1;
+        for (let i = 0; i < 7; ++i) {
+            let tcolor = -1;
+            if (cot[i] < sizeUT) {
+                if (HonorArray[cot[i]]) continue;
+                tcolor = ColorArray[cot[i]];
+            }
+            else if (cot[i] >= 47) continue;
+            else if (cot[i] in JokerColor) tcolor = JokerColor[cot[i]]; 
+            if (tcolor === -1) continue;
+            if (color === -1) color = tcolor;
+            else if (color !== tcolor) return false;
+        }
+        return true;
+    }
+    let scwh = PairSameColorWithHonor(cot);
+    if (scwh && v < 3) v = 3, f = [28];
+    function canHun19(cot) {
+        let count19 = Array(3).fill(0);
+        let numcnt = 0;
+        for (let i = 0; i < 7; ++i) {
+            if (cot[i] < sizeUT) {
+                if (HonorArray[cot[i]]) continue;
+                if (NumberArray[cot[i]] === 0 || NumberArray[cot[i]] === 8) ++count19[ColorArray[cot[i]]];
+                else return false;
+            }
+            else if (cot[i] >= 47) continue;
+            else if (cot[i] in JokerColor) ++count19[JokerColor[cot[i]]];
+            else if (cot[i] === 46) ++numcnt;
+        }
+        return [...count19, numcnt];
+    }
+    let c19 = canHun19(cot);
+    let hun19 = c19[0] <= 2 && c19[1] <= 2 && c19[2] <= 2 && c19[0] + c19[1] + c19[2] + c19[3] <= 6;
+    let hunhun = c19[0] + c19[1] + c19[2] + c19[3] <= 2;
+    if (hun19 && v < 2) v = 2, f = [25];
+    if (hunhun && v < 5) v = 5, f = [25, 28];
+    v += 2, f.push(17);
+    v += infoans.valfan, f.push(...infoans.fan);
+    if (tsumo) ++v, f.push(2);
+    if (v >= 13) return { val: 8000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "counted_yakuman" };
+    if (v >= 11) return { val: 6000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "sanbaiman" };
+    if (v >= 8) return { val: 4000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "baiman" };
+    if (v >= 6) return { val: 3000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "haneman" };
+    let pt = valfus * (1 << 2 + v);
+    if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus, print: "mangan" };
+    return { val: pt, yakuman: 0, valfan: v, fan: f, valfus, realfus, fus };
+}
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40]
 const JPScoreArray = [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2];

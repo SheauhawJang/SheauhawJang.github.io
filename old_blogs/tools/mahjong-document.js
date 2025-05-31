@@ -35,7 +35,11 @@ function processInput() {
     const subcnt = aids[1].length;
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
-    document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, true);
+    document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, 1);
+    try {
+        document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
+        document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
+    } catch {}
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
@@ -167,18 +171,16 @@ function discard(i) {
     drawInputCards();
     processInput();
 }
-function tilesImage(tids, bonus) {
+function tilesImage(tids, bonus, zoom) {
     let output = "";
     let width = 5;
     let max_card = 35;
-    if (window.matchMedia("screen and (max-width: 512px)").matches) {
-        width = 7;
-        max_card = 20;
-    }
+    if (window.matchMedia("screen and (max-width: 512px)").matches) width = 7, max_card = 20;
     if (tids.length >= max_card) width = 100 / max_card;
     else if (tids.length >= 100 / width) width = 100 / tids.length;
-    if (bonus) width *= 0.5;
+    if (bonus === 1) width *= 0.5;
     for (let i = 0; i < tids.length; ++i) output += cardLargeImage(tids, i, width, !bonus);
+    if (bonus === 2) for (let i = tids.length; i < 5; ++i) output += backcardImage(width);
     return output;
 }
 function getUnifiedType(s) {
@@ -250,10 +252,10 @@ function drawInputCards() {
     let rheight = 0;
     let unit = "px";
     if (window.matchMedia("screen and (max-width: 512px)").matches) {
-        width = 100 / 20;
-        height = (100 * 171) / 20 / 80;
-        sheight = (100 * 129) / 20 / 80;
-        unit = "%";
+        width = div.clientWidth / 20;
+        height = (div.clientWidth * 171) / 20 / 80;
+        sheight = (div.clientWidth * 129) / 20 / 80;
+        unit = "px";
     }
     const tids = ipids[0];
     for (let i = 0; i < tids.length; ++i) (output += cardInputImage(tids, i, -1, width, unit)), (rheight = sheight);
@@ -285,24 +287,22 @@ function drawInputCards() {
     output = "";
     const bonusd = document.getElementById("input-pic-bonus");
     const bids = ipids[2];
-    for (let i = 0; i < bids.length; ++i) output += cardInputImage(bids, i, -2, width * 0.75, unit);
-    if (bids.length === 0) bonusd.style.paddingTop = `${sheight * 0.75}${unit}`;
-    else bonusd.style.paddingTop = "0";
+    for (let i = 0; i < bids.length; ++i) output += cardInputImage(bids, i, -2, width, unit);
     bonusd.innerHTML = output;
-    try
-    {
-    output = "";
-    const dorap = document.getElementById("input-pic-dorap");
-    const dorapids = ipids[3];
-    for (let i = 0; i < dorapids.length; ++i) output += cardInputImage(dorapids, i, -3, width * 0.75, unit);
-    for (let i = dorapids.length; i < 5; ++i) output += backcardInputImage(i, -3, width * 0.75, unit);
-    dorap.innerHTML = output;
-    output = "";
-    const urap = document.getElementById("input-pic-urap");
-    const urapids = ipids[4];
-    for (let i = 0; i < urapids.length; ++i) output += cardInputImage(urapids, i, -4, width * 0.75, unit);
-    for (let i = urapids.length; i < 5; ++i) output += backcardInputImage(i, -4, width * 0.75, unit);
-    urap.innerHTML = output;
+    if (bids.length === 0) bonusd.innerHTML = `<div class="card-div" style="width: ${width}${unit};"><img src="./cards/e.png"></div>`;
+    try {
+        output = "";
+        const dorap = document.getElementById("input-pic-dorap");
+        const dorapids = ipids[3];
+        for (let i = 0; i < dorapids.length; ++i) output += cardInputImage(dorapids, i, -3, width, unit);
+        for (let i = dorapids.length; i < 5; ++i) output += backcardInputImage(i, -3, width, unit);
+        dorap.innerHTML = output;
+        output = "";
+        const urap = document.getElementById("input-pic-urap");
+        const urapids = ipids[4];
+        for (let i = 0; i < urapids.length; ++i) output += cardInputImage(urapids, i, -4, width, unit);
+        for (let i = urapids.length; i < 5; ++i) output += backcardInputImage(i, -4, width, unit);
+        urap.innerHTML = output;
     } catch {}
     document.getElementById("subkey_chi").disabled = !isSeq(
         tids
@@ -392,6 +392,14 @@ function subtileInput(t, k) {
             ipids[2].push(ipids[0].at(-1));
             ipids[0].pop();
             break;
+        case 4:
+            ipids[3].push(ipids[0].at(-1));
+            ipids[0].pop();
+            break;
+        case 5:
+            ipids[4].push(ipids[0].at(-1));
+            ipids[0].pop();
+            break;
     }
     remakeInput(ipids);
     drawInputCards();
@@ -458,4 +466,23 @@ function processJPScore() {
     };
     const { aids, substeps } = jp_worker_info;
     jp_worker.postMessage({ task: "jp-score", aids, substeps, gw, mw, wt, info, lang });
+}
+function adjustButtonsFontSize() {
+    const baseBtn = document.getElementById("subkey_chi");
+    if (!baseBtn) return;
+    const targetHeight = baseBtn.clientHeight;
+    console.log(targetHeight);
+    const buttons = document.getElementsByClassName("subkey-button");
+    for (let i = 0; i < buttons.length; i++) {
+        let btn = buttons[i];
+        if (btn === baseBtn) continue;
+        let style = window.getComputedStyle(btn);
+        let fontSize = parseFloat(style.fontSize);
+        btn.style.fontSize = fontSize + "px";
+        while (btn.scrollHeight > targetHeight && fontSize > 8) {
+            fontSize--;
+            btn.style.fontSize = fontSize + "px";
+        }
+        btn.style.height = targetHeight + 'px';
+    }
 }

@@ -271,10 +271,10 @@
                 const button = document.getElementById("inputButton");
                 const text = document.getElementById("textInput");
                 const isVisible = board.style.display !== "none";
-                if (!isVisible) drawInputCards();
                 board.style.display = isVisible ? "none" : "block";
                 text.style.display = isVisible ? "block" : "none";
                 button.textContent = isVisible ? "開啟輸入面板 ▼" : "關閉輸入面板 ▲";
+                if (!isVisible) drawInputCards();
             }
             function toggleNote() {
                 const note = document.getElementById("inputNote");

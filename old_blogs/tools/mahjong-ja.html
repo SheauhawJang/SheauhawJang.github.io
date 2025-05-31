@@ -282,10 +282,10 @@
                 const button = document.getElementById("inputButton");
                 const text = document.getElementById("textInput");
                 const isVisible = board.style.display !== "none";
-                if (!isVisible) drawInputCards();
                 board.style.display = isVisible ? "none" : "block";
                 text.style.display = isVisible ? "block" : "none";
                 button.textContent = isVisible ? "入力パネルを開く ▼" : "入力パネルを隠す ▲";
+                if (!isVisible) drawInputCards();
             }
             function toggleNote() {
                 const note = document.getElementById("inputNote");

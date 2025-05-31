@@ -1236,59 +1236,59 @@ function JP7Pairs(tids, infoans, tsumo, doras = Array(sizeAT).fill(0), uras = Ar
     let gd = 0, gu = 0;
     for (let im = 0; im < 9; ++im) {
         doras[im] += doras[43];
-        uras[im] += doras[43];
+        uras[im] += uras[43];
         for (let ip = 9; ip < 18; ++ip) {
             doras[ip] += doras[44];
-            uras[ip] += doras[44];
+            uras[ip] += uras[44];
             for (let is = 18; is < 27; ++is) {
                 doras[is] += doras[45];
-                uras[is] += doras[45];
+                uras[is] += uras[45];
                 const qs = [im, ip, is];
                 for (let iq = 0; iq < 3; ++iq) {
                     doras[qs[iq]] += doras[46];
-                    uras[qs[iq]] += doras[46];
+                    uras[qs[iq]] += uras[46];
                     for (let iw = 27; iw <= 30; ++iw) {
                         doras[iw] += doras[47];
-                        uras[iw] += doras[47];
+                        uras[iw] += uras[47];
                         for (let ig = 31; ig <= 33; ++ig) {
                             doras[ig] += doras[48];
-                            uras[ig] += doras[48];
+                            uras[ig] += uras[48];
                             const zs = [iw, ig];
                             for (let iz = 0; iz < 2; ++iz) {
                                 doras[zs[iz]] += doras[49];
-                                uras[zs[iz]] += doras[49];
+                                uras[zs[iz]] += uras[49];
                                 const as = [qs[iq], zs[iz]];
                                 for (let i = 0; i < 2; ++i) {
                                     doras[as[i]] += doras[42];
-                                    uras[as[i]] += doras[42];
+                                    uras[as[i]] += uras[42];
                                     let { v, f, d, u } = selectMaxPairs(cot, doras, uras, tan19, sc, scwh, hun19, hunhun);
                                     let nd = 0, nu = 0;
                                     for (let i = 0; i < sizeUT; ++i) nd += nuki[i] * doras[i], nu += nuki[i] * uras[i];
                                     v += nd + nu, d += nd, u += nu;
                                     if (v > gv) gv = v, gf = f, gd = d, gu = u;
                                     doras[as[i]] -= doras[42];
-                                    uras[as[i]] -= doras[42];
+                                    uras[as[i]] -= uras[42];
                                 }
                                 doras[zs[iz]] -= doras[49];
-                                uras[zs[iz]] -= doras[49];
+                                uras[zs[iz]] -= uras[49];
                             }
                             doras[ig] -= doras[48];
-                            uras[ig] -= doras[48];
+                            uras[ig] -= uras[48];
                         }
                         doras[iw] -= doras[47];
-                        uras[iw] -= doras[47];
+                        uras[iw] -= uras[47];
                     }
                     doras[qs[iq]] -= doras[46];
-                    uras[qs[iq]] -= doras[46];
+                    uras[qs[iq]] -= uras[46];
                 }
                 doras[is] -= doras[45];
-                uras[is] -= doras[45];
+                uras[is] -= uras[45];
             }
             doras[ip] -= doras[44];
-            uras[ip] -= doras[44];
+            uras[ip] -= uras[44];
         }
         doras[im] -= doras[43];
-        uras[im] -= doras[43];
+        uras[im] -= uras[43];
     }
     (gv += 2), gf.push(17);
     (gv += infoans.valfan), gf.push(...infoans.fan);

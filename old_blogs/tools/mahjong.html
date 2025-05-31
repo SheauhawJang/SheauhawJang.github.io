@@ -165,6 +165,8 @@
                         <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">加杠</button>
                         <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">暗杠</button>
                         <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">补花</button>
+                        <button onclick="subtileInput(4)" class="subkey-button enable-no-empty">宝牌指示</button>
+                        <button onclick="subtileInput(5)" class="subkey-button enable-no-empty">里宝牌指示</button>
                     </div>
                 </div>
             </div>
@@ -175,7 +177,7 @@
             <div class="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
                 <div class="card-container" id="output-pic"></div>
-                <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
+                <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
             </div>
             <div class="output-box">
                 <div class="title-button-container">
@@ -324,10 +326,11 @@
                 const button = document.getElementById("inputButton");
                 const text = document.getElementById("textInput");
                 const isVisible = board.style.display !== "none";
-                if (!isVisible) drawInputCards();
                 board.style.display = isVisible ? "none" : "block";
                 text.style.display = isVisible ? "block" : "none";
                 button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
+                if (!isVisible) drawInputCards();
+                if (!isVisible) adjustButtonsFontSize();
             }
             function toggleNote() {
                 const note = document.getElementById("inputNote");

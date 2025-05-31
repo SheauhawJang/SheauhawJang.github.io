@@ -155,6 +155,7 @@ html {
 .card-container {
     text-align: center;
     overflow-x: auto;
+    overflow-y: unset;
     white-space: nowrap;
     max-width: 100%;
 }

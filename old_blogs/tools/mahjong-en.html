@@ -26,31 +26,17 @@
                     <div class="input-note" id="inputNote" style="display: none">
                         The input field supports the following formats, which can be mixed:
                         <ol style="margin-top: 0">
-                            <li>
-                                Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors,
-                                <b>East / South / West / North / White Dragon / Green Dragon / Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same
-                                color suffix can only keep the suffix of the rightmost tile.
-                            </li>
+                            <li>Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors, <b>East / South / West / North / White Dragon / Green Dragon / Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same color suffix can only keep the suffix of the rightmost tile.</li>
                             <li>
                                 Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors,
                                 <b>East / South / West / North / White Dragon / Green Dragon / Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.
                             </li>
-                            <li>
-                                English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East / South / West / North</b>, are represented by <b>ESWN</b> in
-                                order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.
-                            </li>
+                            <li>English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East / South / West / North</b>, are represented by <b>ESWN</b> in order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.</li>
                             <li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Characters=w</b>,<b>Circles=b</b>.</li>
-                            <li>
-                                Notation Format: Character tiles are represented by Chinese numbers <b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers <b>①②③④⑤⑥⑦⑧⑨</b>.
-                                Bamboo tiles are represented by full-width numbers <b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.
-                            </li>
+                            <li>Notation Format: Character tiles are represented by Chinese numbers <b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers <b>①②③④⑤⑥⑦⑧⑨</b>. Bamboo tiles are represented by full-width numbers <b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.</li>
                             <li>Unicode Format: Use Unicode U+1F000 to U+1F02B characters to represent the corresponding cards.</li>
                         </ol>
-                        <p>
-                            About Bonus: <b>Spring / Summer / Autumn / Winter / Plum / Orchid / Chrysanthemum / Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or
-                            <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into
-                            joker if necessary.<br />
-                        </p>
+                        <p>About Bonus: <b>Spring / Summer / Autumn / Winter / Plum / Orchid / Chrysanthemum / Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into joker if necessary.<br /></p>
                         About Joker:
                         <ul style="margin-top: 0">
                             <li>
@@ -153,6 +139,12 @@
                             <div></div>
                         </div>
                         <div class="card-container" id="input-pic-bonus"></div>
+                        <div class="win-grid">
+                            <span>Dora Indicator</span>
+                            <div class="card-container" id="input-pic-dorap"></div>
+                            <span>Ura Dora Indicator</span>
+                            <div class="card-container" id="input-pic-urap"></div>
+                        </div>
                     </div>
                     <div class="input-subkeys">
                         <button onclick="clearInput()" class="subkey-button">Clear</button>
@@ -164,6 +156,8 @@
                         <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">Extend Kong</button>
                         <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">Conceal Kong</button>
                         <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">+Bonus</button>
+                        <button onclick="subtileInput(4)" class="subkey-button enable-no-empty">Dora Indicate</button>
+                        <button onclick="subtileInput(5)" class="subkey-button enable-no-empty">Ura Dora Indicate</button>
                     </div>
                 </div>
             </div>
@@ -174,7 +168,7 @@
             <div class="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
                 <div class="card-container" id="output-pic"></div>
-                <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
+                <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
             </div>
             <div class="output-box">
                 <div class="title-button-container">
@@ -212,47 +206,101 @@
                 <div class="output-context" id="brief-output-tw" style="display: none"></div>
                 <div class="output-time" id="time-output-tw"></div>
             </div>
-            <div class="output-box" id="score-gb" style="display: none;">
+            <div class="output-box" id="score-gb" style="display: none">
                 <div class="title-button-container">
                     <div class="output-title">Chinese Official Mahjong (MCR) Points Calculator</div>
                     <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">Fold ▲</button>
                 </div>
-                <div class="output-options" id="options-output-score-gb">
-                    <span>Prevalent</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-gb-global-wind" value="27" checked>East</label>
-                        <label><input type="radio" name="score-gb-global-wind" value="28">South</label>
-                        <label><input type="radio" name="score-gb-global-wind" value="29">West</label>
-                        <label><input type="radio" name="score-gb-global-wind" value="30">North</label>
+                <div id="options-output-score-gb">
+                    <div class="output-options">
+                        <span>Prevalent</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-gb-global-wind" value="27" checked />East</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="28" />South</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="29" />West</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="30" />North</label>
+                        </div>
+                        <span>Seat</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-gb-local-wind" value="27" checked />East</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="28" />South</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="29" />West</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="30" />North</label>
+                        </div>
+                        <span>Winning Way</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-gb-wintype" value="0" checked />Claim</label>
+                            <label><input type="radio" name="score-gb-wintype" value="80" />Draw</label>
+                        </div>
+                        <span>Winning Status</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-gb-wininfo" value="44" />Last Tile</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="46" />Out with Replacement</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="47" />Robbing the Kong</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="58" />Last of its Kind</label>
+                        </div>
+                        <button onclick="processGBScore()" class="score-button">Calculate</button>
                     </div>
-                    <span>Seat</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-gb-local-wind" value="27" checked>East</label>
-                        <label><input type="radio" name="score-gb-local-wind" value="28">South</label>
-                        <label><input type="radio" name="score-gb-local-wind" value="29">West</label>
-                        <label><input type="radio" name="score-gb-local-wind" value="30">North</label>
-                    </div>
-                    <span>Winning Way</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-gb-wintype" value="0" checked>Claim</label>
-                        <label><input type="radio" name="score-gb-wintype" value="80">Draw</label>
-                    </div>
-                    <span>Winning Status</span>
-                    <div class="output-option-group">
-                        <label><input type="checkbox" name="score-gb-wininfo" value="44">Last Tile</label>
-                        <label><input type="checkbox" name="score-gb-wininfo" value="46">Out with Replacement</label>
-                        <label><input type="checkbox" name="score-gb-wininfo" value="47">Robbing the Kong</label>
-                        <label><input type="checkbox" name="score-gb-wininfo" value="58">Last of its Kind</label>
-                    </div>
-                    <button onclick="processGBScore()" class="score-button">Calculate</button>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
                 <div class="output-time" id="time-output-score-gb">Ready to start!</div>
             </div>
+            <div class="output-box" id="score-jp">
+                <div class="title-button-container">
+                    <div class="output-title">Japanese Riichi Mahjong (RCR) Scores Calculator</div>
+                    <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">Fold ▲</button>
+                </div>
+                <div id="options-output-score-jp">
+                    <div class="output-options">
+                        <span>Prevailing</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-jp-global-wind" value="27" checked>East</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="28">South</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="29">West</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="30">North</label>
+                        </div>
+                        <span>Seat</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-jp-local-wind" value="27" checked>East</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="28">South</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="29">West</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="30">North</label>
+                        </div>
+                        <span>Winning Way</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-jp-wintype" value="0" checked>Claim</label>
+                            <label><input type="radio" name="score-jp-wintype" value="1">Draw</label>
+                        </div>
+                        <span>Riichi Status</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-jp-wininfo" value="1">Riichi</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="16">Double Riichi</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="3">Ippatsu</label>
+                        </div>
+                        <span>Winning Status</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-jp-wininfo" value="32">First Turn</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="13">Last Tile</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="12">After a Kong</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="15">Robbing the Kong</label>
+                        </div>
+                        <button onclick="processJPScore()" class="score-button">Calculate</button>
+                    </div>
+                    <div class="output-options">
+                        <span>Dora Indicator</span>
+                        <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
+                        <span>Ura Dora Indicator</span>
+                        <div class="card-container" id="output-pic-uras" style="text-align: left"></div>
+                    </div>
+                </div>
+                <div class="output-context" id="output-score-jp"></div>
+                <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
+                <div class="output-time" id="time-output-score-jp">Ready to start!</div>
+            </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.3.5</div>
+            <div class="output-time">v4.4.3</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
@@ -292,7 +340,7 @@
                 button.textContent = isVisible ? "Show input instructions ▼" : "Hide input instructions ▲";
             }
             function toggleOutput(i) {
-                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb"];
+                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp"];
                 const d = document.getElementById(ids[i]);
                 const b = document.getElementById("toggle-" + ids[i]);
                 const s = document.getElementById("brief-" + ids[i]);
@@ -300,7 +348,7 @@
                 const v = d.style.display !== "none";
                 d.style.display = v ? "none" : "block";
                 s.style.display = v ? "block" : "none";
-                if (o) o.style.display = v ? "none" : "grid";
+                if (o) o.style.display = v ? "none" : "block";
                 b.textContent = v ? "Expand ▼" : "Fold ▲";
             }
             window.onload = function () {

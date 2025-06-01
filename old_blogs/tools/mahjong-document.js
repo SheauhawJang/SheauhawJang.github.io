@@ -14,10 +14,8 @@ function processInput() {
     const document_scores_ids = ["score-gb", "score-jp"];
     const workers_scores = [gb_worker, jp_worker];
     for (let i = 0; i < document_scores_ids.length; ++i) {
-        try {
-            document.getElementById(document_scores_ids[i]).style.display = "none";
-            if (workers_scores[i]) workers_scores[i].terminate();
-        } catch {}
+        document.getElementById(document_scores_ids[i]).style.display = "none";
+        if (workers_scores[i]) workers_scores[i].terminate();
     }
     const input = document.getElementById("inputText").value;
     aids = splitTiles(input);
@@ -36,10 +34,8 @@ function processInput() {
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, 1);
-    try {
-        document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
-        document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
-    } catch {}
+    document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
+    document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
@@ -70,14 +66,12 @@ function processInput() {
         switch (task) {
             case 1:
                 if (Math.min(...substeps[task]) === -1) {
-                    try {
-                        document.getElementById("output-score-jp").textContent = "";
-                        document.getElementById("brief-output-score-jp").textContent = "";
-                        document.getElementById("time-output-score-jp").textContent = "Ready to start!";
-                        document.getElementById("score-jp").style.display = "block";
-                        jp_worker = null;
-                        jp_worker_info = { aids, substeps: substeps[task] };
-                    } catch {}
+                    document.getElementById("output-score-jp").textContent = "";
+                    document.getElementById("brief-output-score-jp").textContent = "";
+                    document.getElementById("time-output-score-jp").textContent = "Ready to start!";
+                    document.getElementById("score-jp").style.display = "block";
+                    jp_worker = null;
+                    jp_worker_info = { aids, substeps: substeps[task] };
                 }
             case 2:
                 if (Math.min(...substeps[task]) === -1) {
@@ -291,20 +285,18 @@ function drawInputCards() {
     for (let i = 0; i < bids.length; ++i) output += cardInputImage(bids, i, -2, width, unit);
     bonusd.innerHTML = output;
     if (bids.length === 0) bonusd.innerHTML = `<div class="card-div" style="width: ${width}${unit};"><img src="./cards/e.png"></div>`;
-    try {
-        output = "";
-        const dorap = document.getElementById("input-pic-dorap");
-        const dorapids = ipids[3];
-        for (let i = 0; i < dorapids.length; ++i) output += cardInputImage(dorapids, i, -3, width, unit);
-        for (let i = dorapids.length; i < 5; ++i) output += backcardInputImage(i, -3, width, unit);
-        dorap.innerHTML = output;
-        output = "";
-        const urap = document.getElementById("input-pic-urap");
-        const urapids = ipids[4];
-        for (let i = 0; i < urapids.length; ++i) output += cardInputImage(urapids, i, -4, width, unit);
-        for (let i = urapids.length; i < 5; ++i) output += backcardInputImage(i, -4, width, unit);
-        urap.innerHTML = output;
-    } catch {}
+    output = "";
+    const dorap = document.getElementById("input-pic-dorap");
+    const dorapids = ipids[3];
+    for (let i = 0; i < dorapids.length; ++i) output += cardInputImage(dorapids, i, -3, width, unit);
+    for (let i = dorapids.length; i < 5; ++i) output += backcardInputImage(i, -3, width, unit);
+    dorap.innerHTML = output;
+    output = "";
+    const urap = document.getElementById("input-pic-urap");
+    const urapids = ipids[4];
+    for (let i = 0; i < urapids.length; ++i) output += cardInputImage(urapids, i, -4, width, unit);
+    for (let i = urapids.length; i < 5; ++i) output += backcardInputImage(i, -4, width, unit);
+    urap.innerHTML = output;
     document.getElementById("subkey_chi").disabled = !isSeq(
         tids
             .slice(-3)

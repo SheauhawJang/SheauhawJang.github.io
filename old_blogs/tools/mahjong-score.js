@@ -943,7 +943,6 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let head = -1;
     const mq = melds.length >= 5 && aids[1].length === ck;
     const wint = aids[0].at(-1)?.id ?? -1;
-    console.log(wint);
     let valfus = 20,
         fus = [8];
     if (mq && !tsumo) (valfus += 10), (fus = [9]);

@@ -77,6 +77,10 @@ input[type="text"] {
     width: 30px;
 }
 
+.output-context .card-container .card-div {
+    width: 30px;
+}
+
 .output-context .card-container .card-padding {
     width: 10px;
 }
@@ -155,7 +159,6 @@ html {
 .card-container {
     text-align: center;
     overflow-x: auto;
-    overflow-y: unset;
     white-space: nowrap;
     max-width: 100%;
 }
@@ -204,9 +207,13 @@ html {
     z-index: 10;
     text-shadow:
         -1px -1px 0 white,
+        0px -1px 0 white,
         1px -1px 0 white,
-        -1px 1px 0 white,
-        1px 1px 0 white;
+        -1px  0px 0 white,
+        1px  0px 0 white,
+        -1px  1px 0 white,
+        0px  1px 0 white,
+        1px  1px 0 white;
 }
 
 .input-area .card-container {
@@ -382,8 +389,20 @@ input[type="checkbox"] {
         font-size: 12px;
     }
 
+    .win-grid {
+        display: block;
+    }
+
+    .output-context .card-container img {
+        width: 5.5%;
+    }
+
     .output-context .card-container .card-div {
         width: 5.5%;
+    }
+
+    .output-context .card-container .card-div img {
+        width: 100%;
     }
 
     .output-context .card-container .card-padding {

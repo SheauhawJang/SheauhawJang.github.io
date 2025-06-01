@@ -538,7 +538,6 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
         infoans.valfan += aka + nukicnt;
     }
-    if (infoans.yakuman) aka = nukicnt = 0;
     let gans = eans_jp;
     const tiles = getTiles(aids[0]);
     let cm = 0, m = 0;
@@ -587,6 +586,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
         itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
     }
+    if (gans.yakuman) aka = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
     const realpt = (x) => Math.ceil(x / 100) * 100;
     let score, exinfo = "";

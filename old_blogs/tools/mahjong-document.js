@@ -46,12 +46,12 @@ function processInput() {
         if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
         if ("output" in e.data) {
             document.getElementById(document_element_ids[task]).innerHTML = e.data.output;
-            if (lang === "en") addWorkerCardHelper();
             return;
         }
         const { result, time } = e.data;
         document.getElementById(document_element_ids[task]).innerHTML = result.output;
         document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`;
+        if (lang === "en") addWorkerCardHelper();
         switch (task) {
             case 0:
                 substeps[0] = result.step;

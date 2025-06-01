@@ -127,8 +127,22 @@ function randomInput() {
     drawInputCards();
     processInput();
 }
+const HelperHonorArray = ["E", "S", "W", "N", "Wh", "G", "R"];
+const HelperBonusArray = [1, 2, 3, 4, 1, 2, 3, 4];
+const HelperJokerArray = ["J", "Ch", "Cir", "B", "Su", "Wi", "D", "H", "Fl"];
+const HelperArray = NumberArray.map((x, i) => i < 27 ? x + 1 : HelperHonorArray[i - 27]);
+HelperArray.push(...HelperBonusArray, ...HelperJokerArray);
+function getCardHelperDiv(tile, width, unit = "%") {
+    if (lang !== "en") return "";
+    const id = tile.id;
+    const helper = HelperArray[id] ?? "";
+    const bodyWidth = document.body.clientWidth || document.documentElement.clientWidth;
+    let fontSize = width * 0.3;
+    if (unit === '%') fontSize *= bodyWidth / 100;
+    return `<span class="card-helper" style="font-size: ${fontSize}px">${helper}</span>`;
+}
 function cardLargeImage(tids, i, width, link) {
-    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}<img src="./cards/${cardName(tids[i])}.gif"${link ? ` onclick="discard(${i})" class="clickable"` : ""}></div>`;
+    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}<img src="./cards/${cardName(tids[i])}.gif"${link ? ` onclick="discard(${i})" class="clickable"` : ""}></div>`;
 }
 function cardLargeImageRotated(id, width, cnt) {
     return `<div class="card-div" style="width: ${(width * 120) / 80}%;"><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(id)}.gif"></div>`;
@@ -226,7 +240,7 @@ function subtilesImage(sids, tcnt) {
 // Input Panel Functions
 let ipids;
 function cardInputImage(ids, i, j, width, unit) {
-    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}<img src="./cards/${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
 }
 function cardInputImageRotated(ids, i, j, width, unit, cnt) {
     return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 1)" class="clickable"></div>`;

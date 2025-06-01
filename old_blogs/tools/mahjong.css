@@ -192,6 +192,23 @@ html {
     opacity: 1;
 }
 
+.card-helper {
+    position: absolute;
+    top: 0.3em;
+    left: 0.2em;
+    color: red;
+    font-weight: bold;
+    padding: 0px 0px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 10;
+    text-shadow:
+        -1px -1px 0 white,
+        1px -1px 0 white,
+        -1px 1px 0 white,
+        1px 1px 0 white;
+}
+
 .input-area .card-container {
     border: 1px solid #ccc;
     border-radius: 4px;

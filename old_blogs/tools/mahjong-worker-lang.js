@@ -831,8 +831,8 @@ const en_loc = {
     JP_FU_unit: "Minipoints",
 }
 let loc = cn_loc;
-function setLoc(lang) {
-    switch (lang) {
+function setLoc(inlang) {
+    switch (inlang) {
         case "cn": return loc = cn_loc;
         case "tw": return loc = tw_loc;
         case "ja": return loc = ja_loc;

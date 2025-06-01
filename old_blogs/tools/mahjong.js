@@ -170,6 +170,7 @@ const CJokerB = [46, 46, 46, 49, 49];
 const ColorArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4];
 const ColorFirstArray = [0, 9, 18, 27, 31, 34];
 const NumberArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6];
+const HelperArray = [...NumberArray.slice(0, 27).map(x => x + 1), "E", "S", "W", "N", "Wh", "G", "R", 1, 2, 3, 4, 1, 2, 3, 4, "J", "Ch", "Cir", "B", "Su", "Wi", "D", "H", "Fl"];
 const JokerColor = { 43: 0, 44: 1, 45: 2, 47: 3, 48: 4 }
 const JokerRange = { 42: [0, sizeUT], 43: [0, 9], 44: [9, 18], 45: [18, 27], 46: [0, 27], 47: [27, 31], 48: [31, 34], 49: [27, 34] }
 function prepareStep(nm, np, tiles) {

@@ -355,6 +355,7 @@
                 s.style.display = v ? "block" : "none";
                 if (o) o.style.display = v ? "none" : "block";
                 b.textContent = v ? "Expand ▼" : "Fold ▲";
+                addWorkerCardHelper();
             }
             window.onload = function () {
                 randomInput();

@@ -46,6 +46,7 @@ function processInput() {
         if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
         if ("output" in e.data) {
             document.getElementById(document_element_ids[task]).innerHTML = e.data.output;
+            if (lang === "en") addWorkerCardHelper();
             return;
         }
         const { result, time } = e.data;
@@ -127,18 +128,17 @@ function randomInput() {
     drawInputCards();
     processInput();
 }
-const HelperHonorArray = ["E", "S", "W", "N", "Wh", "G", "R"];
-const HelperBonusArray = [1, 2, 3, 4, 1, 2, 3, 4];
-const HelperJokerArray = ["J", "Ch", "Cir", "B", "Su", "Wi", "D", "H", "Fl"];
-const HelperArray = NumberArray.map((x, i) => i < 27 ? x + 1 : HelperHonorArray[i - 27]);
-HelperArray.push(...HelperBonusArray, ...HelperJokerArray);
+function getCardHelperFontSize(width, unit) {
+    const bodyWidth = document.body.clientWidth || document.documentElement.clientWidth;
+    let fontSize = width * 0.3;
+    if (unit === "%") fontSize *= bodyWidth / 100;
+    return fontSize;
+}
 function getCardHelperDiv(tile, width, unit = "%") {
     if (lang !== "en") return "";
     const id = tile.id;
     const helper = HelperArray[id] ?? "";
-    const bodyWidth = document.body.clientWidth || document.documentElement.clientWidth;
-    let fontSize = width * 0.3;
-    if (unit === '%') fontSize *= bodyWidth / 100;
+    const fontSize = getCardHelperFontSize(width, unit);
     return `<span class="card-helper" style="font-size: ${fontSize}px">${helper}</span>`;
 }
 function cardLargeImage(tids, i, width, link) {
@@ -183,7 +183,7 @@ function tilesImage(tids, bonus) {
     let output = "";
     let width = 5;
     let max_card = 35;
-    if (window.matchMedia("screen and (max-width: 512px)").matches) width = 7, max_card = 20;
+    if (window.matchMedia("screen and (max-width: 512px)").matches) (width = 7), (max_card = 20);
     if (tids.length >= max_card) width = 100 / max_card;
     else if (tids.length >= 100 / width) width = 100 / tids.length;
     if (bonus === 1) width *= 0.5;
@@ -478,7 +478,6 @@ function adjustButtonsFontSize() {
     const baseBtn = document.getElementById("subkey_chi");
     if (!baseBtn) return;
     const targetHeight = baseBtn.clientHeight;
-    console.log(targetHeight);
     const buttons = document.getElementsByClassName("subkey-button");
     for (let i = 0; i < buttons.length; i++) {
         let btn = buttons[i];
@@ -490,6 +489,56 @@ function adjustButtonsFontSize() {
             fontSize--;
             btn.style.fontSize = fontSize + "px";
         }
-        btn.style.height = targetHeight + 'px';
+        btn.style.height = targetHeight + "px";
     }
+    if (lang === "en") {
+        const imgs = document.querySelectorAll('.input-card-button');
+        imgs.forEach((img) => {
+            if (img.classList.contains('card-div')) {
+                const numberSpan = img.querySelector('span.card-helper');
+                if (numberSpan) numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
+                return;
+            }
+            const src = img.src;
+            const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
+            const filename = filenameWithExt.split(".")[0];
+            const idx = id(filename).id; 
+            if (idx === undefined) return;
+            const displayNumber = HelperArray[idx]; 
+            const div = document.createElement("div");
+            div.classList.add('card-div', 'input-card-button');
+            const newImg = img.cloneNode(true);
+            newImg.classList.remove('input-card-button');
+            const numberSpan = document.createElement("span");
+            numberSpan.className = "card-helper";
+            numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
+            numberSpan.textContent = displayNumber;
+            div.appendChild(newImg);
+            div.appendChild(numberSpan);
+            img.parentNode.replaceChild(div, img);
+        });
+    }
+}
+function addWorkerCardHelper() {
+    const imgs = document.querySelectorAll("img.no-card-div-img");
+    imgs.forEach((img) => {
+        const src = img.src;
+        const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
+        const filename = filenameWithExt.split(".")[0];
+        const idx = id(filename).id; 
+        if (idx === undefined) return;
+        const displayNumber = HelperArray[idx]; 
+        const div = document.createElement("div");
+        div.className = "card-div";
+        const newImg = img.cloneNode(true);
+        newImg.classList.remove('no-card-div-img');
+        const numberSpan = document.createElement("span");
+        numberSpan.className = "card-helper";
+        if (img.offsetWidth === 0) return;
+        numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
+        numberSpan.textContent = displayNumber;
+        div.appendChild(newImg);
+        div.appendChild(numberSpan);
+        img.parentNode.replaceChild(div, img);
+    });
 }

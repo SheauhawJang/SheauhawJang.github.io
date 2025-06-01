@@ -382,7 +382,7 @@ input[type="checkbox"] {
         font-size: 12px;
     }
 
-    .output-context .card-container img {
+    .output-context .card-container .card-div {
         width: 5.5%;
     }
 

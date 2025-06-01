@@ -20,7 +20,7 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             const gcnt = CountWaitingCards(tiles, subtiles, gans);
             const cnt = gcnt + bcnt;
             const ratio = (gcnt / cnt) * 100;
-            result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td>` + `<td class="devided-waiting-td">` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div>` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div>` + `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td>`;
+            result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td>`;
         } else {
             const cnt = CountWaitingCards(tiles, subtiles, ans);
             result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
@@ -55,8 +55,8 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             const verb = isFlower(id) ? loc.bu : loc.da;
             if (gcnt !== undefined) {
                 const ratio = (gcnt / cnt) * 100;
-                result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` + `<td class="devided-waiting-td">` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div>` + `<div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div>` + `<div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div>` + `<div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td></tr>`;
-            } else result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td>` + `<td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+                result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td></tr>`;
+            } else result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
         return { output: table_head + result + table_tail, ans: { waiting: save, subchecks } };
     }
@@ -511,7 +511,7 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     let fanopt = [];
     for (let i = 0; i < 51; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td style="text-align: left">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
     let fusopt = fus.map((i) => `<tr><td style="text-align: left">${JPGetFuName(i)}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
-    return `<div style="display: flex; gap: 20px; align-items: flex-start;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
+    return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
 }
 function JPScore(aids, substeps, gw, mw, tsumo, info) {
     let infoans = { fan: [], valfan: 0, yakuman: 0 };

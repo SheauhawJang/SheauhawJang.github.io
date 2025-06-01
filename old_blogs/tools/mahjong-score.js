@@ -519,13 +519,7 @@ function isPengpeng(melds) {
     for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) return false;
     return true;
 }
-function countHog(melds) {
-    let tiles = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds.length; ++i)
-        if (melds[i].length < 4)
-            if (melds[i].length === 1) tiles[melds[i][0]] += 3;
-            else if (melds[i].length === 2) tiles[melds[i][0]] += 2;
-            else for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
+function countHog(tiles) {
     let cnt = 0;
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
@@ -671,7 +665,7 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
     }
     return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
 }
-function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
+function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, ota) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -747,7 +741,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
         for (let i = 0; i < n; ++i) ++v, f.push(75);
     }
     if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
-    const hog = countHog(melds);
+    const hog = countHog(ota);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {
         let seq = [],
@@ -948,7 +942,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         yakuman = infoans.yakuman;
     let head = -1;
     const mq = melds.length >= 5 && aids[1].length === ck;
-    const wint = aids[0].at(-1).id;
+    const wint = aids[0].at(-1)?.id ?? -1;
+    console.log(wint);
     let valfus = 20,
         fus = [8];
     if (mq && !tsumo) (valfus += 10), (fus = [9]);

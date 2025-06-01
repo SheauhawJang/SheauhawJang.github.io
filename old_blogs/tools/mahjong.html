@@ -220,34 +220,36 @@
                     <div class="output-title">国标麻将番数计算器</div>
                     <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">折叠 ▲</button>
                 </div>
-                <div class="output-options" id="options-output-score-gb">
-                    <span>圈风</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-gb-global-wind" value="27" checked>东</label>
-                        <label><input type="radio" name="score-gb-global-wind" value="28">南</label>
-                        <label><input type="radio" name="score-gb-global-wind" value="29">西</label>
-                        <label><input type="radio" name="score-gb-global-wind" value="30">北</label>
+                <div id="options-output-score-gb">
+                    <div class="output-options">
+                        <span>圈风</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-gb-global-wind" value="27" checked>东</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="28">南</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="29">西</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="30">北</label>
+                        </div>
+                        <span>门风</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-gb-local-wind" value="27" checked>东</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="28">南</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="29">西</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="30">北</label>
+                        </div>
+                        <span>和牌方式</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-gb-wintype" value="0" checked>点和</label>
+                            <label><input type="radio" name="score-gb-wintype" value="80">自摸</label>
+                        </div>
+                        <span>和牌状态</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-gb-wininfo" value="44">最后一张</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="46">杠上开花</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="47">抢杠和</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="58">和绝张</label>
+                        </div>
+                        <button onclick="processGBScore()" class="score-button">计算</button>
                     </div>
-                    <span>门风</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-gb-local-wind" value="27" checked>东</label>
-                        <label><input type="radio" name="score-gb-local-wind" value="28">南</label>
-                        <label><input type="radio" name="score-gb-local-wind" value="29">西</label>
-                        <label><input type="radio" name="score-gb-local-wind" value="30">北</label>
-                    </div>
-                    <span>和牌方式</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-gb-wintype" value="0" checked>点和</label>
-                        <label><input type="radio" name="score-gb-wintype" value="80">自摸</label>
-                    </div>
-                    <span>和牌状态</span>
-                    <div class="output-option-group">
-                        <label><input type="checkbox" name="score-gb-wininfo" value="44">最后一张</label>
-                        <label><input type="checkbox" name="score-gb-wininfo" value="46">杠上开花</label>
-                        <label><input type="checkbox" name="score-gb-wininfo" value="47">抢杠和</label>
-                        <label><input type="checkbox" name="score-gb-wininfo" value="58">和绝张</label>
-                    </div>
-                    <button onclick="processGBScore()" class="score-button">计算</button>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -258,40 +260,48 @@
                     <div class="output-title">立直麻将点数计算器</div>
                     <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">折叠 ▲</button>
                 </div>
-                <div class="output-options" id="options-output-score-jp">
-                    <span>场风</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-jp-global-wind" value="27" checked>东</label>
-                        <label><input type="radio" name="score-jp-global-wind" value="28">南</label>
-                        <label><input type="radio" name="score-jp-global-wind" value="29">西</label>
-                        <label><input type="radio" name="score-jp-global-wind" value="30">北</label>
+                <div id="options-output-score-jp">
+                    <div class="output-options">
+                        <span>场风</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-jp-global-wind" value="27" checked>东</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="28">南</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="29">西</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="30">北</label>
+                        </div>
+                        <span>自风</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-jp-local-wind" value="27" checked>东</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="28">南</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="29">西</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="30">北</label>
+                        </div>
+                        <span>和牌方式</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-jp-wintype" value="0" checked>荣和</label>
+                            <label><input type="radio" name="score-jp-wintype" value="1">自摸</label>
+                        </div>
+                        <span>立直状态</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-jp-wininfo" value="1">立直</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="16">两立直</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="3">一发</label>
+                        </div>
+                        <span>和牌状态</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-jp-wininfo" value="32">第一巡目</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="13">最后一张</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="12">岭上开花</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="15">抢杠</label>
+                        </div>
+                        <button onclick="processJPScore()" class="score-button">计算</button>
                     </div>
-                    <span>自风</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-jp-local-wind" value="27" checked>东</label>
-                        <label><input type="radio" name="score-jp-local-wind" value="28">南</label>
-                        <label><input type="radio" name="score-jp-local-wind" value="29">西</label>
-                        <label><input type="radio" name="score-jp-local-wind" value="30">北</label>
+                    <div class="output-options">
+                        <span>宝牌指示牌</span>
+                        <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
+                        <span>里宝牌指示牌</span>
+                        <div class="card-container" id="output-pic-uras" style="text-align: left"></div>
                     </div>
-                    <span>和牌方式</span>
-                    <div class="output-option-group">
-                        <label><input type="radio" name="score-jp-wintype" value="0" checked>荣和</label>
-                        <label><input type="radio" name="score-jp-wintype" value="1">自摸</label>
-                    </div>
-                    <span>立直状态</span>
-                    <div class="output-option-group">
-                        <label><input type="checkbox" name="score-jp-wininfo" value="1">立直</label>
-                        <label><input type="checkbox" name="score-jp-wininfo" value="16">双立直</label>
-                        <label><input type="checkbox" name="score-jp-wininfo" value="3">一发</label>
-                    </div>
-                    <span>和牌状态</span>
-                    <div class="output-option-group">
-                        <label><input type="checkbox" name="score-jp-wininfo" value="32">第一巡目</label>
-                        <label><input type="checkbox" name="score-jp-wininfo" value="13">最后一张</label>
-                        <label><input type="checkbox" name="score-jp-wininfo" value="12">岭上开花</label>
-                        <label><input type="checkbox" name="score-jp-wininfo" value="15">抢杠</label>
-                    </div>
-                    <button onclick="processJPScore()" class="score-button">计算</button>
                 </div>
                 <div class="output-context" id="output-score-jp"></div>
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
@@ -299,7 +309,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.4.2 Beta</div>
+            <div class="output-time">v4.4.3</div>
             <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
         </div>
         <script src="mahjong.js"></script>
@@ -348,7 +358,7 @@
                 const v = d.style.display !== "none";
                 d.style.display = v ? "none" : "block";
                 s.style.display = v ? "block" : "none";
-                if (o) o.style.display = v ? "none" : "grid";
+                if (o) o.style.display = v ? "none" : "block";
                 b.textContent = v ? "展开 ▼" : "折叠 ▲";
             }
             window.onload = function () {

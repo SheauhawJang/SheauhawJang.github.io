@@ -171,7 +171,7 @@ function discard(i) {
     drawInputCards();
     processInput();
 }
-function tilesImage(tids, bonus, zoom) {
+function tilesImage(tids, bonus) {
     let output = "";
     let width = 5;
     let max_card = 35;
@@ -179,6 +179,7 @@ function tilesImage(tids, bonus, zoom) {
     if (tids.length >= max_card) width = 100 / max_card;
     else if (tids.length >= 100 / width) width = 100 / tids.length;
     if (bonus === 1) width *= 0.5;
+    if (bonus === 2 && !window.matchMedia("screen and (max-width: 512px)").matches) width *= 0.5;
     for (let i = 0; i < tids.length; ++i) output += cardLargeImage(tids, i, width, !bonus);
     if (bonus === 2) for (let i = tids.length; i < 5; ++i) output += backcardImage(width);
     return output;

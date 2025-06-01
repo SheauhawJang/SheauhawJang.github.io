@@ -69,15 +69,15 @@ input[type="text"] {
     font-style: italic;
 }
 
-.output-box .card-container {
+.output-context .card-container {
     text-align: left;
 }
 
-.output-box .card-container img {
+.output-context .card-container img {
     width: 30px;
 }
 
-.output-box .card-container .card-padding {
+.output-context .card-container .card-padding {
     width: 10px;
 }
 
@@ -365,11 +365,11 @@ input[type="checkbox"] {
         font-size: 12px;
     }
 
-    .output-box .card-container img {
+    .output-context .card-container img {
         width: 5.5%;
     }
 
-    .output-box .card-container .card-padding {
+    .output-context .card-container .card-padding {
         width: 1%;
     }
 

@@ -385,7 +385,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 else if (canBeListen(tiles, ota, otb, ots[k][2], wint)) wintf = 77;
             }
         if (wint && !wt && !wintf && !inMelds(others, wint)) --cp;
-        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles);
+        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, ota);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan.push(...infof);
@@ -515,7 +515,7 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
 }
 function JPScore(aids, substeps, gw, mw, tsumo, info) {
     let infoans = { fan: [], valfan: 0, yakuman: 0 };
-    let riichi = info.includes(16) || info.includes(1);
+    let riichi = false;
     let aka = 0;
     for (let i = 0; i < aids[0].length; ++i) if ('sp' in aids[0][i]) ++aka;
     for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ('sp' in aids[1][i][j]) ++aka;
@@ -525,12 +525,12 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         if (tsumo) 
             if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
             else infoans.fan.push(33), ++infoans.yakuman;
-        else infoans.fan.push(30), infoans.valfan += 5;
+        else if (mw !== 27) infoans.fan.push(30), infoans.valfan += 5;
     }
     if (!infoans.yakuman) {
-        if (info.includes(16)) infoans.fan.push(16), infoans.valfan += 2;
-        else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan;
-        if (info.includes(3)) infoans.fan.push(3), ++infoans.valfan;
+        if (info.includes(16)) infoans.fan.push(16), infoans.valfan += 2, riichi = true;
+        else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan, riichi = true;
+        if (riichi && info.includes(3)) infoans.fan.push(3), ++infoans.valfan;
         if (info.includes(12) && tsumo) infoans.fan.push(12), ++infoans.valfan;
         else if (info.includes(13)) 
             if (tsumo) infoans.fan.push(13), ++infoans.valfan;

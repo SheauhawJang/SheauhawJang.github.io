@@ -207,6 +207,7 @@ const cn_loc = {
     JP_FAN_unit: "番",
     JP_FU_unit: "符",
     kiri_mangan: "切上满贯",
+    wrong_win: "错和",
 }
 const tw_loc = {
     wait: "待",
@@ -417,6 +418,7 @@ const tw_loc = {
     JP_FAN_unit: "番",
     JP_FU_unit: "符",
     kiri_mangan: "切上滿貫",
+    wrong_win: "錯和",
 }
 const ja_loc = {
     wait: "待",
@@ -627,6 +629,7 @@ const ja_loc = {
     JP_FAN_unit: "飜",
     JP_FU_unit: "符",
     kiri_mangan: "切り上げ満貫",
+    wrong_win: "錯和",
 }
 const en_loc = {
     wait: "Wait",
@@ -837,6 +840,7 @@ const en_loc = {
     JP_FAN_unit: "Fan",
     JP_FU_unit: "Minipoints",
     kiri_mangan: "Rounded-Up Mangan",
+    wrong_win: "False Win",
 }
 let loc = cn_loc;
 function setLoc(inlang) {

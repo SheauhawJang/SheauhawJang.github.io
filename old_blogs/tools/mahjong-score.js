@@ -1020,7 +1020,6 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (ck + cp >= 4)
         if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) updateYakuman(2), f.push(35);
         else updateYakuman(1), f.push(34);
-    console.log(setting[6]);
     if (setting[6] && mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
         if (listen_type) (valfus += 2), fus.push(listen_type);
@@ -1031,7 +1030,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (!mq && valfus < 30) valfus = 30;
     if (infoans.yakuman > 0) f.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus };
-    if (gans.yakuman > 0) return eans_jp;
+    if (gans.yakuman > 0 || setting[11]) return eans_jp;
     f.push(...infoans.fan);
     let must_hunyise = false;
     let must_quandai = false;
@@ -1114,7 +1113,7 @@ function PairSelect(cot, ad, au, mask) {
         au[j] += u;
     }
     d *= 2, u *= 2;
-    return { d, u };
+    return [d, u];
 }
 function PairSameColor(cot) {
     let color = -1;
@@ -1174,43 +1173,38 @@ const SameColorArray = [ColorArray.map((x) => (x === 0 ? 1 : 0)), ColorArray.map
 const SameColorWithHonorsArray = [ColorArray.map((x, i) => (x === 0 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 || HonorArray[i] ? 1 : 0))];
 const SameColorNoOrphanArray = [ColorArray.map((x, i) => (x === 0 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 && !OrphanArray[i] ? 1 : 0))];
 const SameColorAllOrphanHonorsArray = [SameColorWithHonorsArray[0].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[1].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[2].map((x, i) => x && OrphanArray[i])];
-function selectMaxPairs(cot, doras, uras, tan19, sc, scwh, hun19, hunhun) {
-    let v = 0, f = [];
-    let { d, u } = PairSelect(cot, doras, uras);
-    v = d + u;
-    if (tan19) {
-        const { d: ad, u: au } = PairSelect(cot, doras, uras, NoOrphanArray);
-        if (ad + au + 1 > v) v = ad + au + 1, d = ad, u = au, f = [4];
+function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting) {
+    let nd = 0, nu = 0;
+    for (let i = 0; i < sizeUT; ++i) nd += nuki[i] * doras[i], nu += nuki[i] * uras[i];
+    let v = 0, f = [], d = 0, u = 0;
+    let yaku = false;
+    const fv = setting[12] ? (v, d, u) => v + d + u : (v) => v;
+    function update(av, ad, au, af) {
+        ad += nd, au += nu;
+        if (yaku && mv + fv(av, ad, au) >= setting[0] && av + ad + au > v) v = av + ad + au, d = ad, u = au, f = af;
+        else if (!yaku && mv + fv(av, ad, au) >= setting[0]) v = av + ad + au, d = ad, u = au, f = af, yaku = true;
+        else if (!yaku && av + ad + au > v) v = av + ad + au, d = ad, u = au, f = af;
     }
+    update(0, ...PairSelect(cot, doras, uras), []);
+    if (tan19) update(1, ...PairSelect(cot, doras, uras, NoOrphanArray), [4]);
     if (sc !== null) {
         let l = 0, r = 3;
         if (sc !== -1) l = sc, r = l + 1;
         for (let i = l; i < r; ++i) { 
-            const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorArray[i]);
-            if (ad + au + 6 > v) v = ad + au + 6, d = ad, u = au, f = [31];
-            if (tan19) {
-                const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorNoOrphanArray[i]);
-                if (ad + au + 7 > v) v = ad + au + 7, d = ad, u = au, f = [4, 31];
-            }
+            update(6, ...PairSelect(cot, doras, uras, SameColorArray[i]), [31]);
+            if (tan19) update(7, ...PairSelect(cot, doras, uras, SameColorNoOrphanArray[i]), [4, 31]);
         }
     }
     if (scwh !== null) {
         let l = 0, r = 3;
         if (scwh !== -1) l = scwh, r = l + 1;
         for (let i = l; i < r; ++i) { 
-            const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorWithHonorsArray[i]);
-            if (ad + au + 3 > v) v = ad + au + 3, d = ad, u = au, f = [28];
-            if (hunhun) {
-                const { d: ad, u: au } = PairSelect(cot, doras, uras, SameColorAllOrphanHonorsArray[i]);
-                if (ad + au + 5 > v) v = ad + au + 5, d = ad, u = au, f = [25, 28];
-            }
+            update(3, ...PairSelect(cot, doras, uras, SameColorWithHonorsArray[i]), [28]);
+            if (hunhun) update(5, ...PairSelect(cot, doras, uras, SameColorAllOrphanHonorsArray[i]), [25, 28]);
         }
     }
-    if (hun19) {
-        const { d: ad, u: au } = PairSelect(cot, doras, uras, OrphanArray);
-        if (ad + au + 2 > v) v = ad + au + 2, d = ad, u = au, f = [25];
-    }
-    return { v, f, d, u };
+    if (hun19) update(2, ...PairSelect(cot, doras, uras, OrphanArray), [25]);
+    return { v, f, d, u, yaku };
 }
 function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     const ot = PairOutput(getTiles(tids));
@@ -1238,6 +1232,12 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
         else updateYakuman(1), gf = [39];
     if (infoans.yakuman > 0) gf.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: gv, fan: gf, valfus, realfus, fus };
+    if (setting[11]) return eans_jp;
+    let mv = infoans.valfan, mf = infoans.fan.slice();
+    if (setting[8] === 0) (mv += 2), mf.push(17);
+    else if (setting[8] === 1) (++mv), mf.push(17), JPScoreArray[17] = 1;
+    if (tsumo) ++mv, mf.push(2);
+    mv -= infoans.delete;
     let tan19 = true;
     for (let i = 0; tan19 && i < 7; ++i)
         if (cot[i] < sizeUT && OrphanArray[cot[i]]) tan19 = false;
@@ -1248,6 +1248,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     const hun19 = c19 && c19[0] <= 2 && c19[1] <= 2 && c19[2] <= 2 && c19[0] + c19[1] + c19[2] + c19[3] <= 6;
     const hunhun = c19 && c19[0] + c19[1] + c19[2] + c19[3] <= 2;
     let gd = 0, gu = 0;
+    let gyk = false;
     for (let im = 0; im < 9; ++im) {
         doras[im] += doras[43];
         uras[im] += uras[43];
@@ -1275,11 +1276,10 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
                                 for (let i = 0; i < 2; ++i) {
                                     doras[as[i]] += doras[42];
                                     uras[as[i]] += uras[42];
-                                    let { v, f, d, u } = selectMaxPairs(cot, doras, uras, tan19, sc, scwh, hun19, hunhun);
-                                    let nd = 0, nu = 0;
-                                    for (let i = 0; i < sizeUT; ++i) nd += nuki[i] * doras[i], nu += nuki[i] * uras[i];
-                                    v += nd + nu, d += nd, u += nu;
-                                    if (v > gv) gv = v, gf = f, gd = d, gu = u;
+                                    let { v, f, d, u, yaku } = selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting);
+                                    if (gyk && yaku && v > gv) gv = v, gf = f, gd = d, gu = u;
+                                    else if (!gyk && yaku) gv = v, gf = f, gd = d, gu = u, gyk = true;
+                                    else if (!gyk && v > gv) gv = v, gf = f, gd = d, gu = u;
                                     doras[as[i]] -= doras[42];
                                     uras[as[i]] -= uras[42];
                                 }
@@ -1304,10 +1304,8 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
         doras[im] -= doras[43];
         uras[im] -= uras[43];
     }
-    if (setting[8] === 0) (gv += 2), gf.push(17);
-    else if (setting[8] === 1) (++gv), gf.push(17), JPScoreArray[17] = 1;
-    (gv += infoans.valfan), gf.push(...infoans.fan);
-    if (tsumo) ++gv, gf.push(2);
+    mv += infoans.delete;
+    gv += mv, gf.push(...mf);
     if (setting[3] && gv >= 13) return { val: 8000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
     if (gv >= 11) return { val: 6000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
     if (gv >= 8) return { val: 4000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };

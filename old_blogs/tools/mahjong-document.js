@@ -459,15 +459,16 @@ function processJPScore() {
     let info = document.querySelectorAll('input[name="score-jp-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
     let sq = Array.from(document.querySelectorAll('input[name="score-jp-setting"]:checked'));
-    for (let i = 0; i <= 6; ++i) {
+    for (let i = 0; i <= 7; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-jp-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(11).fill(0);
+    let setting = Array(14).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(',');
         setting[a] = Number(b ?? 1);
     }
+    setting[0] = Number(document.getElementById("score-jp-setting-fan")?.value ?? 1);
     jp_worker = new Worker("mahjong-worker.js");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {

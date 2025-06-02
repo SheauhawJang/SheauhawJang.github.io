@@ -131,7 +131,7 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-
+ 
 html {
     overflow-y: scroll;
 }
@@ -316,7 +316,7 @@ html {
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 0px 10px;
-    align-items: center;
+    align-items: top;
 }
 
 .output-option-group {
@@ -324,6 +324,12 @@ html {
     flex-wrap: wrap;
     white-space: nowrap;
     gap: 0px 10px;
+}
+
+.output-option-group input[type="number"] {
+    width: 5ch;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 input[type="radio"],

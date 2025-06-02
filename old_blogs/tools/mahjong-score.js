@@ -451,7 +451,7 @@ function ninegateListen(color, tiles, wintile) {
     if (wintile === undefined) return true;
     for (let i = 0; i < 9; ++i) {
         let cnt = tiles[i + color];
-        if (i === wintile) --cnt;
+        if (i === NumberArray[wintile]) --cnt;
         if (i === 0 || i === 8) {
             if (cnt > 3) return false;
         } else if (cnt > 1) return false;

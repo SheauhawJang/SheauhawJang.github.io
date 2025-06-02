@@ -993,7 +993,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (head === 32) (valfus += 2), fus.push(15);
     if (head === 33) (valfus += 2), fus.push(16);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds))
-        if (setting[1] && ninegateListen(ColorFirstArray[melds[0][0]], tiles ?? getTiles(aids[0]), wint)) updateYakuman(2), f.push(47);
+        if (setting[1] && ninegateListen(ColorFirstArray[ColorArray[melds[0][0]]], tiles, wint)) updateYakuman(2), f.push(47);
         else updateYakuman(1), f.push(46);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, PureOrphanArray)) updateYakuman(1), f.push(45);

@@ -513,7 +513,8 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     let fusopt = fus.map((i) => `<tr><td style="text-align: left">${JPGetFuName(i)}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
     return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
 }
-function JPScore(aids, substeps, gw, mw, tsumo, info) {
+function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
+    if (!setting[1]) for (let i = 0; i < JPScoreArray.length; ++i) if (JPScoreArray[i] <= -2) JPScoreArray[i] = -1;
     let infoans = { fan: [], valfan: 0, yakuman: 0 };
     let riichi = false;
     let aka = 0;
@@ -525,7 +526,9 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         if (tsumo) 
             if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
             else infoans.fan.push(33), ++infoans.yakuman;
-        else if (mw !== 27) infoans.fan.push(30), infoans.valfan += 5;
+        else if (mw !== 27) 
+            if (setting[9] === 1) infoans.fan.push(30), infoans.valfan += 5;
+            else if (setting[9] === 2) infoans.fan.push(30), ++infoans.yakuman, JPScoreArray[30] = -1;
     }
     if (!infoans.yakuman) {
         if (info.includes(16)) infoans.fan.push(16), infoans.valfan += 2, riichi = true;
@@ -551,7 +554,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
     function cal(ots, ota, subots, ck, ek) {
-        const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis);
+        const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting);
         if (ans.val > gans.val) gans = ans;
         else if (ans.val === gans.val)
             if (ans.yakuman > gans.yakuman) gans = ans;
@@ -562,17 +565,18 @@ function JPScore(aids, substeps, gw, mw, tsumo, info) {
         ++cm;
         if (!(cm & 1048575)) postDebugInfo(); 
     }
-    if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis);
+    if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
     if (substeps[2] === -1) {
         let tcp = tiles.slice();
         --tcp[aids[0].at(-1).id];
-        let listen_13 = true;
+        let listen_13 = setting[1];
         for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {
             const rid = getRealId(tcp, Orphan13Array[i]);
             if (rid === -1) listen_13 = false;
             else --tcp[rid];
         }
-        const yakuman = (listen_13 ? 2 : 1) + infoans.yakuman;
+        let yakuman = (listen_13 ? 2 : 1);
+        yakuman = setting[2] ? yakuman + infoans.yakuman : Math.max(yakuman, infoans.yakuman);
         let f = [listen_13 ? 37 : 36];
         if (infoans.yakuman > 0) f.push(infoans.fan);
         const valfan = 0, valfus = 20, realfus = 20, fus = [8], pt = yakuman * 8000;
@@ -636,8 +640,8 @@ self.onmessage = function (e) {
             break;
         }
         case "jp-score": {
-            let { aids, substeps, gw, mw, wt, info } = e.data;
-            result = JPScore(aids, substeps, gw, mw, wt, info);
+            let { aids, substeps, gw, mw, wt, info, setting } = e.data;
+            result = JPScore(aids, substeps, gw, mw, wt, info, setting);
             break;
         }
     }

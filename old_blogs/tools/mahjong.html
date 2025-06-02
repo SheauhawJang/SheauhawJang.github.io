@@ -290,6 +290,49 @@
                         </div>
                         <button onclick="processJPScore()" class="score-button">计算</button>
                     </div>
+                    <details>
+                        <summary>规则设置</summary>
+                        <div class="output-options">
+                            <span>役满</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="1" checked />双倍役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="2" checked />复合役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="3" checked />累计役满</label>
+                            </div>
+                            <span>食断</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-0" value="4" checked />开启</label>
+                                <label><input type="radio" name="score-jp-setting-0" value="0" />关闭</label>
+                            </div>
+                            <span>自摸平和</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-2" value="6" checked />平和役</label>
+                                <label><input type="radio" name="score-jp-setting-2" value="0" />自摸符</label>
+                            </div>
+                            <span>切上满贯</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-3" value="7" />开启</label>
+                                <label><input type="radio" name="score-jp-setting-3" value="0" checked />关闭</label>
+                            </div>
+                            <span>七对子</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 番 25 符</label>
+                                <label><input type="radio" name="score-jp-setting-4" value="8,1" />1 番 50 符</label>
+                                <label><input type="radio" name="score-jp-setting-4" value="8,2" />0 番 100 符</label>
+                            </div>
+                            <span>人和</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-5" value="0" />关闭</label>
+                                <label><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 番</label>
+                                <label><input type="radio" name="score-jp-setting-5" value="9,2" />役满</label>
+                            </div>
+                            <span>大七星</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-6" value="0" />役满</label>
+                                <label><input type="radio" name="score-jp-setting-6" value="10" checked />双倍役满</label>
+                            </div>
+                        </div>
+                    </details>
                     <div class="output-options">
                         <span>宝牌指示牌</span>
                         <div class="card-container" id="output-pic-doras" style="text-align: left"></div>

@@ -205,6 +205,7 @@ const cn_loc = {
     counted_yakuman: "累计役满",
     JP_FAN_unit: "番",
     JP_FU_unit: "符",
+    kiri_mangan: "切上满贯",
 }
 const tw_loc = {
     wait: "待",
@@ -413,6 +414,7 @@ const tw_loc = {
     counted_yakuman: "累計役滿",
     JP_FAN_unit: "番",
     JP_FU_unit: "符",
+    kiri_mangan: "切上滿貫",
 }
 const ja_loc = {
     wait: "待",
@@ -621,6 +623,7 @@ const ja_loc = {
     counted_yakuman: "数え役満",
     JP_FAN_unit: "飜",
     JP_FU_unit: "符",
+    kiri_mangan: "切り上げ満貫",
 }
 const en_loc = {
     wait: "Wait",
@@ -644,7 +647,7 @@ const en_loc = {
     quanbukaoxing: "Honors & Knitted Type",
     zuhelongxing: "Knitted Straight Type",
     niconico: "Niconico Type",
-    shiliubudaxing: "Sixteen Pagodas Type",
+    shiliubudaxing: "Sixteen Isolated Type",
     brace_left: " (",
     brace_right: ") ",
     slash: " / ",
@@ -791,7 +794,7 @@ const en_loc = {
     JP_YAKUNAME_49: "Ura Dora",
     JP_YAKUNAME_50: "Red Dora",
     JP_YAKUNAME_51: "Nuki Dora",
-    JP_FUNAME_0_0: "Simples ",
+    JP_FUNAME_0_0: "Simple ",
     JP_FUNAME_0_1: "Non-Simple ",
     JP_FUNAME_1_0: "Open ",
     JP_FUNAME_1_1: "Concealed ",
@@ -800,7 +803,7 @@ const en_loc = {
     JP_FUNAME_8: "Winning",
     JP_FUNAME_9: "Concealed on Discard",
     JP_FUNAME_10: "Seven Pairs",
-    JP_FUNAME_11: "Self Drawn",
+    JP_FUNAME_11: "Self-draw",
     JP_FUNAME_12: "Pair of Seat Wind",
     JP_FUNAME_13: "Pair of Prevailing Wind",
     JP_FUNAME_14: "Pair of White Dragon",
@@ -829,6 +832,7 @@ const en_loc = {
     counted_yakuman: "Counted Yakuman",
     JP_FAN_unit: "Fan",
     JP_FU_unit: "Minipoints",
+    kiri_mangan: "Rounded-Up Mangan",
 }
 let loc = cn_loc;
 function setLoc(inlang) {

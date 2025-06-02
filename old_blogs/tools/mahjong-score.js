@@ -936,10 +936,15 @@ function GB7Pairs(tids) {
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
 const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realfus: 0 };
 let use_time = 0;
-function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras = Array(sizeAT).fill(0), uras = Array(sizeAT).fill(0), nuki = Array(sizeAT).fill(0)) {
+function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
     let f = [];
     let v = infoans.valfan,
         yakuman = infoans.yakuman;
+    function updateYakuman(x, n = 1) {
+        if (n === 0) return;
+        if (setting[2]) yakuman += x * n;
+        else yakuman = Math.max(yakuman, x);
+    } 
     let head = -1;
     const mq = melds.length >= 5 && aids[1].length === ck;
     const wint = aids[0].at(-1)?.id ?? -1;
@@ -988,12 +993,12 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (head === 32) (valfus += 2), fus.push(15);
     if (head === 33) (valfus += 2), fus.push(16);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds))
-        if (ninegateListen(ColorFirstArray[melds[0][0]], tiles ?? getTiles(aids[0]), wint)) (yakuman += 2), f.push(47);
-        else ++yakuman, f.push(46);
+        if (setting[1] && ninegateListen(ColorFirstArray[melds[0][0]], tiles ?? getTiles(aids[0]), wint)) updateYakuman(2), f.push(47);
+        else updateYakuman(1), f.push(46);
     const marr = flattenMelds(melds);
-    if (melds.length >= 5 && isMask(marr, PureOrphanArray)) ++yakuman, f.push(45);
-    if (melds.length >= 5 && isMask(marr, GreenArray)) ++yakuman, f.push(44);
-    if (melds.length >= 5 && ck + ek >= 4) ++yakuman, f.push(43);
+    if (melds.length >= 5 && isMask(marr, PureOrphanArray)) updateYakuman(1), f.push(45);
+    if (melds.length >= 5 && isMask(marr, GreenArray)) updateYakuman(1), f.push(44);
+    if (melds.length >= 5 && ck + ek >= 4) updateYakuman(1), f.push(43);
     let windcount = Array(4).fill(0);
     let dragoncount = Array(3).fill(0);
     for (let i = 0; i < melds.length; ++i)
@@ -1001,18 +1006,19 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             if (ColorArray[melds[i][0]] === 3) ++windcount[melds[i][0] - 27];
             else if (ColorArray[melds[i][0]] === 4) ++dragoncount[melds[i][0] - 31];
     const bgwind = Math.min(...windcount);
-    (yakuman += bgwind * 2), f.push(...Array(bgwind).fill(41));
+    updateYakuman(setting[1] ? 2 : 1, bgwind), f.push(...Array(bgwind).fill(41));
     if (ColorArray[head] === 3) {
         ++windcount[head - 27];
-        if (Math.min(...windcount) > bgwind) ++yakuman, f.push(42);
+        if (Math.min(...windcount) > bgwind) updateYakuman(1), f.push(42);
     }
-    if (melds.length >= 5 && isMask(marr, HonorArray)) ++yakuman, f.push(39);
+    if (melds.length >= 5 && isMask(marr, HonorArray)) updateYakuman(1), f.push(39);
     const bgdragon = Math.min(...dragoncount);
-    (yakuman += bgdragon), f.push(...Array(bgdragon).fill(38));
+    updateYakuman(1, bgdragon), f.push(...Array(bgdragon).fill(38));
     if (ck + cp >= 4)
-        if (head !== -1 && canBeListen(tiles, ta, tb, head, wint)) (yakuman += 2), f.push(35);
-        else ++yakuman, f.push(34);
-    if (mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
+        if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) updateYakuman(2), f.push(35);
+        else updateYakuman(1), f.push(34);
+    console.log(setting[6]);
+    if (setting[6] && mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
         if (listen_type) (valfus += 2), fus.push(listen_type);
         if (tsumo) (valfus += 2), fus.push(11);
@@ -1065,7 +1071,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     (v += tri[31]), f.push(...Array(tri[31]).fill(7));
     (v += tri[32]), f.push(...Array(tri[32]).fill(8));
     (v += tri[33]), f.push(...Array(tri[33]).fill(9));
-    if (melds.length >= 5 && isMask(marr, NoOrphanArray)) ++v, f.push(4);
+    if (melds.length >= 5 && (mq || setting[4]) && isMask(marr, NoOrphanArray)) ++v, f.push(4);
     if (mq && tsumo) ++v, f.push(2);
     let gd = 0, gu = 0;
     for (let i = 0; i < sizeUT; ++i) gd += (ta[i] + nuki[i]) * doras[i], gu += (ta[i] + nuki[i]) * uras[i];
@@ -1077,12 +1083,13 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         gd += cnt * doras[i], gu += cnt * uras[i];
     }
     v += gd + gu;
-    if (v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
+    if (setting[3] && v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
     if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
     if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
     if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
     let pt = valfus * (1 << (2 + v));
     if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
+    if (setting[7] && pt >= 1920) return { val: 2000, yakuman: 0, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "kiri_mangan" };
     return { val: pt, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus };
 }
 function PairSelect(cot, ad, au, mask) {
@@ -1202,20 +1209,30 @@ function selectMaxPairs(cot, doras, uras, tan19, sc, scwh, hun19, hunhun) {
     }
     return { v, f, d, u };
 }
-function JP7Pairs(tids, infoans, tsumo, doras = Array(sizeAT).fill(0), uras = Array(sizeAT).fill(0), nuki = Array(sizeAT).fill(0)) {
+function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     const ot = PairOutput(getTiles(tids));
     let cot = ot.map((x) => x[0]);
     let tsuiso = true;
     for (let i = 0; tsuiso && i < 7; ++i)
         if (cot[i] < sizeUT && NoHonorArray[cot[i]]) tsuiso = false;
         else if (cot[i] >= 43 && cot[i] <= 46) tsuiso = false;
-    const valfus = 25,
+    let valfus = 25,
         realfus = 25,
         fus = [10];
+    console.log(setting[8]);
+    if (setting[8] === 1) valfus = realfus = JPFuArray[10] = 50;
+    else if (setting[8] === 2) valfus = realfus = JPFuArray[10] = 100;
+    console.log(setting[8], setting[8] === 1, setting[8] === 2, valfus, realfus, JPFuArray[10])
     let gv = 0,
         gf = [],
         yakuman = infoans.yakuman;
-    if (tsuiso) (yakuman += 2), (gf = [40]);
+    function updateYakuman(x, n = 1) {
+        if (setting[2]) yakuman += x * n;
+        else yakuman = Math.max(yakuman, x);
+    } 
+    if (tsuiso) 
+        if (setting[1] && setting[10]) updateYakuman(2), (gf = [40]);
+        else updateYakuman(1), gf = [39];
     if (infoans.yakuman > 0) gf.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: gv, fan: gf, valfus, realfus, fus };
     let tan19 = true;
@@ -1284,10 +1301,11 @@ function JP7Pairs(tids, infoans, tsumo, doras = Array(sizeAT).fill(0), uras = Ar
         doras[im] -= doras[43];
         uras[im] -= uras[43];
     }
-    (gv += 2), gf.push(17);
+    if (setting[8] === 0) (gv += 2), gf.push(17);
+    else if (setting[8] === 1) (++gv), gf.push(17), JPScoreArray[17] = 1;
     (gv += infoans.valfan), gf.push(...infoans.fan);
     if (tsumo) ++gv, gf.push(2);
-    if (gv >= 13) return { val: 8000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
+    if (setting[3] && gv >= 13) return { val: 8000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
     if (gv >= 11) return { val: 6000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
     if (gv >= 8) return { val: 4000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
     if (gv >= 6) return { val: 3000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
@@ -1296,5 +1314,5 @@ function JP7Pairs(tids, infoans, tsumo, doras = Array(sizeAT).fill(0), uras = Ar
     return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
 }
 const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40, 48, 49, 50, 51];
-const JPScoreArray = [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, 1, 1, 1];
+const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, 1, 1, 1];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2];

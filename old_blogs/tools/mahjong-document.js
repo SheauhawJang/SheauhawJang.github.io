@@ -458,6 +458,16 @@ function processJPScore() {
     const wt = Number(document.querySelector('input[name="score-jp-wintype"]:checked').value);
     let info = document.querySelectorAll('input[name="score-jp-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
+    let sq = Array.from(document.querySelectorAll('input[name="score-jp-setting"]:checked'));
+    for (let i = 0; i <= 6; ++i) {
+        const ssq = Array.from(document.querySelectorAll(`input[name="score-jp-setting-${i}"]:checked`));
+        sq.push(...ssq);
+    }
+    let setting = Array(11).fill(0);
+    for (let i = 0; i < sq.length; ++i) {
+        const [a, b] = sq[i].value.split(',');
+        setting[a] = Number(b ?? 1);
+    }
     jp_worker = new Worker("mahjong-worker.js");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
@@ -472,7 +482,7 @@ function processJPScore() {
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     const { aids, substeps } = jp_worker_info;
-    jp_worker.postMessage({ task: "jp-score", aids, substeps, gw, mw, wt, info, lang });
+    jp_worker.postMessage({ task: "jp-score", aids, substeps, gw, mw, wt, info, setting, lang });
 }
 function adjustButtonsFontSize() {
     const baseBtn = document.getElementById("subkey_chi");

@@ -987,8 +987,11 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     }
     for (let i = 0; i < koutsufu.length; ++i) valfus += JPFuArray[koutsufu[i]];
     fus.push(...koutsufu);
-    if (head === wind5) (valfus += 2), fus.push(12);
-    if (head === wind6) (valfus += 2), fus.push(13);
+    if (setting[5] && head === wind5 && head === wind6) valfus += 2, fus.push(20);
+    else {
+        if (head === wind5) (valfus += 2), fus.push(12);
+        if (head === wind6) (valfus += 2), fus.push(13);
+    }
     if (head === 31) (valfus += 2), fus.push(14);
     if (head === 32) (valfus += 2), fus.push(15);
     if (head === 33) (valfus += 2), fus.push(16);
@@ -1315,4 +1318,4 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
 }
 const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40, 48, 49, 50, 51];
 const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, 1, 1, 1];
-const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

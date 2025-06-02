@@ -915,7 +915,7 @@ function GB7Pairs(tids) {
             else if (ot[i][0] in JokerColor) tc = JokerColor[ot[i][0]];
             else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
             else if (ot[i][0] === 49) return undefined;
-            if (tc > 3) return undefined;
+            if (tc >= 3) return undefined;
             if (c === -1) c = tc;
             else if (c !== tc) return undefined;
         }

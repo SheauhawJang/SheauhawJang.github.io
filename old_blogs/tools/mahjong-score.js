@@ -939,11 +939,12 @@ let use_time = 0;
 function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
     let f = [];
     let v = infoans.valfan,
-        yakuman = infoans.yakuman;
+        yakuman = infoans.yakuman,
+        realyakuman = yakuman;
     function updateYakuman(x, n = 1) {
         if (n === 0) return;
-        if (setting[2]) yakuman += x * n;
-        else yakuman = Math.max(yakuman, x);
+        if (setting[2]) realyakuman = (yakuman += x * n);
+        else yakuman = Math.max(yakuman, x), realyakuman += x * n;
     } 
     let head = -1;
     const mq = melds.length >= 5 && aids[1].length === ck;
@@ -1029,8 +1030,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     valfus = Math.ceil(valfus / 10) * 10;
     if (!mq && valfus < 30) valfus = 30;
     if (infoans.yakuman > 0) f.push(...infoans.fan);
-    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: v, fan: f, valfus, realfus, fus };
-    if (gans.yakuman > 0 || setting[11]) return eans_jp;
+    if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: v, fan: f, valfus, realfus, fus };
+    if (gans.yakuman > 0) return eans_jp;
     f.push(...infoans.fan);
     let must_hunyise = false;
     let must_quandai = false;
@@ -1178,11 +1179,15 @@ function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, 
     for (let i = 0; i < sizeUT; ++i) nd += nuki[i] * doras[i], nu += nuki[i] * uras[i];
     let v = 0, f = [], d = 0, u = 0;
     let yaku = false;
-    const fv = setting[12] ? (v, d, u) => v + d + u : (v) => v;
+    const fv = setting[12] ? (v, d) => v + d : (v) => v;
+    let limit = setting[0];
+    if (setting[11]) 
+        if (!setting[3]) limit = Infinity;
+        else limit = Math.max(limit, 13);
     function update(av, ad, au, af) {
         ad += nd, au += nu;
-        if (yaku && mv + fv(av, ad, au) >= setting[0] && av + ad + au > v) v = av + ad + au, d = ad, u = au, f = af;
-        else if (!yaku && mv + fv(av, ad, au) >= setting[0]) v = av + ad + au, d = ad, u = au, f = af, yaku = true;
+        if (yaku && mv + fv(av, ad, au) >= limit && av + ad + au > v) v = av + ad + au, d = ad, u = au, f = af;
+        else if (!yaku && mv + fv(av, ad, au) >= limit) v = av + ad + au, d = ad, u = au, f = af, yaku = true;
         else if (!yaku && av + ad + au > v) v = av + ad + au, d = ad, u = au, f = af;
     }
     update(0, ...PairSelect(cot, doras, uras), []);
@@ -1222,17 +1227,17 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     console.log(setting[8], setting[8] === 1, setting[8] === 2, valfus, realfus, JPFuArray[10])
     let gv = 0,
         gf = [],
-        yakuman = infoans.yakuman;
-    function updateYakuman(x, n = 1) {
-        if (setting[2]) yakuman += x * n;
-        else yakuman = Math.max(yakuman, x);
+        yakuman = infoans.yakuman,
+        realyakuman = yakuman;
+    function updateYakuman(x) {
+        if (setting[2]) realyakuman = (yakuman += x);
+        else yakuman = Math.max(yakuman, x), realyakuman += x;
     } 
     if (tsuiso) 
         if (setting[1] && setting[10]) updateYakuman(2), (gf = [40]);
         else updateYakuman(1), gf = [39];
     if (infoans.yakuman > 0) gf.push(...infoans.fan);
-    if (yakuman > 0) return { val: yakuman * 8000, yakuman, valfan: gv, fan: gf, valfus, realfus, fus };
-    if (setting[11]) return eans_jp;
+    if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: gv, fan: gf, valfus, realfus, fus };
     let mv = infoans.valfan, mf = infoans.fan.slice();
     if (setting[8] === 0) (mv += 2), mf.push(17);
     else if (setting[8] === 1) (++mv), mf.push(17), JPScoreArray[17] = 1;

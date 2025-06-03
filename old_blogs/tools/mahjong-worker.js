@@ -554,7 +554,13 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     uras = uras.map((_, i) => uras[getDoraPointer(i)]);
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
-    const ansYakuAri = (ans) => ans.yakuman || (!setting[11] && ans.valfan - (setting[12] ? 0 : ans.dora + ans.ura) - infoans.delete >= setting[0]);
+    function ansYakuAri(ans) {
+        let limit = setting[0];
+        if (!ans.yakuman && setting[11]) 
+            if (!setting[3]) return false; 
+            else limit = Math.max(limit, 13);
+        return ans.yakuman || (ans.valfan - (setting[12] ? 0 : ans.dora) - ans.ura - infoans.delete >= limit);
+    }
     function cal(ots, ota, subots, ck, ek) {
         const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting);
         function replaceCheck() {

@@ -934,7 +934,7 @@ function GB7Pairs(tids) {
     return gans;
 }
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
-const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realfus: 0 };
+const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realyakuman: 0, realfus: 0 };
 let use_time = 0;
 function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
     let f = [];
@@ -1086,10 +1086,10 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         gd += cnt * doras[i], gu += cnt * uras[i];
     }
     v += gd + gu;
-    if (setting[3] && v >= 13) return { val: 8000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
-    if (v >= 11) return { val: 6000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
-    if (v >= 8) return { val: 4000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
-    if (v >= 6) return { val: 3000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
+    if (setting[3] && v >= 13) return { val: 8000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
+    if (v >= 11) return { val: 6000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
+    if (v >= 8) return { val: 4000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
+    if (v >= 6) return { val: 3000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
     let pt = valfus * (1 << (2 + v));
     if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
     if (setting[7] && pt >= 1920) return { val: 2000, yakuman: 0, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "kiri_mangan" };
@@ -1311,10 +1311,10 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     }
     mv += infoans.delete;
     gv += mv, gf.push(...mf);
-    if (setting[3] && gv >= 13) return { val: 8000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
-    if (gv >= 11) return { val: 6000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
-    if (gv >= 8) return { val: 4000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
-    if (gv >= 6) return { val: 3000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
+    if (setting[3] && gv >= 13) return { val: 8000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
+    if (gv >= 11) return { val: 6000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
+    if (gv >= 8) return { val: 4000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
+    if (gv >= 6) return { val: 3000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
     let pt = valfus * (1 << (2 + gv));
     if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
     return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };

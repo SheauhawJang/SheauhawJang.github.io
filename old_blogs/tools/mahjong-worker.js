@@ -568,9 +568,11 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
             else if (ans.val === gans.val)
                 if (ans.yakuman > gans.yakuman) return true;
                 else if (ans.yakuman === gans.yakuman) 
-                    if (ans.valfan > gans.valfan) return true;
-                    else if (ans.valfan === gans.valfan)
-                        if (ans.realfus > gans.realfus) return true;
+                    if (ans.realyakuman > gans.realyakuman) return true;
+                    else if (ans.realyakuman === gans.realyakuman)
+                        if (ans.valfan > gans.valfan) return true;
+                        else if (ans.valfan === gans.valfan)
+                            if (ans.realfus > gans.realfus) return true;
         }
         if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck()) gans = ans;
         else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck())) gans = ans;

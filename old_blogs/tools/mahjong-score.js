@@ -519,8 +519,14 @@ function isPengpeng(melds) {
     for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) return false;
     return true;
 }
-function countHog(tiles) {
+function countHog(melds) {
     let cnt = 0;
+    let tiles = Array(sizeUT).fill(0);
+    for (let i = 0; i < melds.length; ++i)
+        if (melds[i].length < 4)
+            if (melds[i].length === 1) tiles[melds[i][0]] += 3;
+            else if (melds[i].length === 2) tiles[melds[i][0]] += 2;
+            else for (let j = 0; j < melds[i].length; ++j) ++tiles[melds[i][j]];
     for (let i = 0; i < sizeUT; ++i) cnt += Math.floor(tiles[i] / 4);
     return cnt;
 }
@@ -665,7 +671,7 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
     }
     return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
 }
-function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, ota) {
+function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -741,7 +747,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, ot
         for (let i = 0; i < n; ++i) ++v, f.push(75);
     }
     if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
-    const hog = countHog(ota);
+    const hog = countHog(melds);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {
         let seq = [],

@@ -459,11 +459,11 @@ function processJPScore() {
     let info = document.querySelectorAll('input[name="score-jp-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
     let sq = Array.from(document.querySelectorAll('input[name="score-jp-setting"]:checked'));
-    for (let i = 0; i <= 9; ++i) {
+    for (let i = 0; i <= 10; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-jp-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(16).fill(0);
+    let setting = Array(17).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(',');
         setting[a] = Number(b ?? 1);
@@ -552,4 +552,19 @@ function addWorkerCardHelper() {
         div.appendChild(numberSpan);
         img.parentNode.replaceChild(div, img);
     });
+}
+function addReferenceMark() {
+    const ref = document.querySelectorAll('[title]');
+    const box = document.getElementById("title-box");
+    let notes = [];
+    ref.forEach((e, i) => {
+        const t = e.getAttribute('title');
+        const n = i + 1;
+        notes.push(`[${n}] ${t}`);
+        const sup = document.createElement('sup');
+        sup.className = 'reference-sup';
+        sup.textContent = `[${n}]`;
+        e.appendChild(sup);
+    });
+    box.innerHTML = notes.join('<br/>');
 }

@@ -131,7 +131,7 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
- 
+
 html {
     overflow-y: scroll;
 }
@@ -205,15 +205,7 @@ html {
     user-select: none;
     pointer-events: none;
     z-index: 10;
-    text-shadow:
-        -1px -1px 0 white,
-        0px -1px 0 white,
-        1px -1px 0 white,
-        -1px  0px 0 white,
-        1px  0px 0 white,
-        -1px  1px 0 white,
-        0px  1px 0 white,
-        1px  1px 0 white;
+    text-shadow: -1px -1px 0 white, 0px -1px 0 white, 1px -1px 0 white, -1px 0px 0 white, 1px 0px 0 white, -1px 1px 0 white, 0px 1px 0 white, 1px 1px 0 white;
 }
 
 .input-area .card-container {
@@ -292,24 +284,24 @@ html {
 }
 
 .language-bar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 10px 20px;
-  background-color: #f1f1f1;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    flex-wrap: wrap;
 }
 
 .language-bar a {
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: bold;
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .language-bar a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .output-options {
@@ -349,6 +341,22 @@ input[type="checkbox"] {
     top: 0;
     background: #f9f9f9;
     z-index: 1000;
+}
+
+.reference-sup {
+    display: none;
+    font-size: 0.7em;
+    vertical-align: super;
+    cursor: pointer;
+}
+.reference-box {
+    font-size: 14px;
+    color: #888;
+    margin-top: 1em;
+    padding-top: 0.5em;
+}
+.mobile-display-only {
+    display: none;
 }
 
 @media screen and (max-width: 512px) {
@@ -437,5 +445,15 @@ input[type="checkbox"] {
         margin-top: 0;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .reference-sup {
+        display: inline;
+    }
+    .reference-box {
+        font-size: 12px;
+    }
+    .mobile-display-only {
+        display: block;
     }
 }

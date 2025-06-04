@@ -264,18 +264,18 @@
                         <div class="output-options">
                             <span>役滿</span>
                             <div class="output-option-group">
-                                <label title="XJTU規則採用，XJTU七星杯、EMA規則不采用。"><input type="checkbox" name="score-jp-setting" value="1" checked />雙倍役滿</label>
-                                <label title="XJTU規則採用，XJTU七星杯、EMA規則不采用。><input type="checkbox" name="score-jp-setting" value="2" checked />復合役滿</label>
-                                <label title="EMA規則不采用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累計役滿</label>
+                                <label title="XJTU規則採用。聯盟規則、最高位戰規則、協會規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked />雙倍役滿</label>
+                                <label title="聯盟規則、最高位戰規則、協會規則、M.League、XJTU規則採用。XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />復合役滿</label>
+                                <label title="最高位戰規則、協會規則、M.League、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累計役滿</label>
                             </div>
                             <span>連風牌雀頭</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
-                                <label><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
+                                <label title="雀魂規則、XJTU規則採用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
+                                <label title="聯盟規則、最高位戰規則、協會規則、M.League採用。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
                             </div>
                             <span>切上滿貫</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-3" value="7" />開啟</label>
+                                <label title="聯盟WRC規則、最高位戰規則、協會規則、M.League採用。聯盟官方規則、最高位戰Classic規則不採用。"><input type="radio" name="score-jp-setting-3" value="7" />開啟</label>
                                 <label><input type="radio" name="score-jp-setting-3" value="0" checked />關閉</label>
                             </div>
                             <span>食斷</span>
@@ -294,10 +294,15 @@
                                 <label><input type="radio" name="score-jp-setting-4" value="8,1" />1 番 50 符</label>
                                 <label><input type="radio" name="score-jp-setting-4" value="8,2" />0 番 100 符</label>
                             </div>
+                            <span>嶺上開花</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-10" value="0" checked />有自摸符</label>
+                                <label><input type="radio" name="score-jp-setting-10" value="16" />無自摸符</label>
+                            </div>
                             <span>番縛</span>
                             <div class="output-option-group">
                                 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" />番縛</label>
-                                <label title="包括累計役滿。"><input type="checkbox" name="score-jp-setting-7" value="11" />役滿縛</label>
+                                <label><input type="checkbox" name="score-jp-setting-7" value="11" />役滿縛</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="12" />包含表加分牌</label>
                                 <label title="雀魂番縛模式採用。"><input type="checkbox" name="score-jp-setting-7" value="13" checked/>包含一發</label>
                             </div>
@@ -375,6 +380,18 @@
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
                 <div class="output-time" id="time-output-score-gb">Ready to start!</div>
             </div>
+            <div class="reference-box mobile-display-only" id="title-box"></div>
+            <div class="reference-box">
+                相關規則：
+                <ul style="margin-top: 0">   
+                    <li><a href="./rules/Renmei-Rule.pdf" style="color: inherit;">日本職業麻將聯盟官方規則和WRC規則（聯盟規則）</a></li>
+                    <li><a href="./rules/Saikouisen-Rule.pdf" style="color: inherit;">最高位戰日本職業麻將協會競技規定（最高位戰規則）</a></li>
+                    <li><a href="https://npm2001.com/about/regulations/" style="color: inherit;">日本職業麻將協會競技規定（協會規則）</a></li>
+                    <li><a href="https://m-league.jp/about/" style="color: inherit;">M.League正式比賽規則（M.League）</a></li>
+                    <li><a href="./rules/XJTU-Riichi-Rule.pdf" style="color: inherit;">西安交通大學立直麻將競賽規則（XJTU規則）和西安交通大學七星杯立直麻將公開賽規則（XJTU七星杯）</a></li>
+                    <li><a href="./rules/EMA-Riichi-Rule.pdf" style="color: inherit;">歐洲麻將聯盟立直麻將規則（EMA規則）</a>【國際麻將聯盟官方規則】</li>
+                </ul>
+            </div>
         </div>
         <div class="section title-button-container">
             <div class="output-time">v4.4.4</div>
@@ -431,6 +448,7 @@
             }
             window.onload = function () {
                 randomInput();
+                addReferenceMark();
             };
             const lang = "tw";
         </script>

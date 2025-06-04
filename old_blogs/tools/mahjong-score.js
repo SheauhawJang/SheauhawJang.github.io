@@ -1030,7 +1030,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (setting[6] && mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
         if (listen_type) (valfus += 2), fus.push(listen_type);
-        if (tsumo) (valfus += 2), fus.push(11);
+        if (tsumo && !(setting[16] && yakuman === 0 && infoans.fan.includes(12))) (valfus += 2), fus.push(11);
     }
     if (!mq && valfus <= 20) valfus += 2;
     const realfus = valfus;

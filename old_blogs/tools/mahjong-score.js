@@ -1032,9 +1032,9 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         if (listen_type) (valfus += 2), fus.push(listen_type);
         if (tsumo) (valfus += 2), fus.push(11);
     }
+    if (!mq && valfus <= 20) valfus += 2;
     const realfus = valfus;
-    valfus = Math.ceil(valfus / 10) * 10;
-    if (!mq && valfus < 30) valfus = 30;
+    if (setting[14]) valfus = Math.ceil(valfus / 10) * 10;
     if (infoans.yakuman > 0) f.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: v, fan: f, valfus, realfus, fus };
     if (gans.yakuman > 0) return eans_jp;

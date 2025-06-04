@@ -459,11 +459,11 @@ function processJPScore() {
     let info = document.querySelectorAll('input[name="score-jp-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
     let sq = Array.from(document.querySelectorAll('input[name="score-jp-setting"]:checked'));
-    for (let i = 0; i <= 7; ++i) {
+    for (let i = 0; i <= 9; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-jp-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(14).fill(0);
+    let setting = Array(16).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(',');
         setting[a] = Number(b ?? 1);

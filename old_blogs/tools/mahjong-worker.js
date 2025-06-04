@@ -607,7 +607,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     }
     if (gans.yakuman) aka = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
-    const realpt = (x) => Math.ceil(x / 100) * 100;
+    const realpt = setting[15] ? (x) => Math.ceil(x / 100) * 100 : (x) => x;
     let score, exinfo = "";
     if (tsumo) 
         if (mw === 27) score = realpt(gans.val * 2) * 3, exinfo = `${realpt(gans.val * 2)}∀`;

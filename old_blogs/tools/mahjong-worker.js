@@ -1,6 +1,7 @@
 importScripts("mahjong.js");
 importScripts("mahjong-score.js");
 importScripts("mahjong-worker-lang.js");
+importScripts("mahjong-mmc.js");
 const table_head = '<table style="border-collapse: collapse; padding: 0px">';
 const table_tail = "</table>";
 function cardImage(id) {
@@ -657,6 +658,12 @@ self.onmessage = function (e) {
         case "jp-score": {
             let { aids, substeps, gw, mw, wt, info, setting } = e.data;
             result = JPScore(aids, substeps, gw, mw, wt, info, setting);
+            break;
+        }
+        case "qingque-score": {
+            let { aids, substeps, info } = e.data;
+            Qingque_Weight_creation();
+            result = Qingque_Calculate(aids, info, substeps);
             break;
         }
     }

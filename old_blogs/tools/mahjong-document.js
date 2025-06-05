@@ -11,10 +11,11 @@ function processInput() {
         document.getElementById("brief-" + document_element_ids[i]).innerHTML = "";
         document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`;
     }
-    const document_scores_ids = ["score-gb", "score-jp"];
-    const workers_scores = [gb_worker, jp_worker];
+    const document_scores_ids = ["score-gb", "score-jp", "score-qingque"];
+    const workers_scores = [gb_worker, jp_worker, qingque_worker];
     for (let i = 0; i < document_scores_ids.length; ++i) {
-        document.getElementById(document_scores_ids[i]).style.display = "none";
+        const e = document.getElementById(document_scores_ids[i]);
+        if (e) e.style.display = "none";
         if (workers_scores[i]) workers_scores[i].terminate();
     }
     const input = document.getElementById("inputText").value;
@@ -74,6 +75,7 @@ function processInput() {
                     jp_worker = null;
                     jp_worker_info = { aids, substeps: substeps[task] };
                 }
+                break;
             case 2:
                 if (Math.min(...substeps[task]) === -1) {
                     document.getElementById("output-score-gb").textContent = "";
@@ -83,6 +85,20 @@ function processInput() {
                     gb_worker = null;
                     gb_worker_info = { aids, substeps: substeps[task], save: save[task] };
                 }
+                if (Math.min(substeps[1][0], substeps[2][1]) === -1) {
+                    let show_qingque = Boolean(document.getElementById("score-qingque"));
+                    for (let i = 0; i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
+                    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if (aids[1][i][j].id >= sizeUT) show_qingque = false;
+                    if (show_qingque) {
+                        document.getElementById("output-score-qingque").textContent = "";
+                        document.getElementById("brief-output-score-qingque").textContent = "";
+                        document.getElementById("time-output-score-qingque").textContent = "Ready to start!";
+                        document.getElementById("score-qingque").style.display = "block";
+                        qingque_worker = null;
+                        qingque_worker_info = { aids, substeps: [substeps[1][0], substeps[2][1]] };
+                    }
+                }
+                break;
         }
         ++task;
         switch (task) {
@@ -484,6 +500,32 @@ function processJPScore() {
     };
     const { aids, substeps } = jp_worker_info;
     jp_worker.postMessage({ task: "jp-score", aids, substeps, gw, mw, wt, info, setting, lang });
+}
+let qingque_worker = null;
+let qingque_worker_info;
+function processQingqueScore() {
+    if (qingque_worker) {
+        qingque_worker.terminate();
+        qingque_worker = null;
+    }
+    document.getElementById("output-score-qingque").textContent = "";
+    document.getElementById("brief-output-score-qingque").textContent = "";
+    document.getElementById("time-output-score-qingque").textContent = "Calculating......";
+    const mw = Number(document.querySelector('input[name="score-qingque-local-wind"]:checked').value);
+    const wt = Number(document.querySelector('input[name="score-qingque-wintype"]:checked').value);
+    let wi = document.querySelectorAll('input[name="score-qingque-wininfo"]:checked');
+    wi = Array.from(wi).map((x) => Number(x.value));
+    let info = [mw, wt === 1, wi.includes(2), wi.includes(3), wi.includes(4)];
+    qingque_worker = new Worker("mahjong-worker.js");
+    qingque_worker.onmessage = function (e) {
+        qingque_worker.terminate();
+        qingque_worker = null;
+        document.getElementById("output-score-qingque").innerHTML = e.data.result;
+        document.getElementById("brief-output-score-qingque").innerHTML = e.data.result;
+        document.getElementById("time-output-score-qingque").textContent = `Used ${e.data.time} ms`;
+    };
+    const { aids, substeps } = qingque_worker_info;
+    qingque_worker.postMessage({ task: "qingque-score", aids, substeps, info });
 }
 function adjustButtonsFontSize() {
     const baseBtn = document.getElementById("subkey_chi");

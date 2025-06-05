@@ -371,6 +371,38 @@
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
+            <div class="output-box" id="score-qingque" style="display: none">
+                <div class="title-button-container">
+                    <div class="output-title">青雀算分器</div>
+                    <button class="toggle-button" id="toggle-output-score-qingque" onclick="toggleOutput(6)">折叠 ▲</button>
+                </div>
+                <div id="options-output-score-qingque">
+                    <div class="output-options">
+                        <span>门风</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-qingque-local-wind" value="27" checked />东</label>
+                            <label><input type="radio" name="score-qingque-local-wind" value="28" />南</label>
+                            <label><input type="radio" name="score-qingque-local-wind" value="29" />西</label>
+                            <label><input type="radio" name="score-qingque-local-wind" value="30" />北</label>
+                        </div>
+                        <span>和牌方式</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-qingque-wintype" value="0" checked />点和</label>
+                            <label><input type="radio" name="score-qingque-wintype" value="1" />自摸</label>
+                        </div>
+                        <span>和牌状态</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-qingque-wininfo" value="2" />开杠相关</label>
+                            <label><input type="checkbox" name="score-qingque-wininfo" value="3" />最后一张</label>
+                            <label><input type="checkbox" name="score-qingque-wininfo" value="4" />天地和</label>
+                        </div>
+                        <button onclick="processQingqueScore()" class="score-button">计算</button>
+                    </div>
+                </div>
+                <div class="output-context" id="output-score-qingque"></div>
+                <div class="output-context" id="brief-output-score-qingque" style="display: none"></div>
+                <div class="output-time" id="time-output-score-qingque">Ready to start!</div>
+            </div>
             <div class="reference-box mobile-display-only" id="title-box"></div>
             <div class="reference-box">
                 相关规则：
@@ -379,7 +411,7 @@
                     <li><a href="./rules/Saikouisen-Rule.pdf" style="color: inherit;">最高位战日本职业麻将协会竞技规定（最高位战规则）</a></li>
                     <li><a href="https://npm2001.com/about/regulations/" style="color: inherit;">日本职业麻将协会竞技规定（协会规则）</a></li>
                     <li><a href="https://m-league.jp/about/" style="color: inherit;">M.League正式比赛规则（M.League）</a></li>
-                    <li><a href="./rules/XJTU-Riichi-Rule.pdf" style="color: inherit;">西安交通大学立直麻将竞赛规则（XJTU规则）和西安交通大学七星杯立直麻将公开赛规则（XJTU七星杯）</a></li>
+                    <li><a href="./rules/XJTU-Riichi-Rule.pdf" style="color: inherit;">西安交通大学立直麻将比赛规则（XJTU规则）和西安交通大学七星杯立直麻将公开赛规则（XJTU七星杯）</a></li>
                     <li><a href="./rules/EMA-Riichi-Rule.pdf" style="color: inherit;">欧洲麻将联盟立直麻将规则（EMA规则）</a>【国际麻将联盟官方规则】</li>
                 </ul>
             </div>
@@ -426,7 +458,7 @@
                 button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
             }
             function toggleOutput(i) {
-                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp"];
+                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp", "output-score-qingque"];
                 const d = document.getElementById(ids[i]);
                 const b = document.getElementById("toggle-" + ids[i]);
                 const s = document.getElementById("brief-" + ids[i]);

@@ -55,6 +55,75 @@ function kernelRealDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0,
         }
     return dvd[dpi].cnt;
 }
+function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i = 0) {
+    if (arrays.length === i) {
+        g(prefix);
+        return;
+    }
+    const currect = arrays[i];
+    for (let j = 0; j < currect.length; ++j) {
+        prefix[i] = currect[j];
+        cartesianProduct(g, arrays, prefix, i + 1);
+    }
+}
+function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].length, ota = Array(sizeUT).fill(0)) {
+    let submeld = Array(aids[1].length)
+        .fill(null)
+        .map(() => []);
+    let ek = 0,
+        ck = 0;
+    let nsubots = 1;
+    for (let i = 0; i < aids[1].length; ++i) {
+        let wfc = aids[1][i].map((x) => x.id);
+        if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
+        if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
+        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
+        if (isSeq(wfc))
+            if (wfc[2] < sizeUT) submeld[i].push(wfc);
+            else {
+                const [a, b] = wfc;
+                if (isSeq([a - 1, a, b])) submeld[i].push([a - 1, a, b]);
+                if (isSeq([a, b, b + 1])) submeld[i].push([a, b, b + 1]);
+                if (isSeq([a, a + 1, b])) submeld[i].push([a, a + 1, b]);
+            }
+        else {
+            for (let j = 0; j < sizeUT; ++j)
+                if (canBeReal(j, wfc)) {
+                    submeld[i].push(wfc.length === 3 ? tri[j] : quad[j]);
+                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[j]);
+                }
+            if (wfc.length === 4)
+                if (aids[1][i].type % 4 === 0) ++ck;
+                else ++ek;
+        }
+        if (submeld[i].length === 0) return { err: 2 };
+        nsubots *= submeld[i].length;
+    }
+    const { cnt, dvd } = realdvd(tiles, full_tcnt);
+    const nmp = Math.floor(full_tcnt / 3) + (full_tcnt % 3 ? 1 : 0);
+    let melds = Array(nmp).fill(null);
+    let msze = 0;
+    function dfs(f, i = 0, dpi = 0) {
+        if (msze === nmp) {
+            f(melds, ota);
+            return;
+        }
+        const ans = dvd[dpi];
+        for (let j = 0; j < ans.nxt.length; ++j) {
+            const n = ans.nxt[j];
+            for (let p = 0; p < n.p; ++p) melds[msze++] = pair[i];
+            for (let s = 0; s < n.s; ++s) melds[msze++] = seq[i];
+            for (let k = 0; k < n.k; ++k) melds[msze++] = tri[i];
+            ota[i] += n.p * 2 + n.s + n.k * 3;
+            if (n.s) (ota[i + 1] += n.s), (ota[i + 2] += n.s);
+            dfs(f, i + 1, n.dpi);
+            msze -= n.p + n.s + n.k;
+            ota[i] -= n.p * 2 + n.s + n.k * 3;
+            if (n.s) (ota[i + 1] -= n.s), (ota[i + 2] -= n.s);
+        }
+    }
+    return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
+}
 function RemoveMeldsByIndex(s, v, skipi) {
     const t = s.slice();
     for (let i = v.length - 1; i >= 0; --i) if (i !== skipi) t.splice(v[i], 1);
@@ -140,17 +209,13 @@ function Distance(a, b, dis) {
     if (ColorArray[a] !== ColorArray[b]) return false;
     return Math.abs(b - a) === dis;
 }
-function FourShiftOne(a, b, c, d) {
+function FourShiftOne(a, b, c, d, one = 1) {
     if (ColorArray[a] !== ColorArray[d]) return false;
-    return a + 1 === b && b + 1 === c && c + 1 === d;
+    return a + one === b && b + one === c && c + one === d;
 }
-function ThreeShiftOne(a, b, c) {
+function ThreeShiftOne(a, b, c, one = 1) {
     if (ColorArray[a] !== ColorArray[c]) return false;
-    return a + 1 === b && b + 1 === c;
-}
-function containsUndefined(x) {
-    for (let i = 0; i < x.length; ++i) if (x[i] === undefined) return true;
-    return false;
+    return a + one === b && b + one === c;
 }
 function GBSeqBind4(s, ma, a, b, c, d, ans) {
     let v = 0;
@@ -220,8 +285,7 @@ function GBSeqBind2(s, ma, a, b, ans) {
     }
 }
 let seq_miss = 0,
-    seq_total = 0,
-    seq_time = 0;
+    seq_total = 0;
 function GBSeqBind(s, ma = Array(s.length).fill(0)) {
     ++seq_total;
     const key = `${s.join(",")}|${ma.join(",")}`;
@@ -380,7 +444,7 @@ const GreenArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
 const SymmeArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0];
 const OrphanArray = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1];
 const NoOrphanArray = OrphanArray.map((x) => 1 - x);
-const PureOrphanArray = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0];
+const TerminalArray = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0];
 const BigArray = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0];
 const MidArray = [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const LowArray = [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -409,12 +473,12 @@ function isSameColor(melds) {
     }
     return true;
 }
-function isContains5(melds) {
+function isContains5(melds, five = 4) {
     for (let i = 0; i < melds.length; ++i) {
         let contains = false;
         for (let j = 0; !contains && j < melds[i].length; ++j) {
             if (melds[i][j] >= 27) return false;
-            if (NumberArray[melds[i][j]] === 4) contains = true;
+            if (NumberArray[melds[i][j]] === five) contains = true;
         }
         if (!contains) return false;
     }
@@ -602,75 +666,6 @@ function canBeListen(tiles, ta, tb, x, wint) {
     }
     return false;
 }
-function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i = 0) {
-    if (arrays.length === i) {
-        g(prefix);
-        return;
-    }
-    const currect = arrays[i];
-    for (let j = 0; j < currect.length; ++j) {
-        prefix[i] = currect[j];
-        cartesianProduct(g, arrays, prefix, i + 1);
-    }
-}
-function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].length, ota = Array(sizeUT).fill(0)) {
-    let submeld = Array(aids[1].length)
-        .fill(null)
-        .map(() => []);
-    let ek = 0,
-        ck = 0;
-    let nsubots = 1;
-    for (let i = 0; i < aids[1].length; ++i) {
-        let wfc = aids[1][i].map((x) => x.id);
-        if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
-        if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
-        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
-        if (isSeq(wfc))
-            if (wfc[2] < sizeUT) submeld[i].push(wfc);
-            else {
-                const [a, b] = wfc;
-                if (isSeq([a - 1, a, b])) submeld[i].push([a - 1, a, b]);
-                if (isSeq([a, b, b + 1])) submeld[i].push([a, b, b + 1]);
-                if (isSeq([a, a + 1, b])) submeld[i].push([a, a + 1, b]);
-            }
-        else {
-            for (let j = 0; j < sizeUT; ++j)
-                if (canBeReal(j, wfc)) {
-                    submeld[i].push(wfc.length === 3 ? tri[j] : quad[j]);
-                    if (wfc.length === 3 && wfc[1] >= sizeUT && SeqCheck(j)) submeld[i].push(seq[j]);
-                }
-            if (wfc.length === 4)
-                if (aids[1][i].type % 4 === 0) ++ck;
-                else ++ek;
-        }
-        if (submeld[i].length === 0) return { err: 2 };
-        nsubots *= submeld[i].length;
-    }
-    const { cnt, dvd } = realdvd(tiles, full_tcnt);
-    const nmp = Math.floor(full_tcnt / 3) + (full_tcnt % 3 ? 1 : 0);
-    let melds = Array(nmp).fill(null);
-    let msze = 0;
-    function dfs(f, i = 0, dpi = 0) {
-        if (msze === nmp) {
-            f(melds, ota);
-            return;
-        }
-        const ans = dvd[dpi];
-        for (let j = 0; j < ans.nxt.length; ++j) {
-            const n = ans.nxt[j];
-            for (let p = 0; p < n.p; ++p) melds[msze++] = pair[i];
-            for (let s = 0; s < n.s; ++s) melds[msze++] = seq[i];
-            for (let k = 0; k < n.k; ++k) melds[msze++] = tri[i];
-            ota[i] += n.p * 2 + n.s + n.k * 3;
-            if (n.s) (ota[i + 1] += n.s), (ota[i + 2] += n.s);
-            dfs(f, i + 1, n.dpi);
-            msze -= n.p + n.s + n.k;
-            ota[i] -= n.p * 2 + n.s + n.k * 3;
-            if (n.s) (ota[i + 1] -= n.s), (ota[i + 2] -= n.s);
-        }
-    }
-    return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
-}
 function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     let f = [];
     let v = 0;
@@ -709,7 +704,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
         if (zimo) (v += 4), f.push(56);
         else (v += 2), f.push(62);
     else if (zimo === 80) ++v, f.push(zimo);
-    if (melds.length >= 5 && isMask(marr, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
+    if (melds.length >= 5 && isMask(marr, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
     if (melds.length >= 5 && isMask(marr, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
     if (melds.length >= 5)
         if (isMask(marr, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
@@ -846,7 +841,7 @@ function GB7Pairs(tids) {
         let must_quemen = false;
         const melds = a.map((x) => [x]);
         if (isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
-        if (isMask(a, PureOrphanArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
+        if (isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
         if (isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
         if (!must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18);
         if (!must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
@@ -1006,7 +1001,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         if (setting[1] && ninegateListen(ColorFirstArray[ColorArray[melds[0][0]]], tiles, wint)) updateYakuman(2), f.push(47);
         else updateYakuman(1), f.push(46);
     const marr = flattenMelds(melds);
-    if (melds.length >= 5 && isMask(marr, PureOrphanArray)) updateYakuman(1), f.push(45);
+    if (melds.length >= 5 && isMask(marr, TerminalArray)) updateYakuman(1), f.push(45);
     if (melds.length >= 5 && isMask(marr, GreenArray)) updateYakuman(1), f.push(44);
     if (melds.length >= 5 && ck + ek >= 4) updateYakuman(1), f.push(43);
     let windcount = Array(4).fill(0);

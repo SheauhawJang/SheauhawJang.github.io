@@ -855,7 +855,7 @@ function GB7Pairs(tids, setting) {
         if (setting[2] && isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
         if (setting[3] && isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
         if (setting[4] && !must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18);
-        if (setting[12] && isMask(a, EvenArray)) (v += 24), f.push(21);
+        if (setting[12] && isMask(a, EvenArray)) (v += 24), f.push(21), (must_duan1 = true);
         if (setting[5] && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
         if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
         if (setting[6] && isMask(a, BigArray)) (v += 24), f.push(25), (must_wuzi = true);

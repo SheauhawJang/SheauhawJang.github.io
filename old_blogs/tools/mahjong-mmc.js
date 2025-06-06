@@ -58,12 +58,12 @@ function Qingque_evaluate_fans(hand, ignore_occ = false) {
             if (!Array.isArray(fan_results[j])) res[j] = fan_results[j];
             else res[j] = fan_results[j][i + 1];
         }
-        results.push(res);
+        results.push(res.map(Boolean));
     }
     if (hand.pairs) {
         let res = Array(fan_results.length).fill(0);
         for (let j = 0; j < fan_results.length; ++j) if (Qingque_fans[j].tag.special_compatible && (!ignore_occ || !Qingque_fans[j].tag.is_occasional)) res[j] = !Array.isArray(fan_results[j]) ? fan_results[j] : fan_results[j][0];
-        results.push(res);
+        results.push(res.map(Boolean));
     }
     return results;
 }

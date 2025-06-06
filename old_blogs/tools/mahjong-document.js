@@ -87,9 +87,14 @@ function processInput() {
                 }
                 if (Math.min(substeps[1][0], substeps[2][1]) === -1) {
                     let show_qingque = Boolean(document.getElementById("score-qingque"));
-                    for (let i = 0; i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
-                    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if (aids[1][i][j].id >= sizeUT) show_qingque = false;
                     if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
+                    for (let i = 0; show_qingque && i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
+                    let stiles = tiles.slice();
+                    for (let i = 0; show_qingque && i < aids[1].length; ++i) 
+                        for (let j = 0; j < aids[1][i].length; ++j) 
+                            if (aids[1][i][j].id >= sizeUT) show_qingque = false;
+                            else ++stiles[aids[1][i][j].id];
+                    for (let i = 0; show_qingque && i < sizeUT; ++i) if (stiles[i] > 4) show_qingque = false;
                     if (show_qingque) {
                         document.getElementById("output-score-qingque").textContent = "";
                         document.getElementById("brief-output-score-qingque").textContent = "";

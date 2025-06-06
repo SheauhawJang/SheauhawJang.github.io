@@ -90,8 +90,8 @@ function processInput() {
                     if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
                     for (let i = 0; show_qingque && i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
                     let stiles = tiles.slice();
-                    for (let i = 0; show_qingque && i < aids[1].length; ++i) 
-                        for (let j = 0; j < aids[1][i].length; ++j) 
+                    for (let i = 0; show_qingque && i < aids[1].length; ++i)
+                        for (let j = 0; j < aids[1][i].length; ++j)
                             if (aids[1][i][j].id >= sizeUT) show_qingque = false;
                             else ++stiles[aids[1][i][j].id];
                     for (let i = 0; show_qingque && i < sizeUT; ++i) if (stiles[i] > 4) show_qingque = false;
@@ -362,17 +362,16 @@ function addInput(i) {
     drawInputCards();
 }
 function removeInput(i, j, k) {
-    if (j === -1) {
-        ipids[0].splice(i, 1);
-    } else if (j <= -2) {
+    if (j === -1) ipids[0].splice(i, 1);
+    else if (j <= -2)
         // ipids[0].push(ipids[2][i]);
         ipids[-j].splice(i, 1);
-    } else {
+    else {
         let t = getUnifiedType(ipids[1][j]);
-        if (t % 4 === 0 || k === 1) {
+        if (t % 4 === 0 || k === 1)
             // for (let i = 0; i < ipids[1][j].length; ++i) ipids[0].push(ipids[1][j][i]);
             ipids[1].splice(j, 1);
-        } else {
+        else {
             let nt = 2;
             if (i < 1) nt = 1;
             else if (i === ipids[1][j].length - 1) nt = 3;
@@ -487,7 +486,7 @@ function processJPScore() {
     }
     let setting = Array(17).fill(0);
     for (let i = 0; i < sq.length; ++i) {
-        const [a, b] = sq[i].value.split(',');
+        const [a, b] = sq[i].value.split(",");
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan")?.value ?? 1);
@@ -551,23 +550,23 @@ function adjustButtonsFontSize() {
         btn.style.height = targetHeight + "px";
     }
     if (lang === "en") {
-        const imgs = document.querySelectorAll('.input-card-button');
+        const imgs = document.querySelectorAll(".input-card-button");
         imgs.forEach((img) => {
-            if (img.classList.contains('card-div')) {
-                const numberSpan = img.querySelector('span.card-helper');
+            if (img.classList.contains("card-div")) {
+                const numberSpan = img.querySelector("span.card-helper");
                 if (numberSpan) numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
                 return;
             }
             const src = img.src;
             const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
             const filename = filenameWithExt.split(".")[0];
-            const idx = id(filename).id; 
+            const idx = id(filename).id;
             if (idx === undefined) return;
-            const displayNumber = HelperArray[idx]; 
+            const displayNumber = HelperArray[idx];
             const div = document.createElement("div");
-            div.classList.add('card-div', 'input-card-button');
+            div.classList.add("card-div", "input-card-button");
             const newImg = img.cloneNode(true);
-            newImg.classList.remove('input-card-button');
+            newImg.classList.remove("input-card-button");
             const numberSpan = document.createElement("span");
             numberSpan.className = "card-helper";
             numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
@@ -584,13 +583,13 @@ function addWorkerCardHelper() {
         const src = img.src;
         const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
         const filename = filenameWithExt.split(".")[0];
-        const idx = id(filename).id; 
+        const idx = id(filename).id;
         if (idx === undefined) return;
-        const displayNumber = HelperArray[idx]; 
+        const displayNumber = HelperArray[idx];
         const div = document.createElement("div");
         div.className = "card-div";
         const newImg = img.cloneNode(true);
-        newImg.classList.remove('no-card-div-img');
+        newImg.classList.remove("no-card-div-img");
         const numberSpan = document.createElement("span");
         numberSpan.className = "card-helper";
         if (img.offsetWidth === 0) return;
@@ -602,17 +601,17 @@ function addWorkerCardHelper() {
     });
 }
 function addReferenceMark() {
-    const ref = document.querySelectorAll('[title]');
+    const ref = document.querySelectorAll("[title]");
     const box = document.getElementById("title-box");
     let notes = [];
     ref.forEach((e, i) => {
-        const t = e.getAttribute('title');
+        const t = e.getAttribute("title");
         const n = i + 1;
         notes.push(`[${n}] ${t}`);
-        const sup = document.createElement('sup');
-        sup.className = 'reference-sup';
+        const sup = document.createElement("sup");
+        sup.className = "reference-sup";
         sup.textContent = `[${n}]`;
         e.appendChild(sup);
     });
-    box.innerHTML = notes.join('<br/>');
+    box.innerHTML = notes.join("<br/>");
 }

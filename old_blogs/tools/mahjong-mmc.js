@@ -16,7 +16,7 @@ function Qingque_Calculate(aids, info, substeps) {
         const p = MeldsPermutation(aids);
         if (p.err === 1) return cn_loc.subtile_error_1;
         if (p.err === 2) return cn_loc.subtile_error_2;
-        p.itots((ots) => (p.itsubots((subots) => decom.push([...ots, ...subots]))));
+        p.itots((ots) => p.itsubots((subots) => decom.push([...ots, ...subots])));
         (ek = p.ek), (ck = p.ck);
     }
     const pairs = substeps[1] === -1 ? PairOutput(counter) : null;
@@ -32,13 +32,8 @@ function Qingque_Calculate(aids, info, substeps) {
     const res2 = Qingque_derepellenise(max_res);
     let fan_count = 0;
     let output = [];
-    for (let i = 0; i < res2.length; ++i) {
-        if (res2[i]) {
-            output.push(Qingque_fans[i].name);
-            ++fan_count;
-        }
-    }
-    if (fan_count) output = output.join(', ') + "; \n";
+    for (let i = 0; i < res2.length; ++i) if (res2[i]) output.push(Qingque_fans[i].name), ++fan_count;
+    if (fan_count) output = output.join(", ") + "; \n";
     else output = "平和; \n";
     let sd_pt = Math.round(max_fan * max_fan);
     let oo_pt = Math.round(max_fan * 10 * Math.tanh(max_fan * 0.1));
@@ -70,13 +65,9 @@ function Qingque_evaluate_fans(hand, ignore_occ = false) {
 function Qingque_get_fan(res) {
     let fan = 0;
     res = res.slice();
-    for (let i = 0; i <= Qingque_indices.robbing_the_kong; ++i) {
-        (fan += res[i] ? Qingque_fans[i].tag.fan_value : 0), (res[i] = false);
-    }
+    for (let i = 0; i <= Qingque_indices.robbing_the_kong; ++i) (fan += res[i] ? Qingque_fans[i].tag.fan_value : 0), (res[i] = false);
     for (let a = 14; a <= 23; ++a) {
-        for (let i = 0; i <= Qingque_indices.mixed_straight; ++i) {
-            if (Qingque_fans[i].tag.weight_20 === a - 1) res[i] = 0;
-        }
+        for (let i = 0; i <= Qingque_indices.mixed_straight; ++i) if (Qingque_fans[i].tag.weight_20 === a - 1) res[i] = 0;
         const tv = Qingque_get_weight(res);
         let fan0 = Math.log2(Number(Qingque_total_Weight)) - Math.log2(Number(tv));
         fan += fan0 * (a === 14 ? 0.7 : 0.05);
@@ -88,9 +79,7 @@ function Qingque_get_weight(res) {
     let weight = 0n;
     let reskey = 0n;
     for (let i = res.length - 1; i >= 0; --i) reskey = (reskey << 1n) | BigInt(res[i]);
-    for (const [key, w] of Qingque_Weight) {
-        if ((key & reskey) === reskey) weight += w;
-    }
+    for (const [key, w] of Qingque_Weight) if ((key & reskey) === reskey) weight += w;
     return weight & uint64_mask;
 }
 function Qingque_derepellenise(res) {
@@ -252,7 +241,7 @@ function Qingque_decom_map(hand, f, g = () => 0) {
 }
 function Qingque_contains_pair_of(hand, mask) {
     if (!Array.isArray(mask)) mask = [mask];
-    for (const i of mask) if (Qingque_counter_count(hand, i) !== 2 || Qingque_counter_count(hand, i) !== 4) return false;
+    for (const i of mask) if (Qingque_counter_count(hand, i) !== 2 && Qingque_counter_count(hand, i) !== 4) return false;
     return true;
 }
 function Qingque_count_pair_of(hand, mask) {
@@ -478,10 +467,9 @@ function criteria_nine_numbers(hand) {
     if (!Qingque_Arraymask(hand, NoHonorArray)) return false;
     return Qingque_decom_map(hand, (d) => {
         let num_table = 0;
-        for (const m of d) {
+        for (const m of d)
             if (m.length === 3) num_table += 0o111 << (NumberArray[m[0]] * 3);
             else num_table += 0o1 << (NumberArray[m[0]] * 3);
-        }
         return num_table === 0o111111111;
     });
 }
@@ -496,18 +484,14 @@ function criteria_reflected_hand(hand) {
     if (!Qingque_Arraymask(hand, NoHonorArray)) return false;
     function reflect_by(m1, m2, ref) {
         if (ColorArray[m1[0]] !== ColorArray[m2[0]]) return false;
-        if (m1.length === 3 && m2.length === 3) {
-            return NumberArray[m1[0]] + NumberArray[m2[2]] === ref;
-        }
+        if (m1.length === 3 && m2.length === 3) return NumberArray[m1[0]] + NumberArray[m2[2]] === ref;
         const isTri = (m) => m.length === 1 || m.length === 4;
-        if ((m1.length === 2 && m2.length === 2) || (isTri(m1) && isTri(m2))) {
-            return NumberArray[m1[0]] + NumberArray[m2[0]] === ref;
-        }
+        if ((m1.length === 2 && m2.length === 2) || (isTri(m1) && isTri(m2))) return NumberArray[m1[0]] + NumberArray[m2[0]] === ref;
         return false;
     }
     function is_reflection(d1, d2, ref) {
         let paired = 0;
-        for (let i = 0; i < d1.length; ++i) {
+        for (let i = 0; i < d1.length; ++i)
             for (let j = 0; j < d2.length; ++j) {
                 if (paired & (1 << j)) continue;
                 if (reflect_by(d1[i], d2[j], ref)) {
@@ -515,7 +499,6 @@ function criteria_reflected_hand(hand) {
                     break;
                 }
             }
-        }
         return paired === (1 << d2.length) - 1;
     }
     let min_num = 10,
@@ -626,15 +609,12 @@ function criteria_mirrored_hand(hand) {
                 const cfi = ColorFirstArray[ci];
                 for (let cj = ci + 1; cj < 3; ++cj) {
                     const cfj = ColorFirstArray[cj];
-                    for (let i = 0; i < 9; ++i) {
+                    for (let i = 0; i < 9; ++i)
                         for (let j = i + 1; j < 9; ++j) {
-                            for (let k = j + 1; k < 9; ++k) {
-                                if (Qingque_contains_pair_of(h, [cfi + i, cfi + j, cfi + k, cfj + i, cfj + j, cfj + k])) return true;
-                            }
+                            for (let k = j + 1; k < 9; ++k) if (Qingque_contains_pair_of(h, [cfi + i, cfi + j, cfi + k, cfj + i, cfj + j, cfj + k])) return true;
                             if (Qingque_contains_pair_of(h, [cfi + i, cfj + i]) && Qingque_count_pair_of(h, [cfi + j, cfj + j]) === 4) return true;
                             if (Qingque_contains_pair_of(h, [cfi + j, cfj + j]) && Qingque_count_pair_of(h, [cfi + i, cfj + i]) === 4) return true;
                         }
-                    }
                 }
             }
             return false;

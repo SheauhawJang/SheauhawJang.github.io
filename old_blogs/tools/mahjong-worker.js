@@ -313,15 +313,12 @@ function GBFanDiv(fan) {
     for (let i = 0; i < fan.length; ++i)
         if (fan[i] > 0) ++fans[fan[i]];
         else --fans[-fan[i]];
-
     fans[60] += fans[83];
     fans[61] += fans[83];
     let fanopt = [];
     for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
-
     return `${table_head}${fanopt.join("")}${table_tail}`;
 }
-
 function postDebugInfoGlobal(st, m, cm, output) {
     const t = new Date() - st;
     const predict_t = Math.round((t * m) / cm);
@@ -341,12 +338,14 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     const wint = aids[0].at(-1)?.id;
     let listen_cnt = save.waiting[wint]?.ans.length ?? 999;
     let gans = { val: 0, fan: [] };
-    let cm = 0, m = 0, p = Array(7).fill(null);
+    let cm = 0,
+        m = 0,
+        p = Array(7).fill(null);
     const tiles = getTiles(aids[0]);
     if (substeps[0] === -1) p[6] = MeldsPermutation(aids, tiles);
     if (substeps[1] === -1) ++m;
     if (substeps[2] === -1) ++m;
-    if (substeps[4] === -1) {
+    if (substeps[4] === -1)
         for (let i = 0; i < 6; ++i) {
             let tcp = tiles.slice();
             let win = true;
@@ -364,7 +363,6 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             if (!win) continue;
             p[i] = MeldsPermutation(aids, tcp, aids[0].length - 9, ota);
         }
-    }
     for (let i = 0; i < 7; ++i) if (p[i]) m += p[i].nots * p[i].nsubots;
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, `${loc.at_least} ${gans.val + aids[2].length} ${loc.GB_FAN_unit}\n${GBFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}`);
     function inMelds(melds, ta, tb, x) {
@@ -392,7 +390,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         ans.fan.push(...infof);
         if (ans.val > gans.val) gans = ans;
         ++cm;
-        if (!(cm & 1048575)) postDebugInfo(); 
+        if (!(cm & 1048575)) postDebugInfo();
     }
     const st = new Date();
     if (substeps[1] === -1) {
@@ -424,7 +422,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             --tcp[rid];
         }
         if (seven_stars) pans = { val: 24, fan: [20] };
-        else {
+        else
             for (let i = 0; i < 6; ++i) {
                 let tcp = tiles.slice();
                 let win = true;
@@ -443,7 +441,6 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                     break;
                 }
             }
-        }
         pans.val += infov;
         pans.fan.push(...infof);
         if (wt === 80) ++pans.val, pans.fan.push(80);
@@ -465,17 +462,16 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
         }
         postDebugInfo();
     }
-    if (substeps[4] === -1) {
+    if (substeps[4] === -1)
         for (let i = 0; i < 6; ++i) {
             if (!p[i]) continue;
             const { err, itots, itsubots, ek, ck } = p[i];
             if (err === 1) return { output: loc.subtile_error_1, brief: "" };
             if (err === 2) return { output: loc.subtile_error_2, brief: "" };
-            const other = [KnitDragonSave[i].slice(0, 3), KnitDragonSave[i].slice(3, 6), KnitDragonSave[i].slice(6, 9)]
+            const other = [KnitDragonSave[i].slice(0, 3), KnitDragonSave[i].slice(3, 6), KnitDragonSave[i].slice(6, 9)];
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
             postDebugInfo();
         }
-    }
     gans.val += aids[2].length;
     gans.fan.push(...Array(aids[2].length).fill(81));
     let ptchange = wt ? `${loc.winner} +${gans.val * 3 + 24}${loc.comma}${loc.other_player} -${gans.val + 8}` : `${loc.winner} +${gans.val + 24}${loc.comma}${loc.loser} -${gans.val + 8}${loc.comma}${loc.observer} -8`;
@@ -497,17 +493,12 @@ function JPGetFanCount(mq, i) {
 }
 function JPGetFuName(i) {
     if (i >= 8) return loc[`JP_FUNAME_${i}`];
-    let opts = [
-        i & 1 ? loc.JP_FUNAME_0_1 : loc.JP_FUNAME_0_0, 
-        i & 2 ? loc.JP_FUNAME_1_1 : loc.JP_FUNAME_1_0, 
-        i & 4 ? loc.JP_FUNAME_2_1 : loc.JP_FUNAME_2_0
-    ];
-    return opts.join('');
+    let opts = [i & 1 ? loc.JP_FUNAME_0_1 : loc.JP_FUNAME_0_0, i & 2 ? loc.JP_FUNAME_1_1 : loc.JP_FUNAME_1_0, i & 4 ? loc.JP_FUNAME_2_1 : loc.JP_FUNAME_2_0];
+    return opts.join("");
 }
 function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     let fans = new Array(48).fill(0);
-    for (let i = 0; i < fan.length; ++i)
-        if (fan[i] > 0) ++fans[fan[i]];
+    for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
     fans.push(d, u, aka, nuki);
     let fanopt = [];
     for (let i = 0; i < 51; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
@@ -519,24 +510,23 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
     let aka = 0;
-    for (let i = 0; i < aids[0].length; ++i) if ('sp' in aids[0][i]) ++aka;
-    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ('sp' in aids[1][i][j]) ++aka;
-    for (let i = 0; i < aids[2].length; ++i) if ('sp' in aids[2][i]) ++aka;
+    for (let i = 0; i < aids[0].length; ++i) if ("sp" in aids[0][i]) ++aka;
+    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ("sp" in aids[1][i][j]) ++aka;
+    for (let i = 0; i < aids[2].length; ++i) if ("sp" in aids[2][i]) ++aka;
     let nukicnt = aids[2].length;
-    if (info.includes(32)) {
-        if (tsumo) 
+    if (info.includes(32))
+        if (tsumo)
             if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
             else infoans.fan.push(33), ++infoans.yakuman;
-        else if (mw !== 27) 
-            if (setting[9] === 1) infoans.fan.push(30), infoans.valfan += 5;
-            else if (setting[9] === 2) infoans.fan.push(30), ++infoans.yakuman, JPScoreArray[30] = -1;
-    }
+        else if (mw !== 27)
+            if (setting[9] === 1) infoans.fan.push(30), (infoans.valfan += 5);
+            else if (setting[9] === 2) infoans.fan.push(30), ++infoans.yakuman, (JPScoreArray[30] = -1);
     if (!infoans.yakuman) {
-        if (info.includes(16)) infoans.fan.push(16), infoans.valfan += 2, riichi = true;
-        else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan, riichi = true;
-        if (riichi && info.includes(3)) infoans.fan.push(3), ++infoans.valfan, infoans.delete += setting[13] ? 0 : 1;
+        if (info.includes(16)) infoans.fan.push(16), (infoans.valfan += 2), (riichi = true);
+        else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan, (riichi = true);
+        if (riichi && info.includes(3)) infoans.fan.push(3), ++infoans.valfan, (infoans.delete += setting[13] ? 0 : 1);
         if (info.includes(12) && tsumo) infoans.fan.push(12), ++infoans.valfan;
-        else if (info.includes(13)) 
+        else if (info.includes(13))
             if (tsumo) infoans.fan.push(13), ++infoans.valfan;
             else infoans.fan.push(14), ++infoans.valfan;
         if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
@@ -545,7 +535,8 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     }
     let gans = eans_jp;
     const tiles = getTiles(aids[0]);
-    let cm = 0, m = 0;
+    let cm = 0,
+        m = 0;
     const p = MeldsPermutation(aids);
     let mq = aids[1].length === 0;
     const nukis = getTiles(aids[2]);
@@ -557,10 +548,10 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
     function ansYakuAri(ans) {
         let limit = setting[0];
-        if (!ans.yakuman && setting[11]) 
-            if (!setting[3]) return false; 
+        if (!ans.yakuman && setting[11])
+            if (!setting[3]) return false;
             else limit = Math.max(limit, 13);
-        return ans.yakuman || (ans.valfan - (setting[12] ? 0 : ans.dora) - ans.ura - infoans.delete >= limit);
+        return ans.yakuman || ans.valfan - (setting[12] ? 0 : ans.dora) - ans.ura - infoans.delete >= limit;
     }
     function cal(ots, ota, subots, ck, ek) {
         const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting);
@@ -568,17 +559,16 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
             if (ans.val > gans.val) return true;
             else if (ans.val === gans.val)
                 if (ans.yakuman > gans.yakuman) return true;
-                else if (ans.yakuman === gans.yakuman) 
+                else if (ans.yakuman === gans.yakuman)
                     if (ans.realyakuman > gans.realyakuman) return true;
                     else if (ans.realyakuman === gans.realyakuman)
                         if (ans.valfan > gans.valfan) return true;
-                        else if (ans.valfan === gans.valfan)
-                            if (ans.realfus > gans.realfus) return true;
+                        else if (ans.valfan === gans.valfan) if (ans.realfus > gans.realfus) return true;
         }
         if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck()) gans = ans;
         else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck())) gans = ans;
         ++cm;
-        if (!(cm & 1048575)) postDebugInfo(); 
+        if (!(cm & 1048575)) postDebugInfo();
     }
     if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
     if (substeps[2] === -1) {
@@ -590,11 +580,15 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
             if (rid === -1) listen_13 = false;
             else --tcp[rid];
         }
-        let yakuman = (listen_13 ? 2 : 1);
+        let yakuman = listen_13 ? 2 : 1;
         yakuman = setting[2] ? yakuman + infoans.yakuman : Math.max(yakuman, infoans.yakuman);
         let f = [listen_13 ? 37 : 36];
         if (infoans.yakuman > 0) f.push(infoans.fan);
-        const valfan = 0, valfus = 20, realfus = 20, fus = [8], pt = yakuman * 8000;
+        const valfan = 0,
+            valfus = 20,
+            realfus = 20,
+            fus = [8],
+            pt = yakuman * 8000;
         if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
     }
     if (substeps[0] === -1) {
@@ -608,20 +602,20 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     if (gans.yakuman) aka = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
     const realpt = setting[15] ? (x) => Math.ceil(x / 100) * 100 : (x) => x;
-    let score, exinfo = "";
-    if (tsumo) 
-        if (mw === 27) score = realpt(gans.val * 2) * 3, exinfo = `${realpt(gans.val * 2)}∀`;
-        else score = realpt(gans.val * 2) + realpt(gans.val) * 2, exinfo = `${realpt(gans.val)}${loc.slash}${realpt(gans.val * 2)}`;
-    else 
-        if (mw === 27) score = realpt(gans.val * 6);
-        else score = realpt(gans.val * 4);
+    let score,
+        exinfo = "";
+    if (tsumo)
+        if (mw === 27) (score = realpt(gans.val * 2) * 3), (exinfo = `${realpt(gans.val * 2)}∀`);
+        else (score = realpt(gans.val * 2) + realpt(gans.val) * 2), (exinfo = `${realpt(gans.val)}${loc.slash}${realpt(gans.val * 2)}`);
+    else if (mw === 27) score = realpt(gans.val * 6);
+    else score = realpt(gans.val * 4);
     if (tsumo) exinfo = loc.brace_left + exinfo + loc.brace_right;
     const ptchange = ansYakuAri(gans) ? `+${score} ${exinfo}` : `${loc.wrong_win}`;
     const namebrace = name === "" ? name : `${loc.brace_left}${name}${loc.brace_right}`;
     const fanfuinfo = gans.yakuman ? name : gans.valfus >= 20 ? `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit}${namebrace}` : "";
     const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq, gans.dora ?? 0, gans.ura ?? 0, aka, nukicnt);
     const opts = [fanfuinfo, fanfudiv, ptchange];
-    return { output: opts.join(''), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
+    return { output: opts.join(""), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
 }
 self.onmessage = function (e) {
     if (e.data.lang) setLoc(e.data.lang);

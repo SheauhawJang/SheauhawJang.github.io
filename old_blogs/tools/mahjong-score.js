@@ -1222,10 +1222,8 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     let valfus = 25,
         realfus = 25,
         fus = [10];
-    console.log(setting[8]);
     if (setting[8] === 1) valfus = realfus = JPFuArray[10] = 50;
     else if (setting[8] === 2) valfus = realfus = JPFuArray[10] = 100;
-    console.log(setting[8], setting[8] === 1, setting[8] === 2, valfus, realfus, JPFuArray[10])
     let gv = 0,
         gf = [],
         yakuman = infoans.yakuman,

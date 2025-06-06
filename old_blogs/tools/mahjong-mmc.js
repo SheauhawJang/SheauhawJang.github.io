@@ -7,7 +7,7 @@ const Qingque_heavenly_or_earthly_hand = 4;
 function Qingque_Calculate(aids, info, substeps) {
     const decom = [];
     const counter = getTiles(aids[0]);
-    let all_tiles = aids[0];
+    let all_tiles = aids[0].slice();
     for (let i = 0; i < aids[1].length; ++i) all_tiles.push(...aids[1][i]);
     const all_counter = getTiles(all_tiles);
     let ek = 0,
@@ -16,12 +16,11 @@ function Qingque_Calculate(aids, info, substeps) {
         const p = MeldsPermutation(aids);
         if (p.err === 1) return cn_loc.subtile_error_1;
         if (p.err === 2) return cn_loc.subtile_error_2;
-        p.itots((ots) => p.itsubots((subots) => decom.push([...ots, ...subots])));
+        p.itots((ots) => (p.itsubots((subots) => decom.push([...ots, ...subots]))));
         (ek = p.ek), (ck = p.ck);
     }
     const pairs = substeps[1] === 1 ? PairOutput(counter) : null;
     let v0 = Qingque_evaluate_fans({ aids, info, decom, pairs, counter, all_counter, ek, ck }, false);
-    console.log(v0);
     let v = v0.map((x) => x.map((y, i) => (i <= Qingque_indices.robbing_the_kong ? 0 : y)));
     let max_fan = 0;
     let max_res = [];

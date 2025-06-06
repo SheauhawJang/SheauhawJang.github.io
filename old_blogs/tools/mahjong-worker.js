@@ -326,7 +326,7 @@ function postDebugInfoGlobal(st, m, cm, output) {
     let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
     postMessage({ debug, output });
 }
-function GBScore(aids, substeps, save, gw, mw, wt, info) {
+function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     let infov = 0;
     let infof = [];
     if (info.includes(44))
@@ -384,7 +384,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
                 else if (canBeListen(tiles, ota, otb, ots[k][2], wint)) wintf = 77;
             }
         if (wint !== undefined && !wt && !wintf && !inMelds(others, wint)) --cp;
-        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles);
+        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, setting);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan.push(...infof);
@@ -394,17 +394,17 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
     }
     const st = new Date();
     if (substeps[1] === -1) {
-        let pans = GB7Pairs(aids[0]);
+        let pans = GB7Pairs(aids[0], setting);
         pans.val += infov;
         pans.fan.push(...infof);
-        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (wt === 80) if (setting[19]) pans.val += 4, pans.fan.push(56); else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
     }
     if (substeps[2] === -1) {
         let pans = { val: 88 + infov, fan: [7, ...infof] };
-        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (wt === 80) if (setting[19]) pans.val += 4, pans.fan.push(56); else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -443,7 +443,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info) {
             }
         pans.val += infov;
         pans.fan.push(...infof);
-        if (wt === 80) ++pans.val, pans.fan.push(80);
+        if (wt === 80) if (setting[19]) pans.val += 4, pans.fan.push(56); else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -644,8 +644,8 @@ self.onmessage = function (e) {
             break;
         }
         case "gb-score": {
-            let { aids, substeps, save, gw, mw, wt, info } = e.data;
-            result = GBScore(aids, substeps, save, gw, mw, wt, info);
+            let { aids, substeps, save, gw, mw, wt, info, setting } = e.data;
+            result = GBScore(aids, substeps, save, gw, mw, wt, info, setting);
             break;
         }
         case "jp-score": {

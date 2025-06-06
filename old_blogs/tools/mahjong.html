@@ -210,7 +210,7 @@
                 <div class="output-context" id="brief-output-tw" style="display: none"></div>
                 <div class="output-time" id="time-output-tw"></div>
             </div>
-            <div class="output-box" id="score-gb" style="display: none">
+            <div class="output-box" id="score-gb">
                 <div class="title-button-container">
                     <div class="output-title">国标麻将番数计算器</div>
                     <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">折叠 ▲</button>
@@ -245,6 +245,46 @@
                         </div>
                         <button onclick="processGBScore()" class="score-button">计算</button>
                     </div>
+                    <details>
+                        <summary>规则设置</summary>
+                        <div class="output-options">
+                            <span>七对复合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="1" checked />绿一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="3" checked />字一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="2" checked />清幺九</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="4" checked />混幺九</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="6" checked />全大/全中/全小</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="7" checked />大于五/小于五</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="8" checked />全带五</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="9" checked />推不倒</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="11" checked />五门齐</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="12" />全双刻</label>
+                            </div>
+                            <span>混一色复合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="22" />绿一色</label>
+                            </div>
+                            <span>缺一门复合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="15" checked />三风刻</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="16" checked />一色四同顺</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四节高</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
+                            </div>
+                            <span>不求人</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-0" value="0" checked />必然门清不计</label>
+                                <label><input type="radio" name="score-gb-setting-0" value="19" />必然门清加记</label>
+                            </div>
+                        </div>
+                    </details>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -372,7 +412,7 @@
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
-            <div class="output-box" id="score-qingque" style="display: none">
+            <div class="output-box" id="score-qingque">
                 <div class="title-button-container">
                     <div class="output-title">青雀算分器</div>
                     <button class="toggle-button" id="toggle-output-score-qingque" onclick="toggleOutput(6)">折叠 ▲</button>

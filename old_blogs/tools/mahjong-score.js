@@ -217,19 +217,21 @@ function ThreeShiftOne(a, b, c, one = 1) {
     if (ColorArray[a] !== ColorArray[c]) return false;
     return a + one === b && b + one === c;
 }
-function GBSeqBind4(s, ma, a, b, c, d, ans) {
+function GBSeqBind4(s, ma, a, b, c, d, ans, que, setting) {
     let v = 0;
     let f = [];
     let tmsk = 0;
     const vs = [s[a], s[b], s[c], s[d]];
     const ms = [ma[a], ma[b], ma[c], ma[d]];
     const msk = ma[a] | ma[b] | ma[c] | ma[d];
-    if (!(msk & 1) && FourSame(...vs)) (v = 42), (f = [14, -64, -64, -64]), (tmsk = 1);
-    else if (!(msk & 2) && FourShift(...vs)) (v = 32), (f = [16]), (tmsk = 2);
+    if (!(msk & 1) && FourSame(...vs)) {
+        (v = 42), (f = [14, -64, -64, -64]), (tmsk = 1);
+        if (!setting[16] && que) --v, f.push(-75);
+    } else if (!(msk & 2) && FourShift(...vs)) (v = 32), (f = [16]), (tmsk = 2);
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c, d]);
         const m = RemoveMeldsByIndex(ma, [a, b, c, d]);
-        const r = [0, 1, 2, 3].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk)));
+        const r = [0, 1, 2, 3].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk), que, setting));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
@@ -237,7 +239,7 @@ function GBSeqBind4(s, ma, a, b, c, d, ans) {
             }
     }
 }
-function GBSeqBind3(s, ma, a, b, c, ans) {
+function GBSeqBind3(s, ma, a, b, c, ans, que, setting) {
     let v = 0;
     let f = 0;
     let tmsk = 0;
@@ -254,7 +256,7 @@ function GBSeqBind3(s, ma, a, b, c, ans) {
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c]);
         const m = RemoveMeldsByIndex(ma, [a, b, c]);
-        const r = [0, 1, 2].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk)));
+        const r = [0, 1, 2].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk), que, setting));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
@@ -262,7 +264,7 @@ function GBSeqBind3(s, ma, a, b, c, ans) {
             }
     }
 }
-function GBSeqBind2(s, ma, a, b, ans) {
+function GBSeqBind2(s, ma, a, b, ans, que, setting) {
     let v = 0;
     let f = 0;
     let tmsk = 0;
@@ -276,7 +278,7 @@ function GBSeqBind2(s, ma, a, b, ans) {
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b]);
         const m = RemoveMeldsByIndex(ma, [a, b]);
-        const r = [0, 1].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk)));
+        const r = [0, 1].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk), que, setting));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
@@ -286,7 +288,7 @@ function GBSeqBind2(s, ma, a, b, ans) {
 }
 let seq_miss = 0,
     seq_total = 0;
-function GBSeqBind(s, ma = Array(s.length).fill(0)) {
+function GBSeqBind(s, ma, que, setting) {
     ++seq_total;
     const key = `${s.join(",")}|${ma.join(",")}`;
     if (seqsave.has(key)) return seqsave.get(key);
@@ -300,11 +302,11 @@ function GBSeqBind(s, ma = Array(s.length).fill(0)) {
                 if (c - 1 > b && s[c] === s[c - 1] && ma[c] === ma[c - 1]) continue;
                 for (let d = c + 1; d < s.length; ++d) {
                     if (d - 1 > c && s[d] === s[d - 1] && ma[d] === ma[d - 1]) continue;
-                    GBSeqBind4(s, ma, a, b, c, d, ans);
+                    GBSeqBind4(s, ma, a, b, c, d, ans, que, setting);
                 }
-                GBSeqBind3(s, ma, a, b, c, ans);
+                GBSeqBind3(s, ma, a, b, c, ans, que, setting);
             }
-            GBSeqBind2(s, ma, a, b, ans);
+            GBSeqBind2(s, ma, a, b, ans, que, setting);
         }
     }
     try {
@@ -321,7 +323,7 @@ function GetHeadFromId(id) {
 function GetIdFromHead(head) {
     return head / sizeAT - 1;
 }
-function GBTriBind4(s, op, ma, a, b, c, d, ans, pon) {
+function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
     let v = 0;
     let f = [];
     let tmsk = 0;
@@ -330,22 +332,26 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon) {
     const ms = [ma[a], ma[b], ma[c], ma[d]];
     const msk = ma[a] | ma[b] | ma[c] | ma[d];
     if (FourShiftOne(...vs)) {
-        if (!(msk & 1) && vs[0] < 27) (v = 48), (f = [15]), (tmsk = 1);
-        else if (!(msk & 2)) {
+        if (!(msk & 1) && vs[0] < 27) {
+            (v = 48), (f = [15]), (tmsk = 1);
+            if (!setting[17] && (pon & 4)) --v, f.push(-75);
+        } else if (!(msk & 2)) {
             (v = 88), (f = [1, ...os.map((a) => -a)]), (tmsk = 2);
             for (let i = 0; i < os.length; ++i) v -= os[i] === 73 ? 1 : os[i] === 83 ? 4 : os[i] ? 2 : 0;
             os = [0, 0, 0, 0];
+            if (!setting[20] && (pon & 2)) v -= 6, f.push(-49);
         }
-        if (pon) (v -= 6), f.push(-48), (pon = false);
+        if (pon & 1) (v -= 6), f.push(-48);
     } else if (!(msk & 4) && vs[3] >= sizeAT && vs[0] >= 27 && FourShiftOne(...[vs[0], vs[1], vs[2], GetIdFromHead(vs[3])].sort((a, b) => a - b))) {
         (v = 64), (f = [9]), (tmsk = 4);
         for (let i = 0; i < os.length; ++i) if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
+        if (!setting[21] && (pon & 2)) v -= 6, f.push(-49);
     }
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c, d]);
         const p = RemoveMeldsByIndex(op, [a, b, c, d]);
         const m = RemoveMeldsByIndex(ma, [a, b, c, d]);
-        const r = [0, 1, 2, 3].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon));
+        const r = [0, 1, 2, 3].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon, setting));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
@@ -353,7 +359,7 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon) {
             }
     }
 }
-function GBTriBind3(s, op, ma, a, b, c, ans, pon) {
+function GBTriBind3(s, op, ma, a, b, c, ans, pon, setting) {
     let v = 0;
     let f = [];
     let tmsk = 0;
@@ -364,20 +370,23 @@ function GBTriBind3(s, op, ma, a, b, c, ans, pon) {
     if (!(msk & 8) && vs[0] >= 31 && ThreeShiftOne(...vs)) {
         (v = 88), (f = [2]), (tmsk = 8);
         for (let i = 0; i < os.length; ++i) if (os[i] === 59) (v -= 2), f.push(-os[i]), (os[i] = 0);
+        if (!setting[13] && (pon & 4)) --v, f.push(-75);
     } else if (!(msk & 16) && vs[2] >= sizeAT && vs[0] >= 31 && ThreeShiftOne(...[vs[0], vs[1], GetIdFromHead(vs[2])].sort((a, b) => a - b))) {
         (v = 64), (f = [10]), (tmsk = 16);
         for (let i = 0; i < os.length; ++i) if (os[i] === 59) (v -= 2), f.push(-os[i]), (os[i] = 0);
+        if (!setting[14] && (pon & 4)) --v, f.push(-75);
     } else if (!(msk & 32) && vs[0] < 27 && ThreeShiftOne(...vs)) (v = 24), (f = [24]), (tmsk = 32);
     else if (!(msk & 64) && ThreeMixedSame(...vs)) (v = 16), (f = [32]), (tmsk = 64);
     else if (!(msk & 128) && Math.min(...vs) >= 27 && Math.max(...vs) <= 30) {
         (v = 12), (f = [38]), (tmsk = 128);
         for (let i = 0; i < os.length; ++i) if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
+        if (!setting[15] && (pon & 4)) --v, f.push(-75);
     } else if (!(msk & 256) && ThreeMixedShiftOne(...vs)) (v = 8), (f = [42]), (tmsk = 256);
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c]);
         const p = RemoveMeldsByIndex(op, [a, b, c]);
         const m = RemoveMeldsByIndex(ma, [a, b, c]);
-        const r = [0, 1, 2].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon));
+        const r = [0, 1, 2].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon, setting));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
@@ -385,7 +394,7 @@ function GBTriBind3(s, op, ma, a, b, c, ans, pon) {
             }
     }
 }
-function GBTriBind2(s, op, ma, a, b, ans, pon) {
+function GBTriBind2(s, op, ma, a, b, ans, pon, setting) {
     let v = 0;
     let f = [];
     let tmsk = 0;
@@ -401,7 +410,7 @@ function GBTriBind2(s, op, ma, a, b, ans, pon) {
         const t = RemoveMeldsByIndex(s, [a, b]);
         const p = RemoveMeldsByIndex(op, [a, b]);
         const m = RemoveMeldsByIndex(ma, [a, b]);
-        const r = [0, 1].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon));
+        const r = [0, 1].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon, setting));
         for (let i = 0; i < r.length; ++i)
             if (r[i].val + v > ans.val) {
                 ans.val = r[i].val + v;
@@ -411,9 +420,9 @@ function GBTriBind2(s, op, ma, a, b, ans, pon) {
 }
 let tri_miss = 0,
     tri_total = 0;
-function GBTriBind(s, op, ma, pon) {
+function GBTriBind(s, op, ma, pon, setting) {
     ++tri_total;
-    const key = `${s.join(",")}|${op.join(",")}|${ma.join(",")}|${pon}`;
+    const key = `${s.join(",")}|${op.join(",")}|${ma.join(",")}`;
     if (trisave.has(key)) return trisave.get(key);
     ++tri_miss;
     let ans = { val: 0, fan: [] };
@@ -425,11 +434,11 @@ function GBTriBind(s, op, ma, pon) {
                 if (c - 1 > b && s[c] === s[c - 1] && op[c] === op[c - 1] && ma[c] === ma[c - 1]) continue;
                 for (let d = c + 1; d < s.length; ++d) {
                     if (d - 1 > c && s[d] === s[d - 1] && op[d] === op[d - 1] && ma[d] === ma[d - 1]) continue;
-                    GBTriBind4(s, op, ma, a, b, c, d, ans, pon);
+                    GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting);
                 }
-                GBTriBind3(s, op, ma, a, b, c, ans, pon);
+                GBTriBind3(s, op, ma, a, b, c, ans, pon, setting);
             }
-            GBTriBind2(s, op, ma, a, b, ans, pon);
+            GBTriBind2(s, op, ma, a, b, ans, pon, setting);
         }
     }
     try {
@@ -572,14 +581,14 @@ function isMixedDoubleDragon(melds) {
     for (let i = 0; i < MixedDoubleDragon.length; ++i) if (deepArrayEqual(melds, MixedDoubleDragon[i])) return true;
     return false;
 }
-function isPinghe(melds) {
+function isAllSeq(melds) {
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 2) {
             if (melds[i][0] >= 27) return false;
         } else if (melds[i].length !== 3) return false;
     return true;
 }
-function isPengpeng(melds) {
+function isAllTri(melds) {
     for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) return false;
     return true;
 }
@@ -622,7 +631,7 @@ function predictBind(melds) {
         else if (melds[i].length !== 2) ++nt;
     return Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
 }
-function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, can73 = true) {
+function calculateBind(seq, tri, wind60, wind61, has48 = false, has49 = false, has75 = false, can65 = true, can73 = true, setting = []) {
     let v = 0;
     seq = seq.sort((a, b) => a - b);
     tri = tri.sort((a, b) => a - b);
@@ -634,8 +643,8 @@ function calculateBind(seq, tri, wind60, wind61, has49 = false, can65 = true, ca
             else if (wind60 === tri[i]) (orphan[i] = 60), (v += 2);
             else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
             else if (can73) (orphan[i] = 73), ++v;
-    const seqans = GBSeqBind(seq);
-    const trians = GBTriBind(tri, orphan, Array(tri.length).fill(can65 ? 0 : 1024), has49);
+    const seqans = GBSeqBind(seq, Array(seq.length).fill(0), has75, setting);
+    const trians = GBTriBind(tri, orphan, Array(tri.length).fill(can65 ? 0 : 1024), has48 | (has49 ? 2 : 0) | (has75 ? 4 : 0), setting);
     return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
 }
 let filter_cnt = 0;
@@ -666,7 +675,7 @@ function canBeListen(tiles, ta, tb, x, wint) {
     }
     return false;
 }
-function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
+function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, setting) {
     let f = [];
     let v = 0;
     let must_hunyise = false;
@@ -698,12 +707,12 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     } else if (ck + cp === 3) (v += 16), f.push(33);
     else if (ck + cp === 2 && !(ck === 2 && ek === 0)) (v += 2), f.push(66);
     const marr = flattenMelds(melds);
-    if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
+    if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
-    if (melds.length >= 5 && !must_menqing && aids[1].length === ck)
-        if (zimo) (v += 4), f.push(56);
-        else (v += 2), f.push(62);
-    else if (zimo === 80) ++v, f.push(zimo);
+    if (melds.length >= 5 && aids[1].length === ck)
+        if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), zimo = 56;
+        else if (!must_menqing) (v += 2), f.push(62);
+    if (zimo === 80) ++v, f.push(zimo);
     if (melds.length >= 5 && isMask(marr, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
     if (melds.length >= 5 && isMask(marr, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
     if (melds.length >= 5)
@@ -726,20 +735,22 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
     if (melds.length >= 5 && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
     if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
     if (melds.length >= 5 && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
-    if (melds.length >= 5 && isMask(marr, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
+    if (melds.length >= 5 && isMask(marr, SymmeArray)) (v += 8), f.push(40), (must_quemen ||= !setting[18]);
     let has_pengpeng = false;
-    if (melds.length >= 5 && !must_pengpeng && isPengpeng(melds)) (v += 6), f.push(48), (has_pengpeng = true);
-    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true);
+    if (melds.length >= 5 && !must_pengpeng && isAllTri(melds)) (v += 6), f.push(48), (has_pengpeng = true);
+    let has_hunyise = false;
+    if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true), has_hunyise = true;
     if (must_hunyise) must_quemen = true;
     if (isFiveColors(melds)) (v += 6), f.push(51);
     if (melds.length >= 5 && !must_quandai && isContains19(melds)) (v += 4), f.push(55);
-    if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
+    if (melds.length >= 5 && !must_pinghe && isAllSeq(melds)) (v += 2), f.push(63), (must_pinghe = true);
     if (must_pinghe) must_wuzi = true;
     if (melds.length >= 5 && !must_duan1 && isMask(marr, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
     if (must_duan1) must_wuzi = true;
+    let has_quemen = false;
     if (melds.length >= 5 && !must_quemen) {
         const n = countLack(melds);
-        for (let i = 0; i < n; ++i) ++v, f.push(75);
+        for (let i = 0; i < n; ++i) ++v, f.push(75), has_quemen = true;
     }
     if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
     const hog = countHog(melds);
@@ -751,7 +762,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles) {
             if (melds[i].length === 3) seq.push(melds[i][0]);
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
             else tri.push(melds[i][0]);
-        const bind = calculateBind(seq, tri, wind60, wind61, fourteen_type && has_pengpeng, can_shuangtong, yaojiuke);
+        const bind = calculateBind(seq, tri, wind60, wind61, fourteen_type && has_pengpeng, melds.length === 5 && has_hunyise, melds.length === 5 && has_quemen, can_shuangtong, yaojiuke, setting);
         v += bind.val;
         f = [...f, ...bind.fan];
     }
@@ -783,7 +794,7 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo) {
     ++filter_cnt;
     const marr = flattenMelds(melds);
     if (isFiveColors(melds)) (v += 6), f.push(51);
-    if (melds.length >= 5 && !must_pinghe && isPinghe(melds)) (v += 2), f.push(63), (must_pinghe = true);
+    if (melds.length >= 5 && !must_pinghe && isAllSeq(melds)) (v += 2), f.push(63), (must_pinghe = true);
     if (must_pinghe) must_wuzi = true;
     if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
     const hog = countHog(melds);
@@ -802,7 +813,7 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo) {
     return { val: v, fan: f };
 }
 let pairs_filer = 0;
-function GB7Pairs(tids) {
+function GB7Pairs(tids, setting) {
     const ot = PairOutput(getTiles(tids));
     function pairLeastProduct(f, prefix = Array(7).fill(-1), count = Array(sizeUT).fill(0), i = 0) {
         if (i === 7) {
@@ -840,20 +851,21 @@ function GB7Pairs(tids) {
         let must_wuzi = false;
         let must_quemen = false;
         const melds = a.map((x) => [x]);
-        if (isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise = true);
-        if (isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
-        if (isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
-        if (!must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18);
-        if (!must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
+        if (setting[1] && isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
+        if (setting[2] && isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
+        if (setting[3] && isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
+        if (setting[4] && !must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18);
+        if (setting[12] && isMask(a, EvenArray)) (v += 24), f.push(21);
+        if (setting[5] && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
         if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
-        if (isMask(a, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
-        else if (isMask(a, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
-        if (isMask(a, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
-        if (isMask(a, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
-        else if (isMask(a, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
-        if (isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
-        if (isMask(a, SymmeArray)) (v += 8), f.push(40), (must_quemen = true);
-        if (!must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true);
+        if (setting[6] && isMask(a, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
+        else if (setting[7] && isMask(a, G5Array)) (v += 12), f.push(36), (must_wuzi = true);
+        if (setting[6] && isMask(a, MidArray)) (v += 24), f.push(26), (must_duan1 = true);
+        if (setting[6] && isMask(a, LowArray)) (v += 24), f.push(27), (must_wuzi = true);
+        else if (setting[7] && isMask(a, L5Array)) (v += 12), f.push(37), (must_wuzi = true);
+        if (setting[8] && isContains5(melds)) (v += 16), f.push(31), (must_duan1 = true);
+        if (setting[9] && isMask(a, SymmeArray)) (v += 8), f.push(40), (must_quemen ||= !setting[18]);
+        if (setting[10] && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true);
         if (must_hunyise) must_quemen = true;
         if (!must_duan1 && isMask(a, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
         if (must_duan1) must_wuzi = true;
@@ -884,7 +896,7 @@ function GB7Pairs(tids) {
             let u = false;
             for (let j = 3; !u && j < 5; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
         }
-    if (arr.every(Boolean)) {
+    if (setting[11] && arr.every(Boolean)) {
         let v = 24 + 6,
             f = [19, 51];
         let hun19 = true;
@@ -1063,7 +1075,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let sanshoku = 0;
     for (let i = 0; i < 7; ++i) sanshoku += Math.min(seq[i], seq[i + 9], seq[i + 18]);
     (v += sanshoku * (mq ? 2 : 1)), f.push(...Array(sanshoku).fill(19));
-    if (melds.length >= 5 && isPengpeng(melds)) (v += 2), f.push(18);
+    if (melds.length >= 5 && isAllTri(melds)) (v += 2), f.push(18);
     (v += tri[wind5]), f.push(...Array(tri[wind5]).fill(5));
     (v += tri[wind6]), f.push(...Array(tri[wind6]).fill(6));
     (v += tri[31]), f.push(...Array(tri[31]).fill(7));

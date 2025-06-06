@@ -32,15 +32,15 @@ function Qingque_Calculate(aids, info, substeps) {
     for (let i = 0; i <= Qingque_indices.robbing_the_kong; ++i) (max_res[i] = v0[0][i]), (max_fan += v0[0][i] ? Qingque_fans[i].tag.fan_value : 0);
     const res2 = Qingque_derepellenise(max_res);
     let fan_count = 0;
-    let output = "";
+    let output = [];
     for (let i = 0; i < res2.length; ++i) {
         if (res2[i]) {
-            output += Qingque_fans[i].name + ", ";
+            output.push(Qingque_fans[i].name);
             ++fan_count;
         }
     }
-    if (fan_count) output += "\b\b; \n";
-    else output += "平和; \n";
+    if (fan_count) output = output.join(', ') + "; \n";
+    else output = "平和; \n";
     let sd_pt = Math.round(max_fan * max_fan);
     let oo_pt = Math.round(max_fan * 10 * Math.tanh(max_fan * 0.1));
     let so_pt = 3 * sd_pt - 2 * oo_pt;

@@ -84,19 +84,15 @@ function Qingque_get_fan(res) {
     }
     return fan;
 }
+const uint64_mask = (1n << 64n) - 1n;
 function Qingque_get_weight(res) {
     let weight = 0n;
     let reskey = 0n;
-    let debugv = 0n;
     for (let i = res.length - 1; i >= 0; --i) reskey = (reskey << 1n) | BigInt(res[i]);
     for (const [key, w] of Qingque_Weight) {
-        if ((key & reskey) === reskey) {
-            weight += w;
-        } 
-        debugv += w;
+        if ((key & reskey) === reskey) weight += w;
     }
-    console.log(debugv);
-    return weight;
+    return weight & uint64_mask;
 }
 function Qingque_derepellenise(res) {
     let new_res = res.slice();

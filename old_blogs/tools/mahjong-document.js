@@ -89,6 +89,7 @@ function processInput() {
                     let show_qingque = Boolean(document.getElementById("score-qingque"));
                     for (let i = 0; i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
                     for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if (aids[1][i][j].id >= sizeUT) show_qingque = false;
+                    if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
                     if (show_qingque) {
                         document.getElementById("output-score-qingque").textContent = "";
                         document.getElementById("brief-output-score-qingque").textContent = "";

@@ -52,7 +52,7 @@ function Qingque_evaluate_fans(hand, ignore_occ = false) {
     let results = [];
     for (let i = 0; i < Qingque_fans.length; ++i) fan_results.push(Qingque_fans[i].f(hand));
     for (let i = 0; i < hand.decom.length; ++i) {
-        let res = Array(fan_results.length).fill(0);
+        let res = Array(fan_results.length).fill(null);
         for (let j = 0; j < fan_results.length; ++j) {
             if (Qingque_fans[j].tag.is_special || (ignore_occ && fans[j].tag.is_occasional)) continue;
             if (!Array.isArray(fan_results[j])) res[j] = fan_results[j];
@@ -61,7 +61,7 @@ function Qingque_evaluate_fans(hand, ignore_occ = false) {
         results.push(res.map(Boolean));
     }
     if (hand.pairs) {
-        let res = Array(fan_results.length).fill(0);
+        let res = Array(fan_results.length).fill(null);
         for (let j = 0; j < fan_results.length; ++j) if (Qingque_fans[j].tag.special_compatible && (!ignore_occ || !Qingque_fans[j].tag.is_occasional)) res[j] = !Array.isArray(fan_results[j]) ? fan_results[j] : fan_results[j][0];
         results.push(res.map(Boolean));
     }

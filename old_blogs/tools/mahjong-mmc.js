@@ -19,7 +19,7 @@ function Qingque_Calculate(aids, info, substeps) {
         p.itots((ots) => (p.itsubots((subots) => decom.push([...ots, ...subots]))));
         (ek = p.ek), (ck = p.ck);
     }
-    const pairs = substeps[1] === 1 ? PairOutput(counter) : null;
+    const pairs = substeps[1] === -1 ? PairOutput(counter) : null;
     let v0 = Qingque_evaluate_fans({ aids, info, decom, pairs, counter, all_counter, ek, ck }, false);
     let v = v0.map((x) => x.map((y, i) => (i <= Qingque_indices.robbing_the_kong ? 0 : y)));
     let max_fan = 0;

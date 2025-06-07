@@ -73,10 +73,6 @@ input[type="text"] {
     text-align: left;
 }
 
-.output-context .card-container img {
-    width: 30px;
-}
-
 .output-context .card-container .card-div {
     width: 30px;
 }
@@ -189,6 +185,49 @@ html {
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
+    z-index: 20;
+}
+
+.card-div .card-img-overlay {
+    position: absolute;
+    top: 17.571059%;
+    left: 3.75%;
+    width: 92.5%;
+    height: 76.485788%;
+    pointer-events: none;
+}
+
+.card-div .card-img-overlay-r {
+    position: absolute;
+    top: -93.040293%;
+    left: 6.666667%;
+    width: 61.666667%;
+    height: 108.424908%;
+    pointer-events: none;
+    transform-origin: left bottom;
+    transform: rotate(90deg);
+}
+
+.card-div .card-img-overlay-rr-0 {
+    position: absolute;
+    top: -49.512671%;
+    left: 6.666667%;
+    width: 61.666667%;
+    height: 57.699805%;
+    pointer-events: none;
+    transform-origin: left bottom;
+    transform: rotate(90deg);
+}
+
+.card-div .card-img-overlay-rr-1 {
+    position: absolute;
+    top: -2.729045%;
+    left: 6.666667%;
+    width: 61.666667%;
+    height: 57.699805%;
+    pointer-events: none;
+    transform-origin: left bottom;
+    transform: rotate(90deg);
 }
 
 .card-div:hover .card-overlay {
@@ -285,19 +324,30 @@ html {
 
 .language-bar {
     display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px 20px;
     background-color: #f1f1f1;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
     font-size: 14px;
     flex-wrap: wrap;
+}
+
+.language-bar > div:last-child {
+    margin-left: auto;
+}
+
+.language-bar-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .language-bar a {
     color: #4caf50;
     text-decoration: none;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .language-bar a:hover {
@@ -405,10 +455,6 @@ input[type="checkbox"] {
 
     .win-grid {
         display: block;
-    }
-
-    .output-context .card-container img {
-        width: 5.5%;
     }
 
     .output-context .card-container .card-div {

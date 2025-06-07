@@ -39,7 +39,7 @@ function Qingque_Calculate(aids, info, substeps) {
     let oo_pt = Math.round(max_fan * 10 * Math.tanh(max_fan * 0.1));
     let so_pt = 3 * sd_pt - 2 * oo_pt;
     const pt_display = info[Qingque_self_drawn] ? `各 ${sd_pt}'` : `${oo_pt}'·${so_pt}'`;
-    output += `共 ${max_fan.toFixed(2)} 番 (${pt_display}).\n\n`;
+    output += `共 ${max_fan.toFixed(2)} 番 (${pt_display}).`;
     return output;
 }
 function Qingque_evaluate_fans(hand, ignore_occ = false) {

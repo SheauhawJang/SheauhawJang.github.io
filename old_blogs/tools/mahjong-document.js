@@ -52,7 +52,8 @@ function processInput() {
         const { result, time } = e.data;
         document.getElementById(document_element_ids[task]).innerHTML = result.output;
         document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`;
-        if (lang === "en") addWorkerCardHelper();
+        if (useHelper()) addWorkerCardHelper();
+        updateCardSkin();
         switch (task) {
             case 0:
                 substeps[0] = result.step;
@@ -156,23 +157,41 @@ function getCardHelperFontSize(width, unit) {
     if (unit === "%") fontSize *= bodyWidth / 100;
     return fontSize;
 }
+function useHelper() {
+    return typeof card_helper !== "undefined" && card_helper;
+}
 function getCardHelperDiv(tile, width, unit = "%") {
-    if (lang !== "en") return "";
+    if (!useHelper()) return "";
     const id = tile.id;
     const helper = HelperArray[id] ?? "";
     const fontSize = getCardHelperFontSize(width, unit);
     return `<span class="card-helper" style="font-size: ${fontSize}px">${helper}</span>`;
 }
-function cardLargeImage(tids, i, width, link) {
-    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}<img src="./cards/${cardName(tids[i])}.gif"${link ? ` onclick="discard(${i})" class="clickable"` : ""}></div>`;
+let cardskin = "jp";
+function hasGBCard(id) {
+    if ("sp" in id) return false;
+    if (id.id >= JokerC) return false;
+    return true;
 }
-function cardLargeImageRotated(id, width, cnt) {
-    return `<div class="card-div" style="width: ${(width * 120) / 80}%;"><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(id)}.gif"></div>`;
+function getCardImage(id, t = "", onclick = "") {
+    if (cardskin === "gb" && hasGBCard(id)) {
+        let gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay">`;
+        if (t === "r") gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-r">`;
+        if (t === "k") gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-rr-0"><img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-rr-1">`;
+        return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    }
+    return `<img src="./cards/${t}${cardName(id)}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }
-function backcardImage(width) {
+function outputCardImage(tids, i, width, link) {
+    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? "discard(${i})" : "")}</div>`;
+}
+function outputCardImageRotated(id, width, cnt) {
+    return `<div class="card-div" style="width: ${(width * 120) / 80}%;">${getCardImage(id, cnt === 2 ? "k" : "r")}</div>`;
+}
+function outputCardImageBack(width) {
     return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.png"></div>`;
 }
-function emptycardImage(width) {
+function outputCardImageEmpty(width) {
     return `<div class="card-div" style="width: ${width / 5}%;"></div>`;
 }
 function joinHand(ids) {
@@ -210,8 +229,8 @@ function tilesImage(tids, bonus) {
     else if (tids.length >= 100 / width) width = 100 / tids.length;
     if (bonus === 1) width *= 0.5;
     if (bonus === 2 && !window.matchMedia("screen and (max-width: 512px)").matches) width *= 0.5;
-    for (let i = 0; i < tids.length; ++i) output += cardLargeImage(tids, i, width, !bonus);
-    if (bonus === 2) for (let i = tids.length; i < 5; ++i) output += backcardImage(width);
+    for (let i = 0; i < tids.length; ++i) output += outputCardImage(tids, i, width, !bonus);
+    if (bonus === 2) for (let i = tids.length; i < 5; ++i) output += outputCardImageBack(width);
     return output;
 }
 function getUnifiedType(s) {
@@ -239,38 +258,38 @@ function subtilesImage(sids, tcnt) {
     if (tcnt >= max_card) width = 100 / max_card;
     else if (tcnt >= 100 / width) width = 100 / tcnt;
     for (let i = 0; i < sids.length; ++i) {
-        output += emptycardImage(width);
+        output += outputCardImageEmpty(width);
         let t = getUnifiedType(sids[i]);
         if (t % 4 === 0)
             for (let j = 0; j < sids[i].length; ++j)
-                if (j === 0 || j === sids[i].length - 1) output += backcardImage(width);
-                else output += cardLargeImage(sids[i], j, width, false);
+                if (j === 0 || j === sids[i].length - 1) output += outputCardImageBack(width);
+                else output += outputCardImage(sids[i], j, width, false);
         else {
             let rloc = getRotatedLocation(t, sids[i].length);
             let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
-            if (seq) output += cardLargeImageRotated(sids[i][rloc], width, 1);
+            if (seq) output += outputCardImageRotated(sids[i][rloc], width, 1);
             for (let j = 0; j < sids[i].length; ++j)
                 if (j === rloc)
                     if (seq) continue;
-                    else if (t > 3) output += cardLargeImageRotated(sids[i][j++], width, 2);
-                    else output += cardLargeImageRotated(sids[i][j], width, 1);
-                else output += cardLargeImage(sids[i], j, width, false);
+                    else if (t > 3) output += outputCardImageRotated(sids[i][j++], width, 2);
+                    else output += outputCardImageRotated(sids[i][j], width, 1);
+                else output += outputCardImage(sids[i], j, width, false);
         }
     }
     return output;
 }
 // Input Panel Functions
 let ipids;
-function cardInputImage(ids, i, j, width, unit) {
-    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}<img src="./cards/${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
+function inputCardImage(ids, i, j, width, unit) {
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}${getCardImage(ids[i], "", `removeInput(${i}, ${j}, 0)`)}</div>`;
 }
-function cardInputImageRotated(ids, i, j, width, unit, cnt) {
-    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div><img src="./cards/${cnt === 2 ? "k" : "r"}${cardName(ids[i])}.gif" onclick="removeInput(${i}, ${j}, 1)" class="clickable"></div>`;
+function inputCardImageRotated(ids, i, j, width, unit, cnt) {
+    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div>${getCardImage(ids[i], cnt === 2 ? "k" : "r", `removeInput(${i}, ${j}, 1)`)}</div>`;
 }
-function backcardInputImage(i, j, width, unit) {
+function inputCardImageBack(i, j, width, unit) {
     return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
 }
-function emptycardInputImage(width, unit) {
+function inputCardImageEmpty(width, unit) {
     return `<div class="card-div" style="width: ${width / 5}${unit};"></div>`;
 }
 function drawInputCards() {
@@ -289,26 +308,26 @@ function drawInputCards() {
         unit = "px";
     }
     const tids = ipids[0];
-    for (let i = 0; i < tids.length; ++i) (output += cardInputImage(tids, i, -1, width, unit)), (rheight = sheight);
+    for (let i = 0; i < tids.length; ++i) (output += inputCardImage(tids, i, -1, width, unit)), (rheight = sheight);
     const sids = ipids[1];
     for (let i = 0; i < sids.length; ++i) {
-        output += emptycardInputImage(width, unit);
+        output += inputCardImageEmpty(width, unit);
         let t = getUnifiedType(sids[i]);
         if (t % 4 === 0) {
             for (let j = 0; j < sids[i].length; ++j)
-                if (j === 0 || j === sids[i].length - 1) output += backcardInputImage(j, i, width, unit);
-                else output += cardInputImage(sids[i], j, i, width, unit);
+                if (j === 0 || j === sids[i].length - 1) output += inputCardImageBack(j, i, width, unit);
+                else output += inputCardImage(sids[i], j, i, width, unit);
             rheight = Math.max(rheight, sheight);
         } else {
             let rloc = getRotatedLocation(t, sids[i].length);
             let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
-            if (seq) output += cardInputImageRotated(sids[i], rloc, i, width, unit, 1);
+            if (seq) output += inputCardImageRotated(sids[i], rloc, i, width, unit, 1);
             for (let j = 0; j < sids[i].length; ++j)
                 if (j === rloc)
                     if (seq) continue;
-                    else if (t > 3) output += cardInputImageRotated(sids[i], j++, i, width, unit, 2);
-                    else output += cardInputImageRotated(sids[i], j, i, width, unit, 1);
-                else output += cardInputImage(sids[i], j, i, width, unit, false);
+                    else if (t > 3) output += inputCardImageRotated(sids[i], j++, i, width, unit, 2);
+                    else output += inputCardImageRotated(sids[i], j, i, width, unit, 1);
+                else output += inputCardImage(sids[i], j, i, width, unit, false);
             if (t > 3) rheight = height;
             else rheight = Math.max(rheight, sheight);
         }
@@ -318,20 +337,20 @@ function drawInputCards() {
     output = "";
     const bonusd = document.getElementById("input-pic-bonus");
     const bids = ipids[2];
-    for (let i = 0; i < bids.length; ++i) output += cardInputImage(bids, i, -2, width, unit);
+    for (let i = 0; i < bids.length; ++i) output += inputCardImage(bids, i, -2, width, unit);
     bonusd.innerHTML = output;
     if (bids.length === 0) bonusd.innerHTML = `<div class="card-div" style="width: ${width}${unit};"><img src="./cards/e.png"></div>`;
     output = "";
     const dorap = document.getElementById("input-pic-dorap");
     const dorapids = ipids[3];
-    for (let i = 0; i < dorapids.length; ++i) output += cardInputImage(dorapids, i, -3, width, unit);
-    for (let i = dorapids.length; i < 5; ++i) output += backcardInputImage(i, -3, width, unit);
+    for (let i = 0; i < dorapids.length; ++i) output += inputCardImage(dorapids, i, -3, width, unit);
+    for (let i = dorapids.length; i < 5; ++i) output += inputCardImageBack(i, -3, width, unit);
     dorap.innerHTML = output;
     output = "";
     const urap = document.getElementById("input-pic-urap");
     const urapids = ipids[4];
-    for (let i = 0; i < urapids.length; ++i) output += cardInputImage(urapids, i, -4, width, unit);
-    for (let i = urapids.length; i < 5; ++i) output += backcardInputImage(i, -4, width, unit);
+    for (let i = 0; i < urapids.length; ++i) output += inputCardImage(urapids, i, -4, width, unit);
+    for (let i = urapids.length; i < 5; ++i) output += inputCardImageBack(i, -4, width, unit);
     urap.innerHTML = output;
     document.getElementById("subkey_chi").disabled = !isSeq(
         tids
@@ -543,6 +562,12 @@ function processQingqueScore() {
     const { aids, substeps } = qingque_worker_info;
     qingque_worker.postMessage({ task: "qingque-score", aids, substeps, info });
 }
+function getFixedImage(div) {
+    return Array.from(div.querySelectorAll("img")).find((img) => getComputedStyle(img).position !== "absolute");
+}
+function getNamedImage(div) {
+    return div.querySelector("img.card-img-overlay, img.card-img-overlay-r, img.card-img-overlay-rr-0") ?? getFixedImage(div);
+}
 function adjustButtonsFontSize() {
     const baseBtn = document.getElementById("subkey_chi");
     if (!baseBtn) return;
@@ -560,36 +585,28 @@ function adjustButtonsFontSize() {
         }
         btn.style.height = targetHeight + "px";
     }
-    if (lang === "en") {
-        const imgs = document.querySelectorAll(".input-card-button");
-        imgs.forEach((img) => {
-            if (img.classList.contains("card-div")) {
-                const numberSpan = img.querySelector("span.card-helper");
-                if (numberSpan) numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
-                return;
+    if (useHelper()) {
+        const divs = document.querySelectorAll(".input-card-button");
+        divs.forEach((div) => {
+            let numberSpan = div.querySelector("span.card-helper");
+            if (!numberSpan) {
+                const src = getNamedImage(div).src;
+                const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
+                const filename = filenameWithExt.split(".")[0];
+                const idx = id(filename).id;
+                if (idx === undefined) return;
+                const displayNumber = HelperArray[idx];
+                numberSpan = document.createElement("span");
+                numberSpan.className = "card-helper";
+                numberSpan.textContent = displayNumber;
+                div.appendChild(numberSpan);
             }
-            const src = img.src;
-            const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
-            const filename = filenameWithExt.split(".")[0];
-            const idx = id(filename).id;
-            if (idx === undefined) return;
-            const displayNumber = HelperArray[idx];
-            const div = document.createElement("div");
-            div.classList.add("card-div", "input-card-button");
-            const newImg = img.cloneNode(true);
-            newImg.classList.remove("input-card-button");
-            const numberSpan = document.createElement("span");
-            numberSpan.className = "card-helper";
-            numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
-            numberSpan.textContent = displayNumber;
-            div.appendChild(newImg);
-            div.appendChild(numberSpan);
-            img.parentNode.replaceChild(div, img);
+            numberSpan.style.fontSize = `${getCardHelperFontSize(div.offsetWidth, "px")}px`;
         });
     }
 }
 function addWorkerCardHelper() {
-    const imgs = document.querySelectorAll("img.no-card-div-img");
+    const imgs = document.querySelectorAll(".no-helper");
     imgs.forEach((img) => {
         const src = img.src;
         const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
@@ -597,18 +614,14 @@ function addWorkerCardHelper() {
         const idx = id(filename).id;
         if (idx === undefined) return;
         const displayNumber = HelperArray[idx];
-        const div = document.createElement("div");
-        div.className = "card-div";
-        const newImg = img.cloneNode(true);
-        newImg.classList.remove("no-card-div-img");
+        const div = img.parentNode;
+        img.classList.remove("no-helper");
         const numberSpan = document.createElement("span");
         numberSpan.className = "card-helper";
         if (img.offsetWidth === 0) return;
         numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
         numberSpan.textContent = displayNumber;
-        div.appendChild(newImg);
         div.appendChild(numberSpan);
-        img.parentNode.replaceChild(div, img);
     });
 }
 function addReferenceMark() {
@@ -625,4 +638,30 @@ function addReferenceMark() {
         e.appendChild(sup);
     });
     box.innerHTML = notes.join("<br/>");
+}
+const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-img-overlay-rr-0", "card-img-overlay-rr-1"]);
+function updateCardSkin(skin) {
+    if (skin) cardskin = skin;
+    const divs = document.querySelectorAll(".card-div");
+    divs.forEach((div) => {
+        const i = getNamedImage(div);
+        if (!i) return;
+        const src = i.src;
+        const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
+        const filename = filenameWithExt.split(".")[0];
+        const idx = id(filename.slice(-2));
+        if (idx.id === undefined) return;
+        let type = filename.at(-3) ?? "";
+        if (div.querySelector("img.card-img-overlay-r")) type = "r";
+        if (div.querySelector("img.card-img-overlay-rr-0")) type = "k";
+        const onclick = getFixedImage(div).getAttribute('onclick');
+        const imgs = div.querySelectorAll("img");
+        imgs.forEach((img) => {
+            if (Array.from(img.classList).some((cls) => gboverlays.has(cls))) div.removeChild(img);
+        });
+        div.removeChild(getFixedImage(div));
+        const tmpdiv = document.createElement("div");
+        tmpdiv.innerHTML = getCardImage(idx, type, onclick);
+        while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
+    });
 }

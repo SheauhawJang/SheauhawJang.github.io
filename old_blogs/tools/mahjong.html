@@ -488,7 +488,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.4.5</div>
+            <div class="output-time">v4.5.0</div>
             <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
         </div>
         <script src="mahjong.js"></script>
@@ -541,8 +541,9 @@
                 b.textContent = v ? "展开 ▼" : "折叠 ▲";
             }
             window.onload = function () {
-                randomInput();
+                loadStorage();
                 addReferenceMark();
+                randomInput();
             };
             const lang = "cn";
         </script>

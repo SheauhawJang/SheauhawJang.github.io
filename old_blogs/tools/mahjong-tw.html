@@ -401,7 +401,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.4.5</div>
+            <div class="output-time">v4.5.0</div>
             <div class="output-time">聯絡作者：<a href="https://x.com/sheauhaw" style="color: inherit;">三倍滿自動姬</a></div>
         </div>
         <script src="mahjong.js"></script>
@@ -454,8 +454,9 @@
                 b.textContent = v ? "展開 ▼" : "摺疊 ▲";
             }
             window.onload = function () {
-                randomInput();
+                loadStorage();
                 addReferenceMark();
+                randomInput();
             };
             const lang = "tw";
         </script>

@@ -641,7 +641,7 @@ function addReferenceMark() {
 }
 const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-img-overlay-rr-0", "card-img-overlay-rr-1"]);
 function updateCardSkin(skin) {
-    if (skin) cardskin = skin;
+    if (skin) localStorage.setItem("cardskin", cardskin = skin);
     const divs = document.querySelectorAll(".card-div");
     divs.forEach((div) => {
         const i = getNamedImage(div);
@@ -664,4 +664,7 @@ function updateCardSkin(skin) {
         tmpdiv.innerHTML = getCardImage(idx, type, onclick);
         while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
     });
+}
+function loadStorage() {
+    updateCardSkin(localStorage.getItem("cardskin"));
 }

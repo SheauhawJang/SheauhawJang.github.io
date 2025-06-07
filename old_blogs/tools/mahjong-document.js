@@ -183,7 +183,7 @@ function getCardImage(id, t = "", onclick = "") {
     return `<img src="./cards/${t}${cardName(id)}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }
 function outputCardImage(tids, i, width, link) {
-    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? "discard(${i})" : "")}</div>`;
+    return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? `discard(${i})` : "")}</div>`;
 }
 function outputCardImageRotated(id, width, cnt) {
     return `<div class="card-div" style="width: ${(width * 120) / 80}%;">${getCardImage(id, cnt === 2 ? "k" : "r")}</div>`;

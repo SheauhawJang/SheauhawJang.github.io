@@ -69,7 +69,6 @@ function Qingque_get_fan(res) {
     for (let a = 14; a <= 23; ++a) {
         for (let i = 0; i <= Qingque_indices.mixed_straight; ++i) if (Qingque_fans[i].tag.weight_20 === a - 1) res[i] = 0;
         const tv = Qingque_get_weight(res);
-        console.log(fan, Qingque_total_Weight, tv, Math.log2(Number(Qingque_total_Weight)), Math.log2(Number(tv)));
         let fan0 = Math.log2(Number(Qingque_total_Weight)) - Math.log2(Number(tv));
         fan += fan0 * (a === 14 ? 0.7 : 0.05);
     }
@@ -81,7 +80,6 @@ function Qingque_get_weight(res) {
     let reskey = 0n;
     for (let i = res.length - 1; i >= 0; --i) reskey = (reskey << 1n) | BigInt(res[i]);
     for (const [key, w] of Qingque_Weight) if ((key & reskey) === reskey) weight += w;
-    console.log(res.map(Number), weight);
     return weight & uint64_mask;
 }
 function Qingque_derepellenise(res) {

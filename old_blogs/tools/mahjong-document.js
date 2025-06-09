@@ -174,21 +174,29 @@ function hasGBCard(id) {
     return true;
 }
 function hasQQCard(id) {
+    if (id.id === JokerC) return true;
+    if (id.id === JokerC + 7) return true;
     if ("sp" in id) return false;
-    if (id.id > JokerC) return false;
+    if (id.id >= JokerC + 4) return false;
     return true;
 }
 function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "qq" && hasQQCard(id)) {
         let gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay">`;
         if (t === "r") gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-r">`;
-        if (t === "k") gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-rr-0"><img src="./qqcards/${cardName(id)}.gif" class="card-img-overlay-rr-1">`;
+        if (t === "k") gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-rr-0"><img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-rr-1">`;
         return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     }
     if (cardskin === "gb" && hasGBCard(id)) {
         let gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay">`;
         if (t === "r") gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-r">`;
         if (t === "k") gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-rr-0"><img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-rr-1">`;
+        return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    }
+    if (cardskin === "hk" && hasGBCard(id)) {
+        let gboverlay = `<img src="./hkcards/${cardName(id)}.png" class="card-img-overlay">`;
+        if (t === "r") gboverlay = `<img src="./hkcards/${cardName(id)}.png" class="card-img-overlay-r">`;
+        if (t === "k") gboverlay = `<img src="./hkcards/${cardName(id)}.png" class="card-img-overlay-rr-0"><img src="./hkcards/${cardName(id)}.png" class="card-img-overlay-rr-1">`;
         return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     }
     return `<img src="./cards/${t}${cardName(id)}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;

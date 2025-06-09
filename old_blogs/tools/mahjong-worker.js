@@ -383,7 +383,9 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
                 else if (canBeListen(tiles, ota, otb, ots[k][1], wint)) wintf = 78;
                 else if (canBeListen(tiles, ota, otb, ots[k][2], wint)) wintf = 77;
             }
-        if (wint !== undefined && !wt && !wintf && !inMelds(others, wint)) --cp;
+        console.log(setting[25], inMelds(others, wint));
+        if (wint !== undefined && !wt && !wintf && !inMelds(others, ota, otb, wint)) --cp;
+        if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
         let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, setting);
         if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;

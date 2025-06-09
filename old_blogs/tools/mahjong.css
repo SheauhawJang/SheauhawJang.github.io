@@ -364,8 +364,16 @@ html {
 .output-option-group {
     display: flex;
     flex-wrap: wrap;
-    white-space: nowrap;
     gap: 0px 10px;
+}
+
+.output-option-group div {
+    white-space: nowrap;
+    flex-shrink: 1;
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .output-option-group input[type="number"] {
@@ -394,7 +402,7 @@ input[type="checkbox"] {
 }
 
 .reference-sup {
-    display: none;
+    display: inline;
     font-size: 0.7em;
     vertical-align: super;
     cursor: pointer;
@@ -406,7 +414,7 @@ input[type="checkbox"] {
     padding-top: 0.5em;
 }
 .mobile-display-only {
-    display: none;
+    display: block;
 }
 
 @media screen and (max-width: 512px) {

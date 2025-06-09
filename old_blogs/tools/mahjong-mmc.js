@@ -69,6 +69,7 @@ function Qingque_get_fan(res) {
     for (let a = 14; a <= 23; ++a) {
         for (let i = 0; i <= Qingque_indices.mixed_straight; ++i) if (Qingque_fans[i].tag.weight_20 === a - 1) res[i] = 0;
         const tv = Qingque_get_weight(res);
+        console.log(fan, Qingque_total_Weight, tv, Math.log2(Number(Qingque_total_Weight)), Math.log2(Number(tv)));
         let fan0 = Math.log2(Number(Qingque_total_Weight)) - Math.log2(Number(tv));
         fan += fan0 * (a === 14 ? 0.7 : 0.05);
     }
@@ -80,6 +81,7 @@ function Qingque_get_weight(res) {
     let reskey = 0n;
     for (let i = res.length - 1; i >= 0; --i) reskey = (reskey << 1n) | BigInt(res[i]);
     for (const [key, w] of Qingque_Weight) if ((key & reskey) === reskey) weight += w;
+    console.log(res.map(Number), weight);
     return weight & uint64_mask;
 }
 function Qingque_derepellenise(res) {
@@ -555,7 +557,7 @@ function criteria_double_sequence(hand) {
 function criteria_mixed_triple_triplet(hand) {
     return Qingque_decom_map(hand, (d) => {
         let tris = [];
-        for (const m of d) if (m.length === 1 || m.length === 4) tris.push(m[0]);
+        for (const m of d) if (m.length === 1 || m.length === 4) if (ColorArray[m[0]] < 3) tris.push(m[0]);
         for (let i = 0; i < tris.length; ++i) for (let j = i + 1; j < tris.length; ++j) for (let k = j + 1; k < tris.length; ++k) if (ThreeMixedSame(tris[i], tris[j], tris[k])) return true;
         return false;
     });
@@ -624,14 +626,14 @@ function criteria_mirrored_hand(hand) {
 function criteria_four_shifted_triplets(hand) {
     return Qingque_decom_map(hand, (d) => {
         let tris = [];
-        for (const m of d) if (m.length === 1 || m.length === 4) tris.push(m[0]);
+        for (const m of d) if (m.length === 1 || m.length === 4) if (ColorArray[m[0]] < 3) tris.push(m[0]);
         return tris.length === 4 && FourShiftOne(...tris.sort((a, b) => a - b));
     });
 }
 function criteria_three_shifted_triplets(hand) {
     return Qingque_decom_map(hand, (d) => {
         let tris = [];
-        for (const m of d) if (m.length === 1 || m.length === 4) tris.push(m[0]);
+        for (const m of d) if (m.length === 1 || m.length === 4) if (ColorArray[m[0]] < 3) tris.push(m[0]);
         tris.sort((a, b) => a - b);
         for (let i = 0; i < tris.length; ++i) for (let j = i + 1; j < tris.length; ++j) for (let k = j + 1; k < tris.length; ++k) if (ThreeShiftOne(tris[i], tris[j], tris[k])) return true;
         return false;
@@ -693,7 +695,7 @@ function criteria_two_short_straights(hand) {
 function criteria_mixed_shifted_triplets(hand) {
     return Qingque_decom_map(hand, (d) => {
         let tris = [];
-        for (const m of d) if (m.length === 1 || m.length === 4) tris.push(m[0]);
+        for (const m of d) if (m.length === 1 || m.length === 4) if (ColorArray[m[0]] < 3) tris.push(m[0]);
         for (let i = 0; i < tris.length; ++i) for (let j = i + 1; j < tris.length; ++j) for (let k = j + 1; k < tris.length; ++k) if (ThreeMixedShiftOne(tris[i], tris[j], tris[k])) return true;
         return false;
     });

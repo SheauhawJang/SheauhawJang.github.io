@@ -302,22 +302,22 @@
                         <button onclick="processJPScore()" class="score-button">Calculate</button>
                     </div>
                     <details>
-                        <summary>Rule Settings</summary>
+                        <summary>Rules Settings</summary>
                         <div class="output-options">
                             <span>Yakuman</span>
                             <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="1" checked />Double Yakuman</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative Yakuman</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="3" checked />Counted Yakuman</label>
+                                <label title="Used in XJTU Rules. Unused in JPML Rules, Saikouisen Rules, ClubJPM Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked />Double Yakuman</label>
+                                <label title="Used in JPML Rules, Saikouisen Rules, ClubJPM Rules, M.League and XJTU Rules. Unused in XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative Yakuman</label>
+                                <label title="Unused in Saikouisen Rules, ClubJPM Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked />Counted Yakuman</label>
                             </div>
                             <span>Double Wind Pair</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-1" value="0" checked />4 Minipoints</label>
-                                <label><input type="radio" name="score-jp-setting-1" value="5" />2 Minipoints</label>
+                                <label title="Used in MahjongSoul and XJTU Rules."><input type="radio" name="score-jp-setting-1" value="0" checked />4 Minipoints</label>
+                                <label title="Used in JPML Rules, Saikouisen Rules, ClubJPM Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 Minipoints</label>
                             </div>
                             <span>Rounded-up Mangan</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
+                                <label title="Used in JPML WRC Rules, Saikouisen Rules, ClubJPM Rules and M.League. Unused in JPML Official Rules and Saikouisen Classic Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
                                 <label><input type="radio" name="score-jp-setting-3" value="0" checked />OFF</label>
                             </div>
                             <span>Open All Simples</span>
@@ -346,18 +346,28 @@
                                 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" /> Fan Limit</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="11" />Yakuman Limit</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="12" />Front Dora Included</label>
-                                <label><input type="checkbox" name="score-jp-setting-7" value="13" checked/>Ippatsu Included</label>
+                                <label title="Used in Mahjong Han Limit Mode."><input type="checkbox" name="score-jp-setting-7" value="13" checked/>Ippatsu Included</label>
                             </div>
                             <span>Blessing of Man</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-5" value="0" />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 Fan</label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,2" />Yakuman</label>
+                                <label title="Used in JPML Rules, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 Fan</label>
+                                <label title="Used in MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-5" value="9,2" />Yakuman</label>
                             </div>
                             <span>Big Seven Stars</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-6" value="0" />Yakuman</label>
-                                <label><input type="radio" name="score-jp-setting-6" value="10" checked />Double Yakuman</label>
+                                <label title="Used in XJTU Rules and MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-6" value="10" checked />Double Yakuman</label>
+                            </div>
+                            <span>Minipoints Jumping</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-8" value="14" checked />ON</label>
+                                <label><input type="radio" name="score-jp-setting-8" value="0" />OFF</label>
+                            </div>
+                            <span>Scores Rounding up</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />ON</label>
+                                <label><input type="radio" name="score-jp-setting-9" value="0" />OFF</label>
                             </div>
                         </div>
                     </details>
@@ -372,9 +382,21 @@
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
+            <div class="reference-box mobile-display-only" id="title-box"></div>
+            <div class="reference-box">
+                Related Rules:
+                <ul style="margin-top: 0">   
+                    <li><a href="./rules/Renmei-Rule.pdf" style="color: inherit;">Japan Professional Mahjong League Official Rules and WRC Rules (JPML Rules)</a></li>
+                    <li><a href="./rules/Saikouisen-Rule.pdf" style="color: inherit;">Saikouisen Nihon Pro Mahjong Association Competition Rules (Saikouisen Rules)</a></li>
+                    <li><a href="https://npm2001.com/about/regulations/" style="color: inherit;">Nihon Pro Mahjong Association Competition Rules (ClubJPM Rules)</a></li>
+                    <li><a href="https://m-league.jp/about/" style="color: inherit;">M.League Official Match Rules (M.League)</a></li>
+                    <li><a href="./rules/XJTU-Riichi.pdf" style="color: inherit;">Xi’an Jiaotong University Riichi Mahjong Competition Rules (XJTU Rules) and Xi’an Jiaotong University Seven Stars Cup Riichi Mahjong Open Tournament Rules (XJTU 7-stars)</a></li>
+                    <li><a href="./rules/EMA-Riichi.pdf" style="color: inherit;">European Mahjong Association Riichi Rules (EMA rules)</a> [Official Rules of Mahjong International League]</li>
+                </ul>
+            </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.4.4</div>
+            <div class="output-time">v4.5.0</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
@@ -428,6 +450,7 @@
             }
             window.onload = function () {
                 loadStorage();
+                addReferenceMark();
                 randomInput();
             };
             const lang = "en";

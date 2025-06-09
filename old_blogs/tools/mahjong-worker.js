@@ -337,6 +337,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1)?.id;
     let listen_cnt = save.waiting[wint]?.ans.length ?? 999;
+    let must_single_listen = listen_cnt === 999;
     let gans = { val: 0, fan: [] };
     let cm = 0,
         m = 0,
@@ -372,6 +373,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     function cal(ots, ota, subots, ck, ek, f, others = []) {
         let cp = 0;
         let wintf = 0;
+        let bilisten = false;
         const otb = buildHand(tiles, ota, wint);
         for (let k = 0; k < ots.length; ++k)
             if (ots[k].length === 1) ++cp;
@@ -379,15 +381,18 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
                 if (wintf) continue;
                 if (ots[k].length === 2) {
                     if (canBeListen(tiles, ota, otb, ots[k][0], wint)) wintf = 79;
-                } else if (canBeListen(tiles, ota, otb, ots[k][0], wint)) wintf = 77;
+                } else if (canBeListen(tiles, ota, otb, ots[k][0], wint)) 
+                    if (NumberArray[ots[k][0]] === 6) wintf = 77;
+                    else bilisten = true;
                 else if (canBeListen(tiles, ota, otb, ots[k][1], wint)) wintf = 78;
-                else if (canBeListen(tiles, ota, otb, ots[k][2], wint)) wintf = 77;
+                else if (canBeListen(tiles, ota, otb, ots[k][2], wint)) 
+                    if (NumberArray[ots[k][2]] === 2) wintf = 77;
+                    else bilisten = true;
             }
-        console.log(setting[25], inMelds(others, wint));
-        if (wint !== undefined && !wt && !wintf && !inMelds(others, ota, otb, wint)) --cp;
+        if (wint !== undefined && !wt && !wintf && !bilisten && !inMelds(others, ota, otb, wint)) --cp;
         if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
         let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, setting);
-        if (listen_cnt < 2 && wintf) ++ans.val, ans.fan.push(wintf);
+        if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) ++ans.val, ans.fan.push(wintf);
         ans.val += infov;
         ans.fan.push(...infof);
         if (ans.val > gans.val) gans = ans;
@@ -455,8 +460,8 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
         const { err, itots, itsubots, ek, ck } = p[6];
         if (err === 1) return { output: loc.subtile_error_1, brief: "" };
         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
-        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (listen_cnt = 999), (infov += 6), infof.push(52);
-        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) listen_cnt = 999;
+        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (must_single_listen = true), (infov += 6), infof.push(52);
+        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
         itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
         if (gans.val === 0 && nmp >= 5) {
             gans.val = 8;

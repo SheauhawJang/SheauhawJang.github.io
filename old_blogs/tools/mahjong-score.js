@@ -676,7 +676,6 @@ function canBeListen(tiles, ta, tb, x, wint) {
     return false;
 }
 function GBKPC(ck, ek, cp, setting, fourteen_type) {
-    console.log(setting[20]);
     let must_pengpeng = false;
     let must_menqing = false;
     let must_2anke = false;

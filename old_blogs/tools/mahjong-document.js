@@ -487,11 +487,11 @@ function processGBScore() {
     let info = document.querySelectorAll('input[name="score-gb-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
     let sq = Array.from(document.querySelectorAll('input[name="score-gb-setting"]:checked'));
-    for (let i = 0; i <= 3; ++i) {
+    for (let i = 0; i <= 4; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(26).fill(0);
+    let setting = Array(27).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(",");
         if (Number(a) === 0 && b === undefined) continue;

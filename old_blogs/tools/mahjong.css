@@ -413,6 +413,9 @@ input[type="checkbox"] {
     margin-top: 1em;
     padding-top: 0.5em;
 }
+.reference-box a {
+    color: inherit;
+}
 .mobile-display-only {
     display: block;
 }

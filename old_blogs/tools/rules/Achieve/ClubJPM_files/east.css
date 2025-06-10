@@ -1,0 +1,226 @@
+@charset "UTF-8";
+/*
+Theme Name: NIGHT BIRD
+Author: DERA-DESIGN
+Author URI: https://deradesign.jp/
+Description: 2021.1.1
+Version: 1.0
+*/
+
+
+
+
+
+
+
+.name-box-east{
+  position: absolute;
+  background: url(https://vpl2023.com/wp-content/uploads/name-bg-dealer.svg)no-repeat;
+
+}
+
+.name-box-east{
+  transition: .5s;
+  position: absolute;
+  bottom: -10px;
+  height: 100px;
+  width: 430px;
+  left: 0;
+  right: 0;
+  top: 940px;
+  margin: auto;
+
+}
+
+.name-box-east h3{
+  border-bottom: none;
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+
+
+}
+
+.name-box-east h3 span{
+  transition: .5s;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom:0;
+  margin: auto;
+  height: 100px;
+  width:10.2em;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  display: block;
+  padding: 0;
+
+}
+
+
+
+.main-column .live-area .name-box-east span::before {
+  left: 29px;
+  top:33px;
+}
+
+
+.name-box-north{
+  position: absolute;
+  background: url(https://vpl2023.com/wp-content/uploads/name-bg-vertical.svg)no-repeat;
+
+}
+
+.name-box-north{
+  transition: .5s;
+  position: absolute;
+
+  height: 430px;
+  width: 100px;
+  top: 0;
+  bottom: 0;
+  left: -1600px;
+  right: 0;
+  margin: auto;
+}
+
+.name-box-north h3{
+  border-bottom: none;
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+.name-box-north h3 span{
+  transition: .5s;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom:0;
+  margin: auto;
+  height: 10.2em;
+  width: 100px;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  display: block;
+  padding: 0;
+}
+
+
+.main-column .live-area .name-box-north span::before {
+  left: 32px;
+  top:4px;
+}
+
+
+
+.name-box-west{
+  position: absolute;
+  background: url(https://vpl2023.com/wp-content/uploads/name-bg.svg)no-repeat;
+}
+
+.name-box-west{
+  transition: .5s;
+  position: absolute;
+  top: 12px;
+  height: 100px;
+  width: 430px;
+  left: 0;
+  right: 0;
+  bottom: 963px;
+  margin: auto;
+
+}
+
+.name-box-west h3{
+  border-bottom: none;
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+
+
+}
+
+.name-box-west h3 span{
+  transition: .5s;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom:0;
+  margin: auto;
+  height: 100px;
+  width: 10.2em;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  display: block;
+  padding:20px 0 0 0;
+
+}
+
+.main-column .live-area .name-box-west span::before {
+  left: 2px;
+  top:35px;
+}
+
+
+.name-box-south{
+  position: absolute;
+  background: url(https://vpl2023.com/wp-content/uploads/name-bg-vertical.svg)no-repeat;
+
+}
+
+.name-box-south{
+  transition: .5s;
+  position: absolute;
+
+  height: 430px;
+  width: 100px;
+  top: 0;
+  bottom: 0;
+  left: 1600px;
+  right: 0;
+  margin: auto;
+}
+
+.name-box-south h3{
+  border-bottom: none;
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+.name-box-south h3 span{
+ transition: .5s;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom:0;
+  margin: auto;
+  height: 10.2em;
+  width: 100px;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  display:block;
+  padding: 0 20px 0 0;
+
+}
+
+.main-column .live-area .name-box-south span::before {
+  left: 32px;
+  top:4px;
+}
+

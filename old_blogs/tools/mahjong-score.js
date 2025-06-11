@@ -683,12 +683,12 @@ function GBKPC(ck, ek, cp, setting, fourteen_type) {
         f = [];
     if (ck + ek >= 4) {
         (v += 88), f.push(5), (must_pengpeng = fourteen_type);
-        if (ck === 2);
-        else if (ck === 1);
+        if (ck === 2 && setting[30]) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
+        else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67);
     } else if (ck + ek === 3) {
         (v += 32), f.push(17);
-        if (ck === 2);
-        else if (ck === 1);
+        if (ck === 2 && setting[30]) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
+        else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67);
     } else if (ck === 2) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
     else if (ek === 2) (v += 4), f.push(57);
     else if (ck + ek === 2) {
@@ -720,7 +720,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
     let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
-    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73));
+    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, aids[0].at(-1).id)) (v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73));
     if (melds.length >= 5 && aids[1].length === ck)
         if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), (zimo = 56);
         else if (!must_menqing) (v += 2), f.push(62);

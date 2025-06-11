@@ -316,7 +316,7 @@ function GBFanDiv(fan) {
     fans[60] += fans[83];
     fans[61] += fans[83];
     let fanopt = [];
-    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${fans[i] > 1 ? `×${fans[i]}` : ""}</td></tr>`);
+    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
     return `${table_head}${fanopt.join("")}${table_tail}`;
 }
 function postDebugInfoGlobal(st, m, cm, output) {
@@ -329,10 +329,10 @@ function postDebugInfoGlobal(st, m, cm, output) {
 function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     let infov = 0;
     let infof = [];
-    if (info.includes(44))
-        if (wt) (infov += 8), infof.push((wt = 44));
-        else (infov += 8), infof.push(45);
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
+    if (info.includes(44))
+        if (!wt) (infov += 8), infof.push(45);
+        else if (setting[32] || wt !== 46) (infov += 8), infof.push((wt ||= 44));
     if (info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1)?.id;

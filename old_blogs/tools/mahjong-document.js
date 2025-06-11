@@ -491,7 +491,7 @@ function processGBScore() {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(31).fill(0);
+    let setting = Array(36).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(",");
         if (Number(a) === 0 && b === undefined) continue;

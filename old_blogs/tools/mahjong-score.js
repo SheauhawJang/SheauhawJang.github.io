@@ -323,6 +323,26 @@ function GetHeadFromId(id) {
 function GetIdFromHead(head) {
     return head / sizeAT - 1;
 }
+function Get19KFan(osid) {
+    switch (osid) {
+        case 73:
+            return 1;
+        case 83:
+            return 4;
+        case 59:
+        case 60:
+        case 61:
+            return 2;
+        case 183:
+            return 3;
+        case 159:
+        case 160:
+        case 161:
+            return 1;
+        default:
+            return 0;
+    }
+}
 function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
     let v = 0;
     let f = [];
@@ -337,14 +357,17 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
             if (!setting[17] && pon & 4) --v, f.push(-75);
         } else if (!(msk & 2)) {
             (v = 88), (f = [1, ...os.map((a) => -a)]), (tmsk = 2);
-            for (let i = 0; i < os.length; ++i) v -= os[i] === 73 ? 1 : os[i] === 83 ? 4 : os[i] ? 2 : 0;
+            for (let i = 0; i < os.length; ++i) v -= Get19KFan(os[i]);
             os = [0, 0, 0, 0];
             if (!setting[20] && pon & 2) (v -= 6), f.push(-49);
         }
         if (pon & 1) (v -= 6), f.push(-48);
     } else if (!(msk & 4) && vs[3] >= sizeAT && vs[0] >= 27 && FourShiftOne(...[vs[0], vs[1], vs[2], GetIdFromHead(vs[3])].sort((a, b) => a - b))) {
         (v = 64), (f = [9]), (tmsk = 4);
-        for (let i = 0; i < os.length; ++i) if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
+        if (!setting[35])
+            for (let i = 0; i < os.length; ++i)
+                if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
+                else if (setting[33] && os[i] && os[i] < 100) --v, f.push(-73), (os[i] += 100);
         if (!setting[21] && pon & 2) (v -= 6), f.push(-49);
     }
     if (v) {
@@ -369,17 +392,20 @@ function GBTriBind3(s, op, ma, a, b, c, ans, pon, setting) {
     const msk = ma[a] | ma[b] | ma[c];
     if (!(msk & 8) && vs[0] >= 31 && ThreeShiftOne(...vs)) {
         (v = 88), (f = [2]), (tmsk = 8);
-        for (let i = 0; i < os.length; ++i) if (os[i] === 59) (v -= 2), f.push(-os[i]), (os[i] = 0);
+        for (let i = 0; i < os.length; ++i) if (os[i] === 59 || os[i] === 159) (v -= Get19KFan(os[i])), f.push(-os[i]), (os[i] = 0);
         if (!setting[13] && pon & 4) --v, f.push(-75);
     } else if (!(msk & 16) && vs[2] >= sizeAT && vs[0] >= 31 && ThreeShiftOne(...[vs[0], vs[1], GetIdFromHead(vs[2])].sort((a, b) => a - b))) {
         (v = 64), (f = [10]), (tmsk = 16);
-        for (let i = 0; i < os.length; ++i) if (os[i] === 59) (v -= 2), f.push(-os[i]), (os[i] = 0);
+        for (let i = 0; i < os.length; ++i) if (os[i] === 59 || os[i] === 159) (v -= Get19KFan(os[i])), f.push(-os[i]), (os[i] = 0);
         if (!setting[14] && pon & 4) --v, f.push(-75);
     } else if (!(msk & 32) && vs[0] < 27 && ThreeShiftOne(...vs)) (v = 24), (f = [24]), (tmsk = 32);
     else if (!(msk & 64) && ThreeMixedSame(...vs)) (v = 16), (f = [32]), (tmsk = 64);
     else if (!(msk & 128) && Math.min(...vs) >= 27 && Math.max(...vs) <= 30) {
         (v = 12), (f = [38]), (tmsk = 128);
-        for (let i = 0; i < os.length; ++i) if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
+        if (!setting[34])
+            for (let i = 0; i < os.length; ++i)
+                if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
+                else if (setting[33] && os[i] && os[i] < 100) --v, f.push(-73), (os[i] += 100);
         if (!setting[15] && pon & 4) --v, f.push(-75);
     } else if (!(msk & 256) && ThreeMixedShiftOne(...vs)) (v = 8), (f = [42]), (tmsk = 256);
     if (v) {
@@ -404,7 +430,7 @@ function GBTriBind2(s, op, ma, a, b, ans, pon, setting) {
     const msk = ma[a] | ma[b];
     if (!(msk & 512) && vs[0] >= 31 && vs[1] >= 31 && vs[1] < sizeUT) {
         (v = 6), (f = [54]), (tmsk = 512);
-        for (let i = 0; i < os.length; ++i) if (os[i] === 59) (v -= 2), f.push(-os[i]), (os[i] = 0);
+        for (let i = 0; i < os.length; ++i) if (os[i] === 59 || os[i] === 159) (v -= Get19KFan(os[i])), f.push(-os[i]), (os[i] = 0);
     } else if (!(msk & 1024) && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && NumberArray[vs[0]] === NumberArray[vs[1]]))) (v = 2), (f = [65]), (tmsk = 1024);
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b]);
@@ -637,15 +663,21 @@ function calculateBind(seq, tri, wind60, wind61, has48 = false, has49 = false, h
     tri = tri.sort((a, b) => a - b);
     let orphan = Array(tri.length).fill(0);
     for (let i = 0; i < orphan.length; ++i)
-        if (OrphanArray[tri[i]])
+        if (OrphanArray[tri[i]]) {
             if (wind61 === wind60 && wind61 === tri[i]) (orphan[i] = 83), (v += 4);
             else if (wind61 === tri[i]) (orphan[i] = 61), (v += 2);
             else if (wind60 === tri[i]) (orphan[i] = 60), (v += 2);
             else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
             else if (can73) (orphan[i] = 73), ++v;
+            if (setting[33] && !can73 && orphan[i]) orphan[i] += 100;
+        }
     const seqans = GBSeqBind(seq, Array(seq.length).fill(0), has75, setting);
     const trians = GBTriBind(tri, orphan, Array(tri.length).fill((can32 ? 0 : 64) | (can65 ? 0 : 1024)), has48 | (has49 ? 2 : 0) | (has75 ? 4 : 0), setting);
-    return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
+    let fan = [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)];
+    for (let i = 0; i < fan.length; ++i) 
+        if (fan[i] > 100) fan.push(fan[i] - 100, -73), fan[i] = 0;
+        else if (fan[i] < -100) fan.push(fan[i] + 100, 73), fan[i] = 0;
+    return { val: seqans.val + trians.val + v, fan };
 }
 let filter_cnt = 0;
 function buildHand(tiles, ta, wint) {
@@ -675,32 +707,36 @@ function canBeListen(tiles, ta, tb, x, wint) {
     }
     return false;
 }
-function GBKPC(ck, ek, cp, setting, fourteen_type) {
+function GBKPC(ck, ek, cp, setting, fourteen_type, zimo) {
     let must_pengpeng = false;
     let must_menqing = false;
     let must_2anke = false;
     let v = 0,
         f = [];
+    let has_single_ck = false;
+    let has_single_ek = false;
     if (ck + ek >= 4) {
         (v += 88), f.push(5), (must_pengpeng = fourteen_type);
         if (ck === 2 && setting[30]) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
-        else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67);
+        else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67), (has_single_ck = true);
     } else if (ck + ek === 3) {
         (v += 32), f.push(17);
         if (ck === 2 && setting[30]) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
-        else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67);
+        else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67), (has_single_ck = true);
     } else if (ck === 2) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
     else if (ek === 2) (v += 4), f.push(57);
     else if (ck + ek === 2) {
         if (setting[24] === 0) (v += 5), f.push(82);
         else if (setting[24] === 1) (v += 6), f.push(82), (GBScoreArray[82] = 6);
-        else if (setting[24] === 2) (v += 3), f.push(67, 74);
-        else if (setting[24] === 3) (v += 6), f.push(57, 67);
-    } else if (ck) (v += 2), f.push(67);
-    else if (ek) ++v, f.push(74);
+        else if (setting[24] === 2) (v += 3), f.push(67, 74), (has_single_ek = has_single_ck = true);
+        else if (setting[24] === 3) (v += 6), f.push(57, 67), (has_single_ck = true);
+    } else if (ck) (v += 2), f.push(67), (has_single_ck = true);
+    else if (ek) ++v, f.push(74), (has_single_ek = true);
     if (ck + cp >= 4) (v += 64), f.push(12), (must_pengpeng = fourteen_type), (must_menqing = fourteen_type);
     else if (ck + cp === 3) (v += 16), f.push(33);
     else if (!must_2anke && ck + cp === 2) (v += 2), f.push(66);
+    if (has_single_ek && zimo === 46 && setting[31]) --v, f.push(-74);
+    else if (has_single_ck && zimo === 46 && setting[31] === 2) --v, f.push(-74);
     return { v, f, must_menqing, must_pengpeng };
 }
 function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, setting) {
@@ -717,12 +753,12 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
     let can_3tong = true;
     let skip_bind = false;
     const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
-    let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type);
+    let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type, zimo);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, aids[0].at(-1).id)) (v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73));
     if (melds.length >= 5 && aids[1].length === ck)
-        if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), (zimo = 56);
+        if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), (zimo ||= 56);
         else if (!must_menqing) (v += 2), f.push(62);
     if (zimo === 80) ++v, f.push(zimo);
     if (melds.length >= 5 && isMask(marr, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_2tong &&= setting[28]), (can_3tong &&= setting[29]);

@@ -274,7 +274,7 @@
                             <span>役滿</span>
                             <div class="output-option-group">
                                 <label title="XJTU規則採用。聯盟規則、最高位戰規則、協會規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked />雙倍役滿</label>
-                                <label title="聯盟規則、最高位戰規則、協會規則、M.League、XJTU規則採用。XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />復合役滿</label>
+                                <label title="聯盟規則、最高位戰規則、協會規則、M.League、XJTU規則採用。XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />複合役滿</label>
                                 <label title="最高位戰規則、協會規則、M.League、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累計役滿</label>
                             </div>
                             <span>連風牌雀頭</span>
@@ -384,6 +384,96 @@
                         </div>
                         <button onclick="processGBScore()" class="score-button">計算</button>
                     </div>
+                    <details>
+                        <summary>規則設定</summary>
+                        <div class="output-options">
+                            <span>不求人</span>
+                            <div class="output-option-group">
+                                <label title="國標原文、問答規則、MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-0" value="0" checked />必然門清不計</label>
+                                <label title="世麻規則採用。疑難解析建議採用。"><input type="radio" name="score-gb-setting-0" value="19" />必然門清加計</label>
+                            </div>
+                            <span title="國標原文的下述台種定義排除七對，但包含了七對複合字一色、清么九的牌例。疑難解析允許七對複合清一色、混一色、五門齊。問答規則建議允許，MIL規則允許七對複合清一色至混么九。世麻規則允許七對複合清一色至五門齊。JMSA規則允許七對複合清一色至推不倒、字一色至混么九。">七對複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="1" checked />綠一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="6" checked />全大/全中/全小</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="7" checked />大於五/小於五</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="9" checked />推不倒</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="11" checked />五門齊</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="3" checked />字一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="2" checked />清么九</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="4" checked />混么九</label>
+                                <label title="由於張數限制，不可能出現。"><input type="checkbox" name="score-gb-setting" value="8" checked />全帶五</label>
+                                <label title="現行規則均不允許。"><input type="checkbox" name="score-gb-setting" value="12" />全雙刻</label>
+                            </div>
+                            <span>雙暗槓</span>
+                            <div class="output-option-group">
+                                <label title="國標原文、問答規則、MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 台</label>
+                                <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-1" value="23" />8 台</label>
+                            </div>
+                            <span>明暗槓</span>
+                            <div class="output-option-group">
+                                <label title="MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 台</label>
+                                <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 台</label>
+                                <label title="1999年全國麻將運動比賽補充規定（參見疑難解析）。"><input type="radio" name="score-gb-setting-2" value="24,2" />明槓+暗槓</label>
+                                <label title="問答規則採用。"><input type="radio" name="score-gb-setting-2" value="24,3" />雙明槓+暗槓</label>
+                            </div>
+                            <span>三槓四槓</span>
+                            <div class="output-option-group">
+                                <label title="MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-6" value="0" checked />加計暗刻不計暗槓</label>
+                                <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-6" value="30,1" />加計暗刻和暗槓</label>
+                                <label title="問答規則採用。"><input type="radio" name="score-gb-setting-6" value="30,2" />請輸入文字</label>
+                            </div>
+                            <span>槓上開花</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="31,1" />不計明槓</label>
+                                <label title="疑難解析採用。"><input type="checkbox" name="score-gb-setting" value="31,2" />不計明槓且暗槓减 1 台</label>
+                                <label title="問答規則、MIL規則、JMSA規則採用。"><input type="checkbox" name="score-gb-setting" value="32" checked />可複合妙手回春</label>
+                            </div>
+                            <span>不計么九刻</span>
+                            <div class="output-option-group">
+                                <label title="疑難解析採用。"><input type="checkbox" name="score-gb-setting" value="33" />圈風刻/門風刻/箭刻减 1 台</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="34" />三風刻加計么九刻</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="35" />小四喜加計么九刻</label>
+                            </div>
+                            <span>九蓮寶燈</span>
+                            <div class="output-option-group">
+                                <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-5" value="0" checked />不計一个么九刻</label>
+                                <label><input type="radio" name="score-gb-setting-5" value="27" />不計所有么九刻</label>
+                            </div>
+                            <span title="國標原文、問答規則、世麻規則、MIL規則允許缺一門複合大三元至一色四節高。">缺一門複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="15" checked />三風刻</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="16" checked />一色四同順</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四節高</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
+                            </div>
+                            <span title="國標原文、問答規則、MIL規則允許混一色複合大四喜、小四喜；不允許混一色複合綠一色。世麻規則允許混一色複合下述所有台種。">混一色複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="22" />綠一色</label>
+                            </div>
+                            <span>清么九複合</span>
+                            <div class="output-option-group">
+                                <label title="世麻規則採用。問答規則、MIL規則不採用。"><input type="checkbox" name="score-gb-setting" value="28" />雙同刻</label>
+                                <label title="國標原文為“不計同刻”，若非筆誤則不採用。"><input type="checkbox" name="score-gb-setting" value="29" checked />三同刻</label>
+                            </div>
+                            <span>組合龍和牌</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-3" value="25" />和牌張可解釋為組合龍部分时不計邊張/嵌張/單釣將</label>
+                                <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-3" value="0" checked />和牌張可解釋為順子或雀頭部分时可計邊張/嵌張/單釣將</label>
+                            </div>
+                            <span>多面聽和牌</span>
+                            <div class="output-option-group">
+                                <label title="問答規則、世麻規則、MIL規則採用。疑難解析建議採用。"><input type="radio" name="score-gb-setting-4" value="0" checked />不計邊張/嵌張/單釣將</label>
+                                <label><input type="radio" name="score-gb-setting-4" value="26" />可計邊張/嵌張/單釣將</label>
+                            </div>
+                        </div>
+                    </details>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -399,6 +489,12 @@
                     <li><a href="./rules/Achieve/MLeague.html">M.League正式比賽規則（M.League）</a></li>
                     <li><a href="./rules/XJTU-Riichi.pdf">西安交通大學立直麻將比賽規則（XJTU規則）和西安交通大學七星杯立直麻將公開賽規則（XJTU七星杯）</a></li>
                     <li><a href="./rules/EMA-Riichi.pdf">歐洲麻將聯盟立直麻將規則（EMA規則）</a>【國際麻將聯盟官方規則】</li>
+                    <li><a href="./rules/GB98.pdf">中國麻將競賽規則（國標原文）</a></li>
+                    <li><a href="./rules/GB98-EC.pdf">中國麻將競賽規則疑難解析（疑難解析）</a></li>
+                    <li><a href="./rules/GB98-FAQ.pdf">《中國麻將競賽規則（試行）》問答（問答規則）</a></li>
+                    <li><a href="./rules/WMO-MCR.pdf">世界麻將組織麻將競賽規則（世麻規則）</a></li>
+                    <li><a href="./rules/MIL-MCR.pdf">國際麻將聯盟國標麻將規則補充細則（MIL規則）</a></li>
+                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻將體育協會規則和台種一覽（JMSA規則）</a></li>
                 </ul>
             </div>
         </div>

@@ -395,6 +395,96 @@
                         </div>
                         <button onclick="processGBScore()" class="score-button">計算</button>
                     </div>
+                    <details>
+                        <summary>ルール設定</summary>
+                        <div class="output-options">
+                            <span>不求人</span>
+                            <div class="output-option-group">
+                                <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-0" value="0" checked />必然門清不計</label>
+                                <label title="WMOルールでは適用される。疑問解説では適用が推奨されている。"><input type="radio" name="score-gb-setting-0" value="19" />必然門清加計</label>
+                            </div>
+                            <span title="国標原文に記載された以下の役の定義は七対を除外しているが、七対と字一色・清么九との複合の牌例は含まれている。疑問解説では七対と清一色・混一色・五門斉との複合が許可されている。問答集ルールでは七対と清一色から混么九までの各役との複合の許可を推奨していて、MILルールでは上述の複合が正式に許可されている。WMOルールでは七対と清一色から五門斉までの各役との複合が許可されている。JMSAルールでは七対と清一色から推不倒まで、及び字一色から混么九までの各役との複合が許可されている。">七対の複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="1" checked />緑一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="6" checked />全大/全中/全小</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="7" checked />大于五/小于五</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="9" checked />推不倒</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="11" checked />五門斉</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="3" checked />字一色</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="2" checked />清么九</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="4" checked />混么九</label>
+                                <label title="枚数制限のため成立しない。"><input type="checkbox" name="score-gb-setting" value="8" checked />全帯五</label>
+                                <label title="現行の各ルールではいずれも許可されていない。"><input type="checkbox" name="score-gb-setting" value="12" />全双刻</label>
+                            </div>
+                            <span>双暗槓</span>
+                            <div class="output-option-group">
+                                <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 点</label>
+                                <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="23" />8 点</label>
+                            </div>
+                            <span>明暗槓</span>
+                            <div class="output-option-group">
+                                <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 点</label>
+                                <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 点</label>
+                                <label title="1999年全国麻雀運動競技大会補足規定では適用される。（疑問解説を参照）。"><input type="radio" name="score-gb-setting-2" value="24,2" />明槓+暗槓</label>
+                                <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,3" />双明槓+暗槓</label>
+                            </div>
+                            <span>三槓・四槓</span>
+                            <div class="output-option-group">
+                                <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="0" checked />暗刻加算・暗槓不加算</label>
+                                <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,1" />暗刻・暗槓ともに加算</label>
+                                <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,2" />とある複雑な計算法</label>
+                            </div>
+                            <span>槓上開花</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="31,1" />明槓加算なし</label>
+                                <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="31,2" />明槓加算なし・暗槓 1 点除く</label>
+                                <label title="問答集ルール、MILルール、JMSAルールでは適用される。"><input type="checkbox" name="score-gb-setting" value="32" checked />妙手回春と複合できる</label>
+                            </div>
+                            <span>么九刻除外時</span>
+                            <div class="output-option-group">
+                                <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="33" />圈風刻・門風刻・箭刻は 1 点を除く</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="34" />三風刻と么九刻と複合する</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="35" />小四喜と么九刻と複合する</label>
+                            </div>
+                            <span>九蓮宝燈</span>
+                            <div class="output-option-group">
+                                <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの么九刻を加算しない</label>
+                                <label><input type="radio" name="score-gb-setting-5" value="27" />全ての么九刻を加算しない</label>
+                            </div>
+                            <span title="國標原文・問答集ルール・WMOルール・MILルールでは缺一門と大三元から一色四節高までの各役との複合が許可されている。">缺一門の複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="15" checked />三風刻</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="16" checked />一色四同順</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四節高</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
+                            </div>
+                            <span title="國標原文・問答集ルール・MILルールでは混一色と大四喜・小四喜との複合が許可されており、混一色と緑一色との複合が許可されていない。WMOルールでは混一色と以下のすべての役との複合が許可されている。">混一色の複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="22" />緑一色</label>
+                            </div>
+                            <span>清么九の複合</span>
+                            <div class="output-option-group">
+                                <label title="WMOルールでは適用される。問答集ルール・MILルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="28" />双同刻</label>
+                                <label title="国標原文の本文では「同刻と複合しない」と記載されており、誤記でなければ適用されない。"><input type="checkbox" name="score-gb-setting" value="29" checked />三同刻</label>
+                            </div>
+                            <span>組合竜和了</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-3" value="25" />和了牌が組合竜の一部と解釈できる場合は辺張・坎張・単釣将を加算しない</label>
+                                <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="0" checked />和了牌が順子又は雀頭の一部と解釈できる場合は辺張・坎張・単釣将を加算しうる</label>
+                            </div>
+                            <span>多面待ち和了</span>
+                            <div class="output-option-group">
+                                <label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨されている。"><input type="radio" name="score-gb-setting-4" value="0" checked />辺張・坎張・単釣将を加算しない</label>
+                                <label><input type="radio" name="score-gb-setting-4" value="26" />辺張・坎張・単釣将を加算しうる</label>
+                            </div>
+                        </div>
+                    </details>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -410,6 +500,12 @@
                     <li><a href="./rules/Achieve/MLeague.html">Mリーグの公式戦ルール（Mリーグ）</a></li>
                     <li><a href="./rules/XJTU-Riichi.pdf">西安交通大学立直麻雀競技ルール（XJTUルール）及び西安交通大学七星杯立直麻雀オープン大会ルール（XJTU七星杯）</a></li>
                     <li><a href="./rules/EMA-Riichi.pdf">欧州麻雀協会立直ルール（EMAルール）</a>【国際麻雀連盟公式ルール】</li>
+                    <li><a href="./rules/GB98.pdf">中国麻雀競技規則（國標原文）</a></li>
+                    <li><a href="./rules/GB98-EC.pdf">中国麻雀競技規則疑問解説（疑問解説）</a></li>
+                    <li><a href="./rules/GB98-FAQ.pdf">《中国麻雀競技規則（試行）》問答集（問答集ルール）</a></li>
+                    <li><a href="./rules/WMO-MCR.pdf">世界麻将組織麻将競技規則（WMOルール）</a></li>
+                    <li><a href="./rules/MIL-MCR.pdf">国際麻雀連盟国標麻雀規則補足細則（MILルール）</a></li>
+                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻將體育協會ルール及び役の一覧（JMSAルール）</a></li>
                 </ul>
             </div>
         </div>

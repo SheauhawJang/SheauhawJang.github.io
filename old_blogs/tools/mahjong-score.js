@@ -631,7 +631,7 @@ function predictBind(melds) {
         else if (melds[i].length !== 2) ++nt;
     return Math.max(sq - 1, 0) * 16 + Math.max(nt - 1, 0) * 16 + nt + getWindPredict(wt) + getDragonPredict(dt);
 }
-function calculateBind(seq, tri, wind60, wind61, has48 = false, has49 = false, has75 = false, can65 = true, can73 = true, setting = []) {
+function calculateBind(seq, tri, wind60, wind61, has48 = false, has49 = false, has75 = false, can32 = true, can65 = true, can73 = true, setting = []) {
     let v = 0;
     seq = seq.sort((a, b) => a - b);
     tri = tri.sort((a, b) => a - b);
@@ -644,7 +644,7 @@ function calculateBind(seq, tri, wind60, wind61, has48 = false, has49 = false, h
             else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
             else if (can73) (orphan[i] = 73), ++v;
     const seqans = GBSeqBind(seq, Array(seq.length).fill(0), has75, setting);
-    const trians = GBTriBind(tri, orphan, Array(tri.length).fill(can65 ? 0 : 1024), has48 | (has49 ? 2 : 0) | (has75 ? 4 : 0), setting);
+    const trians = GBTriBind(tri, orphan, Array(tri.length).fill((can32 ? 0 : 64) | (can65 ? 0 : 1024)), has48 | (has49 ? 2 : 0) | (has75 ? 4 : 0), setting);
     return { val: seqans.val + trians.val + v, fan: [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)] };
 }
 let filter_cnt = 0;
@@ -713,18 +713,19 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
     let must_wuzi = false;
     let must_quemen = false;
     let yaojiuke = true;
-    let can_shuangtong = true;
+    let can_2tong = true;
+    let can_3tong = true;
     let skip_bind = false;
     const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
     let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
-    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 87), f.push(4), f.push(-73), (must_qingyise = true), (must_menqing = true);
+    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles ?? getTiles(aids[0]), aids[0].at(-1).id)) (v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73));
     if (melds.length >= 5 && aids[1].length === ck)
         if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), (zimo = 56);
         else if (!must_menqing) (v += 2), f.push(62);
     if (zimo === 80) ++v, f.push(zimo);
-    if (melds.length >= 5 && isMask(marr, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_shuangtong = false);
+    if (melds.length >= 5 && isMask(marr, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_2tong &&= setting[28]), (can_3tong &&= setting[29]);
     if (melds.length >= 5 && isMask(marr, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
     if (melds.length >= 5)
         if (isMask(marr, BigArray)) (v += 24), f.push(25), (must_wuzi = true);
@@ -773,7 +774,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
             if (melds[i].length === 3) seq.push(melds[i][0]);
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
             else tri.push(melds[i][0]);
-        const bind = calculateBind(seq, tri, wind60, wind61, fourteen_type && has_pengpeng, melds.length === 5 && has_hunyise, melds.length === 5 && has_quemen, can_shuangtong, yaojiuke, setting);
+        const bind = calculateBind(seq, tri, wind60, wind61, fourteen_type && has_pengpeng, melds.length === 5 && has_hunyise, melds.length === 5 && has_quemen, can_3tong, can_2tong, yaojiuke, setting);
         v += bind.val;
         f = [...f, ...bind.fan];
     }

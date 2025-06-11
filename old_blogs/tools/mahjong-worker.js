@@ -332,7 +332,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (info.includes(44))
         if (!wt) (infov += 8), infof.push(45);
-        else if (setting[32] || wt !== 46) (infov += 8), infof.push((wt ||= 44));
+        else if (setting[32] || wt !== 46) (infov += 8), infof.push(44), (wt ||= 44);
     if (info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1)?.id;

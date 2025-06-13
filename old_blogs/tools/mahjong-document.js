@@ -252,11 +252,6 @@ function tilesImage(tids, bonus) {
     if (bonus === 2) for (let i = tids.length; i < 5; ++i) output += outputCardImageBack(width);
     return output;
 }
-function getUnifiedType(s) {
-    let t = s.type;
-    if (s.length >= 4) return pmod(t, 8);
-    return Math.min(Math.max(t, 1), 3);
-}
 function getRotatedLocation(t, l) {
     let rloc = t % 4;
     if (rloc === 3) {
@@ -487,11 +482,11 @@ function processGBScore() {
     let info = document.querySelectorAll('input[name="score-gb-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
     let sq = Array.from(document.querySelectorAll('input[name="score-gb-setting"]:checked'));
-    for (let i = 0; i <= 6; ++i) {
+    for (let i = 0; i <= 7; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(36).fill(0);
+    let setting = Array(37).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(",");
         if (Number(a) === 0 && b === undefined) continue;

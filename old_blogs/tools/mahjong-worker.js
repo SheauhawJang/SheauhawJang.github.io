@@ -460,7 +460,9 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
         const { err, itots, itsubots, ek, ck } = p[6];
         if (err === 1) return { output: loc.subtile_error_1, brief: "" };
         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
-        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5) (must_single_listen = true), (infov += 6), infof.push(52);
+        let addk = false;
+        for (let i = 0; i < aids[1].length; ++i) if (getUnifiedType(aids[1][i]) > 4) addk = true;
+        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) (must_single_listen = true), (infov += 6), infof.push(52);
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
         itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
         if (gans.val === 0 && nmp >= 5) {

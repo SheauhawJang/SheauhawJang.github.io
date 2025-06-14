@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="支持一般型麻将、国标麻将、立直麻将、十六张麻将、港式台湾麻将以及任意张麻将的牌理向听数计算。支持百搭牌（万能牌/癞子/混儿）。支持国标麻将算番、立直麻将算点。">
+        <meta name="description" content="支持一般型麻将、国标麻将、立直麻将、十六张麻将、港式台湾麻将以及任意张麻将的牌理向听数计算。支持百搭牌（万能牌/癞子/混儿）。支持国标麻将算番、立直麻将算点。" />
         <title>麻将多功能计算器</title>
         <link rel="stylesheet" href="mahjong.css" />
     </head>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <h1>麻将多功能计算器</h1>
-        <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0;">
+        <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0">
             <li>支持一般型麻将、国标麻将、立直麻将、十六张麻将、港式台湾麻将以及任意张麻将的牌理向听数计算。</li>
             <li>支持百搭牌（万能牌/癞子/混儿）。</li>
             <li>支持国标麻将算番、立直麻将算点。</li>
@@ -342,6 +342,11 @@
                                 <label title="问答规则、世麻规则、MIL规则采用。疑难解析建议采用。"><input type="radio" name="score-gb-setting-4" value="0" checked />不计边张/坎张/单钓将</label>
                                 <label><input type="radio" name="score-gb-setting-4" value="26" />可计边张/坎张/单钓将</label>
                             </div>
+                            <span>加杠全求人</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-7" value="0" checked />开启</label>
+                                <label><input type="radio" name="score-gb-setting-7" value="36" />关闭</label>
+                            </div>
                         </div>
                     </details>
                 </div>
@@ -435,7 +440,7 @@
                                 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" />番缚</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="11" />役满缚</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="12" />包含表宝牌</label>
-                                <label title="雀魂番缚模式采用。"><input type="checkbox" name="score-jp-setting-7" value="13" checked/>包含一发</label>
+                                <label title="雀魂番缚模式采用。"><input type="checkbox" name="score-jp-setting-7" value="13" checked />包含一发</label>
                             </div>
                             <span>人和</span>
                             <div class="output-option-group">
@@ -506,19 +511,19 @@
             <div class="reference-box mobile-display-only" id="title-box"></div>
             <div class="reference-box">
                 相关规则：
-                <ul style="margin-top: 0">   
-                    <li><a href="./rules/GB98.pdf">中国麻将竞赛规则（国标原文）</a></li>
-                    <li><a href="./rules/GB98-EC.pdf">中国麻将竞赛规则疑难解析（疑难解析）</a></li>
-                    <li><a href="./rules/GB98-FAQ.pdf">《中国麻将竞赛规则（试行）》问答（问答规则）</a></li>
-                    <li><a href="./rules/WMO-MCR.pdf">世界麻将组织麻将竞赛规则（世麻规则）</a></li>
-                    <li><a href="./rules/MIL-MCR.pdf">国际麻将联盟国标麻将规则补充细则（MIL规则）</a></li>
-                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻将体育协会规则和番种一览（JMSA规则）</a></li>
-                    <li><a href="./rules/Renmei.pdf">日本职业麻将联盟官方规则和WRC规则（联盟规则）</a></li>
-                    <li><a href="./rules/Achieve/Saikouisen.html">最高位战日本职业麻将协会竞技规定和Classic规则（最高位战规则）</a></li>
-                    <li><a href="./rules/Achieve/ClubJPM.html">日本职业麻将协会竞技规定（协会规则）</a></li>
-                    <li><a href="./rules/Achieve/MLeague.html">M.League正式比赛规则（M.League）</a></li>
-                    <li><a href="./rules/XJTU-Riichi.pdf">西安交通大学立直麻将比赛规则（XJTU规则）和西安交通大学七星杯立直麻将公开赛规则（XJTU七星杯）</a></li>
-                    <li><a href="./rules/EMA-Riichi.pdf">欧洲麻将联盟立直麻将规则（EMA规则）</a>【国际麻将联盟官方规则】</li>
+                <ul style="margin-top: 0">
+                    <li><a href="./rules/GB98.pdf">中国麻将竞赛规则</a>（国标原文）</li>
+                    <li><a href="./rules/GB98-EC.pdf">中国麻将竞赛规则疑难解析</a>（疑难解析）</li>
+                    <li><a href="./rules/GB98-FAQ.pdf">《中国麻将竞赛规则（试行）》问答</a>（问答规则）</li>
+                    <li><a href="./rules/WMO-MCR.pdf">世界麻将组织麻将竞赛规则</a>（世麻规则）</li>
+                    <li><a href="./rules/MIL-MCR.pdf">国际麻将联盟国标麻将规则补充细则</a>（MIL规则）</li>
+                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻将体育协会规则和番种一览</a>（JMSA规则）（<a href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">原始内容<img src="./Icon_External_Link.svg" alt="外部链接图标" style="width: 0.8em; height: 0.8em; margin-left: 0.2em" /></a>）</li>
+                    <li><a href="./rules/Renmei.pdf">日本职业麻将联盟官方规则和WRC规则</a>（联盟规则）</li>
+                    <li><a href="./rules/Achieve/Saikouisen.html">最高位战日本职业麻将协会竞技规定和Classic规则</a>（最高位战规则）（<a href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">原始内容<img src="./Icon_External_Link.svg" alt="外部链接图标" style="width: 0.8em; height: 0.8em; margin-left: 0.2em" /></a>）</li>
+                    <li><a href="./rules/Achieve/ClubJPM.html">日本职业麻将协会竞技规定</a>（协会规则）（<a href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">原始内容<img src="./Icon_External_Link.svg" alt="外部链接图标" style="width: 0.8em; height: 0.8em; margin-left: 0.2em" /></a>）</li>
+                    <li><a href="./rules/Achieve/MLeague.html">M.League正式比赛规则</a>（M.League） （<a href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">原始内容<img src="./Icon_External_Link.svg" alt="外部链接图标" style="width: 0.8em; height: 0.8em; margin-left: 0.2em" /></a>）</li>
+                    <li><a href="./rules/XJTU-Riichi.pdf">西安交通大学立直麻将比赛规则</a>（XJTU规则）和<a href="./rules/XJTU-Riichi.pdf">西安交通大学七星杯立直麻将公开赛规则</a>（XJTU七星杯）</li>
+                    <li><a href="./rules/EMA-Riichi.pdf">欧洲麻将联盟立直麻将规则</a>（EMA规则）</li>
                 </ul>
             </div>
         </div>

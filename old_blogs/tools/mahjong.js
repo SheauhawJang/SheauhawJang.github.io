@@ -151,6 +151,11 @@ function splitTiles(s) {
     s = s.replace(regex, " ");
     return [splitKernel(s), subtiles, splitKernel(bonus.join(" ")), splitKernel(dora.join(" ")), splitKernel(ura.join(" "))];
 }
+function getUnifiedType(s) {
+    let t = s.type;
+    if (s.length >= 4) return pmod(t, 8);
+    return Math.min(Math.max(t, 1), 3);
+}
 // Check left, left+1, left+2 can be a sequence or not
 const SeqArray = [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 function SeqCheck(left) {

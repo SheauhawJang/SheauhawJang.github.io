@@ -881,6 +881,7 @@ function GB7Pairs(tids, setting) {
         let f = [19];
         let must_hunyise = false;
         let must_qingyise = false;
+        let must_quandai = false;
         let must_hun19 = false;
         let must_duan1 = false;
         let must_wuzi = false;
@@ -889,7 +890,8 @@ function GB7Pairs(tids, setting) {
         if (setting[1] && isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
         if (setting[2] && isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
         if (setting[3] && isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
-        if (setting[4] && !must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18);
+        if (setting[4] && !must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18), must_hun19 = true;
+        if (must_hun19) must_quandai = true;
         if (setting[12] && isMask(a, EvenArray)) (v += 24), f.push(21), (must_duan1 = true);
         if (setting[5] && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
         if (must_qingyise) (must_hunyise = true), (must_wuzi = true);
@@ -902,6 +904,7 @@ function GB7Pairs(tids, setting) {
         if (setting[9] && isMask(a, SymmeArray)) (v += 8), f.push(40), (must_quemen ||= !setting[18]);
         if (setting[10] && !must_hunyise && isSameColorWithHonor(melds)) (v += 6), f.push(49), (must_hunyise = true);
         if (must_hunyise) must_quemen = true;
+        if (setting[40] && !must_quandai && isMask(a, OrphanArray)) (v += 4), f.push(55);
         if (!must_duan1 && isMask(a, NoOrphanArray)) (v += 2), f.push(68), (must_duan1 = true);
         if (must_duan1) must_wuzi = true;
         if (!must_quemen) {
@@ -936,7 +939,9 @@ function GB7Pairs(tids, setting) {
             f = [19, 51];
         let hun19 = true;
         for (let i = 0; hun19 && i < cot.length; ++i) if (cot[i] < sizeUT && !OrphanArray[cot[i]]) hun19 = false;
-        if (hun19) (v += 32), f.push(18);
+        if (hun19)
+            if (setting[4]) (v += 32), f.push(18);
+            else if (setting[40]) (v += 4), f.push(55);
         let tiles = Array(sizeUT).fill(0);
         for (let i = 0; i < cot.length; ++i)
             if (cot[i] < sizeUT) ++tiles[cot[i]];

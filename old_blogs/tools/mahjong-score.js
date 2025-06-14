@@ -758,7 +758,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
     if (melds.length >= 5 && isMask(marr, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, aids[0].at(-1).id)) (v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73));
     if (melds.length >= 5 && aids[1].length === ck)
-        if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), (zimo ||= 56);
+        if ((setting[19] || !must_menqing) && zimo) (v += 4), f.push(56), (zimo = 56);
         else if (!must_menqing) (v += 2), f.push(62);
     if (zimo === 80) ++v, f.push(zimo);
     if (melds.length >= 5 && isMask(marr, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_2tong &&= setting[28]), (can_3tong &&= setting[29]);

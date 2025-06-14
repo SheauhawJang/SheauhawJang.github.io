@@ -332,7 +332,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (info.includes(44))
         if (!wt) (infov += 8), infof.push(45);
-        else if (setting[32] || wt !== 46) (infov += 8), infof.push(44), (wt ||= 44);
+        else if (setting[32] || wt !== 46) (infov += 8), infof.push(44), (wt = wt !== 46 ? 44 : 46);
     if (info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1)?.id;
@@ -381,11 +381,11 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
                 if (wintf) continue;
                 if (ots[k].length === 2) {
                     if (canBeListen(tiles, ota, otb, ots[k][0], wint)) wintf = 79;
-                } else if (canBeListen(tiles, ota, otb, ots[k][0], wint)) 
+                } else if (canBeListen(tiles, ota, otb, ots[k][0], wint))
                     if (NumberArray[ots[k][0]] === 6) wintf = 77;
                     else bilisten = true;
                 else if (canBeListen(tiles, ota, otb, ots[k][1], wint)) wintf = 78;
-                else if (canBeListen(tiles, ota, otb, ots[k][2], wint)) 
+                else if (canBeListen(tiles, ota, otb, ots[k][2], wint))
                     if (NumberArray[ots[k][2]] === 2) wintf = 77;
                     else bilisten = true;
             }
@@ -404,14 +404,18 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
         let pans = GB7Pairs(aids[0], setting);
         pans.val += infov;
         pans.fan.push(...infof);
-        if (wt === 80) if (setting[19]) pans.val += 4, pans.fan.push(56); else ++pans.val, pans.fan.push(80);
+        if (wt === 80)
+            if (setting[19]) (pans.val += 4), pans.fan.push(56);
+            else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
     }
     if (substeps[2] === -1) {
         let pans = { val: 88 + infov, fan: [7, ...infof] };
-        if (wt === 80) if (setting[19]) pans.val += 4, pans.fan.push(56); else ++pans.val, pans.fan.push(80);
+        if (wt === 80)
+            if (setting[19]) (pans.val += 4), pans.fan.push(56);
+            else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -450,7 +454,9 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
             }
         pans.val += infov;
         pans.fan.push(...infof);
-        if (wt === 80) if (setting[19]) pans.val += 4, pans.fan.push(56); else ++pans.val, pans.fan.push(80);
+        if (wt === 80)
+            if (setting[19]) (pans.val += 4), pans.fan.push(56);
+            else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -481,13 +487,12 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
             postDebugInfo();
         }
-    let basept = setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val;
+    let basept = (setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val) + aids[2].length;
     gans.val += aids[2].length;
-    basept += aids[2].length;
     gans.fan.push(...Array(aids[2].length).fill(81));
-    if (setting[39] && wt) basept = Math.ceil(basept / 3);
     let fanreview = `${gans.val} ${loc.GB_FAN_unit}`;
     if (gans.val > basept) fanreview = `${loc.GB_max_fan}${loc.brace_left}${fanreview}${loc.brace_right}`;
+    if (setting[39] && wt) basept = Math.ceil(basept / 3);
     let ptchange = wt ? `${loc.winner} +${(basept + setting[37]) * 3}${loc.comma}${loc.other_player} -${basept + setting[37]}` : `${loc.winner} +${basept + setting[37] * 3}${loc.comma}${loc.loser} -${basept + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
     if (gans.val < setting[0]) ptchange = loc.wrong_win;
     outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];

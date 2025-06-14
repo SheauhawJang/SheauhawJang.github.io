@@ -157,12 +157,14 @@ html {
     overflow-x: auto;
     white-space: nowrap;
     max-width: 100%;
+    user-select: none;
 }
 
 .card-div {
     position: relative;
     display: inline-block;
     vertical-align: bottom;
+    user-select: none;
 }
 
 .card-div img {

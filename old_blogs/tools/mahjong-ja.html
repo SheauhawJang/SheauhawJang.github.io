@@ -488,6 +488,13 @@
                                 <label><input type="radio" name="score-gb-setting-7" value="0" checked />あり</label>
                                 <label><input type="radio" name="score-gb-setting-7" value="36" />なし</label>
                             </div>
+                            <span>点数計算</span>
+                            <div class="output-option-group">
+                                <label><input type="number" id="score-gb-setting-fan" value="8" min="0" />点縛り</label>
+                                <label><input type="number" id="score-gb-setting-blind" value="8" min="0" />点底点</label>
+                                <label title="JMSAルールでは 88 点満貫制が適用される。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" />点満貫</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="39" />ツモ点数を三分割</label>
+                            </div>
                         </div>
                     </details>
                 </div>

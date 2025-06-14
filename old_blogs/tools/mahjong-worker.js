@@ -481,10 +481,16 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
             postDebugInfo();
         }
+    let basept = setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val;
     gans.val += aids[2].length;
+    basept += aids[2].length;
     gans.fan.push(...Array(aids[2].length).fill(81));
-    let ptchange = wt ? `${loc.winner} +${gans.val * 3 + 24}${loc.comma}${loc.other_player} -${gans.val + 8}` : `${loc.winner} +${gans.val + 24}${loc.comma}${loc.loser} -${gans.val + 8}${loc.comma}${loc.observer} -8`;
-    outputs = [`${gans.val} ${loc.GB_FAN_unit}`, "\n", GBFanDiv(gans.fan), ptchange];
+    if (setting[39] && wt) basept = Math.ceil(basept / 3);
+    let fanreview = `${gans.val} ${loc.GB_FAN_unit}`;
+    if (gans.val > basept) fanreview = `${loc.GB_max_fan}${loc.brace_left}${fanreview}${loc.brace_right}`;
+    let ptchange = wt ? `${loc.winner} +${(basept + setting[37]) * 3}${loc.comma}${loc.other_player} -${basept + setting[37]}` : `${loc.winner} +${basept + setting[37] * 3}${loc.comma}${loc.loser} -${basept + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
+    if (gans.val < setting[0]) ptchange = loc.wrong_win;
+    outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 function JPPrintName(yakuman, printname) {

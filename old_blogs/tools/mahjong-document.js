@@ -486,12 +486,16 @@ function processGBScore() {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
         sq.push(...ssq);
     }
-    let setting = Array(37).fill(0);
+    let setting = Array(40).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(",");
         if (Number(a) === 0 && b === undefined) continue;
         setting[a] = Number(b ?? 1);
     }
+    setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
+    setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
+    setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
+    console.log(setting[0], setting[37], setting[38]);
     gb_worker = new Worker("mahjong-worker.js");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
@@ -533,7 +537,7 @@ function processJPScore() {
         const [a, b] = sq[i].value.split(",");
         setting[a] = Number(b ?? 1);
     }
-    setting[0] = Number(document.getElementById("score-jp-setting-fan")?.value ?? 1);
+    setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
     jp_worker = new Worker("mahjong-worker.js");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {

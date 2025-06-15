@@ -497,21 +497,14 @@ function OrphanStep(tiles) {
 }
 // Creation of Knitted Dragon
 let KnitDragonSave = Array.from({ length: 6 }, () => Array(9).fill(0));
+// prettier-ignore
+const Permutation3 = [ [0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0] ];
 function KnitDragonCreate() {
-    // dragonOffset contains all possible permutations (6 permutations for 3 elements)
-    const dragonOffsets = [
-        [0, 1, 2],
-        [0, 2, 1],
-        [1, 0, 2],
-        [1, 2, 0],
-        [2, 0, 1],
-        [2, 1, 0],
-    ];
     for (let i = 0; i < 6; ++i)
         for (let j = 0; j < 9; ++j) {
             const di = Math.floor(j / 3);
             const dj = j % 3;
-            const id = di * 9 + dragonOffsets[i][di] + dj * 3;
+            const id = di * 9 + Permutation3[i][di] + dj * 3;
             KnitDragonSave[i][j] = id;
         }
 }

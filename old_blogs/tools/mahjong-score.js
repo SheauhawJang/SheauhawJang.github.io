@@ -476,6 +476,7 @@ function GBTriBind(s, op, ma, pon, setting) {
     return ans;
 }
 const GreenArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0];
+const PureGreenArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 const SymmeArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0];
 const OrphanArray = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1];
 const NoOrphanArray = OrphanArray.map((x) => 1 - x);
@@ -669,14 +670,14 @@ function calculateBind(seq, tri, wind60, wind61, has48 = false, has49 = false, h
             else if (wind60 === tri[i]) (orphan[i] = 60), (v += 2);
             else if (tri[i] >= 31) (orphan[i] = 59), (v += 2);
             else if (can73) (orphan[i] = 73), ++v;
-            if (setting[33] && !can73 && orphan[i]) orphan[i] += 100, --v;
+            if (setting[33] && !can73 && orphan[i]) (orphan[i] += 100), --v;
         }
     const seqans = GBSeqBind(seq, Array(seq.length).fill(0), has75, setting);
     const trians = GBTriBind(tri, orphan, Array(tri.length).fill((can32 ? 0 : 64) | (can65 ? 0 : 1024)), has48 | (has49 ? 2 : 0) | (has75 ? 4 : 0), setting);
     let fan = [...seqans.fan, ...trians.fan, ...orphan.filter(Boolean)];
-    for (let i = 0; i < fan.length; ++i) 
-        if (fan[i] > 100) fan.push(fan[i] - 100, -73), fan[i] = 0;
-        else if (fan[i] < -100) fan.push(fan[i] + 100, 73), fan[i] = 0;
+    for (let i = 0; i < fan.length; ++i)
+        if (fan[i] > 100) fan.push(fan[i] - 100, -73), (fan[i] = 0);
+        else if (fan[i] < -100) fan.push(fan[i] + 100, 73), (fan[i] = 0);
     return { val: seqans.val + trians.val + v, fan };
 }
 let filter_cnt = 0;
@@ -890,7 +891,7 @@ function GB7Pairs(tids, setting) {
         if (setting[1] && isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
         if (setting[2] && isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
         if (setting[3] && isMask(a, HonorArray)) (v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true);
-        if (setting[4] && !must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18), must_hun19 = true;
+        if (setting[4] && !must_hun19 && isMask(a, OrphanArray)) (v += 32), f.push(18), (must_hun19 = true);
         if (must_hun19) must_quandai = true;
         if (setting[12] && isMask(a, EvenArray)) (v += 24), f.push(21), (must_duan1 = true);
         if (setting[5] && !must_qingyise && isSameColor(melds)) (v += 24), f.push(22), (must_qingyise = true);
@@ -1048,7 +1049,13 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         else updateYakuman(1), f.push(46);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, TerminalArray)) updateYakuman(1), f.push(45);
-    if (melds.length >= 5 && isMask(marr, GreenArray)) updateYakuman(1), f.push(44);
+    function updateGreen() {
+        if (setting[18] && isMask(marr, PureGreenArray)) 
+            if (setting[18] === 1) return;
+            else if (setting[1] && setting[18] === 2) return updateYakuman(2), f.push(49);
+        return updateYakuman(1), f.push(44);
+    }
+    if (melds.length >= 5 && isMask(marr, GreenArray)) updateGreen();
     if (melds.length >= 5 && ck + ek >= 4) updateYakuman(1), f.push(43);
     let windcount = Array(4).fill(0);
     let dragoncount = Array(3).fill(0);
@@ -1115,6 +1122,11 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let sanshoku = 0;
     for (let i = 0; i < 7; ++i) sanshoku += Math.min(seq[i], seq[i + 9], seq[i + 18]);
     (v += sanshoku * (mq ? 2 : 1)), f.push(...Array(sanshoku).fill(19));
+    if (setting[17]) {
+        let santsu = 0;
+        for (let i = 0; i < 6; ++i) santsu += Math.min(seq[Permutation3[i][0] * 9], seq[Permutation3[i][1] * 9 + 3], seq[Permutation3[i][2] * 9 + 6]);
+        (v += santsu * (mq ? 2 : 1)), f.push(...Array(santsu).fill(48));
+    }
     if (melds.length >= 5 && isAllTri(melds)) (v += 2), f.push(18);
     (v += tri[wind5]), f.push(...Array(tri[wind5]).fill(5));
     (v += tri[wind6]), f.push(...Array(tri[wind6]).fill(6));
@@ -1372,6 +1384,6 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
     return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40, 48, 49, 50, 51];
-const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, 1, 1, 1];
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40, 49, 96, 97, 99, 98];
+const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

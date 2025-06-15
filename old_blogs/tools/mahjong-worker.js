@@ -506,6 +506,7 @@ function JPPrintName(yakuman, printname) {
     return "";
 }
 function JPGetFanCount(mq, i) {
+    if (i >= JPScoreArray.length) return `${1} ${loc.JP_FAN_unit}`;
     if (JPScoreArray[i] === -1) return `${loc.yakuman}`;
     if (JPScoreArray[i] <= -2) return `${loc[`times_${-JPScoreArray[i]}`]}${loc.yakuman}`;
     const s = mq ? Math.ceil(JPScoreArray[i]) : Math.floor(JPScoreArray[i]);
@@ -517,11 +518,11 @@ function JPGetFuName(i) {
     return opts.join("");
 }
 function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
-    let fans = new Array(48).fill(0);
+    let fans = new Array(96).fill(0);
     for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
     fans.push(d, u, aka, nuki);
     let fanopt = [];
-    for (let i = 0; i < 51; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
+    for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
     let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${JPGetFuName(i)}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
     return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
 }

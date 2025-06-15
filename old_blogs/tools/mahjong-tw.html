@@ -387,12 +387,14 @@
                     <details>
                         <summary>規則設定</summary>
                         <div class="output-options">
-                            <span>不求人</span>
+                            <span title="國標原文的不求人定義限定一般型。問答規則、MIL規則、JMSA規則不允許不求人複合下述所有台種。世麻規則允許不求人複合下述所有台種。疑難解析建議允許不求人複合下述所有台種。">不求人複合</span>
                             <div class="output-option-group">
-                                <label title="國標原文、問答規則、MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-0" value="0" checked />必然門清不計</label>
-                                <label title="世麻規則採用。疑難解析建議採用。"><input type="radio" name="score-gb-setting-0" value="19" />必然門清加計</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="19" />九蓮寶燈/四暗刻</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="41" />七對/連七對</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="42" />十三么</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="43" />全不靠/七星不靠</label>
                             </div>
-                            <span title="國標原文的下述台種定義排除七對，但包含了七對複合字一色、清么九的牌例。疑難解析允許七對複合清一色、混一色、五門齊。問答規則建議允許，MIL規則允許七對複合清一色至混么九。世麻規則允許七對複合清一色至五門齊。JMSA規則允許七對複合清一色至推不倒、字一色至混么九。">七對複合</span>
+                            <span title="國標原文的下述台種定義限定一般型，但包含了七對複合字一色、清么九的牌例。疑難解析允許七對複合清一色、混一色、五門齊。問答規則建議允許，MIL規則允許七對複合清一色至混么九。世麻規則允許七對複合清一色至五門齊。JMSA規則允許七對複合清一色至推不倒、字一色至混么九。">七對複合</span>
                             <div class="output-option-group">
                                 <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>

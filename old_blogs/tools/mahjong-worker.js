@@ -405,7 +405,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
         pans.val += infov;
         pans.fan.push(...infof);
         if (wt === 80)
-            if (setting[19]) (pans.val += 4), pans.fan.push(56);
+            if (setting[41]) (pans.val += 4), pans.fan.push(56);
             else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
@@ -414,7 +414,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     if (substeps[2] === -1) {
         let pans = { val: 88 + infov, fan: [7, ...infof] };
         if (wt === 80)
-            if (setting[19]) (pans.val += 4), pans.fan.push(56);
+            if (setting[42]) (pans.val += 4), pans.fan.push(56);
             else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;
@@ -455,7 +455,7 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
         pans.val += infov;
         pans.fan.push(...infof);
         if (wt === 80)
-            if (setting[19]) (pans.val += 4), pans.fan.push(56);
+            if (setting[43]) (pans.val += 4), pans.fan.push(56);
             else ++pans.val, pans.fan.push(80);
         if (pans.val > gans.val) gans = pans;
         ++cm;

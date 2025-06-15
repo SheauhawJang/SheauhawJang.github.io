@@ -398,12 +398,14 @@
                     <details>
                         <summary>ルール設定</summary>
                         <div class="output-options">
-                            <span>不求人</span>
+                            <span title="国標原文に記載された不求人の定義は一般形に限定される。問答集ルール・MILルール・JMSAルールでは不求人と以下のすべての役との複合が許可されていない。WMOルールでは不求人と以下のすべての役との複合が許可される。疑問解説では不求人と以下のすべての役との複合の許可が推奨される。">不求人の複合</span>
                             <div class="output-option-group">
-                                <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-0" value="0" checked />必然門清不計</label>
-                                <label title="WMOルールでは適用される。疑問解説では適用が推奨されている。"><input type="radio" name="score-gb-setting-0" value="19" />必然門清加計</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="19" />九蓮宝燈/四暗刻</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="41" />七対/連七対</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="42" />十三么</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="43" />全不靠/七星不靠</label>
                             </div>
-                            <span title="国標原文に記載された以下の役の定義は七対を除外しているが、七対と字一色・清么九との複合の牌例は含まれている。疑問解説では七対と清一色・混一色・五門斉との複合が許可されている。問答集ルールでは七対と清一色から混么九までの各役との複合の許可を推奨していて、MILルールでは上述の複合が正式に許可されている。WMOルールでは七対と清一色から五門斉までの各役との複合が許可されている。JMSAルールでは七対と清一色から推不倒まで、及び字一色から混么九までの各役との複合が許可されている。">七対の複合</span>
+                            <span title="国標原文に記載された以下の役の定義は一般形に限定されるが、七対と字一色・清么九との複合の牌例は含まれている。疑問解説では七対と清一色・混一色・五門斉との複合が許可される。問答集ルールでは七対と清一色から混么九までの各役との複合の許可が推奨され、MILルールでは上述の複合が正式に許可される。WMOルールでは七対と清一色から五門斉までの各役との複合が許可される。JMSAルールでは七対と清一色から推不倒まで、及び字一色から混么九までの各役との複合が許可される。">七対の複合</span>
                             <div class="output-option-group">
                                 <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
@@ -454,7 +456,7 @@
                                 <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの么九刻を加算しない</label>
                                 <label><input type="radio" name="score-gb-setting-5" value="27" />全ての么九刻を加算しない</label>
                             </div>
-                            <span title="國標原文・問答集ルール・WMOルール・MILルールでは缺一門と大三元から一色四節高までの各役との複合が許可されている。">缺一門の複合</span>
+                            <span title="國標原文・問答集ルール・WMOルール・MILルールでは缺一門と大三元から一色四節高までの各役との複合が許可される。">缺一門の複合</span>
                             <div class="output-option-group">
                                 <label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
@@ -463,7 +465,7 @@
                                 <label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四節高</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
                             </div>
-                            <span title="國標原文・問答集ルール・MILルールでは混一色と大四喜・小四喜との複合が許可されており、混一色と緑一色との複合が許可されていない。WMOルールでは混一色と以下のすべての役との複合が許可されている。">混一色の複合</span>
+                            <span title="國標原文・問答集ルール・MILルールでは混一色と大四喜・小四喜との複合が許可されており、混一色と緑一色との複合が許可されていない。WMOルールでは混一色と以下のすべての役との複合が許可される。">混一色の複合</span>
                             <div class="output-option-group">
                                 <label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
@@ -481,7 +483,7 @@
                             </div>
                             <span>多面待ち和了</span>
                             <div class="output-option-group">
-                                <label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨されている。"><input type="radio" name="score-gb-setting-4" value="0" checked />辺張・坎張・単釣将を加算しない</label>
+                                <label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨される。"><input type="radio" name="score-gb-setting-4" value="0" checked />辺張・坎張・単釣将を加算しない</label>
                                 <label><input type="radio" name="score-gb-setting-4" value="26" />辺張・坎張・単釣将を加算しうる</label>
                             </div>
                             <span>加槓全求人</span>

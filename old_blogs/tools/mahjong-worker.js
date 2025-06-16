@@ -527,6 +527,7 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
 }
 function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
+    let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray.length; ++i) if (JPScoreArray[i] <= -2) JPScoreArray[i] = -1;
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
@@ -535,13 +536,44 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ("sp" in aids[1][i][j]) ++aka;
     for (let i = 0; i < aids[2].length; ++i) if ("sp" in aids[2][i]) ++aka;
     let nukicnt = aids[2].length;
+    const tiles = getTiles(aids[0]);
+    const p = MeldsPermutation(aids);
     if (info.includes(32))
         if (tsumo)
             if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
             else infoans.fan.push(33), ++infoans.yakuman;
-        else if (mw !== 27)
-            if (setting[9] === 1) infoans.fan.push(30), (infoans.valfan += 5);
-            else if (setting[9] === 2) infoans.fan.push(30), ++infoans.yakuman, (JPScoreArray[30] = -1);
+        else if (mw !== 27) {
+            const RenhouScoreArray = [0, 5, -1, 4, 6, 8];
+            const renhou = (JPScoreArray[30] = RenhouScoreArray[setting[9]]);
+            console.log(renhou);
+            if (renhou < 0) infoans.fan.push(30), (infoans.yakuman += -renhou);
+            else if (renhou > 0)
+                if (setting[21]) {
+                    let gf = [8], gvf = 20, grf = 0;
+                    if (substeps[0] === -1) {
+                        const { err, itots, itsubots, ck } = p;
+                        if (err === 1) return { output: loc.subtile_error_1, brief: "" };
+                        if (err === 2) return { output: loc.subtile_error_2, brief: "" };
+                        itots((ots, ota) => itsubots((subots) => {
+                            let {listen_type, bilisten, valfus, fus} = JPGetFusMain([...ots, subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
+                            let realfus = 0;
+                            ({valfus, fus, realfus} = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, ots.length + subots.length >= 5 && subots.length === ck));
+                            if (realfus > grf) gf = fus, gvf = valfus, grf = realfus;
+                        }));
+                    }
+                    if (substeps[1] === -1) {
+                        const SevenPairsFusArray = [25, 50, 100];
+                        const sf = JPFuArray[10] = SevenPairsFusArray[setting[8]];
+                        if (sf >= gvf) gvf = grf = sf, gf = [10];
+                    }
+                    const RenhouValueArray = [0, 2000, 8000, gvf << 6, 3000, 4000];
+                    const RenhouPrintArray = ["", "mangan", "yakuman", "", "haneman", "baiman"];
+                    if (RenhouValueArray[3] >= 2000) {
+                        RenhouValueArray[3] = 2000, RenhouPrintArray[3] = "mangan";
+                    } else if (setting[7] && RenhouValueArray[3] >= 1920) RenhouValueArray[3] = 2000, RenhouPrintArray[3] = "kiri_mangan";
+                    gans = { ...eans_jp, val: RenhouValueArray[setting[9]], fan: [30], valfan: renhou, fus: gf, valfus: gvf, realfus: grf, print: RenhouPrintArray[setting[9]] };
+                } else infoans.fan.push(30), (infoans.valfan += renhou);
+        }
     if (!infoans.yakuman) {
         if (info.includes(16)) infoans.fan.push(16), (infoans.valfan += 2), (riichi = true);
         else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan, (riichi = true);
@@ -554,11 +586,8 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
         infoans.valfan += aka + nukicnt;
         infoans.delete += setting[12] ? 0 : aka + nukicnt;
     }
-    let gans = eans_jp;
-    const tiles = getTiles(aids[0]);
     let cm = 0,
         m = 0;
-    const p = MeldsPermutation(aids);
     let mq = aids[1].length === 0;
     const nukis = getTiles(aids[2]);
     let doras = getTiles(aids[3]);
@@ -574,25 +603,28 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
             else limit = Math.max(limit, 13);
         return ans.yakuman || ans.valfan - (setting[12] ? 0 : ans.dora) - ans.ura - infoans.delete >= limit;
     }
+    function replaceCheck(ans) {
+        if (ans.val > gans.val) return true;
+        else if (ans.val === gans.val)
+            if (ans.yakuman > gans.yakuman) return true;
+            else if (ans.yakuman === gans.yakuman)
+                if (ans.realyakuman > gans.realyakuman) return true;
+                else if (ans.realyakuman === gans.realyakuman)
+                    if (ans.valfan > gans.valfan) return true;
+                    else if (ans.valfan === gans.valfan) if (ans.realfus > gans.realfus) return true;
+    }
     function cal(ots, ota, subots, ck, ek) {
         const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting);
-        function replaceCheck() {
-            if (ans.val > gans.val) return true;
-            else if (ans.val === gans.val)
-                if (ans.yakuman > gans.yakuman) return true;
-                else if (ans.yakuman === gans.yakuman)
-                    if (ans.realyakuman > gans.realyakuman) return true;
-                    else if (ans.realyakuman === gans.realyakuman)
-                        if (ans.valfan > gans.valfan) return true;
-                        else if (ans.valfan === gans.valfan) if (ans.realfus > gans.realfus) return true;
-        }
-        if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck()) gans = ans;
-        else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck())) gans = ans;
+        if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
+        else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
         ++cm;
         if (!(cm & 1048575)) postDebugInfo();
     }
-    if (substeps[1] === -1) gans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
-    if (substeps[2] === -1) {
+    if (substeps[1] === -1) {
+        const ans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
+        if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
+        else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
+    } if (substeps[2] === -1) {
         let tcp = tiles.slice();
         --tcp[aids[0].at(-1).id];
         let listen_13 = setting[1];

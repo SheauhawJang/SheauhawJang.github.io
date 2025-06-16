@@ -985,31 +985,19 @@ function GB7Pairs(tids, setting) {
     return gans;
 }
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
-const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realyakuman: 0, realfus: 0 };
+const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realyakuman: 0, realfus: 0, dora: 0, ura: 0 };
 let use_time = 0;
-function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
-    let f = [];
-    let v = infoans.valfan,
-        yakuman = infoans.yakuman,
-        realyakuman = yakuman;
-    function updateYakuman(x, n = 1) {
-        if (n === 0) return;
-        if (setting[2]) realyakuman = yakuman += x * n;
-        else (yakuman = Math.max(yakuman, x)), (realyakuman += x * n);
-    }
-    let head = -1;
-    const mq = melds.length >= 5 && aids[1].length === ck;
-    const wint = aids[0].at(-1)?.id ?? -1;
+function JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, mq = melds.length >= 5 && aids[1].length === ck, wint = aids[0].at(-1)?.id ?? -1, tb = buildHand(tiles, ta, wint)) {
+    const hcnt = Math.ceil(aids[0].length / 3);
     let valfus = 20,
         fus = [8];
     if (mq && !tsumo) (valfus += 10), (fus = [9]);
-    const hcnt = Math.ceil(aids[0].length / 3);
+    let head = -1;
     let listen_type = 0;
-    let bilisten = false;
-    let koutsufu = [];
     let epmid = -1;
     let ep19 = -1;
-    const tb = buildHand(tiles, ta, wint);
+    let bilisten = false;
+    let koutsufu = [];
     for (let i = 0; i < hcnt; ++i)
         if (melds[i].length === 2) {
             if (canBeListen(tiles, ta, tb, melds[i][0], wint)) listen_type = 19;
@@ -1044,13 +1032,40 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (head === 31) (valfus += 2), fus.push(14);
     if (head === 32) (valfus += 2), fus.push(15);
     if (head === 33) (valfus += 2), fus.push(16);
+    return { head, listen_type, cp, bilisten, valfus, fus };
+}
+function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq, v = 0, f = []) {
+    if (setting[6] && mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
+    else {
+        if (listen_type) (valfus += 2), fus.push(listen_type);
+        if (tsumo && !(setting[16] && yakuman === 0 && infoans.fan.includes(12))) (valfus += 2), fus.push(11);
+    }
+    if (!mq && valfus <= 20) valfus += 2;
+    const realfus = valfus;
+    if (setting[14]) valfus = Math.ceil(valfus / 10) * 10;
+    return { fus, valfus, realfus, v, f };
+}
+function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
+    let f = [];
+    let v = infoans.valfan,
+        yakuman = infoans.yakuman,
+        realyakuman = yakuman;
+    function updateYakuman(x, n = 1) {
+        if (n === 0) return;
+        if (setting[2]) realyakuman = yakuman += x * n;
+        else (yakuman = Math.max(yakuman, x)), (realyakuman += x * n);
+    }
+    const mq = melds.length >= 5 && aids[1].length === ck;
+    const wint = aids[0].at(-1)?.id ?? -1;
+    const tb = buildHand(tiles, ta, wint);
+    let { head, listen_type, cp, bilisten, valfus, fus } = JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, mq, wint, tb);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds))
         if (setting[1] && ninegateListen(ColorFirstArray[ColorArray[melds[0][0]]], tiles, wint)) updateYakuman(2), f.push(47);
         else updateYakuman(1), f.push(46);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, TerminalArray)) updateYakuman(1), f.push(45);
     function updateGreen() {
-        if (setting[18] && isMask(marr, PureGreenArray)) 
+        if (setting[18] && isMask(marr, PureGreenArray))
             if (setting[18] === 1) return;
             else if (setting[1] && setting[18] === 2) return updateYakuman(2), f.push(49);
         return updateYakuman(1), f.push(44);
@@ -1075,14 +1090,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (ck + cp >= 4)
         if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) updateYakuman(2), f.push(35);
         else updateYakuman(1), f.push(34);
-    if (setting[6] && mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
-    else {
-        if (listen_type) (valfus += 2), fus.push(listen_type);
-        if (tsumo && !(setting[16] && yakuman === 0 && infoans.fan.includes(12))) (valfus += 2), fus.push(11);
-    }
-    if (!mq && valfus <= 20) valfus += 2;
-    const realfus = valfus;
-    if (setting[14]) valfus = Math.ceil(valfus / 10) * 10;
+    let realfus;
+    ({ fus, valfus, realfus, v, f } = JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq, v, f));
     if (infoans.yakuman > 0) f.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: v, fan: f, valfus, realfus, fus };
     if (gans.yakuman > 0) return eans_jp;

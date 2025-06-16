@@ -484,7 +484,6 @@ function processGBScore() {
     let sq = Array.from(document.querySelectorAll('input[name="score-gb-setting"]:checked'));
     for (let i = 0; i <= 7; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
-        console.log(ssq);
         sq.push(...ssq);
         if (i === 0) for (let j = 0; j < ssq.length; ++j) if (ssq[j].value === '19') sq.push({value: "41"}, {value: "42"}, {value: "43"});
     }
@@ -497,7 +496,6 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    console.log(setting[0], setting[37], setting[38]);
     gb_worker = new Worker("mahjong-worker.js");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {

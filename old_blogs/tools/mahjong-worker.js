@@ -2,7 +2,7 @@ importScripts("mahjong.js");
 importScripts("mahjong-score.js");
 importScripts("mahjong-worker-lang.js");
 importScripts("mahjong-mmc.js");
-console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
+//console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const table_head = '<table style="border-collapse: collapse; padding: 0px">';
 const table_tail = "</table>";
 function cardImage(id) {
@@ -546,7 +546,6 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
         else if (mw !== 27) {
             const RenhouScoreArray = [0, 5, -1, 4, 6, 8];
             const renhou = (JPScoreArray[30] = RenhouScoreArray[setting[9]]);
-            console.log(renhou);
             if (renhou < 0) infoans.fan.push(30), (infoans.yakuman += -renhou);
             else if (renhou > 0)
                 if (setting[21]) {

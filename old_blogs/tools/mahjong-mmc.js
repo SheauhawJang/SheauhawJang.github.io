@@ -430,7 +430,7 @@ function criteria_mixed_outside_hand(hand) {
     return Qingque_decom_map(hand, (d) => isContains19(d), criteria_all_terminals);
 }
 function criteria_nine_gates(hand) {
-    if (!criteria_concealed_hand(hand)) return false;
+    if (hand.aids[1].length !== 0) return false;
     return Qingque_decom_map(hand, (d) => ninegate(d, hand.counter, hand.aids[0].at(-1).id));
 }
 function criteria_full_flush(hand) {

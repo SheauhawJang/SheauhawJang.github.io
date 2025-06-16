@@ -352,9 +352,11 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
     const ms = [ma[a], ma[b], ma[c], ma[d]];
     const msk = ma[a] | ma[b] | ma[c] | ma[d];
     if (FourShiftOne(...vs)) {
-        if (!(msk & 1) && vs[0] < 27) {
-            (v = 48), (f = [15]), (tmsk = 1);
-            if (!setting[17] && pon & 4) --v, f.push(-75);
+        if (vs[0] < 27) {
+            if (!(msk & 1)) {
+                (v = 48), (f = [15]), (tmsk = 1);
+                if (!setting[17] && pon & 4) --v, f.push(-75);
+            }
         } else if (!(msk & 2)) {
             (v = 88), (f = [1, ...os.map((a) => -a)]), (tmsk = 2);
             for (let i = 0; i < os.length; ++i) v -= Get19KFan(os[i]);
@@ -1090,6 +1092,24 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (ck + cp >= 4)
         if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) updateYakuman(2), f.push(35);
         else updateYakuman(1), f.push(34);
+    let tri = null;
+    function init_tri() {
+        if (tri !== null) return;
+        tri = Array(sizeUT).fill(0);
+        for (let i = 0; i < melds.length; ++i) if (melds[i].length !== 3 && melds[i].length !== 2) ++tri[melds[i][0]];
+    }
+    if (setting[20]) {
+        init_tri();
+        let tri4 = tri.slice();
+        let shift4 = 0;
+        for (let i = 0; i < 3; ++i)
+            for (let j = 0; j < 6; ++j) {
+                const cnt = Math.min(...tri4.slice(i * 9 + j, i * 9 + j + 4));
+                for (let k = 0; k < 4; ++k) tri4[i * 9 + j + k] -= cnt;
+                shift4 += cnt;
+            }
+        updateYakuman(1, shift4), f.push(...Array(shift4).fill(51));
+    }
     let realfus;
     ({ fus, valfus, realfus, v, f } = JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq, v, f));
     if (infoans.yakuman > 0) f.push(...infoans.fan);
@@ -1123,11 +1143,6 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let itsu = 0;
     for (let i = 0; i < 3; ++i) itsu += Math.min(seq[i * 9], seq[i * 9 + 3], seq[i * 9 + 6]);
     (v += itsu * (mq ? 2 : 1)), f.push(...Array(itsu).fill(21));
-    let tri = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds.length; ++i) if (melds[i].length !== 3 && melds[i].length !== 2) ++tri[melds[i][0]];
-    let toukou = 0;
-    for (let i = 0; i < 9; ++i) toukou += Math.min(tri[i], tri[i + 9], tri[i + 18]);
-    (v += toukou * 2), f.push(...Array(toukou).fill(20));
     let sanshoku = 0;
     for (let i = 0; i < 7; ++i) sanshoku += Math.min(seq[i], seq[i + 9], seq[i + 18]);
     (v += sanshoku * (mq ? 2 : 1)), f.push(...Array(sanshoku).fill(19));
@@ -1135,6 +1150,21 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         let santsu = 0;
         for (let i = 0; i < 6; ++i) santsu += Math.min(seq[Permutation3[i][0] * 9], seq[Permutation3[i][1] * 9 + 3], seq[Permutation3[i][2] * 9 + 6]);
         (v += santsu * (mq ? 2 : 1)), f.push(...Array(santsu).fill(48));
+    }
+    let toukou = 0;
+    init_tri();
+    for (let i = 0; i < 9; ++i) toukou += Math.min(tri[i], tri[i + 9], tri[i + 18]);
+    (v += toukou * 2), f.push(...Array(toukou).fill(20));
+    if (setting[19]) {
+        let tri3 = tri.slice();
+        let shift3 = 0;
+        for (let i = 0; i < 3; ++i)
+            for (let j = 0; j < 7; ++j) {
+                const cnt = Math.min(...tri3.slice(i * 9 + j, i * 9 + j + 3));
+                for (let k = 0; k < 3; ++k) tri3[i * 9 + j + k] -= cnt;
+                shift3 += cnt;
+            }
+        (v += shift3 * 2), f.push(...Array(shift3).fill(50));
     }
     if (melds.length >= 5 && isAllTri(melds)) (v += 2), f.push(18);
     (v += tri[wind5]), f.push(...Array(tri[wind5]).fill(5));
@@ -1393,6 +1423,6 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
     return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 38, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 37, 41, 30, 40, 49, 96, 97, 99, 98];
-const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2];
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 30, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 40, 49, 37, 41, 96, 98, 99, 97];
+const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

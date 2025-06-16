@@ -530,6 +530,7 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
 function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray.length; ++i) if (JPScoreArray[i] <= -2) JPScoreArray[i] = -1;
+    if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
     let aka = 0;

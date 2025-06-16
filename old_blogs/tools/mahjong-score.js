@@ -1093,10 +1093,16 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) updateYakuman(2), f.push(35);
         else updateYakuman(1), f.push(34);
     let tri = null;
+    let seq = null;
     function init_tri() {
         if (tri !== null) return;
         tri = Array(sizeUT).fill(0);
         for (let i = 0; i < melds.length; ++i) if (melds[i].length !== 3 && melds[i].length !== 2) ++tri[melds[i][0]];
+    }
+    function init_seq() {
+        if (seq !== null) return;
+        seq = Array(25).fill(0);
+        for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) ++seq[melds[i][0]];
     }
     if (setting[20]) {
         init_tri();
@@ -1110,6 +1116,12 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             }
         updateYakuman(1, shift4), f.push(...Array(shift4).fill(51));
     }
+    if (setting[22] === 1 || (setting[22] === 2 && mq)) {
+        init_seq();
+        let same4 = 0;
+        for (let i = 0; i < 25; ++i) same4 += Math.floor(seq[i] / 4);
+        updateYakuman(1, same4), f.push(...Array(same4).fill(53));
+    }
     let realfus;
     ({ fus, valfus, realfus, v, f } = JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq, v, f));
     if (infoans.yakuman > 0) f.push(...infoans.fan);
@@ -1119,15 +1131,22 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let must_hunyise = false;
     let must_quandai = false;
     if (melds.length >= 5 && isSameColor(melds)) (v += mq ? 6 : 5), f.push(31), (must_hunyise = true);
-    let seq = Array(25).fill(0);
-    for (let i = 0; i < melds.length; ++i) if (melds[i].length === 3) ++seq[melds[i][0]];
+    init_seq();
+    let same3 = 0;
+    const Same3Array = [0, 2, 1.5, 2.5, 2, 3];
+    const Same3RealArray = mq ? [0, 2, 2, 3, 2, 3] : [0, 2, 1, 2, 0, 0];
+    if (Same3RealArray[setting[21]] !== 0) {
+        JPScoreArray[53] = Same3Array[setting[21]];
+        for (let i = 0; i < 25; ++i) same3 += Math.floor(seq[i] / 3);
+        v += Same3RealArray[setting[21]] * same3, f.push(...Array(same3).fill(52));
+    }
     if (mq) {
         let beikou = 0;
         for (let i = 0; i < 25; ++i) beikou += Math.floor(seq[i] / 2);
         const b1 = beikou % 2,
             b2 = Math.floor(beikou / 2);
         (v += b1 + 3 * b2), f.push(...Array(b2).fill(29));
-        if (b1) f.push(11);
+        if (!same3 && b1) f.push(11);
     }
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += mq ? 3 : 2), f.push(28);
     if (melds.length >= 5 && isMask(marr, OrphanArray)) (v += 2), f.push(25), (must_quandai = true);
@@ -1423,6 +1442,6 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
     return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 30, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 40, 49, 37, 41, 96, 98, 99, 97];
-const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1];
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 30, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 40, 49, 37, 41, 96, 98, 99, 97];
+const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1, 3, -1];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

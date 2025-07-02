@@ -595,6 +595,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     let uras = getTiles(riichi ? aids[4] : []);
     doras = doras.map((_, i) => doras[getDoraPointer(i)]);
     uras = uras.map((_, i) => uras[getDoraPointer(i)]);
+    console.log(doras.map((x,i)=>i*10+x));
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
     function ansYakuAri(ans) {

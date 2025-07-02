@@ -1199,12 +1199,12 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     for (let i = 0; i < melds.length; ++i) 
         if (melds[i].length === 3) for (let j = 0; j < 3; ++j) ++vaildora[melds[i][j]];
         else vaildora[melds[i][0]] += melds[i].length === 1 ? 3 : melds[i].length;
-    for (let i = 0; i < sizeUT; ++i) (gd += (ta[i] + nuki[i]) * doras[i]), (gu += (ta[i] + nuki[i]) * uras[i]);
+    for (let i = 0; i < sizeUT; ++i) (gd += vaildora[i] * doras[i]), (gu += vaildora[i] * uras[i]);
     for (let i = 42; i < 50; ++i) {
         if (doras[i] === 0 && uras[i] == 0) continue;
         const [l, r] = JokerRange[i];
         let cnt = 0;
-        for (let j = l; j < r; ++j) if (ta[j] + nuki[j] > cnt) cnt = ta[j] + nuki[j];
+        for (let j = l; j < r; ++j) if (vaildora[j] > cnt) cnt = vaildora[j];
         (gd += cnt * doras[i]), (gu += cnt * uras[i]);
     }
     v += gd + gu;

@@ -485,9 +485,8 @@ function processGBScore() {
     for (let i = 0; i <= 7; ++i) {
         const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
         sq.push(...ssq);
-        if (i === 0) for (let j = 0; j < ssq.length; ++j) if (ssq[j].value === '19') sq.push({value: "41"}, {value: "42"}, {value: "43"});
     }
-    let setting = Array(44).fill(0);
+    let setting = Array(45).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(",");
         if (Number(a) === 0 && b === undefined) continue;

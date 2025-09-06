@@ -456,6 +456,11 @@ input[type="checkbox"] {
     display: block;
 }
 
+.fan {
+    font-style: italic;
+    font-size: small;
+}
+
 @media screen and (max-width: 512px) {
     body {
         padding: 6px;
@@ -544,5 +549,10 @@ input[type="checkbox"] {
     }
     .mobile-display-only {
         display: block;
+    }
+
+    .fan {
+        font-style: italic;
+        font-size: x-small;
     }
 }

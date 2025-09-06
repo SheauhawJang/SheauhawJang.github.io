@@ -255,6 +255,112 @@
                         </div>
                         <button onclick="processGBScore()" class="score-button">Calculate</button>
                     </div>
+                    <details>
+                        <summary>Rules Settings</summary>
+                        <div class="output-options">
+                            <span title="國標原文的不求人定義限定一般型。問答規則、MIL規則、JMSA規則不允許不求人複合下述所有台種。世麻規則允許不求人複合下述所有台種。疑難解析建議允許不求人複合下述所有台種。"><span class="fan">Fully Conc. Hand</span> with</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="19" /><span class="fan">Nine Gates</span> / <span class="fan">Four Concealed Pungs</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="41" /><span class="fan">Seven (Shifted) Pairs</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="42" /><span class="fan">Thirteen Orphans</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="43" /><span class="fan">Honors and Knitted Tiles</span></label>
+                            </div>
+                            <span title="國標原文的下述台種定義限定一般型，但包含了七對複合字一色、清么九的牌例。疑難解析允許七對複合清一色、混一色、五門齊。問答規則建議允許，MIL規則允許七對複合清一色至混么九。世麻規則允許七對複合清一色至五門齊。JMSA規則允許七對複合清一色至推不倒、字一色至混么九。"><span class="fan">Seven Pairs</span> with</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="5" checked /><span class="fan">Full Flush</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="10" checked /><span class="fan">Half Flush</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="1" checked /><span class="fan">All Green</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="6" checked /><span class="fan">Upper/Middle/Lower Tiles</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="7" checked /><span class="fan">Upper/Lower Four</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="9" checked /><span class="fan">Reversible Tiles</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="11" checked /><span class="fan">All Types</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="3" checked /><span class="fan">All Honors</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="2" checked /><span class="fan">All Terminals</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="4" checked /><span class="fan">All Terminals and Honors</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="40" checked /><span class="fan">Outside Hand</span></label>
+                                <label title="由於張數限制，不可能出現。"><input type="checkbox" name="score-gb-setting" value="8" checked /><span class="fan">All Fives</span></label>
+                                <label title="現行規則均不允許。"><input type="checkbox" name="score-gb-setting" value="12" /><span class="fan">All Even Pungs</span></label>
+                            </div>
+                            <span><span class="fan">Two Conc. Kongs</span></span>
+                            <div class="output-option-group">
+                                <label title="國標原文、問答規則、MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 Points</label>
+                                <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-1" value="23" />8 Points</label>
+                            </div>
+                            <span><span class="fan">Conc. and Melded Kong</span></span>
+                            <div class="output-option-group">
+                                <label title="MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 Points</label>
+                                <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 Points</label>
+                                <label title="1999年全國麻將運動比賽補充規定（參見疑難解析）。"><input type="radio" name="score-gb-setting-2" value="24,2" /><span class="fan">Melded Kong</span> + <span class="fan">Concealed Kong</span></label>
+                                <label title="問答規則採用。"><input type="radio" name="score-gb-setting-2" value="24,3" /><span class="fan">Two Melded Kongs</span> + <span class="fan">Concealed Kong</span></label>
+                            </div>
+                            <span><span class="fan">Three/Four Kongs</span></span>
+                            <div class="output-option-group">
+                                <label title="MIL規則、JMSA規則採用。"><input type="radio" name="score-gb-setting-6" value="0" checked />Combine with <span class="fan">Concealed Pungs</span>, without <span class="fan">Concealed Kongs</span></label>
+                                <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-6" value="30,1" />Combine with <span class="fan">Concealed Pungs</span> and <span class="fan">Concealed Kongs</span></label>
+                                <label title="問答規則採用。"><input type="radio" name="score-gb-setting-6" value="30,2" />A Certain Combination</label>
+                            </div>
+                            <span><span class="fan">Out with Repl. Tile</span></span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="31,1" />Combine without <span class="fan">Meld Kong</span></label>
+                                <label title="疑難解析採用。"><input type="checkbox" name="score-gb-setting" value="31,2" />1 point deducted in <span class="fan">Melded/Concealed Kong</span></label>
+                                <label title="問答規則、MIL規則、JMSA規則採用。"><input type="checkbox" name="score-gb-setting" value="32" checked />Combine with <span class="fan">Last Tile Draw</span></label>
+                            </div>
+                            <span>Omit <span class="fan">Pung of Term./Hon.</span></span>
+                            <div class="output-option-group">
+                                <label title="疑難解析採用。"><input type="checkbox" name="score-gb-setting" value="33" />1 point deducted in <span class="fan">Prevalent Wind</span> / <span class="fan">Seat Wind</span> / <span class="fan">Dragon Pung</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="34" /><span class="fan">Big Three Winds</span> does not omit</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="35" /><span class="fan">Little Four Winds</span> does not omit</label>
+                            </div>
+                            <span><span class="fan">Nine Gates</span></span>
+                            <div class="output-option-group">
+                                <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-5" value="0" checked />Omit one <span class="fan">Pung of Terminals and Honors</span></label>
+                                <label><input type="radio" name="score-gb-setting-5" value="27" />Omit all <span class="fan">Pung of Terminals and Honors</span></label>
+                            </div>
+                            <span title="國標原文、問答規則、世麻規則、MIL規則允許缺一門複合大三元至一色四節高。"><span class="fan">One Voided Suit</span> with</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="13" checked /><span class="fan">Big Three Dragons</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="14" checked /><span class="fan">Little Three Dragons</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="15" checked /><span class="fan">Big Three Winds</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="16" checked /><span class="fan">Quadruple Chow</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="44" checked /><span class="fan">Four Shifted Chows</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="17" checked /><span class="fan">Four Pure Shifted Pungs</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="18" /><span class="fan">Reversible Tiles</span></label>
+                            </div>
+                            <span title="國標原文、問答規則、MIL規則允許混一色複合大四喜、小四喜；不允許混一色複合綠一色。世麻規則允許混一色複合下述所有台種。"><span class="fan">Half Flush with</span></span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span class="fan">Big Four Winds</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span class="fan">Little Four Winds</span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="22" /><span class="fan">All Green</span></label>
+                            </div>
+                            <span><span class="fan">All Terminals</span> with</span>
+                            <div class="output-option-group">
+                                <label title="世麻規則採用。問答規則、MIL規則不採用。"><input type="checkbox" name="score-gb-setting" value="28" /><span class="fan">Double Pung</span></label>
+                                <label title="國標原文為“不計同刻”，若非筆誤則不採用。"><input type="checkbox" name="score-gb-setting" value="29" checked /><span class="fan">Triple Pung</span></label>
+                            </div>
+                            <span><span class="fan">Knitted Str.</span></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-3" value="25" />Omit <span class="fan">Edge/Closed/Pair Wait</span> when winning tile can be considered as part of <span class="fan">Knitted Straight</span></label>
+                                <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-3" value="0" checked />Allow <span class="fan">Edge/Closed/Pair</span> Wait when winning tile can be considered as part of chow or pair</label>
+                            </div>
+                            <span>Multi-Wait</span>
+                            <div class="output-option-group">
+                                <label title="問答規則、世麻規則、MIL規則採用。疑難解析建議採用。"><input type="radio" name="score-gb-setting-4" value="0" checked />Omit <span class="fan">Edge/Closed/Pair Wait</span></label>
+                                <label><input type="radio" name="score-gb-setting-4" value="26" />Allow <span class="fan">Edge/Closed/Pair Wait</span></label>
+                            </div>
+                            <span><span class="fan">Melded Hand</span></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-7" value="0" checked />Extended Kong allowed</label>
+                                <label><input type="radio" name="score-gb-setting-7" value="36" />Extended Kong banned</label>
+                            </div>
+                            <span>Payment Method</span>
+                            <div class="output-option-group">
+                                <label>Minimum limit <input type="number" id="score-gb-setting-fan" value="8" min="0" /> points</label>
+                                <label>Extra points <input type="number" id="score-gb-setting-blind" value="8" min="0" /> points</label>
+                                <label title="JMSA規則採用 88 台封頂。"><input type="checkbox" name="score-gb-setting" value="38" />Maximum limit <input type="number" id="score-gb-setting-maxfan" value="88" min="0" /> points</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="39" />Points divided by 3 when self-drawn</label>
+                            </div>
+                        </div>
+                    </details>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>

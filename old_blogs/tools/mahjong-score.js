@@ -227,7 +227,10 @@ function GBSeqBind4(s, ma, a, b, c, d, ans, que, setting) {
     if (!(msk & 1) && FourSame(...vs)) {
         (v = 42), (f = [14, -64, -64, -64]), (tmsk = 1);
         if (!setting[16] && que) --v, f.push(-75);
-    } else if (!(msk & 2) && FourShift(...vs)) (v = 32), (f = [16]), (tmsk = 2);
+    } else if (!(msk & 2) && FourShift(...vs)) {
+        (v = 32), (f = [16]), (tmsk = 2);
+        if (!setting[44] && que) --v, f.push(-75);
+    }
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c, d]);
         const m = RemoveMeldsByIndex(ma, [a, b, c, d]);

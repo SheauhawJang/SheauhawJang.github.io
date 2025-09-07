@@ -1139,7 +1139,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     const Same3Array = [0, 2, 1.5, 2.5, 2, 3];
     const Same3RealArray = mq ? [0, 2, 2, 3, 2, 3] : [0, 2, 1, 2, 0, 0];
     if (Same3RealArray[setting[21]] !== 0) {
-        JPScoreArray[53] = Same3Array[setting[21]];
+        JPScoreArray[52] = Same3Array[setting[21]];
         for (let i = 0; i < 25; ++i) same3 += Math.floor(seq[i] / 3);
         v += Same3RealArray[setting[21]] * same3, f.push(...Array(same3).fill(52));
     }

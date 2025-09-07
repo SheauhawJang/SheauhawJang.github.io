@@ -550,9 +550,4 @@ input[type="checkbox"] {
     .mobile-display-only {
         display: block;
     }
-
-    .fan {
-        font-style: italic;
-        font-size: x-small;
-    }
 }

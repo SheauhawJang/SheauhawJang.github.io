@@ -216,6 +216,8 @@ const cn_loc = {
     JP_FU_unit: "符",
     kiri_mangan: "切上满贯",
     wrong_win: "错和",
+    fanname_format_left: "",
+    fanname_format_right: "",
 }
 const tw_loc = {
     wait: "待",
@@ -435,6 +437,8 @@ const tw_loc = {
     JP_FU_unit: "符",
     kiri_mangan: "切上滿貫",
     wrong_win: "錯和",
+    fanname_format_left: "",
+    fanname_format_right: "",
 }
 const ja_loc = {
     wait: "待",
@@ -654,6 +658,8 @@ const ja_loc = {
     JP_FU_unit: "符",
     kiri_mangan: "切り上げ満貫",
     wrong_win: "錯和",
+    fanname_format_left: "",
+    fanname_format_right: "",
 }
 const en_loc = {
     wait: "Wait",
@@ -821,6 +827,13 @@ const en_loc = {
     JP_YAKUNAME_45: "All Terminals",
     JP_YAKUNAME_46: "Nine Gates",
     JP_YAKUNAME_47: "True Nine Gates",
+    JP_YAKUNAME_48: "Mixed Straight",
+    JP_YAKUNAME_49: "All Green without Dragon",
+    JP_YAKUNAME_50: "Three Shifted Pungs",
+    JP_YAKUNAME_51: "Four Shifted Pungs",
+    JP_YAKUNAME_52: "Pure Triple Chow",
+    JP_YAKUNAME_53: "Pure Quadruple Chow",
+    JP_YAKUNAME_53_EX: "Pure Quadruple Chow",
     JP_YAKUNAME_96: "Dora",
     JP_YAKUNAME_97: "Ura Dora",
     JP_YAKUNAME_98: "Red Dora",
@@ -866,6 +879,8 @@ const en_loc = {
     JP_FU_unit: "Minipoints",
     kiri_mangan: "Rounded-Up Mangan",
     wrong_win: "False Win",
+    fanname_format_left: "<span class=\"fan\">",
+    fanname_format_right: "</span>",
 }
 let loc = cn_loc;
 function setLoc(inlang) {

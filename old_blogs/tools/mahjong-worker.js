@@ -317,7 +317,7 @@ function GBFanDiv(fan) {
     fans[60] += fans[83];
     fans[61] += fans[83];
     let fanopt = [];
-    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc[`GB_FANNAME_${i}`]}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
+    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`GB_FANNAME_${i}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
     return `${table_head}${fanopt.join("")}${table_tail}`;
 }
 function postDebugInfoGlobal(st, m, cm, output) {
@@ -523,8 +523,8 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
     fans.push(d, u, aka, nuki);
     let fanopt = [];
-    for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
-    let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${JPGetFuName(i)}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
+    for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`JP_YAKUNAME_${PrintSeq[i]}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
+    let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${loc.fanname_format_left + JPGetFuName(i) + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
     return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
 }
 function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {

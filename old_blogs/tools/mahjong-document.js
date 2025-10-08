@@ -180,11 +180,13 @@ function getCardHelperFontSize(width, unit) {
 function useHelper() {
     return typeof card_helper !== "undefined" && card_helper;
 }
-function getCardHelperDiv(tile, width, unit = "%") {
+function getCardHelperDiv(tile, width, unit = "%", t = "") {
     if (!useHelper()) return "";
     const id = tile.id;
     const helper = HelperArray[id] ?? "";
     const fontSize = getCardHelperFontSize(width, unit);
+    if (t === "r") return `<span class="card-helper-r" style="font-size: ${fontSize}px">${helper}</span>`;
+    if (t === "k") return `<span class="card-helper-rr-0" style="font-size: ${fontSize}px">${helper}</span><span class="card-helper-rr-1" style="font-size: ${fontSize}px">${helper}</span>`;
     return `<span class="card-helper" style="font-size: ${fontSize}px">${helper}</span>`;
 }
 let cardskin = "jp";
@@ -225,7 +227,7 @@ function outputCardImage(tids, i, width, link) {
     return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? `discard(${i})` : "")}</div>`;
 }
 function outputCardImageRotated(id, width, cnt) {
-    return `<div class="card-div" style="width: ${(width * 120) / 80}%;">${getCardImage(id, cnt === 2 ? "k" : "r")}</div>`;
+    return `<div class="card-div" style="width: ${(width * 120) / 80}%;">${getCardHelperDiv(id, width, undefined, cnt === 2 ? "k" : "r")}${getCardImage(id, cnt === 2 ? "k" : "r")}</div>`;
 }
 function outputCardImageBack(width) {
     return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.png"></div>`;
@@ -318,7 +320,7 @@ function inputCardImage(ids, i, j, width, unit) {
     return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}${getCardImage(ids[i], "", `removeInput(${i}, ${j}, 0)`)}</div>`;
 }
 function inputCardImageRotated(ids, i, j, width, unit, cnt) {
-    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div>${getCardImage(ids[i], cnt === 2 ? "k" : "r", `removeInput(${i}, ${j}, 1)`)}</div>`;
+    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit, cnt === 2 ? "k" : "r")}${getCardImage(ids[i], cnt === 2 ? "k" : "r", `removeInput(${i}, ${j}, 1)`)}</div>`;
 }
 function inputCardImageBack(i, j, width, unit) {
     return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;

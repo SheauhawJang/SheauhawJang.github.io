@@ -290,7 +290,7 @@
                             </div>
                             <span>連風牌雀頭</span>
                             <div class="output-option-group">
-                                <label title="雀魂・XJTUルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
+                                <label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
                                 <label title="連盟ルール・最高位戦ルール・協会ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
                             </div>
                             <span>切り上げ満貫</span>
@@ -387,6 +387,19 @@
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-9" value="15" checked />あり</label>
                                 <label><input type="radio" name="score-jp-setting-9" value="0" />なし</label>
+                            </div>
+                            <span>簡単設定</span>
+                            <div class="output-option-group">
+                                <button onclick="processJPSetting(0)">XJTUルール</button>
+                                <button onclick="processJPSetting(1)">XJTU七星杯</button>
+                                <button onclick="processJPSetting(2)">連盟公式ルール</button>
+                                <button onclick="processJPSetting(3)">連盟WRCルール</button>
+                                <button onclick="processJPSetting(4)">最高位戦ルール／協会ルール／Mリーグ</button>
+                                <button onclick="processJPSetting(5)">最高位戦Classicルール</button>
+                                <button onclick="processJPSetting(8)">EMAルール</button>
+                                <button onclick="processJPSetting(9)">雀魂</button>
+                                <button onclick="processJPSetting(10)">雀魂のローカル役モード</button>
+                                <button onclick="processJPSetting(11)">天鳳</button>
                             </div>
                         </div>
                     </details>
@@ -540,6 +553,12 @@
                                 <label title="JMSAルールでは 88 点満貫制が適用される。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" />点満貫</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="39" />ツモ点数を三分割</label>
                             </div>
+                            <span>簡単設定</span>
+                            <div class="output-option-group">
+                                <button onclick="processGBSetting(0)">MILルール</button>
+                                <button onclick="processGBSetting(1)">WMOルール</button>
+                                <button onclick="processGBSetting(2)">JMSAルール</button>
+                            </div>
                         </div>
                     </details>
                 </div>
@@ -621,7 +640,7 @@
             window.onload = function () {
                 loadStorage();
                 addReferenceMark();
-                randomInput();
+                loadInput();
             };
             const lang = "ja";
         </script>

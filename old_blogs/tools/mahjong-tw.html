@@ -279,7 +279,7 @@
                             </div>
                             <span>連風牌雀頭</span>
                             <div class="output-option-group">
-                                <label title="雀魂、XJTU規則採用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
+                                <label title="雀魂、天鳳、XJTU規則、EMA規則採用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
                                 <label title="聯盟規則、最高位戰規則、協會規則、M.League採用。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
                             </div>
                             <span>切上滿貫</span>
@@ -376,6 +376,19 @@
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-9" value="15" checked />開啟</label>
                                 <label><input type="radio" name="score-jp-setting-9" value="0" />關閉</label>
+                            </div>
+                            <span>快捷設定</span>
+                            <div class="output-option-group">
+                                <button onclick="processJPSetting(0)">XJTU規則</button>
+                                <button onclick="processJPSetting(1)">XJTU七星杯</button>
+                                <button onclick="processJPSetting(2)">聯盟官方規則</button>
+                                <button onclick="processJPSetting(3)">聯盟WRC規則</button>
+                                <button onclick="processJPSetting(4)">最高位戰規則／協會規則／M.League</button>
+                                <button onclick="processJPSetting(5)">最高位戰Classic規則</button>
+                                <button onclick="processJPSetting(8)">EMA規則</button>
+                                <button onclick="processJPSetting(9)">雀魂</button>
+                                <button onclick="processJPSetting(10)">雀魂古役模式</button>
+                                <button onclick="processJPSetting(11)">天鳳</button>
                             </div>
                         </div>
                     </details>
@@ -529,6 +542,12 @@
                                 <label title="JMSA規則採用 88 台封頂。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" />台封頂</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="39" />自摸分三</label>
                             </div>
+                            <span>快捷設定</span>
+                            <div class="output-option-group">
+                                <button onclick="processGBSetting(0)">MIL規則</button>
+                                <button onclick="processGBSetting(1)">世麻規則</button>
+                                <button onclick="processGBSetting(2)">JMSA規則</button>
+                            </div>
                         </div>
                     </details>
                 </div>
@@ -611,7 +630,7 @@
             window.onload = function () {
                 loadStorage();
                 addReferenceMark();
-                randomInput();
+                loadInput();
             };
             const lang = "tw";
         </script>

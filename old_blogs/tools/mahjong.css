@@ -190,7 +190,7 @@ html {
     z-index: 20;
 }
 
-.card-div .card-img-overlay {
+.card-img-overlay {
     position: absolute;
     top: 17.571059%;
     left: 3.75%;
@@ -199,7 +199,7 @@ html {
     pointer-events: none;
 }
 
-.card-div .card-img-overlay-r {
+.card-img-overlay-r {
     position: absolute;
     top: -93.040293%;
     left: 6.388889%;
@@ -210,7 +210,7 @@ html {
     transform: rotate(90deg);
 }
 
-.card-div .card-img-overlay-rr-0 {
+.card-img-overlay-rr-0 {
     position: absolute;
     top: -49.512671%;
     left: 6.388889%;
@@ -221,7 +221,7 @@ html {
     transform: rotate(90deg);
 }
 
-.card-div .card-img-overlay-rr-1 {
+.card-img-overlay-rr-1 {
     position: absolute;
     top: -2.729045%;
     left: 6.388889%;
@@ -246,6 +246,23 @@ html {
     user-select: none;
     pointer-events: none;
     z-index: 10;
+    text-shadow: -1px -1px 0 white, 0px -1px 0 white, 1px -1px 0 white, -1px 0px 0 white, 1px 0px 0 white, -1px 1px 0 white, 0px 1px 0 white, 1px 1px 0 white;
+}
+
+.card-helper-r {
+    position: absolute;
+    top: -93.040293%;
+    left: 6.388889%;
+    width: 61.666667%;
+    height: 108.424908%;
+    color: red;
+    font-weight: bold;
+    padding: 0px 0px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 10;
+    transform-origin: right bottom;
+    transform: rotate(90deg);
     text-shadow: -1px -1px 0 white, 0px -1px 0 white, 1px -1px 0 white, -1px 0px 0 white, 1px 0px 0 white, -1px 1px 0 white, 0px 1px 0 white, 1px 1px 0 white;
 }
 

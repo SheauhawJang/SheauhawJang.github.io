@@ -297,6 +297,11 @@
                                 <label><input type="radio" name="score-jp-setting-2" value="6" checked />平和役</label>
                                 <label><input type="radio" name="score-jp-setting-2" value="0" />自摸符</label>
                             </div>
+                            <span>副露平和型</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="24" />平和役</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="25" />允許 20 符</label>
+                            </div>
                             <span>七對子</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 番 25 符</label>
@@ -615,24 +620,13 @@
                 note.style.display = isVisible ? "none" : "block";
                 button.textContent = isVisible ? "顯示輸入說明 ▼" : "隱藏輸入說明 ▲";
             }
-            function toggleOutput(i) {
-                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp"];
-                const d = document.getElementById(ids[i]);
-                const b = document.getElementById("toggle-" + ids[i]);
-                const s = document.getElementById("brief-" + ids[i]);
-                const o = document.getElementById("options-" + ids[i]);
-                const v = d.style.display !== "none";
-                d.style.display = v ? "none" : "block";
-                s.style.display = v ? "block" : "none";
-                if (o) o.style.display = v ? "none" : "block";
-                b.textContent = v ? "展開 ▼" : "摺疊 ▲";
-            }
             window.onload = function () {
                 loadStorage();
                 addReferenceMark();
                 loadInput();
             };
             const lang = "tw";
+            const toggleOutputLang = ["展開 ▼" , "摺疊 ▲"];
         </script>
     </body>
 </html>

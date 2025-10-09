@@ -205,7 +205,7 @@
             <div class="output-box">
                 <div class="title-button-container">
                     <div class="output-title">一般形牌理</div>
-                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutputLang = (0)">収納 ▲</button>
                 </div>
                 <div class="output-context" id="output-std"></div>
                 <div class="output-context" id="brief-output-std" style="display: none"></div>
@@ -214,7 +214,7 @@
             <div class="output-box">
                 <div class="title-button-container">
                     <div class="output-title">立直麻雀標準形牌理</div>
-                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutputLang = (2)">収納 ▲</button>
                 </div>
                 <div class="output-context" id="output-jp"></div>
                 <div class="output-context" id="brief-output-jp" style="display: none"></div>
@@ -223,7 +223,7 @@
             <div class="output-box">
                 <div class="title-button-container">
                     <div class="output-title">中国国標麻雀標準形牌理</div>
-                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutputLang = (1)">収納 ▲</button>
                 </div>
                 <div class="output-context" id="output-gb"></div>
                 <div class="output-context" id="brief-output-gb" style="display: none"></div>
@@ -232,7 +232,7 @@
             <div class="output-box">
                 <div class="title-button-container">
                     <div class="output-title">香港式台湾麻雀牌理</div>
-                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutputLang = (3)">収納 ▲</button>
                 </div>
                 <div class="output-context" id="output-tw"></div>
                 <div class="output-time" id="time-output-tw"></div>
@@ -241,7 +241,7 @@
             <div class="output-box" id="score-jp">
                 <div class="title-button-container">
                     <div class="output-title">立直麻雀点数計算</div>
-                    <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutputLang = (5)">収納 ▲</button>
                 </div>
                 <div id="options-output-score-jp">
                     <div class="output-options">
@@ -308,6 +308,11 @@
                                 <label><input type="radio" name="score-jp-setting-2" value="6" checked />平和の役</label>
                                 <label><input type="radio" name="score-jp-setting-2" value="0" />自摸の符</label>
                             </div>
+                            <span>副露平和形</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="24" />喰い平和あり</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="25" />20 符可能</label>
+                            </div>
                             <span>七対子</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 飜 25 符</label>
@@ -372,7 +377,7 @@
                                 <label><input type="radio" name="score-jp-setting-16" value="22,2" />役満・門前のみ</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="23" checked />四連太宝と呼ぶ</label>
                             </div>
-                            <span>発なし緑一色</span>
+                            <span>発無し緑一色</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-12" value="18,1" />なし</label>
                                 <label><input type="radio" name="score-jp-setting-12" value="0" checked />役満</label>
@@ -417,7 +422,7 @@
             <div class="output-box" id="score-gb" style="display: none;">
                 <div class="title-button-container">
                     <div class="output-title">中国国標麻雀点数計算</div>
-                    <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutputLang = (4)">収納 ▲</button>
                 </div>
                 <div id="options-output-score-gb">
                     <div class="output-options">
@@ -625,24 +630,13 @@
                 note.style.display = isVisible ? "none" : "block";
                 button.textContent = isVisible ? "入力説明を表示する ▼" : "入力説明を非表示にする ▲";
             }
-            function toggleOutput(i) {
-                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp"];
-                const d = document.getElementById(ids[i]);
-                const b = document.getElementById("toggle-" + ids[i]);
-                const s = document.getElementById("brief-" + ids[i]);
-                const o = document.getElementById("options-" + ids[i]);
-                const v = d.style.display !== "none";
-                d.style.display = v ? "none" : "block";
-                s.style.display = v ? "block" : "none";
-                if (o) o.style.display = v ? "none" : "block";
-                b.textContent = v ? "展開 ▼" : "収納 ▲";
-            }
             window.onload = function () {
                 loadStorage();
                 addReferenceMark();
                 loadInput();
             };
             const lang = "ja";
+            const toggleOutputLang = ["展開 ▼" , "収納 ▲"];
         </script>
     </body>
 </html>

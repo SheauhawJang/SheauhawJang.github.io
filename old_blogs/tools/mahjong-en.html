@@ -442,6 +442,11 @@
                                 <label><input type="radio" name="score-jp-setting-2" value="6" checked /><span class="fan">Pinfu</span> Yaku</label>
                                 <label><input type="radio" name="score-jp-setting-2" value="0" /><span class="fan">Self-draw Minipoints</span></label>
                             </div>
+                            <span>Open <span class="fan">Pinfu</span> Shape</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="24" />Enable <span class="fan">Pinfu</span> Yaku</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="25" />Allow 20 Minipoints</label>
+                            </div>
                             <span><span class="fan">Seven Pairs</span></span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 Fan 25 Minipoints</label>
@@ -606,19 +611,6 @@
                 note.style.display = isVisible ? "none" : "block";
                 button.textContent = isVisible ? "Show input instructions ▼" : "Hide input instructions ▲";
             }
-            function toggleOutput(i) {
-                const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp"];
-                const d = document.getElementById(ids[i]);
-                const b = document.getElementById("toggle-" + ids[i]);
-                const s = document.getElementById("brief-" + ids[i]);
-                const o = document.getElementById("options-" + ids[i]);
-                const v = d.style.display !== "none";
-                d.style.display = v ? "none" : "block";
-                s.style.display = v ? "block" : "none";
-                if (o) o.style.display = v ? "none" : "block";
-                b.textContent = v ? "Expand ▼" : "Fold ▲";
-                addWorkerCardHelper();
-            }
             window.onload = function () {
                 loadStorage();
                 addReferenceMark();
@@ -626,6 +618,7 @@
             };
             const lang = "en";
             const card_helper = true;
+            const toggleOutputLang = ["Expand ▼" , "Fold ▲"];
         </script>
     </body>
 </html>

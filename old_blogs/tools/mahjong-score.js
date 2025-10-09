@@ -1044,12 +1044,12 @@ function JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, 
     return { head, listen_type, cp, bilisten, valfus, fus };
 }
 function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq, v = 0, f = []) {
-    if (setting[6] && mq && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
+    if ((setting[6] || !tsumo) && (mq || setting[24]) && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
         if (listen_type) (valfus += 2), fus.push(listen_type);
         if (tsumo && !(setting[16] && yakuman === 0 && infoans.fan.includes(12))) (valfus += 2), fus.push(11);
     }
-    if (!mq && valfus <= 20) valfus += 2;
+    if (!setting[25] && !mq && valfus <= 20) valfus += 2;
     const realfus = valfus;
     if (setting[14]) valfus = Math.ceil(valfus / 10) * 10;
     return { fus, valfus, realfus, v, f };

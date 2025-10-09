@@ -211,7 +211,8 @@ function indexStep(em, ep, i, ui, uj, aj, bj, cj) {
     const ldi = i * 7;
     return ldStep[ldi] + em * ldStep[ldi + 6] + ep * ldStep[ldi + 5] + ui * ldStep[ldi + 4] + uj * ldStep[ldi + 3] + aj * ldStep[ldi + 2] + bj * ldStep[ldi + 1] + cj;
 }
-const dgues = Array(sizeAT).fill(0);
+const guseall = Array(sizeAT).fill(0);
+const guse3p = guseall.map((_, i) => (i > 0 && i < 8 ? Infinity : 0));
 function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     const dpi = indexStep(em, ep, i, ui, uj, aj, bj, cj);
@@ -223,7 +224,7 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[JokerC] - cj;
     const cs = SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity;
-    const csi = glmt === Infinity && cs && SeqCheck(i + 1) && guse[i + 2] !== Infinity; // When glmt is not Infinity, slide is not equal
+    const csi = glmt === Infinity && cs && SeqCheck(i + 1) && guse[i + 3] !== Infinity; // When glmt is not Infinity, joker slide is not equal
     let ri = Math.max(tiles[i] - ui, 0);
     let rj = Math.max(tiles[i + 1] - uj, 0);
     let nxti;
@@ -299,7 +300,7 @@ function useStepMemory(nm, np, tiles, glmt, sup, guse) {
     vst = nvst;
     return true;
 }
-function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = dgues) {
+function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = guseall) {
     tiles = tiles.slice();
     let nm = (tcnt / 3) | 0;
     let np = +(nm * 3 !== tcnt);
@@ -403,7 +404,7 @@ function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt 
     return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt) < maxstep;
 }
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
-function PairStep(tiles, disjoint = false, guse = dgues) {
+function PairStep(tiles, disjoint = false, guse = guseall) {
     if (!disjoint) {
         let ans = 0;
         let sig = 0;
@@ -739,6 +740,28 @@ function JPPrecheck(tiles, step, substep, tcnt) {
     }
     return { dischecks, getchecks };
 }
+function JP3pPrecheck(tiles, step, substep, tcnt) {
+    const dischecks = Array(sizeAT)
+        .fill(null)
+        .map(() => Array(3).fill(false));
+    const getchecks = Array(sizeAT)
+        .fill(null)
+        .map(() => Array(3).fill(false));
+    const nstep = Math.max(step, 0);
+    if (nstep >= substep[0]) {
+        initDischecks(tiles, (i) => (dischecks[i][0] = searchDp(tiles, 0, 0, tcnt, nstep + 1, 4, guse3p) <= nstep));
+        initGetchecks(tiles, (i) => (getchecks[i][0] = searchDp(tiles, 0, 0, tcnt, nstep, 4, guse3p) < nstep));
+    }
+    if (tcnt === 14 && nstep >= substep[1]) {
+        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, true, guse3p) <= nstep));
+        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, true, guse3p) < nstep));
+    }
+    if (tcnt === 14 && nstep >= substep[2]) {
+        initDischecks(tiles, (i) => (dischecks[i][2] = OrphanStep(tiles) <= nstep));
+        initGetchecks(tiles, (i) => (getchecks[i][2] = OrphanStep(tiles) < nstep));
+    }
+    return { dischecks, getchecks };
+}
 function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     const dischecks = Array(sizeAT)
         .fill(null)
@@ -824,6 +847,17 @@ function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, true) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
         else if (discheck[0] && (!g || g[0]) && StepCheck(tiles, step, tcnt - d, tcnt, 4)) return true;
+    }
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i]));
+    return { ans, gans, checked: discheck.some(Boolean) };
+}
+function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
+    discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2]];
+    const nstep = Math.max(step, 0);
+    function waiting(tiles, step, _, g) {
+        if (discheck[1] && (!g || g[1]) && PairStep(tiles, true, guse3p) < step) return true;
+        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
+        else if (discheck[0] && (!g || g[0]) && searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step) return true;
     }
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };

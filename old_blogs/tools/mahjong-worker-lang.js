@@ -607,7 +607,7 @@ const ja_loc = {
     JP_YAKUNAME_46: "九蓮宝燈",
     JP_YAKUNAME_47: "純正九蓮宝燈",
     JP_YAKUNAME_48: "三色通貫",
-    JP_YAKUNAME_49: "発なし緑一色",
+    JP_YAKUNAME_49: "発無し緑一色",
     JP_YAKUNAME_50: "三連刻",
     JP_YAKUNAME_51: "四連刻",
     JP_YAKUNAME_52: "一色三順",

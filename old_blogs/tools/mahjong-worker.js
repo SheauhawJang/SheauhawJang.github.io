@@ -156,6 +156,62 @@ function JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd) {
     ).output;
     return { output, substep, dvd7, dvd13 };
 }
+function JP3pStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, dvd13) {
+    let table = "";
+    let step0 = searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guse3p);
+    table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step0)}</td></tr>`;
+    postMessage({ output: table_head + table + table_tail });
+    let step3p = step0;
+    let step7 = Infinity;
+    if (full_tcnt === 14 && subcnt === 0) {
+        step7 = PairStep(tiles, true, guse3p);
+        table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(step7)}</td></tr>`;
+        postMessage({ output: table_head + table + table_tail });
+        step3p = Math.min(step3p, step7);
+        table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(step13)}</td></tr>`;
+        postMessage({ output: table_head + table + table_tail });
+        step3p = Math.min(step3p, step13);
+    }
+    let output = getWaitingType(step3p);
+    let stepTypeJP = [];
+    if (step0 == step3p) stepTypeJP.push(loc.normal);
+    if (step7 === step3p) stepTypeJP.push(loc.pair7);
+    if (step13 === step3p) stepTypeJP.push(loc.kokushi);
+    output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
+    let brief = output;
+    output += table_head + table + table_tail;
+    postMessage({ output, brief });
+    if (step3p === -1 && full_tcnt > 0) {
+        let odvd = [];
+        let cnt = 0;
+        if (step7 === -1) {
+            ++cnt;
+            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+        }
+        if (step13 === -1) {
+            ++cnt;
+            odvd.push(`<div class="waiting-brief">${loc.kokushi}${loc.colon}</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+        }
+        if (step0 === -1) {
+            cnt += dvd.cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10 - odvd.length);
+            odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
+        }
+        output += loc.windvd + ": \n";
+        output += `<div class="win-grid">${odvd.join("")}</div>`;
+        if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
+    }
+    const substep = [step0, step7, step13];
+    output += printWaiting(
+        tiles,
+        tcnt,
+        full_tcnt,
+        subtiles,
+        (d, g) => JP3pWaiting(tiles, step3p, substep, full_tcnt, d, g),
+        () => JP3pPrecheck(tiles, step3p, substep, full_tcnt)
+    ).output;
+    return { output };
+}
 function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13) {
     let table = "";
     let stepGB = step;
@@ -695,6 +751,11 @@ self.onmessage = function (e) {
         case 3: {
             let { tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd } = e.data;
             result = TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd);
+            break;
+        }
+        case 4: {
+            let { tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, dvd13 } = e.data;
+            result = JP3pStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, dvd13);
             break;
         }
         case "gb-score": {

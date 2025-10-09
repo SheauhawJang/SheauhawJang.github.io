@@ -1,15 +1,21 @@
 let aids;
 let worker = null;
+const TASK_NUM = 5;
 function processInput() {
     if (worker) {
         worker.terminate();
         worker = null;
     }
-    const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw"];
+    function sf(f) {
+        try {
+            f();
+        } catch {}
+    }
+    const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw", "output-jp3p"];
     for (let i = 0; i < document_element_ids.length; ++i) {
-        document.getElementById(document_element_ids[i]).innerHTML = "";
-        document.getElementById("brief-" + document_element_ids[i]).innerHTML = "";
-        document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`;
+        sf(() => (document.getElementById(document_element_ids[i]).innerHTML = ""));
+        sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
+        sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`));
     }
     const document_scores_ids = ["score-gb", "score-jp", "score-qingque"];
     const workers_scores = [gb_worker, jp_worker, qingque_worker];
@@ -40,18 +46,18 @@ function processInput() {
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
-    let save = Array(4);
+    let save = Array(TASK_NUM);
     let dvd, dvd7, dvd13;
-    let substeps = Array(4);
+    let substeps = Array(TASK_NUM);
     worker.onmessage = function (e) {
-        if ("brief" in e.data) document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief;
+        if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief));
         if ("output" in e.data) {
-            document.getElementById(document_element_ids[task]).innerHTML = e.data.output;
+            sf(() => (document.getElementById(document_element_ids[task]).innerHTML = e.data.output));
             return;
         }
         const { result, time } = e.data;
-        document.getElementById(document_element_ids[task]).innerHTML = result.output;
-        document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`;
+        sf(() => (document.getElementById(document_element_ids[task]).innerHTML = result.output));
+        sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
         if (useHelper()) addWorkerCardHelper();
         updateCardSkin();
         switch (task) {
@@ -107,9 +113,9 @@ function processInput() {
                 }
                 break;
         }
-        ++task;
+        do ++task;
+        while (task < TASK_NUM && !document.getElementById(document_element_ids[task]));
         switch (task) {
-            case 0:
             case 1:
                 worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, dvd });
                 break;
@@ -120,6 +126,9 @@ function processInput() {
                 worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step: substeps[0], save: save[0], dvd });
                 break;
             case 4:
+                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step13: substeps[1][2], dvd, dvd7, dvd13 });
+                break;
+            default:
                 worker.terminate();
                 worker = null;
                 break;
@@ -163,11 +172,9 @@ function loadInput() {
     const t = sessionStorage.getItem("inputText");
     const e = document.getElementById("inputText");
     e.addEventListener("change", () => sessionStorage.setItem("inputText", e.value));
-    if (t !== null) {
-        e.value = t;
-    } else {
-        randomInputText();
-    }
+    if (t !== null) e.value = t;
+    else randomInputText();
+
     drawInputCards();
     processInput();
 }
@@ -550,7 +557,7 @@ function processGBScore() {
 let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 16;
-const JP_SETTING_SIZE = 24;
+const JP_SETTING_SIZE = 26;
 function processJPScore() {
     if (jp_worker) {
         jp_worker.terminate();
@@ -740,12 +747,12 @@ function loadCheckbox(key) {
     const cbs = document.querySelectorAll(`input[name="${key}"]`);
     let cvs = new Set();
     const cvstorage = localStorage.getItem(key);
-    if (cvstorage !== null) {
+    if (cvstorage !== null)
         try {
             cvs = new Set(JSON.parse(cvstorage));
             cbs.forEach((cb) => (cb.checked = cvs.has(cb.value)));
         } catch {}
-    }
+
     const cf = debounce(() => {
         const cvstorage = Array.from(cbs)
             .filter((cb) => cb.checked)
@@ -757,41 +764,34 @@ function loadCheckbox(key) {
 function loadRadio(key) {
     const rds = document.querySelectorAll(`input[name="${key}"]`);
     const sv = localStorage.getItem(key);
-    if (sv) {
-        rds.forEach((r) => (r.checked = r.value === sv));
-    }
+    if (sv) rds.forEach((r) => (r.checked = r.value === sv));
+
     const rf = debounce(() => {
         const s = Array.from(rds).find((r) => r.checked);
-        if (s) {
-            localStorage.setItem(key, s.value);
-        } else {
-            localStorage.removeItem(key);
-        }
+        if (s) localStorage.setItem(key, s.value);
+        else localStorage.removeItem(key);
     });
     rds.forEach((r) => r.addEventListener("change", rf));
 }
 function loadInputbox(key) {
     const e = document.getElementById(key);
     const s = localStorage.getItem(key);
-    if (s !== null) {
-        e.value = s;
-    }
+    if (s !== null) e.value = s;
+
     e.addEventListener("change", () => localStorage.setItem(key, e.value));
 }
 function loadGBStorage() {
     loadCheckbox("score-gb-setting");
-    for (let i = 0; i <= GB_RADIO_MAX; ++i) {
-        loadRadio(`score-gb-setting-${i}`);
-    }
+    for (let i = 0; i <= GB_RADIO_MAX; ++i) loadRadio(`score-gb-setting-${i}`);
+
     loadInputbox("score-gb-setting-fan");
     loadInputbox("score-gb-setting-blind");
     loadInputbox("score-gb-setting-maxfan");
 }
 function loadJPStorage() {
     loadCheckbox("score-jp-setting");
-    for (let i = 0; i <= JP_RADIO_MAX; ++i) {
-        loadRadio(`score-jp-setting-${i}`);
-    }
+    for (let i = 0; i <= JP_RADIO_MAX; ++i) loadRadio(`score-jp-setting-${i}`);
+
     loadInputbox("score-jp-setting-fan");
 }
 function loadStorage() {
@@ -842,36 +842,68 @@ function processGBSetting(id) {
     }
 }
 function processJPSetting(id) {
-    const positives = [[1, 2, 3], [3], [2, 3, 21], [2, 3, 21], [2], [2], [2], [2], [], [1, 2, 3, 13], [1, 2, 3, 13], [2, 3]],
-        negatives = [[21, 11], [1, 2, 21, 11], [1, 11], [1, 11], [1, 3, 11], [1, 3, 11], [1, 3, 11], [1, 3, 11], [1, 2, 3, 11], [11], [11], [1, 11]],
-        radios = [
-            [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // XJTU (0)
-            [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // XJTU 7 Stars (1)
-            [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // JPML (2)
-            [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // JPML WRC (3)
-            [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // Saikouisen (4)
-            [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // Saikouisen Classic (5)
-            [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // ClubJPM (6=4)
-            [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // M.League (7=4)
-            [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // EMA (8)
-            [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // Mahjong Soul (9)
-            [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0], // Mahjong Soul Local Yaku (10)
-            [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0], // Tenhou (11)
-        ];
+    // prettier-ignore
+    const rules = [
+        [[1, 2, 3], [21, 11, 24, 25], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU (0)
+        [[3], [1, 2, 21, 11, 24, 25], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU 7 Stars (1)
+        [[2, 3, 21], [1, 11, 24, 25], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML (2)
+        [[2, 3, 21], [1, 11, 24, 25], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML WRC (3)
+        [[2], [1, 3, 11, 24, 25], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen (4)
+        [[2], [1, 3, 11, 24, 25], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen Classic (5)
+        [[2], [1, 3, 11, 24, 25], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // ClubJPM (6=4)
+        [[2], [1, 3, 11, 24, 25], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // M.League (7=4)
+        [[], [1, 2, 3, 11, 24, 25], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // EMA (8)
+        [[1, 2, 3, 13], [11, 24, 25], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Mahjong Soul (9)
+        [[1, 2, 3, 13], [11, 24, 25], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0]], // Mahjong Soul Local Yaku (10)
+        [[2, 3], [1, 11, 24, 25], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Tenhou (11)
+    ];
+    const positive = rules[id][0],
+        negative = rules[id][1],
+        radio = rules[id][2];
     document.getElementById("score-jp-setting-fan").value = 1;
     document.getElementById("score-jp-setting-fan").dispatchEvent(new Event("change"));
     const cbs = document.querySelectorAll(`input[name="score-jp-setting"]`);
-    const mpp = new Set(positives[id].map(String)),
-        mpn = new Set(negatives[id].map(String));
+    const mpp = new Set(positive.map(String)),
+        mpn = new Set(negative.map(String));
     cbs.forEach((cb) => {
         if (mpp.has(cb.value)) cb.checked = true;
         else if (mpn.has(cb.value)) cb.checked = false;
     });
     if (cbs.length) cbs[0].dispatchEvent(new Event("change"));
     for (let i = 0; i <= JP_RADIO_MAX; ++i) {
-        if (radios[id][i] == undefined) continue;
+        if (radio[i] == undefined) continue;
         const rds = document.querySelectorAll(`input[name="score-jp-setting-${i}"]`);
-        rds.forEach((r) => (r.checked = r.value == radios[id][i]));
+        rds.forEach((r) => (r.checked = r.value == radio[i]));
         if (rds.length) rds[0].dispatchEvent(new Event("change"));
     }
+}
+function toggleOutput(i) {
+    const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp", "output-score-qingque", "output-jp3p"];
+    const d = document.getElementById(ids[i]);
+    const b = document.getElementById("toggle-" + ids[i]);
+    const s = document.getElementById("brief-" + ids[i]);
+    const o = document.getElementById("options-" + ids[i]);
+    const v = d.style.display !== "none";
+    d.style.display = v ? "none" : "block";
+    s.style.display = v ? "block" : "none";
+    if (o) o.style.display = v ? "none" : "block";
+    b.textContent = v ? toggleOutputLang[0] : toggleOutputLang[1];
+}
+function toggleSwitch(e, on, off, f = () => {}) {
+    const btn = e.currentTarget;
+    const isOn = btn.getAttribute("aria-pressed") === "true";
+    const newState = !isOn;
+    btn.setAttribute("aria-pressed", String(newState));
+    btn.classList.toggle("on", newState);
+    const label = btn.querySelector(".label-text");
+    const thumb = btn.querySelector('.thumb');
+    if (label) label.textContent = newState ? on : off;
+    if (label && thumb) btn.appendChild(newState ? thumb : label);
+    f(newState);
+}
+function switchJP34(newState) {
+    const e4 = document.getElementById('output-group-jp');
+    const e3 = document.getElementById('output-group-jp3p');
+    e4.style.display = newState ? 'block' : 'none';
+    e3.style.display = newState ? "none" : "block";
 }

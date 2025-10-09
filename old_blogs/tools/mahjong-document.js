@@ -25,6 +25,7 @@ function processInput() {
         if (workers_scores[i]) workers_scores[i].terminate();
     }
     const input = document.getElementById("inputText").value;
+    sessionStorage.setItem("inputText", input);
     aids = splitTiles(input);
     let tids = aids[0];
     let bids = aids[2];
@@ -139,7 +140,7 @@ function processInput() {
 function updateInput(s) {
     const e = document.getElementById("inputText");
     e.value = s;
-    e.dispatchEvent(new Event("change"));
+    //e.dispatchEvent(new Event("change"));
 }
 function randomInputText() {
     function shuffle(array) {
@@ -171,7 +172,7 @@ function randomInput() {
 function loadInput() {
     const t = sessionStorage.getItem("inputText");
     const e = document.getElementById("inputText");
-    e.addEventListener("change", () => sessionStorage.setItem("inputText", e.value));
+    //e.addEventListener("change", () => sessionStorage.setItem("inputText", e.value));
     if (t !== null) e.value = t;
     else randomInputText();
 
@@ -432,7 +433,7 @@ function addInput(i) {
     if (typeof i === "number") i = { id: i };
     document.getElementById("inputText").value += " ";
     document.getElementById("inputText").value += cardName(i);
-    document.getElementById("inputText").dispatchEvent(new Event("change"));
+    //document.getElementById("inputText").dispatchEvent(new Event("change"));
     drawInputCards();
 }
 function removeInput(i, j, k) {

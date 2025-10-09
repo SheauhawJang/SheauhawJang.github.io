@@ -211,12 +211,26 @@
             </div>
             <div class="output-box">
                 <div class="title-button-container">
-                    <div class="output-title">立直麻將標準型牌理</div>
-                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2)">摺疊 ▲</button>
+                    <div class="output-title">
+                        立直麻將標準型牌理
+                        <button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)">
+                            <span class="label-text">四人</span>
+                            <span class="thumb"></span>
+                        </button>
+                    </div>
+                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">摺疊 ▲</button>
+                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">摺疊 ▲</button>
                 </div>
-                <div class="output-context" id="output-jp"></div>
-                <div class="output-context" id="brief-output-jp" style="display: none"></div>
-                <div class="output-time" id="time-output-jp"></div>
+                <div id="output-group-jp">
+                    <div class="output-context" id="output-jp"></div>
+                    <div class="output-context" id="brief-output-jp" style="display: none"></div>
+                    <div class="output-time" id="time-output-jp"></div>
+                </div>
+                <div id="output-group-jp3p" style="display: none;">
+                    <div class="output-context" id="output-jp3p"></div>
+                    <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
+                    <div class="output-time" id="time-output-jp3p"></div>
+                </div>
             </div>
             <div class="output-box">
                 <div class="title-button-container">

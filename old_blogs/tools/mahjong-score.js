@@ -1301,7 +1301,7 @@ function getDoraPointer(x) {
 const SameColorArray = [ColorArray.map((x) => (x === 0 ? 1 : 0)), ColorArray.map((x) => (x === 1 ? 1 : 0)), ColorArray.map((x) => (x === 2 ? 1 : 0))];
 const SameColorWithHonorsArray = [ColorArray.map((x, i) => (x === 0 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 || HonorArray[i] ? 1 : 0))];
 const SameColorNoOrphanArray = [ColorArray.map((x, i) => (x === 0 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 && !OrphanArray[i] ? 1 : 0))];
-const SameColorAllOrphanHonorsArray = [SameColorWithHonorsArray[0].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[1].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[2].map((x, i) => x && OrphanArray[i])];
+const SameColorAllOrphansArray = [SameColorWithHonorsArray[0].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[1].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[2].map((x, i) => x && OrphanArray[i])];
 function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting) {
     let nd = 0,
         nu = 0;
@@ -1339,7 +1339,7 @@ function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, 
         if (scwh !== -1) (l = scwh), (r = l + 1);
         for (let i = l; i < r; ++i) {
             update(3, ...PairSelect(cot, doras, uras, SameColorWithHonorsArray[i]), [28]);
-            if (hunhun) update(5, ...PairSelect(cot, doras, uras, SameColorAllOrphanHonorsArray[i]), [25, 28]);
+            if (hunhun) update(5, ...PairSelect(cot, doras, uras, SameColorAllOrphansArray[i]), [25, 28]);
         }
     }
     if (hun19) update(2, ...PairSelect(cot, doras, uras, OrphanArray), [25]);

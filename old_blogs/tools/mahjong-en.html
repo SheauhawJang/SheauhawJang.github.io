@@ -198,6 +198,13 @@
                     <div class="output-title">Chinese Official Mahjong (MCR) Standard Type Theory</div>
                     <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">Fold ▲</button>
                 </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />Normal Type</label>
+                    <label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span class="fan">Seven Pairs</span> Type</label>
+                    <label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span class="fan">Thirteen Orphans</span> Type</label>
+                    <label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span class="fan">Honors & Knitted</span> Type</label>
+                    <label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span class="fan">Knitted Straight</span> Type</label>
+                </div>
                 <div class="output-context" id="output-gb"></div>
                 <div class="output-context" id="brief-output-gb" style="display: none"></div>
                 <div class="output-time" id="time-output-gb"></div>
@@ -214,6 +221,11 @@
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">Fold ▲</button>
                     <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">Fold ▲</button>
                 </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />Normal Type</label>
+                    <label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span class="fan">Seven Pairs</span> Type</label>
+                    <label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span class="fan">Thirteen Orphans</span> Type</label>
+                </div>
                 <div id="output-group-jp">
                     <div class="output-context" id="output-jp"></div>
                     <div class="output-context" id="brief-output-jp" style="display: none"></div>
@@ -229,6 +241,12 @@
                 <div class="title-button-container">
                     <div class="output-title">Hong Kong Style Taiwanese Mahjong Theory</div>
                     <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">Fold ▲</button>
+                </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />Normal Type</label>
+                    <label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span class="fan">Niconico</span> Type</label>
+                    <label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span class="fan">Thirteen Orphans</span> Type</label>
+                    <label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span class="fan">Sixteen Isolated</span> Type</label>
                 </div>
                 <div class="output-context" id="output-tw"></div>
                 <div class="output-context" id="brief-output-tw" style="display: none"></div>

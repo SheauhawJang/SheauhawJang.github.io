@@ -223,6 +223,11 @@
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">収納 ▲</button>
                     <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">収納 ▲</button>
                 </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般形</label>
+                    <label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七対形</label>
+                    <label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />国士無双形</label>
+                </div>
                 <div id="output-group-jp">
                     <div class="output-context" id="output-jp"></div>
                     <div class="output-context" id="brief-output-jp" style="display: none"></div>
@@ -239,6 +244,13 @@
                     <div class="output-title">中国国標麻雀標準形牌理</div>
                     <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">収納 ▲</button>
                 </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般形</label>
+                    <label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七対形</label>
+                    <label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么形</label>
+                    <label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠形</label>
+                    <label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合竜形</label>
+                </div>
                 <div class="output-context" id="output-gb"></div>
                 <div class="output-context" id="brief-output-gb" style="display: none"></div>
                 <div class="output-time" id="time-output-gb"></div>
@@ -247,6 +259,12 @@
                 <div class="title-button-container">
                     <div class="output-title">香港式台湾麻雀牌理</div>
                     <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">収納 ▲</button>
+                </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般形</label>
+                    <label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />ニコニコ形</label>
+                    <label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么形</label>
+                    <label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不塔形</label>
                 </div>
                 <div class="output-context" id="output-tw"></div>
                 <div class="output-time" id="time-output-tw"></div>

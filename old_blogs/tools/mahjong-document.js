@@ -1,21 +1,41 @@
-let aids;
+let aids, tiles, subtiles;
 let worker = null;
 const TASK_NUM = 5;
+let save_normal = undefined;
+let worker_dvds = Array(TASK_NUM).fill(null);
+let worker_substeps = Array(TASK_NUM).fill(null);
+let lastmask = Array(TASK_NUM).fill(null);
+const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw", "output-jp3p"];
+function sf(f) {
+    try {
+        f();
+    } catch {}
+}
+let updateInnerHTML = Array(TASK_NUM).fill(null).map((_, i) => debounce((text) => sf(() => document.getElementById(document_element_ids[i]).innerHTML = text), 100));
+function putWorkerResult(e, task) {
+    // partial result
+    if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief));
+    if ("output" in e.data) {
+        updateInnerHTML[task](e.data.output);
+        return true; // all known results has been put
+    }
+    // full result
+    const { result, time } = e.data;
+    updateInnerHTML[task](result.output);
+    sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
+    if (useHelper()) addWorkerCardHelper();
+    updateCardSkin();
+    return false; // remain results need to be put
+}
 function processInput() {
     if (worker) {
         worker.terminate();
         worker = null;
     }
-    function sf(f) {
-        try {
-            f();
-        } catch {}
-    }
-    const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw", "output-jp3p"];
     for (let i = 0; i < document_element_ids.length; ++i) {
-        sf(() => (document.getElementById(document_element_ids[i]).innerHTML = ""));
+        updateInnerHTML[i]('');
         sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
-        sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Calculating......`));
+        sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
     }
     const document_scores_ids = ["score-gb", "score-jp", "score-qingque"];
     const workers_scores = [gb_worker, jp_worker, qingque_worker];
@@ -27,18 +47,15 @@ function processInput() {
     const input = document.getElementById("inputText").value;
     sessionStorage.setItem("inputText", input);
     aids = splitTiles(input);
-    let tids = aids[0];
-    let bids = aids[2];
-    let tiles = getTiles(tids);
-    let subtiles = getTiles([...aids[2], ...aids[3], ...aids[4]]);
+    const tids = aids[0];
+    const bids = aids[2];
+    tiles = getTiles(tids);
+    subtiles = getTiles([...aids[2], ...aids[3], ...aids[4]]);
     for (let i = 0; i < aids[1].length; ++i) {
         const ids = aids[1][i];
         for (let j = 0; j < ids.length; ++j) ++subtiles[ids[j].id];
     }
-    let tcnt = tids.length;
-    let full_tcnt = tcnt;
-    if (tcnt % 3 === 1) ++full_tcnt;
-    const subcnt = aids[1].length;
+    const tcnt = tids.length;
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, 1);
@@ -47,53 +64,40 @@ function processInput() {
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
     worker = new Worker("mahjong-worker.js");
     let task = 0;
-    let save = Array(TASK_NUM);
-    let dvd, dvd7, dvd13;
-    let substeps = Array(TASK_NUM);
+    save_normal = undefined;
+    worker_substeps = Array(TASK_NUM);
     worker.onmessage = function (e) {
-        if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief));
-        if ("output" in e.data) {
-            sf(() => (document.getElementById(document_element_ids[task]).innerHTML = e.data.output));
-            return;
+        if (putWorkerResult(e, task)) return;
+        const result = e.data.result;
+        if (task === 0) {
+            save_normal = result.save;
+            worker_dvds[0] = result.dvd;
+            worker_substeps[0] = result.step;
+        } else {
+            worker_dvds[task] = result.dvds;
+            worker_substeps[task] = result.substep;
         }
-        const { result, time } = e.data;
-        sf(() => (document.getElementById(document_element_ids[task]).innerHTML = result.output));
-        sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
-        if (useHelper()) addWorkerCardHelper();
-        updateCardSkin();
-        switch (task) {
-            case 0:
-                substeps[0] = result.step;
-                dvd = result.dvd;
-                break;
-            case 1:
-                dvd7 = result.dvd7;
-                dvd13 = result.dvd13;
-                break;
-        }
-        if (task > 0) substeps[task] = result.substep;
-        save[task] = result.save;
         switch (task) {
             case 1:
-                if (Math.min(...substeps[task]) === -1) {
+                if (Math.min(...worker_substeps[task]) === -1) {
                     document.getElementById("output-score-jp").textContent = "";
                     document.getElementById("brief-output-score-jp").textContent = "";
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     document.getElementById("score-jp").style.display = "block";
                     jp_worker = null;
-                    jp_worker_info = { aids, substeps: substeps[task] };
+                    jp_worker_info = { aids, substeps: worker_substeps[task] };
                 }
                 break;
             case 2:
-                if (Math.min(...substeps[task]) === -1) {
+                if (Math.min(...worker_substeps[task]) === -1) {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     document.getElementById("score-gb").style.display = "block";
                     gb_worker = null;
-                    gb_worker_info = { aids, substeps: substeps[task], save: save[task] };
+                    gb_worker_info = { aids, substeps: worker_substeps[task] };
                 }
-                if (Math.min(substeps[1][0], substeps[2][1]) === -1) {
+                if (Math.min(worker_substeps[1][0], worker_substeps[2][1]) === -1) {
                     let show_qingque = Boolean(document.getElementById("score-qingque"));
                     if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
                     for (let i = 0; show_qingque && i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
@@ -109,25 +113,38 @@ function processInput() {
                         document.getElementById("time-output-score-qingque").textContent = "Ready to start!";
                         document.getElementById("score-qingque").style.display = "block";
                         qingque_worker = null;
-                        qingque_worker_info = { aids, substeps: [substeps[1][0], substeps[2][1]] };
+                        qingque_worker_info = { aids, substeps: [worker_substeps[1][0], worker_substeps[2][1]] };
                     }
                 }
                 break;
         }
+        getStepMask(task, false);
         do ++task;
         while (task < TASK_NUM && !document.getElementById(document_element_ids[task]));
+        let mask = getStepMask(task, true);
+        lastmask[task] = mask;
         switch (task) {
             case 1:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, dvd });
+                sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
+                worker.postMessage({ mask, task, dvds: [worker_dvds[0], undefined, undefined] });
                 break;
             case 2:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step: substeps[0], save: save[0], step13: substeps[1][2], dvd, dvd7, dvd13 });
+                sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
+                mask = Array(5).fill(true);
+                document.querySelectorAll('input[name="step-gb-types"]').forEach((i) => (i.disabled = true, mask[Number(i.value)] = i.checked));
+                worker.postMessage({ mask, task, save: save_normal, steps: [worker_substeps[0], Infinity, worker_substeps[1][2], Infinity, Infinity], dvds: [worker_dvds[0], worker_dvds[1][1], worker_dvds[1][2], undefined, undefined] });
                 break;
             case 3:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step: substeps[0], save: save[0], dvd });
+                sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
+                mask = Array(4).fill(true);
+                document.querySelectorAll('input[name="step-tw-types"]').forEach((i) => (i.disabled = true, mask[Number(i.value)] = i.checked));
+                worker.postMessage({ mask, task, steps: [worker_substeps[0], Infinity, Infinity, Infinity], save: save_normal, dvds: [worker_dvds[0], undefined, undefined] });
                 break;
             case 4:
-                worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, step13: substeps[1][2], dvd, dvd7, dvd13 });
+                sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
+                mask = Array(3).fill(true);
+                document.querySelectorAll('input[name="step-jp-types"]').forEach((i) => (i.disabled = true, mask[Number(i.value)] = i.checked));
+                worker.postMessage({ mask, task, steps: [Infinity, Infinity, worker_substeps[1][2]], dvds: [worker_dvds[0], worker_dvds[1][1], worker_dvds[1][2]] });
                 break;
             default:
                 worker.terminate();
@@ -135,7 +152,46 @@ function processInput() {
                 break;
         }
     };
-    worker.postMessage({ task, tiles, tcnt, full_tcnt, subtiles, subcnt, lang });
+    sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
+    worker.postMessage({ task, aids, tiles, subtiles, lang });
+}
+let reworkers = Array(TASK_NUM).fill(null);
+function getStepMask(task, lock) {
+    const size = [undefined, 3, 5, 4, 3];
+    const name = [undefined, 'jp', 'gb', 'tw', 'jp'];
+    if (size[task] === undefined) return [];
+    let mask = Array(size[task]).fill(true);
+    let boxes = document.querySelectorAll(`input[name="step-${name[task]}-types"]`);
+    boxes.forEach((i) => (mask[Number(i.value)] = i.checked));
+    if (lock !== undefined) boxes.forEach((i) => (i.disabled = lock));
+    return mask;
+}
+function restartInput(i) {
+    if (!worker_substeps[i]) return;
+    const mask = getStepMask(i);
+    function m() {
+        for (let j = 0; j < mask.length; ++j) if (mask[j] !== lastmask[i][j] && worker_substeps[i][j] !== Infinity) return true;
+        return false;
+    }
+    if (!m()) return;
+    lastmask[i] = mask;
+    if (reworkers[i]) {
+        reworkers[i].terminate();
+        reworkers[i] = null;
+    }
+    updateInnerHTML[i]('');
+    sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
+    sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
+    reworkers[i] = new Worker("mahjong-worker.js");
+    reworkers[i].onmessage = function (e) {
+        if (putWorkerResult(e, i)) return;
+        const result = e.data.result;
+        worker_dvds[i] = result.dvds;
+        worker_substeps[i] = result.substep;
+        reworkers[i].terminate();
+        reworkers[i] = null;
+    };
+    reworkers[i].postMessage({ mask, task: i, aids, tiles, subtiles, lang, steps: worker_substeps[i], dvds: worker_dvds[i], save: save_normal });
 }
 function updateInput(s) {
     const e = document.getElementById("inputText");
@@ -552,8 +608,8 @@ function processGBScore() {
         document.getElementById("brief-output-score-gb").innerHTML = e.data.result.brief;
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     };
-    const { aids, substeps, save } = gb_worker_info;
-    gb_worker.postMessage({ task: "gb-score", aids, substeps, save, gw, mw, wt, info, lang, setting });
+    const { aids, substeps } = gb_worker_info;
+    gb_worker.postMessage({ task: "gb-score", aids, substeps, gw, mw, wt, info, lang, setting });
 }
 let jp_worker = null;
 let jp_worker_info;
@@ -897,14 +953,14 @@ function toggleSwitch(e, on, off, f = () => {}) {
     btn.setAttribute("aria-pressed", String(newState));
     btn.classList.toggle("on", newState);
     const label = btn.querySelector(".label-text");
-    const thumb = btn.querySelector('.thumb');
+    const thumb = btn.querySelector(".thumb");
     if (label) label.textContent = newState ? on : off;
     if (label && thumb) btn.appendChild(newState ? thumb : label);
     f(newState);
 }
 function switchJP34(newState) {
-    const e4 = document.getElementById('output-group-jp');
-    const e3 = document.getElementById('output-group-jp3p');
-    e4.style.display = newState ? 'block' : 'none';
+    const e4 = document.getElementById("output-group-jp");
+    const e3 = document.getElementById("output-group-jp3p");
+    e4.style.display = newState ? "block" : "none";
     e3.style.display = newState ? "none" : "block";
 }

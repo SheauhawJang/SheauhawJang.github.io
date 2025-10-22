@@ -5,6 +5,10 @@ importScripts("mahjong-mmc.js");
 //console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const table_head = '<table style="border-collapse: collapse; padding: 0px">';
 const table_tail = "</table>";
+let aids = undefined,
+    tiles,
+    subtiles;
+let tcnt, full_tcnt, subcnt;
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
 }
@@ -36,7 +40,7 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
         for (let i = 0; i < sizeAT; ++i) {
             if (!tiles[i]) continue;
             tiles[i]--;
-            save[i] = getWaiting(dischecks[i], getchecks, (s) => s[i]);
+            save[i] = getWaiting(dischecks[i], getchecks, (s) => s?.[i]);
             tiles[i]++;
             const { ans, gans, checked } = save[i];
             if (gans !== undefined) {
@@ -71,7 +75,7 @@ function getWaitingType(step) {
 function getWinningLine(cards) {
     return cards.map((b) => b.map(cardImageDivide).join("")).join(divideSpace);
 }
-function normalStep(tiles, tcnt, full_tcnt, subtiles) {
+function normalStep() {
     let step = Step(tiles, tcnt, full_tcnt);
     let output = getWaitingType(step) + "\n";
     postMessage({ output, brief: getWaitingType(step) });
@@ -94,58 +98,63 @@ function normalStep(tiles, tcnt, full_tcnt, subtiles) {
     output += r.output;
     return { output, step, save: r.ans, dvd };
 }
-function JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd) {
+function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
-    let step4 = Step(tiles, tcnt, full_tcnt, 4);
-    table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step4)}</td></tr>`;
-    postMessage({ output: table_head + table + table_tail });
-    let stepJP = step4;
-    let step7 = Infinity,
-        step13 = Infinity;
-    if (full_tcnt === 14 && subcnt === 0) {
-        step7 = PairStep(tiles, true);
-        table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(step7)}</td></tr>`;
+    let substep = Array(3).fill(Infinity);
+    if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt, 4);
+    if (mask[0]) {
+        substep[0] = rsubstep[0];
+        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(substep[0])}</td></tr>`;
         postMessage({ output: table_head + table + table_tail });
-        stepJP = Math.min(stepJP, step7);
-        step13 = OrphanStep(tiles);
-        table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(step13)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        stepJP = Math.min(stepJP, step13);
     }
+    if (full_tcnt === 14 && subcnt === 0) {
+        if (rsubstep[1] === Infinity) rsubstep[1] = PairStep(tiles, true);
+        if (mask[1]) {
+            substep[1] = rsubstep[1];
+            table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(substep[1])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+        if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles);
+        if (mask[2]) {
+            substep[2] = rsubstep[2];
+            table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(substep[2])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+    }
+    const stepJP = Math.min(...substep);
+    if (stepJP === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(stepJP);
     let stepTypeJP = [];
-    if (step4 == stepJP) stepTypeJP.push(loc.normal);
-    if (step7 === stepJP) stepTypeJP.push(loc.pair7);
-    if (step13 === stepJP) stepTypeJP.push(loc.kokushi);
+    if (substep[0] === stepJP) stepTypeJP.push(loc.normal);
+    if (substep[1] === stepJP) stepTypeJP.push(loc.pair7);
+    if (substep[2] === stepJP) stepTypeJP.push(loc.kokushi);
     output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
     postMessage({ output, brief });
-    let dvd7 = undefined,
-        dvd13 = undefined;
     if (stepJP === -1 && full_tcnt > 0) {
         let odvd = [];
         let cnt = 0;
-        if (step7 === -1) {
+        if (substep[1] === -1) {
+            dvds[1] ??= PairOutput(tiles);
             ++cnt;
-            dvd7 = PairOutput(tiles);
-            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[1])}</div>`);
         }
-        if (step13 === -1) {
+        if (substep[2] === -1) {
+            dvds[2] ??= OrphanOutput(tiles);
             ++cnt;
-            dvd13 = OrphanOutput(tiles);
-            odvd.push(`<div class="waiting-brief">${loc.kokushi}${loc.colon}</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.kokushi}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[2])}</div>`);
         }
-        if (step4 === -1) {
-            cnt += dvd.cnt;
-            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10 - odvd.length);
+        if (substep[0] === -1) {
+            dvds[0] ??= windvd(tiles, full_tcnt);
+            cnt += dvds[0].cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvds[0].dvd, 10 - odvd.length);
             odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const substep = [step4, step7, step13];
     output += printWaiting(
         tiles,
         tcnt,
@@ -154,29 +163,38 @@ function JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd) {
         (d, g) => JPWaiting(tiles, stepJP, substep, full_tcnt, d, g),
         () => JPPrecheck(tiles, stepJP, substep, full_tcnt)
     ).output;
-    return { output, substep, dvd7, dvd13 };
+    return { output, substep: rsubstep, dvds };
 }
-function JP3pStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, dvd13) {
+function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
-    let step0 = searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guse3p);
-    table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step0)}</td></tr>`;
-    postMessage({ output: table_head + table + table_tail });
-    let step3p = step0;
-    let step7 = Infinity;
-    if (full_tcnt === 14 && subcnt === 0) {
-        step7 = PairStep(tiles, true, guse3p);
-        table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(step7)}</td></tr>`;
+    let substep = Array(3).fill(Infinity);
+    if (rsubstep[0] === Infinity) rsubstep[0] = searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guse3p);
+    if (mask[0]) {
+        substep[0] = rsubstep[0];
+        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(substep[0])}</td></tr>`;
         postMessage({ output: table_head + table + table_tail });
-        step3p = Math.min(step3p, step7);
-        table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(step13)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        step3p = Math.min(step3p, step13);
     }
+    if (full_tcnt === 14 && subcnt === 0) {
+        if (rsubstep[1] === Infinity) rsubstep[1] = PairStep(tiles, true, guse3p);
+        if (mask[1]) {
+            substep[1] = rsubstep[1];
+            table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(substep[1])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+        if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles);
+        if (mask[2]) {
+            substep[2] = rsubstep[2];
+            table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(substep[2])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+    }
+    const step3p = Math.min(...substep);
+    if (step3p === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(step3p);
     let stepTypeJP = [];
-    if (step0 == step3p) stepTypeJP.push(loc.normal);
-    if (step7 === step3p) stepTypeJP.push(loc.pair7);
-    if (step13 === step3p) stepTypeJP.push(loc.kokushi);
+    if (substep[0] === step3p) stepTypeJP.push(loc.normal);
+    if (substep[1] === step3p) stepTypeJP.push(loc.pair7);
+    if (substep[2] === step3p) stepTypeJP.push(loc.kokushi);
     output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
@@ -184,24 +202,26 @@ function JP3pStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, d
     if (step3p === -1 && full_tcnt > 0) {
         let odvd = [];
         let cnt = 0;
-        if (step7 === -1) {
+        if (substep[1] === -1) {
+            dvds[1] ??= PairOutput(tiles);
             ++cnt;
-            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[1])}</div>`);
         }
-        if (step13 === -1) {
+        if (substep[2] === -1) {
+            dvds[2] ??= OrphanOutput(tiles);
             ++cnt;
-            odvd.push(`<div class="waiting-brief">${loc.kokushi}${loc.colon}</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.kokushi}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[2])}</div>`);
         }
-        if (step0 === -1) {
-            cnt += dvd.cnt;
-            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, 10 - odvd.length);
+        if (substep[0] === -1) {
+            dvds[0] ??= windvd(tiles, full_tcnt);
+            cnt += dvds[0].cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvds[0].dvd, 10 - odvd.length);
             odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const substep = [step0, step7, step13];
     output += printWaiting(
         tiles,
         tcnt,
@@ -210,41 +230,54 @@ function JP3pStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, d
         (d, g) => JP3pWaiting(tiles, step3p, substep, full_tcnt, d, g),
         () => JP3pPrecheck(tiles, step3p, substep, full_tcnt)
     ).output;
-    return { output };
+    return { output, substep: rsubstep, dvds };
 }
-function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13) {
+function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5)) {
     let table = "";
-    let stepGB = step;
-    table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step)}</td></tr>`;
-    postMessage({ output: table_head + table + table_tail });
-    let step7 = Infinity,
-        step16 = Infinity,
-        stepkd = Infinity;
+    let substep = Array(5).fill(Infinity);
+    if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt);
+    if (mask[0]) {
+        substep[0] = rsubstep[0];
+        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(rsubstep[0])}</td></tr>`;
+        postMessage({ output: table_head + table + table_tail });
+    }
     if (full_tcnt === 14 && subcnt === 0) {
-        step7 = PairStep(tiles, false);
-        table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(step7)}</td></tr>`;
-        table += `<tr><td style="padding-left: 0px;">${loc.orphan13}${loc.colon}</td><td>${getWaitingType(step13)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        stepGB = Math.min(stepGB, step7);
-        stepGB = Math.min(stepGB, step13);
-        step16 = full_tcnt - 1 - Bukao16Count(tiles);
-        table += `<tr><td style="padding-left: 0px;">${loc.quanbukaoxing}${loc.colon}</td><td>${getWaitingType(step16)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        stepGB = Math.min(stepGB, step16);
+        if (rsubstep[1] === Infinity) rsubstep[1] = PairStep(tiles, false);
+        if (mask[1]) {
+            substep[1] = rsubstep[1];
+            table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(rsubstep[1])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+        if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles, false);
+        if (mask[2]) {
+            substep[2] = rsubstep[2];
+            table += `<tr><td style="padding-left: 0px;">${loc.orphan13}${loc.colon}</td><td>${getWaitingType(rsubstep[2])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+        if (rsubstep[3] === Infinity) rsubstep[3] = full_tcnt - 1 - Bukao16Count(tiles);
+        if (mask[3]) {
+            substep[3] = rsubstep[3];
+            table += `<tr><td style="padding-left: 0px;">${loc.quanbukaoxing}${loc.colon}</td><td>${getWaitingType(rsubstep[3])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
     }
     if (full_tcnt >= 9) {
-        stepkd = KnitDragonStep(tiles, tcnt);
-        table += `<tr><td style="padding-left: 0px;">${loc.zuhelongxing}${loc.colon}</td><td>${getWaitingType(stepkd)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        stepGB = Math.min(stepGB, stepkd);
+        if (rsubstep[4] === Infinity) rsubstep[4] = KnitDragonStep(tiles, tcnt);
+        if (mask[4]) {
+            substep[4] = rsubstep[4];
+            table += `<tr><td style="padding-left: 0px;">${loc.zuhelongxing}${loc.colon}</td><td>${getWaitingType(rsubstep[4])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
     }
+    const stepGB = Math.min(...substep);
+    if (stepGB === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(stepGB);
     let stepTypeGB = [];
-    if (step == stepGB) stepTypeGB.push(loc.normal);
-    if (step7 === stepGB) stepTypeGB.push(loc.pair7);
-    if (step13 === stepGB) stepTypeGB.push(loc.orphan13);
-    if (step16 === stepGB) stepTypeGB.push(loc.quanbukaoxing);
-    if (stepkd == stepGB) stepTypeGB.push(loc.zuhelongxing);
+    if (substep[0] === stepGB) stepTypeGB.push(loc.normal);
+    if (substep[1] === stepGB) stepTypeGB.push(loc.pair7);
+    if (substep[2] === stepGB) stepTypeGB.push(loc.orphan13);
+    if (substep[3] === stepGB) stepTypeGB.push(loc.quanbukaoxing);
+    if (substep[4] === stepGB) stepTypeGB.push(loc.zuhelongxing);
     output += `${loc.brace_left}${stepTypeGB.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
@@ -253,37 +286,39 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
         postMessage({ output });
         let odvd = [];
         let cnt = 0;
-        if (step7 === -1) {
+        if (substep[1] === -1) {
+            dvds[1] ??= PairOutput(tiles);
             ++cnt;
-            if (dvd7 === undefined) dvd7 = PairOutput(tiles);
-            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvd7)}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[1])}</div>`);
         }
-        if (step13 === -1) {
+        if (substep[2] === -1) {
+            dvds[2] ??= OrphanOutput(tiles);
             ++cnt;
-            odvd.push(`<div class="waiting-brief">${loc.orphan13}${loc.colon}</div><div class="card-container">${getWinningLine(dvd13)}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.orphan13}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[2])}</div>`);
         }
-        if (step16 === -1) {
-            const ots = Bukao16Output(tiles);
-            cnt += ots.length;
-            odvd.push(...ots.map((a) => `<div class="waiting-brief">${loc.quanbukaoxing}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
+        if (substep[3] === -1) {
+            dvds[3] ??= Bukao16Output(tiles);
+            cnt += dvds[3].length;
+            odvd.push(...dvds[3].map((a) => `<div class="waiting-brief">${loc.quanbukaoxing}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
         }
-        if (stepkd === -1) {
+        if (substep[4] === -1) {
             let opt_size = 10 - odvd.length;
-            if (step === -1) --opt_size;
-            const ans = KnitDragonOutput(tiles, full_tcnt, opt_size);
+            if (substep[0] === -1) --opt_size;
+            const ans = KnitDragonOutput(tiles, full_tcnt, opt_size, dvds[4]);
+            dvds[4] ??= ans.save;
             cnt += ans.cnt;
             odvd.push(...ans.ots.map((a) => `<div class="waiting-brief">${loc.zuhelongxing}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
         }
-        if (step === -1) {
-            cnt += dvd.cnt;
-            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, Math.max(10 - odvd.length, 1));
+        if (substep[0] === -1) {
+            dvds[0] ??= windvd(tiles, full_tcnt);
+            cnt += dvds[0].cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvds[0].dvd, Math.max(10 - odvd.length, 1));
             odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const substep = [step, step7, step13, step16, stepkd];
     const r = printWaiting(
         tiles,
         tcnt,
@@ -293,36 +328,45 @@ function GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dv
         () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks)
     );
     output += r.output;
-    return { output, substep, save: r.ans };
+    return { output, substep: rsubstep, dvds };
 }
-function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
+function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4)) {
     let table = "";
-    let stepTW = step;
-    table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(step)}</td></tr>`;
-    postMessage({ output: table_head + table + table_tail });
-    let step13 = Infinity,
-        step16 = Infinity,
-        stepnico = Infinity;
-    if (full_tcnt === 17 && subcnt === 0) {
-        stepnico = NiconicoStep(tiles);
-        table += `<tr><td style="padding-left: 0px;">${loc.niconico}${loc.colon}</td><td>${getWaitingType(stepnico)}</td></tr>`;
-        stepTW = Math.min(stepTW, stepnico);
+    let substep = Array(4).fill(Infinity);
+    if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt);
+    if (mask[0]) {
+        substep[0] = rsubstep[0];
+        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(substep[0])}</td></tr>`;
         postMessage({ output: table_head + table + table_tail });
-        step13 = OrphanMeldStep(tiles);
-        table += `<tr><td style="padding-left: 0px;">${loc.orphan13}${loc.colon}</td><td>${getWaitingType(step13)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        stepTW = Math.min(stepTW, step13);
-        step16 = Buda16Step(tiles);
-        table += `<tr><td style="padding-left: 0px;">${loc.shiliubudaxing}${loc.colon}</td><td>${getWaitingType(step16)}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
-        stepTW = Math.min(stepTW, step16);
     }
+    if (full_tcnt === 17 && subcnt === 0) {
+        if (rsubstep[1] === Infinity) rsubstep[1] = NiconicoStep(tiles);
+        if (mask[1]) {
+            substep[1] = rsubstep[1];
+            table += `<tr><td style="padding-left: 0px;">${loc.niconico}${loc.colon}</td><td>${getWaitingType(substep[1])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+        if (rsubstep[2] === Infinity) rsubstep[2] = OrphanMeldStep(tiles);
+        if (mask[2]) {
+            substep[2] = rsubstep[2];
+            table += `<tr><td style="padding-left: 0px;">${loc.orphan13}${loc.colon}</td><td>${getWaitingType(substep[2])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+        if (rsubstep[3] === Infinity) rsubstep[3] = Buda16Step(tiles);
+        if (mask[3]) {
+            substep[3] = rsubstep[3];
+            table += `<tr><td style="padding-left: 0px;">${loc.shiliubudaxing}${loc.colon}</td><td>${getWaitingType(substep[3])}</td></tr>`;
+            postMessage({ output: table_head + table + table_tail });
+        }
+    }
+    const stepTW = Math.min(...substep);
+    if (stepTW === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(stepTW);
     let stepTypeTW = [];
-    if (step == stepTW) stepTypeTW.push(loc.normal);
-    if (stepnico == stepTW) stepTypeTW.push(loc.niconico);
-    if (step13 == stepTW) stepTypeTW.push(loc.orphan13);
-    if (step16 == stepTW) stepTypeTW.push(loc.shiliubudaxing);
+    if (substep[0] === stepTW) stepTypeTW.push(loc.normal);
+    if (substep[1] === stepTW) stepTypeTW.push(loc.niconico);
+    if (substep[2] === stepTW) stepTypeTW.push(loc.orphan13);
+    if (substep[3] === stepTW) stepTypeTW.push(loc.shiliubudaxing);
     output += `${loc.brace_left}${stepTypeTW.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
     output += table_head + table + table_tail;
@@ -331,30 +375,31 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
         postMessage({ output });
         let odvd = [];
         let cnt = 0;
-        if (stepnico === -1) {
-            const ots = NiconicoOutput(tiles);
-            cnt += ots.length;
-            odvd = ots.map((a) => `<div class="waiting-brief">${loc.niconico}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`);
+        if (substep[1] === -1) {
+            dvds[1] ??= NiconicoOutput(tiles);
+            cnt += dvds[1].length;
+            odvd = dvds[1].map((a) => `<div class="waiting-brief">${loc.niconico}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`);
         }
-        if (step13 === -1) {
-            const ots = OrphanMeldOutput(tiles);
-            cnt += ots.length;
-            odvd.push(...ots.map((a) => `<div class="waiting-brief">${loc.orphan13}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
+        if (substep[2] === -1) {
+            dvds[2] ??= OrphanMeldOutput(tiles);
+            cnt += dvds[2].length;
+            odvd.push(...dvds[2].map((a) => `<div class="waiting-brief">${loc.orphan13}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
         }
-        if (step16 === -1) {
+        if (substep[3] === -1) {
+            dvds[3] ??= Buda16Output(tiles);
             ++cnt;
-            odvd.push(`<div class="waiting-brief">${loc.shiliubudaxing}${loc.colon}</div><div class="card-container">${getWinningLine(Buda16Output(tiles))}</div>`);
+            odvd.push(`<div class="waiting-brief">${loc.shiliubudaxing}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[3])}</div>`);
         }
-        if (step === -1) {
-            cnt += dvd.cnt;
-            const ots = WinOutput(tiles, full_tcnt, dvd.dvd, Math.max(10 - odvd.length, 1));
+        if (substep[0] === -1) {
+            dvds[0] ??= windvd(tiles, full_tcnt);
+            cnt += dvds[0].cnt;
+            const ots = WinOutput(tiles, full_tcnt, dvds[0].dvd, Math.max(10 - odvd.length, 1));
             odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
         }
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const substep = [step, stepnico, step13, step16];
     output += printWaiting(
         tiles,
         tcnt,
@@ -363,7 +408,7 @@ function TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd) {
         (d, g, f) => TWWaiting(tiles, stepTW, substep, full_tcnt, f(save.waiting), d, g),
         () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks)
     ).output;
-    return { output, substep };
+    return { output, substep: rsubstep, dvds };
 }
 function GBFanDiv(fan) {
     let fans = new Array(84).fill(0);
@@ -383,7 +428,7 @@ function postDebugInfoGlobal(st, m, cm, output) {
     let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
     postMessage({ debug, output });
 }
-function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
+function GBScore(aids, substeps, gw, mw, wt, info, setting) {
     let infov = 0;
     let infof = [];
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
@@ -393,13 +438,25 @@ function GBScore(aids, substeps, save, gw, mw, wt, info, setting) {
     if (info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1)?.id;
-    let listen_cnt = save.waiting[wint]?.ans.length ?? 999;
+    const tiles = getTiles(aids[0]);
+    let listen_cnt = 0;
+    if (wint === undefined) listen_cnt = 999;
+    else {
+        --tiles[wint];
+        listen_cnt = GBWaiting(
+            tiles,
+            0,
+            substeps.map((i) => Math.max(0, i)),
+            aids[0].length
+        ).ans.length;
+        console.log(listen_cnt);
+        ++tiles[wint];
+    }
     let must_single_listen = listen_cnt === 999;
     let gans = { val: 0, fan: [] };
     let cm = 0,
         m = 0,
         p = Array(7).fill(null);
-    const tiles = getTiles(aids[0]);
     if (substeps[0] === -1) p[6] = MeldsPermutation(aids, tiles);
     if (substeps[1] === -1) ++m;
     if (substeps[2] === -1) ++m;
@@ -606,28 +663,32 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
             if (renhou < 0) infoans.fan.push(30), (infoans.yakuman += -renhou);
             else if (renhou > 0)
                 if (setting[21]) {
-                    let gf = [8], gvf = 20, grf = 0;
+                    let gf = [8],
+                        gvf = 20,
+                        grf = 0;
                     if (substeps[0] === -1) {
                         const { err, itots, itsubots, ck } = p;
                         if (err === 1) return { output: loc.subtile_error_1, brief: "" };
                         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
-                        itots((ots, ota) => itsubots((subots) => {
-                            let {listen_type, bilisten, valfus, fus} = JPGetFusMain([...ots, subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
-                            let realfus = 0;
-                            ({valfus, fus, realfus} = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, ots.length + subots.length >= 5 && subots.length === ck));
-                            if (realfus > grf) gf = fus, gvf = valfus, grf = realfus;
-                        }));
+                        itots((ots, ota) =>
+                            itsubots((subots) => {
+                                let { listen_type, bilisten, valfus, fus } = JPGetFusMain([...ots, subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
+                                let realfus = 0;
+                                ({ valfus, fus, realfus } = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, ots.length + subots.length >= 5 && subots.length === ck));
+                                if (realfus > grf) (gf = fus), (gvf = valfus), (grf = realfus);
+                            })
+                        );
                     }
                     if (substeps[1] === -1) {
                         const SevenPairsFusArray = [25, 50, 100];
-                        const sf = JPFuArray[10] = SevenPairsFusArray[setting[8]];
-                        if (sf >= gvf) gvf = grf = sf, gf = [10];
+                        const sf = (JPFuArray[10] = SevenPairsFusArray[setting[8]]);
+                        if (sf >= gvf) (gvf = grf = sf), (gf = [10]);
                     }
                     const RenhouValueArray = [0, 2000, 8000, gvf << 6, 3000, 4000];
                     const RenhouPrintArray = ["", "mangan", "yakuman", "", "haneman", "baiman"];
                     if (RenhouValueArray[3] >= 2000) {
-                        RenhouValueArray[3] = 2000, RenhouPrintArray[3] = "mangan";
-                    } else if (setting[7] && RenhouValueArray[3] >= 1920) RenhouValueArray[3] = 2000, RenhouPrintArray[3] = "kiri_mangan";
+                        (RenhouValueArray[3] = 2000), (RenhouPrintArray[3] = "mangan");
+                    } else if (setting[7] && RenhouValueArray[3] >= 1920) (RenhouValueArray[3] = 2000), (RenhouPrintArray[3] = "kiri_mangan");
                     gans = { ...eans_jp, val: RenhouValueArray[setting[9]], fan: [30], valfan: renhou, fus: gf, valfus: gvf, realfus: grf, print: RenhouPrintArray[setting[9]] };
                 } else infoans.fan.push(30), (infoans.valfan += renhou);
         }
@@ -681,7 +742,8 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
         const ans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
         if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
         else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
-    } if (substeps[2] === -1) {
+    }
+    if (substeps[2] === -1) {
         let tcp = tiles.slice();
         --tcp[aids[0].at(-1).id];
         let listen_13 = setting[1];
@@ -728,48 +790,53 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     return { output: opts.join(""), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
 }
 self.onmessage = function (e) {
+    const st = new Date();
     if (e.data.lang) setLoc(e.data.lang);
     let task = e.data.task;
     let result;
-    const st = new Date();
+    if (aids === undefined) {
+        ({ aids, tiles, subtiles } = e.data);
+        full_tcnt = tcnt = aids[0].length;
+        if (tcnt % 3 === 1) ++full_tcnt;
+        subcnt = aids[1].length;
+    }
     switch (task) {
         case 0: {
-            let { tiles, tcnt, full_tcnt, subtiles, subcnt } = e.data;
-            result = normalStep(tiles, tcnt, full_tcnt, subtiles, subcnt);
+            result = normalStep();
             break;
         }
         case 1: {
-            let { tiles, tcnt, full_tcnt, subtiles, subcnt, dvd } = e.data;
-            result = JPStep(tiles, tcnt, full_tcnt, subtiles, subcnt, dvd);
+            let { mask, dvds } = e.data;
+            result = JPStep(mask, undefined, dvds);
             break;
         }
         case 2: {
-            let { tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13 } = e.data;
-            result = GBStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, step13, dvd, dvd7, dvd13);
+            let { mask, steps, save, dvds } = e.data;
+            result = GBStep(mask, save, steps, dvds);
             break;
         }
         case 3: {
-            let { tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd } = e.data;
-            result = TWStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step, save, dvd);
+            let { mask, steps, save, dvds } = e.data;
+            result = TWStep(mask, save, steps, dvds);
             break;
         }
         case 4: {
-            let { tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, dvd13 } = e.data;
-            result = JP3pStep(tiles, tcnt, full_tcnt, subtiles, subcnt, step13, dvd, dvd7, dvd13);
+            let { mask, steps, dvds } = e.data;
+            result = JP3pStep(mask, steps, dvds);
             break;
         }
         case "gb-score": {
-            let { aids, substeps, save, gw, mw, wt, info, setting } = e.data;
-            result = GBScore(aids, substeps, save, gw, mw, wt, info, setting);
+            let { substeps, gw, mw, wt, info, setting } = e.data;
+            result = GBScore(aids, substeps, gw, mw, wt, info, setting);
             break;
         }
         case "jp-score": {
-            let { aids, substeps, gw, mw, wt, info, setting } = e.data;
+            let { substeps, gw, mw, wt, info, setting } = e.data;
             result = JPScore(aids, substeps, gw, mw, wt, info, setting);
             break;
         }
         case "qingque-score": {
-            let { aids, substeps, info } = e.data;
+            let { substeps, info } = e.data;
             Qingque_Weight_creation();
             result = Qingque_Calculate(aids, info, substeps);
             break;

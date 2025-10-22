@@ -713,7 +713,7 @@ function initGetchecks(tiles, f) {
 function NormalPrecheck(tiles, step, tcnt) {
     const dischecks = Array(sizeAT);
     const getchecks = Array(sizeUT);
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     initDischecks(tiles, (i) => (dischecks[i] = StepCheck(tiles, nstep + 1, tcnt - 1, tcnt)));
     initGetchecks(tiles, (i) => (getchecks[i] = StepCheck(tiles, nstep, tcnt + 1, tcnt)));
     return { dischecks, getchecks };
@@ -725,7 +725,7 @@ function JPPrecheck(tiles, step, substep, tcnt) {
     const getchecks = Array(sizeAT)
         .fill(null)
         .map(() => Array(3).fill(false));
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     if (nstep >= substep[0]) {
         initDischecks(tiles, (i) => (dischecks[i][0] = StepCheck(tiles, nstep + 1, tcnt - 1, tcnt, 4)));
         initGetchecks(tiles, (i) => (getchecks[i][0] = StepCheck(tiles, nstep, tcnt + 1, tcnt, 4)));
@@ -747,7 +747,7 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
     const getchecks = Array(sizeAT)
         .fill(null)
         .map(() => Array(3).fill(false));
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     if (nstep >= substep[0]) {
         initDischecks(tiles, (i) => (dischecks[i][0] = searchDp(tiles, 0, 0, tcnt, nstep + 1, 4, guse3p) <= nstep));
         initGetchecks(tiles, (i) => (getchecks[i][0] = searchDp(tiles, 0, 0, tcnt, nstep, 4, guse3p) < nstep));
@@ -769,7 +769,7 @@ function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     const getchecks = Array(sizeAT)
         .fill(null)
         .map(() => Array(5).fill(false));
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     if (nstep >= substep[0]) {
         for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck.dischecks[i];
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck.getchecks[i];
@@ -799,7 +799,7 @@ function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
     const getchecks = Array(sizeAT)
         .fill(null)
         .map(() => Array(4).fill(false));
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     if (nstep >= substep[0]) {
         for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck.dischecks[i];
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck.getchecks[i];
@@ -835,14 +835,14 @@ function makeAns(step, tiles, f, ff) {
 }
 function NormalWaiting(tiles, step, tcnt, discheck, getchecks) {
     if (discheck === false) return { ans: [], checked: false };
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     const waiting = (t, i, d, g) => g !== false && StepCheck(t, i, tcnt - d, tcnt);
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck };
 }
 function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2]];
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     function waiting(tiles, step, d, g) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, true) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
@@ -853,7 +853,7 @@ function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
 }
 function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2]];
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     function waiting(tiles, step, _, g) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, true, guse3p) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
@@ -864,7 +864,7 @@ function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
 }
 function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 14 && step === substep[1], tcnt === 14 && step === substep[2], tcnt === 14 && step === substep[3], tcnt >= 9 && step === substep[4]];
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     function waiting(tiles, step, d, g, s) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, false) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
@@ -872,29 +872,31 @@ function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
         else if (discheck[0] && (!g || g[0]) && (s ?? StepCheck(tiles, step, tcnt - d, tcnt))) return true;
         else if (discheck[4] && (!g || g[4]) && KnitDragonStepCheck(tiles, step, tcnt)) return true;
     }
-    const saveWaiting = Array(sizeUT).fill(false);
-    if (nstep >= substep[0]) {
+    let saveWaiting = undefined;
+    if (nstep >= substep[0] && saveans) {
+        saveWaiting = Array(sizeUT).fill(false);
         for (const x of saveans.ans) saveWaiting[x] = true;
         if (saveans.gans) for (const x of saveans.gans) saveWaiting[x] = true;
     }
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i], saveWaiting[i]));
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i], saveWaiting?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };
 }
 function TWWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
     discheck ??= [step === substep[0], tcnt === 17 && step === substep[1], tcnt === 17 && step === substep[2], tcnt === 17 && step === substep[3]];
-    const nstep = Math.max(step, 0);
+    const nstep = step;
     function waiting(tiles, step, d, g, s) {
         if (discheck[1] && (!g || g[1]) && NiconicoStep(tiles) < step) return true;
         else if (discheck[3] && (!g || g[3]) && Buda16Step(tiles) < step) return true;
         else if (discheck[0] && (!g || g[0]) && (s ?? StepCheck(tiles, step, tcnt - d, tcnt))) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanMeldStep(tiles) < step) return true;
     }
-    const saveWaiting = Array(sizeUT).fill(false);
-    if (nstep >= substep[0]) {
+    let saveWaiting = undefined;
+    if (nstep >= substep[0] && saveans) {
+        saveWaiting = Array(sizeUT).fill(false);
         for (const x of saveans.ans) saveWaiting[x] = true;
         if (saveans.gans) for (const x of saveans.gans) saveWaiting[x] = true;
     }
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i], saveWaiting[i]));
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, nstep, 0, getchecks?.[i], saveWaiting?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };
 }
 function prepareDvd(nm, np, tiles) {
@@ -915,8 +917,8 @@ function prepareDvd(nm, np, tiles) {
         ldDvd[ldi + 6] = ldDvd[ldi + 5] * (np + 1);
         sizeDvd += ldDvd[ldi + 6] * (nm + 1);
     }
-    dvd = Array(sizeDvd).fill(null);
-    return { dvd, ldDvd };
+    worker_dvds_0 = Array(sizeDvd).fill(null);
+    return { dvd: worker_dvds_0, ldDvd };
 }
 function getDvd(dvd, ldDvd, em, ep, i, ui, uj, aj, bj, cj) {
     return dvd[indexDvd(ldDvd, em, ep, i, ui, uj, aj, bj, cj)];
@@ -1102,31 +1104,38 @@ function Bukao16Output(tiles) {
     }
     return ots;
 }
-function KnitDragonOutput(tiles, full_tcnt, opt_size) {
+function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
     let ots = Array(6)
         .fill(null)
         .map(() => []);
     let save = new Set();
     let cnt = 0;
+    const reuse = dvds !== undefined;
+    dvds ??= Array(6).fill(null);
     for (let i = 0; i < 6; ++i) {
-        let tcp = tiles.slice();
-        let win = true;
         let head = [[], [], []];
-        for (let j = 0; j < 9; ++j) {
-            const id = KnitDragonSave[i][j];
-            let rid = getRealId(tcp, id);
-            if (rid === -1) {
-                win = false;
-                break;
+        let dvd;
+        if (reuse) ({ head, dvd } = dvds[i]);
+        else {
+            let tcp = tiles.slice();
+            let win = true;
+            for (let j = 0; j < 9; ++j) {
+                const id = KnitDragonSave[i][j];
+                let rid = getRealId(tcp, id);
+                if (rid === -1) {
+                    win = false;
+                    break;
+                }
+                --tcp[rid];
+                head[Math.floor(j / 3)].push(rid);
             }
-            --tcp[rid];
-            head[Math.floor(j / 3)].push(rid);
+            if (!win) continue;
+            const s = JSON.stringify(head);
+            if (save.has(s)) continue;
+            else save.add(s);
+            dvd = windvd(tcp, full_tcnt - 9);
+            dvds[i] = { head, dvd };
         }
-        if (!win) continue;
-        const s = JSON.stringify(head);
-        if (save.has(s)) continue;
-        else save.add(s);
-        let dvd = windvd(tcp, full_tcnt - 9);
         cnt += dvd.cnt;
         let tails = WinOutput(tcp, full_tcnt - 9, dvd.dvd, opt_size);
         for (let j = 0; j < tails.length; ++j) ots[i].push([...head, ...tails[j]]);
@@ -1144,7 +1153,7 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size) {
     }
     let ans = [];
     for (let i = 0; i < 6; ++i) for (let j = 0; j < select[i]; ++j) ans.push(ots[i][j]);
-    return { cnt, ots: ans };
+    return { cnt, ots: ans, save: dvds };
 }
 function NiconicoOutput(tiles) {
     let ots = [];

@@ -205,6 +205,12 @@
                     <div class="output-title">港式台灣麻將牌理</div>
                     <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">摺疊 ▲</button>
                 </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般型</label>
+                    <label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />嚦咕嚦咕型</label>
+                    <label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么型</label>
+                    <label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不搭型</label>
+                </div>
                 <div class="output-context" id="output-tw"></div>
                 <div class="output-context" id="brief-output-tw" style="display: none"></div>
                 <div class="output-time" id="time-output-tw"></div>
@@ -221,6 +227,11 @@
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">摺疊 ▲</button>
                     <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">摺疊 ▲</button>
                 </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般型</label>
+                    <label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七對型</label>
+                    <label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />國士無雙型</label>
+                </div>
                 <div id="output-group-jp">
                     <div class="output-context" id="output-jp"></div>
                     <div class="output-context" id="brief-output-jp" style="display: none"></div>
@@ -236,6 +247,13 @@
                 <div class="title-button-container">
                     <div class="output-title">國標麻將標準型牌理</div>
                     <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">摺疊 ▲</button>
+                </div>
+                <div class="output-option-group">
+                    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般型</label>
+                    <label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七對型</label>
+                    <label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么型</label>
+                    <label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠型</label>
+                    <label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合龍型</label>
                 </div>
                 <div class="output-context" id="output-gb"></div>
                 <div class="output-context" id="brief-output-gb" style="display: none"></div>

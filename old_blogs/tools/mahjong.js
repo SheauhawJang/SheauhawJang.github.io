@@ -968,7 +968,6 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                 let rk = ei - (ui + s + sf + (k - 1) * 3);
                 if (p && rk <= 1 + p * 2) continue; // head with no real card
                 rk = Math.min(rk, 3);
-                console.log(rk);
                 while (k >= 0) {
                     let ti = ui + s + sf + sff + k * 3 + p * 2,
                         tj = uj + s + sf,

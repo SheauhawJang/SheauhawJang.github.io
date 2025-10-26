@@ -170,8 +170,8 @@ let lastStep = {};
 let INF = Infinity;
 const EMPTY = -2;
 let vst = [];
-const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, -1];
-const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, -1];
+const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, 50, 50, 50, 50, 50, 50, 50, 50, 42, 43, 44, 45, 46, 47, 48, 49, 50];
+const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, 50, 50, 50, 50, 50, 50, 50, 50, 42, 46, 46, 46, 46, 49, 49, 49, 50];
 const JokerC = 42;
 const CJokerA = [43, 44, 45, 47, 48];
 const CJokerB = [46, 46, 46, 49, 49];
@@ -227,14 +227,14 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     let rc = tiles[JokerC] - cj;
     const cs = SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity;
     const csi = glmt === Infinity && cs && SeqCheck(i + 1) && guse[i + 3] !== Infinity; // When glmt is not Infinity, joker slide is not equal
-    let ri = Math.max(tiles[i] - ui, 0);
-    let rj = Math.max(tiles[i + 1] - uj, 0);
     let nxti;
     for (nxti = i + 1; nxti < sizeUT; ++nxti) if (guse[nxti] !== Infinity) break;
     let ei = tiles[i];
-    if (JokerA[i] !== JokerA[nxti]) (ri += ra), (ei += ra), (lmti += ra), (ra = aj = 0);
-    if (JokerB[i] !== JokerB[nxti]) (ri += rb), (ei += rb), (lmti += rb), (rb = bj = 0);
-    if (nxti >= sizeUT) (ri += rc), (ei += rc), (lmti += rc), (rc = cj = 0);
+    if (JokerA[i] !== JokerA[nxti]) (ei += ra), (lmti += ra), (ra = aj = 0);
+    if (JokerB[i] !== JokerB[nxti]) (ei += rb), (lmti += rb), (rb = bj = 0);
+    if (nxti >= sizeUT) (ei += rc), (lmti += rc), (rc = cj = 0);
+    let ri = ei - ui;
+    let rj = tiles[i + 1] - uj;
     const lmtj = lmti + ra + rb + rc;
     if (ui > lmtj) return (step[dpi] = INF);
     let ans = INF;
@@ -942,50 +942,49 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
     let ra = tiles[JokerA[i]] - aj;
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[JokerC] - cj;
-    let ri = Math.max(tiles[i] - ui, 0);
-    let rj = Math.max(tiles[i + 1] - uj, 0);
     const nxti = i + 1;
     let ei = tiles[i];
-    if (JokerA[i] !== JokerA[nxti]) (ri += ra), (ei += ra), (ra = aj = 0);
-    if (JokerB[i] !== JokerB[nxti]) (ri += rb), (ei += rb), (rb = bj = 0);
-    if (nxti >= sizeUT) (ri += rc), (ei += rc), (rc = cj = 0);
+    if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = aj = 0);
+    if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = bj = 0);
+    if (nxti >= sizeUT) (ei += rc), (rc = cj = 0);
+    let ri = ei - ui;
+    let rj = tiles[i + 1] - uj;
     const rsum = ra + rb + rc;
     const mp = Math.min(np - ep, Math.ceil(ri / 2));
     for (let p = 0; p <= mp; ++p) {
-        let ms = 0;
-        if (SeqCheck(i)) {
-            let sa = ri - 2 * p,
-                sb = rj,
-                sc = tiles[i + 2];
-            ms = Math.min(sa, sb, sc);
-            // only seq with at least 2 real cards will show
-            if (sa === ms) sa += rsum;
-            else if (sb === ms) sb += rsum;
-            else sc += rsum;
-            ms = Math.min(sa, sb, sc);
-        }
-        for (let s = 0; s <= ms; ++s) {
-            // tri must has real card
-            // all remain cards show be used
-            const k = Math.ceil(Math.max(ri - p * 2 - s, 0) / 3);
-            const ti = p * 2 + s + k * 3 + ui;
-            let tj = s + uj,
-                tk = s;
-            let e = Math.max(ti - ei, 0);
-            if (s) {
-                e += Math.max(tj - tiles[i + 1], 0);
-                e += Math.max(tk - tiles[i + 2], 0);
-                tj = Math.min(tj, tiles[i + 1]);
-                tk = Math.min(tk, tiles[i + 2]);
-            }
-            if (e > rsum) continue;
-            const uaj = Math.min(ra, e);
-            const ubj = Math.min(rb, e - uaj);
-            const ucj = Math.min(rc, e - uaj - ubj);
-            const ans = kernelDvd(tiles, nm, np, dvd, ldDvd, em + s + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj);
-            if (ans) {
-                dvd[dpi].cnt += ans;
-                dvd[dpi].nxt.push({ p, s, k, dpi: indexDvd(ldDvd, em + s + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj) });
+        const ss = [ri - 2 * p, rj, tiles[i + 2]];
+        const ms = SeqCheck(i) ? Math.min(ss[0], ss[2]) : 0;
+        for (let s = 0; s <= Math.max(ms, 0); ++s) {
+            const msf = SeqCheck(i) || SeqCheck(i - 1) ? Math.min(ss[0] - s, ss[1] - s) : 0;
+            for (let sf = 0; sf <= Math.max(msf, 0); ++sf) {
+                // tri must has real card
+                // all remain cards show be used
+                let k = Math.ceil(Math.max(ri - p * 2 - s - sf, 0) / 3);
+                let sff = 0;
+                let rk = ei - (ui + s + sf + (k - 1) * 3);
+                if (p && rk <= 1 + p * 2) continue; // head with no real card
+                rk = Math.min(rk, 3);
+                while (k >= 0) {
+                    let ti = ui + s + sf + sff + k * 3 + p * 2,
+                        tj = uj + s + sf,
+                        tk = s;
+                    let e = sf + sff * 2 + Math.max(ti - ei, 0) + Math.max(tj - tiles[i + 1], 0) + Math.max(tk - tiles[i + 2], 0);
+                    tj = Math.min(tj, tiles[i + 1]);
+                    tk = Math.min(tk, tiles[i + 2]);
+                    if (e > rsum) break;
+                    const uaj = Math.min(ra, e);
+                    const ubj = Math.min(rb, e - uaj);
+                    const ucj = Math.min(rc, e - uaj - ubj);
+                    const ans = kernelDvd(tiles, nm, np, dvd, ldDvd, em + s + sf + sff + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj);
+                    if (ans) {
+                        dvd[dpi].cnt += ans;
+                        dvd[dpi].nxt.push({ p, s, sf, sff, k, dpi: indexDvd(ldDvd, em + s + sf + sff + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj) });
+                    }
+                    if (i >= 27) break;
+                    if (rk === 3) sff += 3, --k;
+                    else if (rk === 2) ++sff, --k;
+                    else sff += 4, k -= 2;
+                }
             }
         }
     }
@@ -1026,10 +1025,12 @@ function WinOutput(tiles, full_tcnt, dvd, opt_size) {
             const n = ans.nxt[j];
             for (let p = 0; p < n.p; ++p) head.push([i, i]);
             for (let s = 0; s < n.s; ++s) melds.push([i, i + 1, i + 2]);
+            for (let s = 0; s < n.sf; ++s) melds.push([i, i + 1, JokerA[i]]);
+            for (let s = 0; s < n.sff; ++s) melds.push([i, JokerA[i], JokerA[i]]);
             for (let k = 0; k < n.k; ++k) melds.push([i, i, i]);
             dfs(i + 1, n.dpi);
             for (let p = 0; p < n.p; ++p) head.pop();
-            for (let m = 0; m < n.s + n.k; ++m) melds.pop();
+            for (let m = 0; m < n.s + n.k + n.sf + n.sff; ++m) melds.pop();
         }
     }
     dfs(0, 0);

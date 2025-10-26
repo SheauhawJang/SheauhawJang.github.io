@@ -15,12 +15,11 @@ function kernelRealDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0,
     let ra = tiles[JokerA[i]] - aj;
     let rb = tiles[JokerB[i]] - bj;
     let rc = tiles[JokerC] - cj;
-    let ri = Math.max(tiles[i] - ui, 0);
     const nxti = i + 1;
     let ei = tiles[i];
-    if (JokerA[i] !== JokerA[nxti]) (ri += ra), (ei += ra), (ra = aj = 0);
-    if (JokerB[i] !== JokerB[nxti]) (ri += rb), (ei += rb), (rb = bj = 0);
-    if (i >= sizeUT) (ri += rc), (ei += rc), (rc = cj = 0);
+    if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = aj = 0);
+    if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = bj = 0);
+    if (i >= sizeUT) (ei += rc), (rc = cj = 0);
     const rsum = ra + rb + rc;
     const mp = np - ep;
     const ms = SeqCheck(i);

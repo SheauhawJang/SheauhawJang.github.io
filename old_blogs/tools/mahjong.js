@@ -28,7 +28,7 @@ function id(name) {
     if (name.length < 2) return {};
     if (name[0] === "i")
         switch (name[1]) {
-            case 'j':
+            case "j":
                 return { id: 42 };
             case "w":
             case "m":
@@ -932,6 +932,10 @@ function indexDvd(ldDvd, em, ep, i, ui, uj, aj, bj, cj) {
     const ldi = i * 7;
     return ldDvd[ldi] + em * ldDvd[ldi + 6] + ep * ldDvd[ldi + 5] + ui * ldDvd[ldi + 4] + uj * ldDvd[ldi + 3] + aj * ldDvd[ldi + 2] + bj * ldDvd[ldi + 1] + cj;
 }
+function fullSeqCheck(i, a, b, c, p) {
+    if (p === 1) return SeqCheck(i) ? Math.min(a, c) : 0;
+    return SeqCheck(i) || SeqCheck(i - 1) ? Math.min(a, b) : 0;
+}
 function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT)
         if (em === nm && ep === np) return 1;
@@ -953,9 +957,9 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
     const mp = Math.min(np - ep, Math.ceil(ri / 2));
     for (let p = 0; p <= mp; ++p) {
         const ss = [ri - 2 * p, rj, tiles[i + 2]];
-        const ms = SeqCheck(i) ? Math.min(ss[0], ss[2]) : 0;
+        const ms = fullSeqCheck(i, ...ss, 1);
         for (let s = 0; s <= Math.max(ms, 0); ++s) {
-            const msf = SeqCheck(i) || SeqCheck(i - 1) ? Math.min(ss[0] - s, ss[1] - s) : 0;
+            const msf = fullSeqCheck(i, ...ss.map((i) => i - s), 2);
             for (let sf = 0; sf <= Math.max(msf, 0); ++sf) {
                 // tri must has real card
                 // all remain cards show be used
@@ -964,6 +968,7 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                 let rk = ei - (ui + s + sf + (k - 1) * 3);
                 if (p && rk <= 1 + p * 2) continue; // head with no real card
                 rk = Math.min(rk, 3);
+                console.log(rk);
                 while (k >= 0) {
                     let ti = ui + s + sf + sff + k * 3 + p * 2,
                         tj = uj + s + sf,
@@ -981,9 +986,9 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                         dvd[dpi].nxt.push({ p, s, sf, sff, k, dpi: indexDvd(ldDvd, em + s + sf + sff + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj) });
                     }
                     if (i >= 27) break;
-                    if (rk === 3) sff += 3, --k;
-                    else if (rk === 2) ++sff, --k;
-                    else sff += 4, k -= 2;
+                    if (rk === 3) (sff += 3), --k, rk = 3;
+                    else if (rk === 2) sff += 2, --k, rk = 3;
+                    else (sff += 4), (k -= 2), rk = 3;
                 }
             }
         }

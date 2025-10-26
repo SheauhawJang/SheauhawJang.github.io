@@ -794,7 +794,7 @@ function updateCardSkin(skin) {
         });
         div.removeChild(getFixedImage(div));
         const tmpdiv = document.createElement("div");
-        tmpdiv.innerHTML = getCardImage(idx, type, onclick);
+        tmpdiv.innerHTML = getCardImage(idx, type, onclick ?? "");
         while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
     });
 }

@@ -449,7 +449,6 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
             substeps.map((i) => Math.max(0, i)),
             aids[0].length
         ).ans.length;
-        console.log(listen_cnt);
         ++tiles[wint];
     }
     let must_single_listen = listen_cnt === 999;

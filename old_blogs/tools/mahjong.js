@@ -954,15 +954,16 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
     for (let p = 0; p <= mp; ++p) {
         let ms = 0;
         if (SeqCheck(i)) {
-            let sa = ri,
+            let sa = ri - 2 * p,
                 sb = rj,
                 sc = tiles[i + 2];
             ms = Math.min(sa, sb, sc);
+            const tms = Math.min(sa, sb + rsum / 2, sc + rsum / 2);
             // only seq with at least 2 real cards will show
             if (sa === ms) sa += rsum;
             else if (sb === ms) sb += rsum;
             else sc += rsum;
-            ms = Math.min(sa, sb, sc);
+            ms = Math.max(Math.min(sa, sb, sc), tms - 1);
         }
         for (let s = 0; s <= ms; ++s) {
             // tri must has real card

@@ -958,12 +958,11 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                 sb = rj,
                 sc = tiles[i + 2];
             ms = Math.min(sa, sb, sc);
-            const tms = Math.min(sa, sb + rsum / 2, sc + rsum / 2);
             // only seq with at least 2 real cards will show
             if (sa === ms) sa += rsum;
             else if (sb === ms) sb += rsum;
             else sc += rsum;
-            ms = Math.max(Math.min(sa, sb, sc), tms - 1);
+            ms = Math.min(sa, sb, sc);
         }
         for (let s = 0; s <= ms; ++s) {
             // tri must has real card
@@ -1118,8 +1117,10 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
     for (let i = 0; i < 6; ++i) {
         let head = [[], [], []];
         let dvd, tcp;
-        if (reuse) ({ head, dvd, tcp } = dvds[i]);
-        else {
+        if (reuse) {
+            if (dvds[i] === null) continue;
+            ({ head, dvd, tcp } = dvds[i]);
+        } else {
             tcp = tiles.slice();
             let win = true;
             for (let j = 0; j < 9; ++j) {

@@ -100,6 +100,7 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
         nsubots *= submeld[i].length;
     }
     const { cnt, dvd } = realdvd(tiles, full_tcnt);
+    console.log(cnt);
     const nmp = Math.floor(full_tcnt / 3) + (full_tcnt % 3 ? 1 : 0);
     let melds = Array(nmp).fill(null);
     let msze = 0;

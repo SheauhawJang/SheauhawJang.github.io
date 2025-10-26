@@ -11,7 +11,15 @@ function sf(f) {
         f();
     } catch {}
 }
-let updateInnerHTML = Array(TASK_NUM).fill(null).map((_, i) => debounce((text) => sf(() => document.getElementById(document_element_ids[i]).innerHTML = text), 100));
+let updateInnerHTML = Array(TASK_NUM)
+    .fill(null)
+    .map((_, i) =>
+        debounce((text) => {
+            sf(() => (document.getElementById(document_element_ids[i]).innerHTML = text));
+            if (useHelper()) addWorkerCardHelper();
+            updateCardSkin();
+        }, 100)
+    );
 function putWorkerResult(e, task) {
     // partial result
     if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief));
@@ -23,8 +31,6 @@ function putWorkerResult(e, task) {
     const { result, time } = e.data;
     updateInnerHTML[task](result.output);
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
-    if (useHelper()) addWorkerCardHelper();
-    updateCardSkin();
     return false; // remain results need to be put
 }
 function processInput() {
@@ -33,7 +39,7 @@ function processInput() {
         worker = null;
     }
     for (let i = 0; i < document_element_ids.length; ++i) {
-        updateInnerHTML[i]('');
+        updateInnerHTML[i]("");
         sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
     }
@@ -131,19 +137,19 @@ function processInput() {
             case 2:
                 sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
                 mask = Array(5).fill(true);
-                document.querySelectorAll('input[name="step-gb-types"]').forEach((i) => (i.disabled = true, mask[Number(i.value)] = i.checked));
+                document.querySelectorAll('input[name="step-gb-types"]').forEach((i) => ((i.disabled = true), (mask[Number(i.value)] = i.checked)));
                 worker.postMessage({ mask, task, save: save_normal, steps: [worker_substeps[0], Infinity, worker_substeps[1][2], Infinity, Infinity], dvds: [worker_dvds[0], worker_dvds[1][1], worker_dvds[1][2], undefined, undefined] });
                 break;
             case 3:
                 sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
                 mask = Array(4).fill(true);
-                document.querySelectorAll('input[name="step-tw-types"]').forEach((i) => (i.disabled = true, mask[Number(i.value)] = i.checked));
+                document.querySelectorAll('input[name="step-tw-types"]').forEach((i) => ((i.disabled = true), (mask[Number(i.value)] = i.checked)));
                 worker.postMessage({ mask, task, steps: [worker_substeps[0], Infinity, Infinity, Infinity], save: save_normal, dvds: [worker_dvds[0], undefined, undefined] });
                 break;
             case 4:
                 sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
                 mask = Array(3).fill(true);
-                document.querySelectorAll('input[name="step-jp-types"]').forEach((i) => (i.disabled = true, mask[Number(i.value)] = i.checked));
+                document.querySelectorAll('input[name="step-jp-types"]').forEach((i) => ((i.disabled = true), (mask[Number(i.value)] = i.checked)));
                 worker.postMessage({ mask, task, steps: [Infinity, Infinity, worker_substeps[1][2]], dvds: [worker_dvds[0], worker_dvds[1][1], worker_dvds[1][2]] });
                 break;
             default:
@@ -158,7 +164,7 @@ function processInput() {
 let reworkers = Array(TASK_NUM).fill(null);
 function getStepMask(task, lock) {
     const size = [undefined, 3, 5, 4, 3];
-    const name = [undefined, 'jp', 'gb', 'tw', 'jp'];
+    const name = [undefined, "jp", "gb", "tw", "jp"];
     if (size[task] === undefined) return [];
     let mask = Array(size[task]).fill(true);
     let boxes = document.querySelectorAll(`input[name="step-${name[task]}-types"]`);
@@ -179,7 +185,7 @@ function restartInput(i) {
         reworkers[i].terminate();
         reworkers[i] = null;
     }
-    updateInnerHTML[i]('');
+    updateInnerHTML[i]("");
     sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
     reworkers[i] = new Worker("mahjong-worker.js");
@@ -272,31 +278,33 @@ function hasQQCard(id) {
     return true;
 }
 function getCardImage(id, t = "", onclick = "") {
+    let name = cardName(id);
     if (cardskin === "qq" && hasQQCard(id)) {
-        let gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay">`;
-        if (t === "r") gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-r">`;
-        if (t === "k") gboverlay = `<img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-rr-0"><img src="./qqcards/${cardName(id)}.png" class="card-img-overlay-rr-1">`;
+        let gboverlay = `<img src="./qqcards/${name}.png" class="card-img-overlay">`;
+        if (t === "r") gboverlay = `<img src="./qqcards/${name}.png" class="card-img-overlay-r">`;
+        if (t === "k") gboverlay = `<img src="./qqcards/${name}.png" class="card-img-overlay-rr-0"><img src="./qqcards/${name}.png" class="card-img-overlay-rr-1">`;
         return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     }
     if (cardskin === "gb" && hasGBCard(id)) {
-        let gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay">`;
-        if (t === "r") gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-r">`;
-        if (t === "k") gboverlay = `<img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-rr-0"><img src="./gbcards/${cardName(id)}.gif" class="card-img-overlay-rr-1">`;
+        let gboverlay = `<img src="./gbcards/${name}.gif" class="card-img-overlay">`;
+        if (t === "r") gboverlay = `<img src="./gbcards/${name}.gif" class="card-img-overlay-r">`;
+        if (t === "k") gboverlay = `<img src="./gbcards/${name}.gif" class="card-img-overlay-rr-0"><img src="./gbcards/${name}.gif" class="card-img-overlay-rr-1">`;
         return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     }
     if (cardskin === "hk" && hasGBCard(id)) {
-        let gboverlay = `<img src="./hkcards/${cardName(id)}.png" class="card-img-overlay">`;
-        if (t === "r") gboverlay = `<img src="./hkcards/${cardName(id)}.png" class="card-img-overlay-r">`;
-        if (t === "k") gboverlay = `<img src="./hkcards/${cardName(id)}.png" class="card-img-overlay-rr-0"><img src="./hkcards/${cardName(id)}.png" class="card-img-overlay-rr-1">`;
+        let gboverlay = `<img src="./hkcards/${name}.png" class="card-img-overlay">`;
+        if (t === "r") gboverlay = `<img src="./hkcards/${name}.png" class="card-img-overlay-r">`;
+        if (t === "k") gboverlay = `<img src="./hkcards/${name}.png" class="card-img-overlay-rr-0"><img src="./hkcards/${name}.png" class="card-img-overlay-rr-1">`;
         return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     }
     if (cardskin === "op" && hasJPCard(id)) {
-        let gboverlay = `<img src="./opcards/${cardName(id)}.png" class="card-img-overlay">`;
-        if (t === "r") gboverlay = `<img src="./opcards/${cardName(id)}.png" class="card-img-overlay-r">`;
-        if (t === "k") gboverlay = `<img src="./opcards/${cardName(id)}.png" class="card-img-overlay-rr-0"><img src="./opcards/${cardName(id)}.png" class="card-img-overlay-rr-1">`;
+        let gboverlay = `<img src="./opcards/${name}.png" class="card-img-overlay">`;
+        if (t === "r") gboverlay = `<img src="./opcards/${name}.png" class="card-img-overlay-r">`;
+        if (t === "k") gboverlay = `<img src="./opcards/${name}.png" class="card-img-overlay-rr-0"><img src="./opcards/${name}.png" class="card-img-overlay-rr-1">`;
         return `${gboverlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     }
-    return `<img src="./cards/${t}${cardName(id)}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    if (cardskin === "jp" && id.id === JokerC) name = "ij";
+    return `<img src="./cards/${t}${name}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }
 function outputCardImage(tids, i, width, link) {
     return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? `discard(${i})` : "")}</div>`;
@@ -787,6 +795,7 @@ function updateCardSkin(skin) {
         div.removeChild(getFixedImage(div));
         const tmpdiv = document.createElement("div");
         tmpdiv.innerHTML = getCardImage(idx, type, onclick);
+        console.log(idx, skin, getCardImage(idx, type, onclick));
         while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
     });
 }

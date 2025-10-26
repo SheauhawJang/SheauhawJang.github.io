@@ -28,6 +28,8 @@ function id(name) {
     if (name.length < 2) return {};
     if (name[0] === "i")
         switch (name[1]) {
+            case 'j':
+                return { id: 42 };
             case "w":
             case "m":
                 return { id: 43 };
@@ -1114,10 +1116,10 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
     dvds ??= Array(6).fill(null);
     for (let i = 0; i < 6; ++i) {
         let head = [[], [], []];
-        let dvd;
-        if (reuse) ({ head, dvd } = dvds[i]);
+        let dvd, tcp;
+        if (reuse) ({ head, dvd, tcp } = dvds[i]);
         else {
-            let tcp = tiles.slice();
+            tcp = tiles.slice();
             let win = true;
             for (let j = 0; j < 9; ++j) {
                 const id = KnitDragonSave[i][j];
@@ -1134,7 +1136,7 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
             if (save.has(s)) continue;
             else save.add(s);
             dvd = windvd(tcp, full_tcnt - 9);
-            dvds[i] = { head, dvd };
+            dvds[i] = { head, dvd, tcp };
         }
         cnt += dvd.cnt;
         let tails = WinOutput(tcp, full_tcnt - 9, dvd.dvd, opt_size);

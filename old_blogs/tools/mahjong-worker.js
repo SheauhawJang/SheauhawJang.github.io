@@ -149,6 +149,7 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
             if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+                ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
                 cnt += dvds[0].cnt;
@@ -219,6 +220,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
             if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+                ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
                 cnt += dvds[0].cnt;
@@ -319,6 +321,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
             if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+                ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
                 cnt += dvds[0].cnt;
@@ -404,6 +407,7 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
             if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+                ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
                 cnt += dvds[0].cnt;

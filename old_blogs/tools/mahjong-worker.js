@@ -131,8 +131,13 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     if (substep[2] === stepJP) stepTypeJP.push(loc.kokushi);
     output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
+    postMessage({ output: output + table_head + table + table_tail, brief });
+    if (rsubstep[2] !== Infinity) {
+        const k = OrphanCount(tiles).count;
+        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${k >= 9 ? loc.OK : loc.dame}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
+    }
     output += table_head + table + table_tail;
-    postMessage({ output, brief });
+    postMessage({ output });
     if (stepJP === -1 && full_tcnt > 0) {
         let odvd = [];
         let cnt = 0;
@@ -202,8 +207,13 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     if (substep[2] === step3p) stepTypeJP.push(loc.kokushi);
     output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
+    postMessage({ output: output + table_head + table + table_tail, brief });
+    if (rsubstep[2] !== Infinity) {
+        const k = OrphanCount(tiles).count;
+        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${k >= 9 ? loc.OK : loc.dame}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
+    }
     output += table_head + table + table_tail;
-    postMessage({ output, brief });
+    postMessage({ output });
     if (step3p === -1 && full_tcnt > 0) {
         let odvd = [];
         let cnt = 0;

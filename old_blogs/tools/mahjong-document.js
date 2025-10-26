@@ -22,7 +22,7 @@ let updateInnerHTML = Array(TASK_NUM)
     );
 function putWorkerResult(e, task) {
     // partial result
-    if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).textContent = e.data.brief));
+    if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).innerHTML = e.data.brief));
     if ("output" in e.data) {
         updateInnerHTML[task](e.data.output);
         return true; // all known results has been put

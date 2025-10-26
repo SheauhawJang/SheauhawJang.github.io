@@ -480,16 +480,23 @@ function PairStep(tiles, disjoint = false, guse = guseall) {
 }
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14
 const Orphan13Array = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
-function OrphanStep(tiles) {
-    let ans = 0;
+function OrphanCount(tiles, jokerc = true) {
     tiles = tiles.slice();
+    let ans = 13;
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         if (tiles[id]) --tiles[id];
         else if (tiles[JokerA[id]]) --tiles[JokerA[id]];
         else if (tiles[JokerB[id]]) --tiles[JokerB[id]];
-        else ++ans;
+        else if (jokerc && tiles[JokerC]) --tiles[JokerC]
+        else --ans;
     }
+    return { tiles, count: ans };
+}
+function OrphanStep(tiles) {
+    let main = OrphanCount(tiles, false);
+    tiles = main.tiles;
+    let ans = 13 - main.count;
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         if (tiles[id]) return ans - 1 - tiles[JokerC];
@@ -576,16 +583,10 @@ function KnitDragonStepCheck(tiles, maxstep, tcnt) {
 }
 // Special Check for 13 orphans in taiwan, only avaliable when tcnt is 16 or 17
 function OrphanMeldStep(tiles) {
-    let miss = 0;
+    let main = OrphanCount(tiles, false);
+    let tcp = main.tiles;
+    let miss = 13 - main.count;
     let ans = Infinity;
-    let tcp = tiles.slice();
-    for (let i = 0; i < Orphan13Array.length; ++i) {
-        const id = Orphan13Array[i];
-        if (tcp[id]) --tcp[id];
-        else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
-        else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
-        else ++miss;
-    }
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         let rid = id;
@@ -985,9 +986,9 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                         dvd[dpi].nxt.push({ p, s, sf, sff, k, dpi: indexDvd(ldDvd, em + s + sf + sff + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj) });
                     }
                     if (i >= 27) break;
-                    if (rk === 3) (sff += 3), --k, rk = 3;
-                    else if (rk === 2) sff += 2, --k, rk = 3;
-                    else (sff += 4), (k -= 2), rk = 3;
+                    if (rk === 3) (sff += 3), --k, (rk = 3);
+                    else if (rk === 2) (sff += 2), --k, (rk = 3);
+                    else (sff += 4), (k -= 2), (rk = 3);
                 }
             }
         }

@@ -130,10 +130,7 @@ function splitKernel(s) {
 }
 function splitTiles(s) {
     const regex = /(\(([^)]+)\)|\[([^\]]+)\]|<([^>]+)>)/g;
-    const subtiles = [];
-    const bonus = [];
-    const dora = [],
-        ura = [];
+    const [subtiles, bonus, dora, ura] = [[], [], [], []];
     for (const match of s.matchAll(regex)) {
         const [, , round, square, angle] = match;
         if (round) {
@@ -190,8 +187,7 @@ function prepareStep(nm, np, tiles) {
         ldStep[ldi + 1] = tiles[JokerC] + 1;
         ldStep[ldi + 2] = ldStep[ldi + 1] * (tiles[JokerB[i]] + 1);
         ldStep[ldi + 3] = ldStep[ldi + 2] * (tiles[JokerA[i]] + 1);
-        let mui = 0,
-            muj = 0;
+        let [mui, muj] = [0, 0];
         if (SeqCheck(i - 1)) mui = muj = 2;
         if (SeqCheck(i - 2)) mui += 2;
         ldStep[ldi + 4] = ldStep[ldi + 3] * (muj + 1);
@@ -222,9 +218,7 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     vst.push(dpi);
     if (guse[i] === Infinity) return (step[dpi] = kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i + 1, uj, 0, aj, bj, cj));
     let lmti = glmt - guse[i];
-    let ra = tiles[JokerA[i]] - aj;
-    let rb = tiles[JokerB[i]] - bj;
-    let rc = tiles[JokerC] - cj;
+    let [ra, rb, rc] = [tiles[JokerA[i]] - aj, tiles[JokerB[i]] - bj, tiles[JokerC] - cj];
     const cs = SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity;
     const csi = glmt === Infinity && cs && SeqCheck(i + 1) && guse[i + 3] !== Infinity; // When glmt is not Infinity, joker slide is not equal
     let nxti;
@@ -233,8 +227,7 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     if (JokerA[i] !== JokerA[nxti]) (ei += ra), (lmti += ra), (ra = aj = 0);
     if (JokerB[i] !== JokerB[nxti]) (ei += rb), (lmti += rb), (rb = bj = 0);
     if (nxti >= sizeUT) (ei += rc), (lmti += rc), (rc = cj = 0);
-    const ri = Math.max(ei - ui, 0);
-    const rj = Math.max(tiles[i + 1] - uj, 0);
+    const [ri, rj] = [Math.max(ei - ui, 0), Math.max(tiles[i + 1] - uj, 0)];
     const lmtj = lmti + ra + rb + rc;
     if (ui > lmtj) return (step[dpi] = INF);
     let ans = INF;
@@ -328,10 +321,7 @@ function check(tiles, target) {
     let meld = 0;
     tiles = tiles.slice();
     for (let i = 0; i < sizeUT; ++i) {
-        if (tiles[i] >= 3) {
-            meld += Math.floor(tiles[i] / 3);
-            tiles[i] %= 3;
-        }
+        if (tiles[i] >= 3) (meld += Math.floor(tiles[i] / 3)), (tiles[i] %= 3);
         if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
             const cnt = Math.min(tiles[i], tiles[i + 1], tiles[i + 2]);
             meld += cnt;
@@ -408,14 +398,12 @@ function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt 
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
 function PairStep(tiles, disjoint = false, guse = guseall) {
     if (!disjoint) {
-        let ans = 0;
-        let sig = 0;
+        let [ans, sig] = [0, 0];
         let ra, rb;
         let i, nxti;
         for (i = 0; i < sizeUT; ++i)
             if (guse[i] !== Infinity) {
-                ra = tiles[JokerA[i]];
-                rb = tiles[JokerB[i]];
+                [ra, rb] = [tiles[JokerA[i]], tiles[JokerB[i]]];
                 break;
             }
         for (; i < sizeUT; i = nxti) {
@@ -446,8 +434,7 @@ function PairStep(tiles, disjoint = false, guse = guseall) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 0) continue;
             const cnt = Math.min(t[JokerA[i]], 2);
-            t[i] = cnt;
-            t[JokerA[i]] -= cnt;
+            (t[i] = cnt), (t[JokerA[i]] -= cnt);
             if (t[i] !== 1) continue;
             if (t[JokerB[i]]) --t[JokerB[i]], ++t[i];
             else if (t[JokerC]) --t[JokerC], ++t[i];
@@ -456,8 +443,7 @@ function PairStep(tiles, disjoint = false, guse = guseall) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 0) continue;
             const cnt = Math.min(t[JokerB[i]], 2);
-            t[i] = cnt;
-            t[JokerB[i]] -= cnt;
+            (t[i] = cnt), (t[JokerB[i]] -= cnt);
             if (t[i] !== 1) continue;
             if (t[JokerC]) --t[JokerC], ++t[i];
         }
@@ -465,11 +451,9 @@ function PairStep(tiles, disjoint = false, guse = guseall) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 0) continue;
             const cnt = Math.min(t[JokerC], 2);
-            t[i] = cnt;
-            t[JokerC] -= cnt;
+            (t[i] = cnt), (t[JokerC] -= cnt);
         }
-        let ans = 0;
-        let sig = 0;
+        let [ans, sig] = [0, 0];
         for (let i = 0; i < sizeUT; ++i)
             if (guse[i] === Infinity) continue;
             else if (t[i] >= 2) ++ans;
@@ -488,7 +472,7 @@ function OrphanCount(tiles, jokerc = true) {
         if (tiles[id]) --tiles[id];
         else if (tiles[JokerA[id]]) --tiles[JokerA[id]];
         else if (tiles[JokerB[id]]) --tiles[JokerB[id]];
-        else if (jokerc && tiles[JokerC]) --tiles[JokerC]
+        else if (jokerc && tiles[JokerC]) --tiles[JokerC];
         else --ans;
     }
     return { tiles, count: ans };
@@ -512,8 +496,7 @@ const Permutation3 = [ [0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2
 function KnitDragonCreate() {
     for (let i = 0; i < 6; ++i)
         for (let j = 0; j < 9; ++j) {
-            const di = Math.floor(j / 3);
-            const dj = j % 3;
+            const [di, dj] = [Math.floor(j / 3), j % 3];
             const id = di * 9 + Permutation3[i][di] + dj * 3;
             KnitDragonSave[i][j] = id;
         }
@@ -528,14 +511,14 @@ function Bukao16Count(tiles) {
         for (let j = 0; j < 9; ++j) {
             const id = KnitDragonSave[i][j];
             ++count;
-            if (tiles[id]);
+            if (tiles[id]) continue;
             else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
             else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
             else --count;
         }
         for (let i = 27; i < 34; ++i) {
             ++count;
-            if (tiles[i]);
+            if (tiles[i]) continue;
             else if (tcp[JokerA[i]]) --tcp[JokerA[i]];
             else if (tcp[JokerB[i]]) --tcp[JokerB[i]];
             else --count;
@@ -608,14 +591,11 @@ function NiconicoStep(tiles) {
         let t = tiles.slice();
         let miss = 3;
         const cnt0 = Math.min(t[i], miss);
-        t[i] -= cnt0;
-        miss -= cnt0;
+        (t[i] -= cnt0), (miss -= cnt0);
         const cnt1 = Math.min(t[JokerA[i]], miss);
-        t[JokerA[i]] -= cnt1;
-        miss -= cnt1;
+        (t[JokerA[i]] -= cnt1), (miss -= cnt1);
         const cnt2 = Math.min(t[JokerB[i]], miss);
-        t[JokerB[i]] -= cnt2;
-        miss -= cnt2;
+        (t[JokerB[i]] -= cnt2), (miss -= cnt2);
         ans = Math.min(ans, PairStep(t, false) + miss);
     }
     return ans;
@@ -654,8 +634,7 @@ function Buda16Step(tiles) {
     }
     let step = Infinity;
     for (let pi = 0; pi < 5; ++pi) {
-        let ra = tiles[46],
-            rb = tiles[49];
+        let [ra, rb] = [tiles[46], tiles[49]];
         let ans = -tiles[JokerC];
         for (let i = 0; i < 3; ++i) {
             const m = i === pi ? pmiss[i] : miss[i];
@@ -934,8 +913,8 @@ function indexDvd(ldDvd, em, ep, i, ui, uj, aj, bj, cj) {
     return ldDvd[ldi] + em * ldDvd[ldi + 6] + ep * ldDvd[ldi + 5] + ui * ldDvd[ldi + 4] + uj * ldDvd[ldi + 3] + aj * ldDvd[ldi + 2] + bj * ldDvd[ldi + 1] + cj;
 }
 function fullSeqCheck(i, a, b, c, p) {
-    if (p === 1) return SeqCheck(i) ? Math.min(a, c) : 0;
-    return SeqCheck(i) || SeqCheck(i - 1) ? Math.min(a, b) : 0;
+    if (p === 1) return SeqCheck(i) ? Math.max(Math.min(a, c), 0) : 0;
+    return SeqCheck(i) || SeqCheck(i - 1) ? Math.max(Math.min(a, b), 0) : 0;
 }
 function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT)
@@ -944,35 +923,36 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
     const dpi = indexDvd(ldDvd, em, ep, i, ui, uj, aj, bj, cj);
     if (dvd[dpi] !== null) return dvd[dpi].cnt;
     dvd[dpi] = { cnt: 0, nxt: [] };
-    let ra = tiles[JokerA[i]] - aj;
-    let rb = tiles[JokerB[i]] - bj;
-    let rc = tiles[JokerC] - cj;
+    let [ra, rb, rc] = [tiles[JokerA[i]] - aj, tiles[JokerB[i]] - bj, tiles[JokerC] - cj];
     const nxti = i + 1;
     let ei = tiles[i];
     if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = aj = 0);
     if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = bj = 0);
     if (nxti >= sizeUT) (ei += rc), (rc = cj = 0);
-    const ri = Math.max(ei - ui, 0);
-    const rj = Math.max(tiles[i + 1] - uj, 0);
+    const [ri, rj] = [Math.max(ei - ui, 0), Math.max(tiles[i + 1] - uj, 0)];
     const rsum = ra + rb + rc;
     const mp = Math.min(np - ep, Math.ceil(ri / 2));
     for (let p = 0; p <= mp; ++p) {
         const ss = [ri - 2 * p, rj, tiles[i + 2]];
         const ms = fullSeqCheck(i, ...ss, 1);
-        for (let s = 0; s <= Math.max(ms, 0); ++s) {
+        for (let s = 0; s <= ms; ++s) {
             const msf = fullSeqCheck(i, ...ss.map((i) => i - s), 2);
-            for (let sf = 0; sf <= Math.max(msf, 0); ++sf) {
+            for (let sf = 0; sf <= msf; ++sf) {
                 // tri must has real card
                 // all remain cards show be used
                 let k = Math.ceil(Math.max(ri - p * 2 - s - sf, 0) / 3);
-                let sff = 0;
                 let rk = ei - (ui + s + sf + (k - 1) * 3);
                 if (p && rk <= 1 + p * 2) continue; // head with no real card
                 rk = Math.min(rk, 3);
-                while (k >= 0) {
-                    let ti = ui + s + sf + sff + k * 3 + p * 2,
-                        tj = uj + s + sf,
-                        tk = s;
+                function step() {
+                    let step;
+                    if (rk === 3) (step = 3), --k, (rk = 3);
+                    else if (rk === 2) (step = 2), --k, (rk = 3);
+                    else (step = 4), (k -= 2), (rk = 3);
+                    return step;
+                }
+                for (let sff = 0; k >= 0; sff += step()) {
+                    let [ti, tj, tk] = [ui + s + sf + sff + k * 3 + p * 2, uj + s + sf, s];
                     let e = sf + sff * 2 + Math.max(ti - ei, 0) + Math.max(tj - tiles[i + 1], 0) + Math.max(tk - tiles[i + 2], 0);
                     tj = Math.min(tj, tiles[i + 1]);
                     tk = Math.min(tk, tiles[i + 2]);
@@ -986,9 +966,6 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                         dvd[dpi].nxt.push({ p, s, sf, sff, k, dpi: indexDvd(ldDvd, em + s + sf + sff + k, ep + p, i + 1, tj, tk, aj + uaj, bj + ubj, cj + ucj) });
                     }
                     if (i >= 27) break;
-                    if (rk === 3) (sff += 3), --k, (rk = 3);
-                    else if (rk === 2) (sff += 2), --k, (rk = 3);
-                    else (sff += 4), (k -= 2), (rk = 3);
                 }
             }
         }
@@ -1016,8 +993,7 @@ function replaceJoker(tiles, ot) {
 function WinOutput(tiles, full_tcnt, dvd, opt_size) {
     const nm = Math.floor(full_tcnt / 3);
     const np = full_tcnt % 3 ? 1 : 0;
-    let melds = [],
-        head = [];
+    let [melds, head] = [[], []];
     let ots = [];
     function dfs(i, dpi) {
         if (melds.length === nm && head.length === np) {
@@ -1044,9 +1020,7 @@ function WinOutput(tiles, full_tcnt, dvd, opt_size) {
 }
 function PairOutput(tiles) {
     let ot = [];
-    let ra = tiles[JokerA[0]],
-        rb = tiles[JokerB[0]],
-        rc = tiles[JokerC];
+    let [ra, rb, rc] = [tiles[JokerA[0]], tiles[JokerB[0]], tiles[JokerC]];
     for (let i = 0; i < sizeUT; ++i) {
         const nxti = i + 1;
         let ei = tiles[i];
@@ -1121,8 +1095,8 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
     const reuse = dvds !== undefined;
     dvds ??= Array(6).fill(null);
     for (let i = 0; i < 6; ++i) {
-        let head = [[], [], []];
         let dvd, tcp;
+        let head = [[], [], []];
         if (reuse) {
             if (dvds[i] === null) continue;
             ({ head, dvd, tcp } = dvds[i]);

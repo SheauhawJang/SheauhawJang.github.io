@@ -52,10 +52,7 @@
                         <p>关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻将把花牌视作百搭牌，本计算器的花牌无此功能，如有需要请转化为专门的百搭牌。<br /></p>
                         关于百搭牌：
                         <ul style="margin-top: 0">
-                            <li>
-                                不定向百搭牌
-                                <img src="./cards/a1j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。（部分地方麻将可能称为万能牌、癞子或者混儿）
-                            </li>
+                            <li>不定向百搭牌<img src="./cards/a1j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。（部分地方麻将可能称为万能牌、癞子或者混儿）</li>
                             <li>万字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
                             <li>饼子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以视作任何一张筒子/饼子。使用<b>3j/ip/ib</b>表示。</li>
                             <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以视作任何一张索子/条子。使用<b>4j/is</b>表示。</li>
@@ -65,6 +62,17 @@
                             <li>字牌百搭牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：可以视作任何一张字牌。使用<b>8j/iz</b>表示。</li>
                             <li>花牌百搭牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：可以视作任何一张花牌。使用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
                         </ul>
+                        关于副露：
+                        <ul style="margin-top: 0">
+                            <li>在一些牌的左右使用半角中括号[]包围表示一组固定面子。</li>
+                            <li>在顺子的手牌后方补充一个半角数字并用半角逗号隔开，对应位置的牌将会被标记为「吃」获得的牌，在最左侧显示并横置。</li>
+                            <li>在刻子的手牌后方补充一个半角数字并用半角逗号隔开，对应位置的牌将会被标记为「碰」获得的牌并横置。</li>
+                            <li>四张手牌的固定面子默认为暗杠。</li>
+                            <li>大明杠需要在四张手牌后方补充一个1~4之间的半角数字并用半角逗号隔开，对应位置的牌将会被标记为「杠」获得的牌并横置。</li>
+                            <li>加杠（小明杠）需要在四张手牌后方补充一个5~8之间的半角数字并用半角逗号隔开，对应位置的牌将会被标记为「碰」获得的牌并横置。</li>
+                        </ul>
+                        <p>关于补花/拔北：在一些牌的左右使用半角小括号()包围表示这些牌是补花或者拔北后的牌。<br /></p>
+                        <p>关于宝牌：在一些牌的左右使用半角尖括号<>包围表示这些牌是宝牌指示牌。括号内如果有半角逗号，则逗号左侧的牌是表宝牌指示牌，逗号右侧的牌是里宝牌指示牌。<br /></p>
                     </div>
                 </div>
             </div>
@@ -218,7 +226,7 @@
                         </button>
                     </div>
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">折叠 ▲</button>
-                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">折叠 ▲</button>
+                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none">折叠 ▲</button>
                 </div>
                 <div class="output-option-group">
                     <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般型</label>
@@ -230,7 +238,7 @@
                     <div class="output-context" id="brief-output-jp" style="display: none"></div>
                     <div class="output-time" id="time-output-jp"></div>
                 </div>
-                <div id="output-group-jp3p" style="display: none;">
+                <div id="output-group-jp3p" style="display: none">
                     <div class="output-context" id="output-jp3p"></div>
                     <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
                     <div class="output-time" id="time-output-jp3p"></div>

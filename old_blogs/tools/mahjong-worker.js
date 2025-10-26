@@ -6,9 +6,8 @@ importScripts("mahjong-mmc.js");
 const MAX_OUTPUT_LENGTH = 12;
 const table_head = '<table style="border-collapse: collapse; padding: 0px">';
 const table_tail = "</table>";
-let aids = undefined,
-    tiles,
-    subtiles;
+let aids = undefined;
+let tiles, subtiles;
 let tcnt, full_tcnt, subcnt;
 function cardImage(id) {
     return `<img src="./cards/a${cardName(id)}.gif" style="vertical-align: middle;">`;
@@ -450,8 +449,7 @@ function GBFanDiv(fan) {
     for (let i = 0; i < fan.length; ++i)
         if (fan[i] > 0) ++fans[fan[i]];
         else --fans[-fan[i]];
-    fans[60] += fans[83];
-    fans[61] += fans[83];
+    (fans[60] += fans[83]), (fans[61] += fans[83]);
     let fanopt = [];
     for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`GB_FANNAME_${i}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
     return `${table_head}${fanopt.join("")}${table_tail}`;
@@ -464,8 +462,7 @@ function postDebugInfoGlobal(st, m, cm, output) {
     postMessage({ debug, output });
 }
 function GBScore(aids, substeps, gw, mw, wt, info, setting) {
-    let infov = 0;
-    let infof = [];
+    let [infov, infof] = [0, []];
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (info.includes(44))
         if (!wt) (infov += 8), infof.push(45);
@@ -488,9 +485,8 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
     }
     let must_single_listen = listen_cnt === 999;
     let gans = { val: 0, fan: [] };
-    let cm = 0,
-        m = 0,
-        p = Array(7).fill(null);
+    let [cm, m] = [0, 0];
+    let p = Array(7).fill(null);
     if (substeps[0] === -1) p[6] = MeldsPermutation(aids, tiles);
     if (substeps[1] === -1) ++m;
     if (substeps[2] === -1) ++m;
@@ -541,8 +537,7 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
         if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
         let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, setting);
         if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) ++ans.val, ans.fan.push(wintf);
-        ans.val += infov;
-        ans.fan.push(...infof);
+        (ans.val += infov), ans.fan.push(...infof);
         if (ans.val > gans.val) gans = ans;
         ++cm;
         if (!(cm & 1048575)) postDebugInfo();
@@ -550,8 +545,7 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
     const st = new Date();
     if (substeps[1] === -1) {
         let pans = GB7Pairs(aids[0], setting);
-        pans.val += infov;
-        pans.fan.push(...infof);
+        (pans.val += infov), pans.fan.push(...infof);
         if (wt === 80)
             if (setting[41]) (pans.val += 4), pans.fan.push(56);
             else ++pans.val, pans.fan.push(80);
@@ -600,8 +594,7 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
                     break;
                 }
             }
-        pans.val += infov;
-        pans.fan.push(...infof);
+        (pans.val += infov), pans.fan.push(...infof);
         if (wt === 80)
             if (setting[43]) (pans.val += 4), pans.fan.push(56);
             else ++pans.val, pans.fan.push(80);
@@ -619,10 +612,7 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
         if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) (must_single_listen = true), (infov += 6), infof.push(52);
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
         itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
-        if (gans.val === 0 && nmp >= 5) {
-            gans.val = 8;
-            gans.fan = [43];
-        }
+        if (gans.val === 0 && nmp >= 5) (gans.val = 8), (gans.fan = [43]);
         postDebugInfo();
     }
     if (substeps[4] === -1)
@@ -636,8 +626,7 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
             postDebugInfo();
         }
     let basept = (setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val) + aids[2].length;
-    gans.val += aids[2].length;
-    gans.fan.push(...Array(aids[2].length).fill(81));
+    (gans.val += aids[2].length), gans.fan.push(...Array(aids[2].length).fill(81));
     let fanreview = `${gans.val} ${loc.GB_FAN_unit}`;
     if (gans.val > basept) fanreview = `${loc.GB_max_fan}${loc.brace_left}${fanreview}${loc.brace_right}`;
     if (setting[39] && wt) basept = Math.ceil(basept / 3);
@@ -697,9 +686,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
             if (renhou < 0) infoans.fan.push(30), (infoans.yakuman += -renhou);
             else if (renhou > 0)
                 if (setting[21]) {
-                    let gf = [8],
-                        gvf = 20,
-                        grf = 0;
+                    let [gf, gvf, grf] = [[8], 20, 0];
                     if (substeps[0] === -1) {
                         const { err, itots, itsubots, ck } = p;
                         if (err === 1) return { output: loc.subtile_error_1, brief: "" };
@@ -720,9 +707,8 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
                     }
                     const RenhouValueArray = [0, 2000, 8000, gvf << 6, 3000, 4000];
                     const RenhouPrintArray = ["", "mangan", "yakuman", "", "haneman", "baiman"];
-                    if (RenhouValueArray[3] >= 2000) {
-                        (RenhouValueArray[3] = 2000), (RenhouPrintArray[3] = "mangan");
-                    } else if (setting[7] && RenhouValueArray[3] >= 1920) (RenhouValueArray[3] = 2000), (RenhouPrintArray[3] = "kiri_mangan");
+                    if (RenhouValueArray[3] >= 2000) (RenhouValueArray[3] = 2000), (RenhouPrintArray[3] = "mangan");
+                    else if (setting[7] && RenhouValueArray[3] >= 1920) (RenhouValueArray[3] = 2000), (RenhouPrintArray[3] = "kiri_mangan");
                     gans = { ...eans_jp, val: RenhouValueArray[setting[9]], fan: [30], valfan: renhou, fus: gf, valfus: gvf, realfus: grf, print: RenhouPrintArray[setting[9]] };
                 } else infoans.fan.push(30), (infoans.valfan += renhou);
         }
@@ -738,12 +724,10 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
         infoans.valfan += aka + nukicnt;
         infoans.delete += setting[12] ? 0 : aka + nukicnt;
     }
-    let cm = 0,
-        m = 0;
+    let [cm, m] = [0, 0];
     let mq = aids[1].length === 0;
     const nukis = getTiles(aids[2]);
-    let doras = getTiles(aids[3]);
-    let uras = getTiles(riichi ? aids[4] : []);
+    let [doras, uras] = [getTiles(aids[3]), getTiles(riichi ? aids[4] : [])];
     doras = doras.map((_, i) => doras[getDoraPointer(i)]);
     uras = uras.map((_, i) => uras[getDoraPointer(i)]);
     const st = new Date();
@@ -790,11 +774,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
         yakuman = setting[2] ? yakuman + infoans.yakuman : Math.max(yakuman, infoans.yakuman);
         let f = [listen_13 ? 37 : 36];
         if (infoans.yakuman > 0) f.push(infoans.fan);
-        const valfan = 0,
-            valfus = 20,
-            realfus = 20,
-            fus = [8],
-            pt = yakuman * 8000;
+        const [valfan, valfus, realfus, fus, pt] = [0, 20, 20, [8], yakuman * 8000];
         if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
     }
     if (substeps[0] === -1) {
@@ -808,8 +788,7 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     if (gans.yakuman) aka = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
     const realpt = setting[15] ? (x) => Math.ceil(x / 100) * 100 : (x) => x;
-    let score,
-        exinfo = "";
+    let [score, exinfo] = [0, ""];
     if (tsumo)
         if (mw === 27) (score = realpt(gans.val * 2) * 3), (exinfo = `${realpt(gans.val * 2)}∀`);
         else (score = realpt(gans.val * 2) + realpt(gans.val) * 2), (exinfo = `${realpt(gans.val)}${loc.slash}${realpt(gans.val * 2)}`);

@@ -12,9 +12,7 @@ function kernelRealDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0,
     const dpi = indexDvd(ldDvd, em, ep, i, ui, uj, aj, bj, cj);
     if (dvd[dpi] !== null) return dvd[dpi].cnt;
     dvd[dpi] = { cnt: 0, nxt: [] };
-    let ra = tiles[JokerA[i]] - aj;
-    let rb = tiles[JokerB[i]] - bj;
-    let rc = tiles[JokerC] - cj;
+    let [ra, rb, rc] = [tiles[JokerA[i]] - aj, tiles[JokerB[i]] - bj, tiles[JokerC] - cj];
     const nxti = i + 1;
     let ei = tiles[i];
     if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = aj = 0);
@@ -25,15 +23,11 @@ function kernelRealDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0,
     const ms = SeqCheck(i);
     for (let p = 0; p <= mp; ++p)
         for (let s = 0; !s || ms; ++s) {
-            let ti = s + ui + p * 2;
-            let tj = s + uj;
-            let tk = s;
+            let [ti, tj, tk] = [s + ui + p * 2, s + uj, s];
             let es = 0;
             if (s) {
-                es += Math.max(tj - tiles[i + 1], 0);
-                es += Math.max(tk - tiles[i + 2], 0);
-                tj = Math.min(tj, tiles[i + 1]);
-                tk = Math.min(tk, tiles[i + 2]);
+                (es += Math.max(tj - tiles[i + 1], 0)), (tj = Math.min(tj, tiles[i + 1]));
+                (es += Math.max(tk - tiles[i + 2], 0)), (tk = Math.min(tk, tiles[i + 2]));
             }
             const jk = rsum - es - Math.max(ti - ei, 0); // jokers can used in Kezi
             if (jk < 0) break; // joker used exceed by seq and pair
@@ -69,8 +63,7 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
     let submeld = Array(aids[1].length)
         .fill(null)
         .map(() => []);
-    let ek = 0,
-        ck = 0;
+    let [ek, ck] = [0, 0];
     let nsubots = 1;
     for (let i = 0; i < aids[1].length; ++i) {
         let wfc = aids[1][i].map((x) => x.id);
@@ -131,8 +124,7 @@ function RemoveMeldsByIndex(s, v, skipi) {
 }
 function AddMeld(s, x) {
     const t = s.slice();
-    let l = -1,
-        r = t.length;
+    let [l, r] = [-1, t.length];
     while (l + 1 !== r) {
         const mid = (l + r) >> 1;
         if (t[mid] < x) l = mid;
@@ -144,8 +136,7 @@ function AddMeld(s, x) {
 function AddMelds2(s, o, x, y) {
     const t = s.slice();
     const p = o.slice();
-    let l = -1,
-        r = t.length;
+    let [l, r] = [-1, t.length];
     while (l + 1 !== r) {
         const mid = (l + r) >> 1;
         if (t[mid] < x || (t[mid] === x && p[mid] < y)) l = mid;
@@ -159,8 +150,7 @@ function AddMelds3(s, o, m, x, y, z) {
     const t = s.slice();
     const p = o.slice();
     const n = m.slice();
-    let l = -1,
-        r = t.length;
+    let [l, r] = [-1, t.length];
     while (l + 1 !== r) {
         const mid = (l + r) >> 1;
         if (t[mid] < x || (t[mid] === x && p[mid] < y) || (t[mid] === x && p[mid] === y && n[mid] < z)) l = mid;
@@ -178,9 +168,7 @@ function FourSame(a, b, c, d) {
 }
 function FourShift(a, b, c, d) {
     if (ColorArray[a] !== ColorArray[d]) return false;
-    const x = b - a,
-        y = c - b,
-        z = d - c;
+    const [x, y, z] = [b - a, c - b, d - c];
     return x === y && y === z;
 }
 function ThreeSame(a, b, c) {
@@ -218,53 +206,41 @@ function ThreeShiftOne(a, b, c, one = 1) {
     return a + one === b && b + one === c;
 }
 function GBSeqBind4(s, ma, a, b, c, d, ans, que, setting) {
-    let v = 0;
-    let f = [];
-    let tmsk = 0;
+    let [v, f, tmsk] = [0, [], 0];
     const vs = [s[a], s[b], s[c], s[d]];
     const ms = [ma[a], ma[b], ma[c], ma[d]];
     const msk = ma[a] | ma[b] | ma[c] | ma[d];
     if (!(msk & 1) && FourSame(...vs)) {
-        (v = 42), (f = [14, -64, -64, -64]), (tmsk = 1);
+        [v, f, tmsk] = [42, [14, -64, -64, -64], 1];
         if (!setting[16] && que) --v, f.push(-75);
     } else if (!(msk & 2) && FourShift(...vs)) {
-        (v = 32), (f = [16]), (tmsk = 2);
+        [v, f, tmsk] = [32, [16], 2];
         if (!setting[44] && que) --v, f.push(-75);
     }
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c, d]);
         const m = RemoveMeldsByIndex(ma, [a, b, c, d]);
         const r = [0, 1, 2, 3].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk), que, setting));
-        for (let i = 0; i < r.length; ++i)
-            if (r[i].val + v > ans.val) {
-                ans.val = r[i].val + v;
-                ans.fan = [...f, ...r[i].fan];
-            }
+        for (let i = 0; i < r.length; ++i) if (r[i].val + v > ans.val) (ans.val = r[i].val + v), (ans.fan = [...f, ...r[i].fan]);
     }
 }
 function GBSeqBind3(s, ma, a, b, c, ans, que, setting) {
-    let v = 0;
-    let f = 0;
-    let tmsk = 0;
+    let [v, f, tmsk] = [0, 0, 0];
     const vs = [s[a], s[b], s[c]];
     const ms = [ma[a], ma[b], ma[c]];
     const msk = ma[a] | ma[b] | ma[c];
-    if (!(msk & 4) && ThreeSame(...vs)) (v = 24), (f = 23), (tmsk = 4);
+    if (!(msk & 4) && ThreeSame(...vs)) [v, f, tmsk] = [24, 23, 4];
     else if (ThreeShift(...vs)) {
-        if (vs[1] - vs[0] === 3 && !(msk & 8)) (v = 16), (f = 28), (tmsk = 8);
-        else if (vs[1] - vs[0] < 3 && !(msk & 2048)) (v = 16), (f = 30), (tmsk = 2048);
-    } else if (!(msk & 16) && MixedStraight(...vs)) (v = 8), (f = 39), (tmsk = 16);
-    else if (!(msk & 32) && ThreeMixedSame(...vs)) (v = 8), (f = 41), (tmsk = 32);
-    else if (!(msk & 64) && ThreeMixedShiftOne(...vs)) (v = 6), (f = 50), (tmsk = 64);
+        if (vs[1] - vs[0] === 3 && !(msk & 8)) [v, f, tmsk] = [16, 28, 8];
+        else if (vs[1] - vs[0] < 3 && !(msk & 2048)) [v, f, tmsk] = [16, 30, 2048];
+    } else if (!(msk & 16) && MixedStraight(...vs)) [v, f, tmsk] = [8, 39, 16];
+    else if (!(msk & 32) && ThreeMixedSame(...vs)) [v, f, tmsk] = [8, 41, 32];
+    else if (!(msk & 64) && ThreeMixedShiftOne(...vs)) [v, f, tmsk] = [6, 50, 64];
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c]);
         const m = RemoveMeldsByIndex(ma, [a, b, c]);
         const r = [0, 1, 2].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk), que, setting));
-        for (let i = 0; i < r.length; ++i)
-            if (r[i].val + v > ans.val) {
-                ans.val = r[i].val + v;
-                ans.fan = [f, ...r[i].fan];
-            }
+        for (let i = 0; i < r.length; ++i) if (r[i].val + v > ans.val) (ans.val = r[i].val + v), (ans.fan = [f, ...r[i].fan]);
     }
 }
 function GBSeqBind2(s, ma, a, b, ans, que, setting) {
@@ -282,11 +258,7 @@ function GBSeqBind2(s, ma, a, b, ans, que, setting) {
         const t = RemoveMeldsByIndex(s, [a, b]);
         const m = RemoveMeldsByIndex(ma, [a, b]);
         const r = [0, 1].map((i) => GBSeqBind(...AddMelds2(t, m, vs[i], ms[i] | tmsk), que, setting));
-        for (let i = 0; i < r.length; ++i)
-            if (r[i].val + v > ans.val) {
-                ans.val = r[i].val + v;
-                ans.fan = [f, ...r[i].fan];
-            }
+        for (let i = 0; i < r.length; ++i) if (r[i].val + v > ans.val) (ans.val = r[i].val + v), (ans.fan = [f, ...r[i].fan]);
     }
 }
 let seq_miss = 0,
@@ -347,9 +319,7 @@ function Get19KFan(osid) {
     }
 }
 function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
-    let v = 0;
-    let f = [];
-    let tmsk = 0;
+    let [v, f, tmsk] = [0, [], 0];
     const vs = [s[a], s[b], s[c], s[d]];
     let os = [op[a], op[b], op[c], op[d]];
     const ms = [ma[a], ma[b], ma[c], ma[d]];
@@ -357,18 +327,18 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
     if (FourShiftOne(...vs)) {
         if (vs[0] < 27) {
             if (!(msk & 1)) {
-                (v = 48), (f = [15]), (tmsk = 1);
+                [v, f, tmsk] = [48, [15], 1];
                 if (!setting[17] && pon & 4) --v, f.push(-75);
             }
         } else if (!(msk & 2)) {
-            (v = 88), (f = [1, ...os.map((a) => -a)]), (tmsk = 2);
+            [v, f, tmsk] = [88, [1, ...os.map((a) => -a)], 2];
             for (let i = 0; i < os.length; ++i) v -= Get19KFan(os[i]);
             os = [0, 0, 0, 0];
             if (!setting[20] && pon & 2) (v -= 6), f.push(-49);
         }
         if (pon & 1) (v -= 6), f.push(-48);
     } else if (!(msk & 4) && vs[3] >= sizeAT && vs[0] >= 27 && FourShiftOne(...[vs[0], vs[1], vs[2], GetIdFromHead(vs[3])].sort((a, b) => a - b))) {
-        (v = 64), (f = [9]), (tmsk = 4);
+        [v, f, tmsk] = [64, [9], 4];
         if (!setting[35])
             for (let i = 0; i < os.length; ++i)
                 if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
@@ -380,39 +350,33 @@ function GBTriBind4(s, op, ma, a, b, c, d, ans, pon, setting) {
         const p = RemoveMeldsByIndex(op, [a, b, c, d]);
         const m = RemoveMeldsByIndex(ma, [a, b, c, d]);
         const r = [0, 1, 2, 3].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon, setting));
-        for (let i = 0; i < r.length; ++i)
-            if (r[i].val + v > ans.val) {
-                ans.val = r[i].val + v;
-                ans.fan = [...f, ...r[i].fan];
-            }
+        for (let i = 0; i < r.length; ++i) if (r[i].val + v > ans.val) (ans.val = r[i].val + v), (ans.fan = [...f, ...r[i].fan]);
     }
 }
 function GBTriBind3(s, op, ma, a, b, c, ans, pon, setting) {
-    let v = 0;
-    let f = [];
-    let tmsk = 0;
+    let [v, f, tmsk] = [0, [], 0];
     const vs = [s[a], s[b], s[c]];
     let os = [op[a], op[b], op[c]];
     const ms = [ma[a], ma[b], ma[c]];
     const msk = ma[a] | ma[b] | ma[c];
     if (!(msk & 8) && vs[0] >= 31 && ThreeShiftOne(...vs)) {
-        (v = 88), (f = [2]), (tmsk = 8);
+        [v, f, tmsk] = [88, [2], 8];
         for (let i = 0; i < os.length; ++i) if (os[i] === 59 || os[i] === 159) (v -= Get19KFan(os[i])), f.push(-os[i]), (os[i] = 0);
         if (!setting[13] && pon & 4) --v, f.push(-75);
     } else if (!(msk & 16) && vs[2] >= sizeAT && vs[0] >= 31 && ThreeShiftOne(...[vs[0], vs[1], GetIdFromHead(vs[2])].sort((a, b) => a - b))) {
-        (v = 64), (f = [10]), (tmsk = 16);
+        [v, f, tmsk] = [64, [10], 16];
         for (let i = 0; i < os.length; ++i) if (os[i] === 59 || os[i] === 159) (v -= Get19KFan(os[i])), f.push(-os[i]), (os[i] = 0);
         if (!setting[14] && pon & 4) --v, f.push(-75);
-    } else if (!(msk & 32) && vs[0] < 27 && ThreeShiftOne(...vs)) (v = 24), (f = [24]), (tmsk = 32);
-    else if (!(msk & 64) && ThreeMixedSame(...vs)) (v = 16), (f = [32]), (tmsk = 64);
+    } else if (!(msk & 32) && vs[0] < 27 && ThreeShiftOne(...vs)) [v, f, tmsk] = [24, [24], 32];
+    else if (!(msk & 64) && ThreeMixedSame(...vs)) [v, f, tmsk] = [16, [32], 64];
     else if (!(msk & 128) && Math.min(...vs) >= 27 && Math.max(...vs) <= 30) {
-        (v = 12), (f = [38]), (tmsk = 128);
+        [v, f, tmsk] = [12, [38], 128];
         if (!setting[34])
             for (let i = 0; i < os.length; ++i)
                 if (os[i] === 73) --v, f.push(-os[i]), (os[i] = 0);
                 else if (setting[33] && os[i] && os[i] < 100) --v, f.push(-73), (os[i] += 100);
         if (!setting[15] && pon & 4) --v, f.push(-75);
-    } else if (!(msk & 256) && ThreeMixedShiftOne(...vs)) (v = 8), (f = [42]), (tmsk = 256);
+    } else if (!(msk & 256) && ThreeMixedShiftOne(...vs)) [v, f, tmsk] = [8, [42], 256];
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b, c]);
         const p = RemoveMeldsByIndex(op, [a, b, c]);
@@ -426,31 +390,24 @@ function GBTriBind3(s, op, ma, a, b, c, ans, pon, setting) {
     }
 }
 function GBTriBind2(s, op, ma, a, b, ans, pon, setting) {
-    let v = 0;
-    let f = [];
-    let tmsk = 0;
+    let [v, f, tmsk] = [0, [], 0];
     const vs = [s[a], s[b]];
     let os = [op[a], op[b]];
     const ms = [ma[a], ma[b]];
     const msk = ma[a] | ma[b];
     if (!(msk & 512) && vs[0] >= 31 && vs[1] >= 31 && vs[1] < sizeUT) {
-        (v = 6), (f = [54]), (tmsk = 512);
+        [v, f, tmsk] = [6, [54], 512];
         for (let i = 0; i < os.length; ++i) if (os[i] === 59 || os[i] === 159) (v -= Get19KFan(os[i])), f.push(-os[i]), (os[i] = 0);
-    } else if (!(msk & 1024) && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && NumberArray[vs[0]] === NumberArray[vs[1]]))) (v = 2), (f = [65]), (tmsk = 1024);
+    } else if (!(msk & 1024) && (vs[0] === vs[1] || (vs[0] < 27 && vs[1] < 27 && NumberArray[vs[0]] === NumberArray[vs[1]]))) [v, f, tmsk] = [2, [65], 1024];
     if (v) {
         const t = RemoveMeldsByIndex(s, [a, b]);
         const p = RemoveMeldsByIndex(op, [a, b]);
         const m = RemoveMeldsByIndex(ma, [a, b]);
         const r = [0, 1].map((i) => GBTriBind(...AddMelds3(t, p, m, vs[i], os[i], ms[i] | tmsk), pon, setting));
-        for (let i = 0; i < r.length; ++i)
-            if (r[i].val + v > ans.val) {
-                ans.val = r[i].val + v;
-                ans.fan = [...f, ...r[i].fan];
-            }
+        for (let i = 0; i < r.length; ++i) if (r[i].val + v > ans.val) (ans.val = r[i].val + v), (ans.fan = [...f, ...r[i].fan]);
     }
 }
-let tri_miss = 0,
-    tri_total = 0;
+let [tri_miss, tri_total] = [0, 0];
 function GBTriBind(s, op, ma, pon, setting) {
     ++tri_total;
     const key = `${s.join(",")}|${op.join(",")}|${ma.join(",")}`;
@@ -575,7 +532,6 @@ function ninegate(melds, tiles, wintile) {
     for (let i = 1; i < 8; ++i) if (light[i] !== 1 && light[i] !== 2) return false;
     return true;
 }
-// prettier-ignore
 let seq = Array.from({ length: 25 }, (_, i) => [i, i + 1, i + 2]);
 let tri = Array.from({ length: sizeUT }, (_, i) => [i]);
 let quad = Array.from({ length: sizeUT }, (_, i) => [i, i, i, i]);
@@ -585,7 +541,6 @@ const PureDoubleDragon = [
     [seq[9], seq[9], seq[15], seq[15], pair[13]],
     [seq[18], seq[18], seq[24], seq[24], pair[22]],
 ].map(normalize);
-// prettier-ignore
 const MixedDoubleDragon = [
     [seq[0], seq[6], seq[9], seq[15], pair[22]],
     [seq[0], seq[6], seq[18], seq[24], pair[13]],
@@ -652,10 +607,7 @@ function getDragonPredict(x) {
     return x <= 3 ? dragonmax[x] : 88 + (x - 3) * 44;
 }
 function predictBind(melds) {
-    let sq = 0,
-        nt = 0,
-        wt = 0,
-        dt = 0;
+    let [sq, nt, wt, dt] = [0, 0, 0, 0];
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 3) ++sq;
         else if (melds[i][0] >= 31) ++dt;
@@ -714,25 +666,19 @@ function canBeListen(tiles, ta, tb, x, wint) {
     return false;
 }
 function GBKPC(ck, ek, cp, setting, fourteen_type, zimo) {
-    let must_pengpeng = false;
-    let must_menqing = false;
-    let must_2anke = false;
-    let v = 0,
-        f = [];
-    let has_single_ck = false;
-    let has_single_ek = false;
+    let [v, f] = [0, []];
+    let [must_pengpeng, must_menqing, must_2anke] = [false, false, false];
+    let [has_single_ck, has_single_ek] = [false, false];
     if (ck + ek >= 4) {
         (v += 88), f.push(5), (must_pengpeng = fourteen_type);
-        if (setting[30]) {
+        if (setting[30])
             if (ck === 2) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
             else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67), (has_single_ck = true);
-        }
     } else if (ck + ek === 3) {
         (v += 32), f.push(17);
-        if (setting[30]) {
+        if (setting[30])
             if (ck === 2) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
             else if (ck === 1 && (setting[30] === 1 || cp === 0)) (v += 2), f.push(67), (has_single_ck = true);
-        }
     } else if (ck === 2) (v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true);
     else if (ek === 2) (v += 4), f.push(57);
     else if (ck + ek === 2) {
@@ -750,17 +696,9 @@ function GBKPC(ck, ek, cp, setting, fourteen_type, zimo) {
     return { v, f, must_menqing, must_pengpeng };
 }
 function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, setting) {
-    let must_hunyise = false;
-    let must_qingyise = false;
-    let must_quandai = false;
-    let must_hun19 = false;
-    let must_pinghe = false;
-    let must_duan1 = false;
-    let must_wuzi = false;
-    let must_quemen = false;
+    let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_pinghe, must_duan1, must_wuzi, must_quemen] = Array(8).fill(false);
     let yaojiuke = true;
-    let can_2tong = true;
-    let can_3tong = true;
+    let [can_2tong, can_3tong] = [true, true];
     let skip_bind = false;
     const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
     let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type, zimo);
@@ -814,15 +752,13 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
     const hog = countHog(melds);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
     if (!skip_bind) {
-        let seq = [],
-            tri = [];
+        let [seq, tri] = [[], []];
         for (let i = 0; i < melds.length; ++i)
             if (melds[i].length === 3) seq.push(melds[i][0]);
             else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
             else tri.push(melds[i][0]);
         const bind = calculateBind(seq, tri, wind60, wind61, fourteen_type && has_pengpeng, melds.length === 5 && has_hunyise, melds.length === 5 && has_quemen, can_3tong, can_2tong, yaojiuke, setting);
-        v += bind.val;
-        f = [...f, ...bind.fan];
+        (v += bind.val), (f = [...f, ...bind.fan]);
     }
     return { val: v, fan: f };
 }
@@ -846,15 +782,13 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, _, se
     if (melds.length >= 5 && !must_wuzi && isMask(marr, NoHonorArray)) ++v, f.push(76);
     const hog = countHog(melds);
     for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
-    let seq = [],
-        tri = [];
+    let [seq, tri] = [[], []];
     for (let i = 0; i < melds.length; ++i)
         if (isSeq(melds[i][0])) seq.push(melds[i][0]);
         else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
         else if (melds[i].length !== 3) tri.push(melds[i][0]);
     const bind = calculateBind(seq, tri, wind60, wind61);
-    v += bind.val;
-    f = [...f, ...bind.fan];
+    (v += bind.val), (f = [...f, ...bind.fan]);
     return { val: v, fan: f };
 }
 let pairs_filer = 0;
@@ -889,13 +823,7 @@ function GB7Pairs(tids, setting) {
     function pairKernel(a, tiles) {
         let v = 24;
         let f = [19];
-        let must_hunyise = false;
-        let must_qingyise = false;
-        let must_quandai = false;
-        let must_hun19 = false;
-        let must_duan1 = false;
-        let must_wuzi = false;
-        let must_quemen = false;
+        let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_duan1, must_wuzi, must_quemen] = Array(7).fill(false);
         const melds = a.map((x) => [x]);
         if (setting[1] && isMask(a, GreenArray)) (v += 88), f.push(3), (must_hunyise ||= !setting[22]);
         if (setting[2] && isMask(a, TerminalArray)) (v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true);
@@ -945,8 +873,7 @@ function GB7Pairs(tids, setting) {
             for (let j = 3; !u && j < 5; ++j) if (!arr[j]) ++arr[j], (u = true), (cot[i] = CJokerA[j]);
         }
     if (setting[11] && arr.every(Boolean)) {
-        let v = 24 + 6,
-            f = [19, 51];
+        let [v, f] = [24 + 6, [19, 51]];
         let hun19 = true;
         for (let i = 0; hun19 && i < cot.length; ++i) if (cot[i] < sizeUT && !OrphanArray[cot[i]]) hun19 = false;
         if (hun19)
@@ -979,8 +906,7 @@ function GB7Pairs(tids, setting) {
             if (c === -1) c = tc;
             else if (c !== tc) return undefined;
         }
-        let maxp = -1,
-            minp = 9;
+        let [maxp, minp] = [-1, 9];
         for (let i = 0; i < 9; ++i)
             if (nbs[i] > 1) return undefined;
             else if (nbs[i]) (maxp = Math.max(maxp, i)), (minp = Math.min(minp, i));
@@ -998,13 +924,11 @@ const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, re
 let use_time = 0;
 function JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, mq = melds.length >= 5 && aids[1].length === ck, wint = aids[0].at(-1)?.id ?? -1, tb = buildHand(tiles, ta, wint)) {
     const hcnt = Math.ceil(aids[0].length / 3);
-    let valfus = 20,
-        fus = [8];
+    let [valfus, fus] = [20, [8]];
     if (mq && !tsumo) (valfus += 10), (fus = [9]);
     let head = -1;
     let listen_type = 0;
-    let epmid = -1;
-    let ep19 = -1;
+    let [epmid, ep19] = [-1, -1];
     let bilisten = false;
     let koutsufu = [];
     for (let i = 0; i < hcnt; ++i)
@@ -1056,9 +980,7 @@ function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilis
 }
 function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
     let f = [];
-    let v = infoans.valfan,
-        yakuman = infoans.yakuman,
-        realyakuman = yakuman;
+    let [v, yakuman, realyakuman] = [infoans.valfan, infoans.yakuman, infoans.yakuman];
     function updateYakuman(x, n = 1) {
         if (n === 0) return;
         if (setting[2]) realyakuman = yakuman += x * n;
@@ -1099,8 +1021,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (ck + cp >= 4)
         if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) updateYakuman(2), f.push(35);
         else updateYakuman(1), f.push(34);
-    let tri = null;
-    let seq = null;
+    let [tri, seq] = [null, null];
     function init_tri() {
         if (tri !== null) return;
         tri = Array(sizeUT).fill(0);
@@ -1135,8 +1056,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: v, fan: f, valfus, realfus, fus };
     if (gans.yakuman > 0) return eans_jp;
     f.push(...infoans.fan);
-    let must_hunyise = false;
-    let must_quandai = false;
+    let [must_hunyise, must_quandai] = [false, false];
     if (melds.length >= 5 && isSameColor(melds)) (v += mq ? 6 : 5), f.push(31), (must_hunyise = true);
     init_seq();
     let same3 = 0;
@@ -1145,7 +1065,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (Same3RealArray[setting[21]] !== 0) {
         JPScoreArray[52] = Same3Array[setting[21]];
         for (let i = 0; i < 25; ++i) same3 += Math.floor(seq[i] / 3);
-        v += Same3RealArray[setting[21]] * same3, f.push(...Array(same3).fill(52));
+        (v += Same3RealArray[setting[21]] * same3), f.push(...Array(same3).fill(52));
     }
     if (mq) {
         let beikou = 0;
@@ -1200,10 +1120,9 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     (v += tri[33]), f.push(...Array(tri[33]).fill(9));
     if (melds.length >= 5 && (mq || setting[4]) && isMask(marr, NoOrphanArray)) ++v, f.push(4);
     if (mq && tsumo) ++v, f.push(2);
-    let gd = 0,
-        gu = 0;
+    let [gd, gu] = [0, 0];
     let vaildora = nuki.slice();
-    for (let i = 0; i < melds.length; ++i) 
+    for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 3) for (let j = 0; j < 3; ++j) ++vaildora[melds[i][j]];
         else vaildora[melds[i][0]] += melds[i].length === 1 ? 3 : melds[i].length;
     for (let i = 0; i < sizeUT; ++i) (gd += vaildora[i] * doras[i]), (gu += vaildora[i] * uras[i]);
@@ -1225,22 +1144,19 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     return { val: pt, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus };
 }
 function PairSelect(cot, ad, au, mask) {
-    let d = 0,
-        u = 0;
+    let [d, u] = [0, 0];
     let backup = Array(7).fill([0, 0, 0]);
     for (let i = 0; i < 7; ++i) if (cot[i] < sizeUT) (d += ad[cot[i]]), (u += au[cot[i]]), (backup[i] = [cot[i], ad[cot[i]], au[cot[i]]]), (ad[cot[i]] = au[cot[i]] = 0);
     for (let i = 0; i < 7; ++i)
         if (cot[i] >= sizeUT) {
-            let sj = -1,
-                sdu = 0;
+            let [sj, sdu] = [-1, 0];
             const [jl, jr] = JokerRange[cot[i]];
             for (let j = jl; j < jr; ++j) if (!mask || mask[j]) if (ad[j] + au[j] > sdu) (sj = j), (sdu = ad[j] + au[j]);
             if (sj > 0) (d += ad[sj]), (u += au[sj]), (backup[i] = [sj, ad[sj], au[sj]]), (ad[sj] = au[sj] = 0);
         }
     for (let i = 0; i < 7; ++i) {
         const [j, d, u] = backup[i];
-        ad[j] += d;
-        au[j] += u;
+        (ad[j] += d), (au[j] += u);
     }
     (d *= 2), (u *= 2);
     return [d, u];
@@ -1303,14 +1219,9 @@ const SameColorWithHonorsArray = [ColorArray.map((x, i) => (x === 0 || HonorArra
 const SameColorNoOrphanArray = [ColorArray.map((x, i) => (x === 0 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 && !OrphanArray[i] ? 1 : 0))];
 const SameColorAllOrphansArray = [SameColorWithHonorsArray[0].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[1].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[2].map((x, i) => x && OrphanArray[i])];
 function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting) {
-    let nd = 0,
-        nu = 0;
+    let [nd, nu] = [0, 0];
     for (let i = 0; i < sizeUT; ++i) (nd += nuki[i] * doras[i]), (nu += nuki[i] * uras[i]);
-    let v = 0,
-        f = [],
-        d = 0,
-        u = 0;
-    let yaku = false;
+    let [v, f, d, u, yaku] = [0, [], 0, 0, false];
     const fv = setting[12] ? (v, d) => v + d : (v) => v;
     let limit = setting[0];
     if (setting[11])
@@ -1325,8 +1236,7 @@ function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, 
     update(0, ...PairSelect(cot, doras, uras), []);
     if (tan19) update(1, ...PairSelect(cot, doras, uras, NoOrphanArray), [4]);
     if (sc !== null) {
-        let l = 0,
-            r = 3;
+        let [l, r] = sc !== -1 ? [sc, sc + 1] : [0, 3];
         if (sc !== -1) (l = sc), (r = l + 1);
         for (let i = l; i < r; ++i) {
             update(6, ...PairSelect(cot, doras, uras, SameColorArray[i]), [31]);
@@ -1334,9 +1244,7 @@ function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, 
         }
     }
     if (scwh !== null) {
-        let l = 0,
-            r = 3;
-        if (scwh !== -1) (l = scwh), (r = l + 1);
+        let [l, r] = scwh !== -1 ? [scwh, scwh + 1] : [0, 3];
         for (let i = l; i < r; ++i) {
             update(3, ...PairSelect(cot, doras, uras, SameColorWithHonorsArray[i]), [28]);
             if (hunhun) update(5, ...PairSelect(cot, doras, uras, SameColorAllOrphansArray[i]), [25, 28]);
@@ -1352,15 +1260,10 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     for (let i = 0; tsuiso && i < 7; ++i)
         if (cot[i] < sizeUT && NoHonorArray[cot[i]]) tsuiso = false;
         else if (cot[i] >= 43 && cot[i] <= 46) tsuiso = false;
-    let valfus = 25,
-        realfus = 25,
-        fus = [10];
+    let [valfus, realfus, fus] = [25, 25, [10]];
     if (setting[8] === 1) valfus = realfus = JPFuArray[10] = 50;
     else if (setting[8] === 2) valfus = realfus = JPFuArray[10] = 100;
-    let gv = 0,
-        gf = [],
-        yakuman = infoans.yakuman,
-        realyakuman = yakuman;
+    let [gv, gf, yakuman, realyakuman] = [0, [], infoans.yakuman, yakuman];
     function updateYakuman(x) {
         if (setting[2]) realyakuman = yakuman += x;
         else (yakuman = Math.max(yakuman, x)), (realyakuman += x);
@@ -1370,8 +1273,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
         else updateYakuman(1), (gf = [39]);
     if (infoans.yakuman > 0) gf.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: gv, fan: gf, valfus, realfus, fus };
-    let mv = infoans.valfan,
-        mf = infoans.fan.slice();
+    let [mv, mf] = [infoans.valfan, infoans.fan.slice()];
     if (setting[8] === 0) (mv += 2), mf.push(17);
     else if (setting[8] === 1) ++mv, mf.push(17), (JPScoreArray[17] = 1);
     if (tsumo) ++mv, mf.push(2);
@@ -1385,64 +1287,36 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     const c19 = PairHun19Array(cot);
     const hun19 = c19 && c19[0] <= 2 && c19[1] <= 2 && c19[2] <= 2 && c19[0] + c19[1] + c19[2] + c19[3] <= 6;
     const hunhun = c19 && c19[0] + c19[1] + c19[2] + c19[3] <= 2;
-    let gd = 0,
-        gu = 0;
+    let [gd, gu] = [0, 0];
     let gyk = false;
-    for (let im = 0; im < 9; ++im) {
-        doras[im] += doras[43];
-        uras[im] += uras[43];
-        for (let ip = 9; ip < 18; ++ip) {
-            doras[ip] += doras[44];
-            uras[ip] += uras[44];
-            for (let is = 18; is < 27; ++is) {
-                doras[is] += doras[45];
-                uras[is] += uras[45];
-                const qs = [im, ip, is];
-                for (let iq = 0; iq < 3; ++iq) {
-                    doras[qs[iq]] += doras[46];
-                    uras[qs[iq]] += uras[46];
-                    for (let iw = 27; iw <= 30; ++iw) {
-                        doras[iw] += doras[47];
-                        uras[iw] += uras[47];
-                        for (let ig = 31; ig <= 33; ++ig) {
-                            doras[ig] += doras[48];
-                            uras[ig] += uras[48];
-                            const zs = [iw, ig];
-                            for (let iz = 0; iz < 2; ++iz) {
-                                doras[zs[iz]] += doras[49];
-                                uras[zs[iz]] += uras[49];
-                                const as = [qs[iq], zs[iz]];
-                                for (let i = 0; i < 2; ++i) {
-                                    doras[as[i]] += doras[42];
-                                    uras[as[i]] += uras[42];
-                                    let { v, f, d, u, yaku } = selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting);
-                                    if (gyk && yaku && v > gv) (gv = v), (gf = f), (gd = d), (gu = u);
-                                    else if (!gyk && yaku) (gv = v), (gf = f), (gd = d), (gu = u), (gyk = true);
-                                    else if (!gyk && v > gv) (gv = v), (gf = f), (gd = d), (gu = u);
-                                    doras[as[i]] -= doras[42];
-                                    uras[as[i]] -= uras[42];
-                                }
-                                doras[zs[iz]] -= doras[49];
-                                uras[zs[iz]] -= uras[49];
-                            }
-                            doras[ig] -= doras[48];
-                            uras[ig] -= uras[48];
-                        }
-                        doras[iw] -= doras[47];
-                        uras[iw] -= uras[47];
-                    }
-                    doras[qs[iq]] -= doras[46];
-                    uras[qs[iq]] -= uras[46];
-                }
-                doras[is] -= doras[45];
-                uras[is] -= uras[45];
-            }
-            doras[ip] -= doras[44];
-            uras[ip] -= uras[44];
+    let selected = Array(7).fill(0);
+    const doraf = [
+        { id: 43, range: [0, 9], fid: (i) => i },
+        { id: 44, range: [9, 18], fid: (i) => i },
+        { id: 45, range: [18, 27], fid: (i) => i },
+        { id: 46, range: [0, 3], fid: (i) => selected[i] },
+        { id: 47, range: [27, 31], fid: (i) => i },
+        { id: 48, range: [31, 34], fid: (i) => i },
+        { id: 49, range: [0, 2], fid: (i) => selected[i - 4] },
+        { id: 42, range: [0, 2], fid: (i) => [selected[3], selected[6]][i] },
+    ];
+    function dorakernel(depth = 0) {
+        if (depth === 7) {
+            let { v, f, d, u, yaku } = selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting);
+            if (gyk && yaku && v > gv) [gv, gf, gd, gu] = [v, f, d, u];
+            else if (!gyk && yaku) ([gv, gf, gd, gu] = [v, f, d, u]), (gyk = true);
+            else if (!gyk && v > gv) [gv, gf, gd, gu] = [v, f, d, u];
         }
-        doras[im] -= doras[43];
-        uras[im] -= uras[43];
+        const { id, range, fid } = doraf[depth];
+        const [l, r] = range;
+        for (let i = l; i < r; ++i) {
+            selected[depth] = i;
+            (doras[fid(i)] += doras[id]), (uras[fid(i)] += uras[id]);
+            dorakernel(depth + 1);
+            (doras[fid(i)] -= doras[id]), (uras[fid(i)] -= uras[id]);
+        }
     }
+    dorakernel();
     mv += infoans.delete;
     (gv += mv), gf.push(...mf);
     if (setting[3] && gv >= 13) return { val: 8000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };

@@ -233,8 +233,8 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     if (JokerA[i] !== JokerA[nxti]) (ei += ra), (lmti += ra), (ra = aj = 0);
     if (JokerB[i] !== JokerB[nxti]) (ei += rb), (lmti += rb), (rb = bj = 0);
     if (nxti >= sizeUT) (ei += rc), (lmti += rc), (rc = cj = 0);
-    let ri = ei - ui;
-    let rj = tiles[i + 1] - uj;
+    const ri = Math.max(ei - ui, 0);
+    const rj = Math.max(tiles[i + 1] - uj, 0);
     const lmtj = lmti + ra + rb + rc;
     if (ui > lmtj) return (step[dpi] = INF);
     let ans = INF;
@@ -952,8 +952,8 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
     if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = aj = 0);
     if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = bj = 0);
     if (nxti >= sizeUT) (ei += rc), (rc = cj = 0);
-    let ri = ei - ui;
-    let rj = tiles[i + 1] - uj;
+    const ri = Math.max(ei - ui, 0);
+    const rj = Math.max(tiles[i + 1] - uj, 0);
     const rsum = ra + rb + rc;
     const mp = Math.min(np - ep, Math.ceil(ri / 2));
     for (let p = 0; p <= mp; ++p) {

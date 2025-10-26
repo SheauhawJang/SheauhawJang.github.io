@@ -134,7 +134,10 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     postMessage({ output: output + table_head + table + table_tail, brief });
     if (rsubstep[2] !== Infinity) {
         const k = OrphanCount(tiles).count;
-        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${k >= 9 ? loc.OK : loc.dame}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
+        let status = loc.dame;
+        if (k >= 9) status = loc.OK;
+        else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
+        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
     }
     output += table_head + table + table_tail;
     postMessage({ output });
@@ -210,7 +213,10 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     postMessage({ output: output + table_head + table + table_tail, brief });
     if (rsubstep[2] !== Infinity) {
         const k = OrphanCount(tiles).count;
-        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${k >= 9 ? loc.OK : loc.dame}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
+        let status = loc.dame;
+        if (k >= 9) status = loc.OK;
+        else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
+        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
     }
     output += table_head + table + table_tail;
     postMessage({ output });

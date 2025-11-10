@@ -62,6 +62,7 @@ function processInput() {
         for (let j = 0; j < ids.length; ++j) ++subtiles[ids[j].id];
     }
     const tcnt = tids.length;
+    const full_tcnt = tcnt + (tcnt % 3 === 1 ? 1 : 0);
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, 1);
@@ -85,23 +86,23 @@ function processInput() {
         }
         switch (task) {
             case 1:
-                if (Math.min(...worker_substeps[task]) === -1) {
+                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt) {
                     document.getElementById("output-score-jp").textContent = "";
                     document.getElementById("brief-output-score-jp").textContent = "";
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     document.getElementById("score-jp").style.display = "block";
                     jp_worker = null;
-                    jp_worker_info = { aids, substeps: worker_substeps[task] };
+                    jp_worker_info = { aids, tiles, substeps: worker_substeps[task] };
                 }
                 break;
             case 2:
-                if (Math.min(...worker_substeps[task]) === -1) {
+                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt) {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     document.getElementById("score-gb").style.display = "block";
                     gb_worker = null;
-                    gb_worker_info = { aids, substeps: worker_substeps[task] };
+                    gb_worker_info = { aids, tiles, substeps: worker_substeps[task] };
                 }
                 if (Math.min(worker_substeps[1][0], worker_substeps[2][1]) === -1) {
                     let show_qingque = Boolean(document.getElementById("score-qingque"));
@@ -119,7 +120,7 @@ function processInput() {
                         document.getElementById("time-output-score-qingque").textContent = "Ready to start!";
                         document.getElementById("score-qingque").style.display = "block";
                         qingque_worker = null;
-                        qingque_worker_info = { aids, substeps: [worker_substeps[1][0], worker_substeps[2][1]] };
+                        qingque_worker_info = { aids, tiles, substeps: [worker_substeps[1][0], worker_substeps[2][1]] };
                     }
                 }
                 break;
@@ -204,14 +205,14 @@ function updateInput(s) {
     e.value = s;
     //e.dispatchEvent(new Event("change"));
 }
-function randomInputText() {
-    function shuffle(array) {
-        for (let i = 0; i < array.length; ++i) {
-            const j = Math.floor(Math.random() * (array.length - i));
-            [array[i], array[i + j]] = [array[i + j], array[i]];
-        }
-        return array;
+function shuffle(array) {
+    for (let i = 0; i < array.length; ++i) {
+        const j = Math.floor(Math.random() * (array.length - i));
+        [array[i], array[i + j]] = [array[i + j], array[i]];
     }
+    return array;
+}
+function randomInputText() {
     let mount = new Array(136);
     for (let i = 0; i < mount.length; ++i) mount[i] = Math.floor(i / 4);
     shuffle(mount);
@@ -219,12 +220,40 @@ function randomInputText() {
     let hand = [];
     for (let i = 0; i < n; ++i) hand.push(mount[i]);
     hand.sort((a, b) => a - b);
-    let handname = [];
-    for (let i = 0; i < n; ++i) {
-        handname.push(cardName(hand[i]));
-        if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+    updateInput(joinHand(hand));
+}
+function randomWinning() {
+    const n = parseInt(document.getElementById("randomWinningCardCount").value);
+    const melds = Math.floor(n / 3), head = n % 3 ? 1 : 0;
+    let tiles = Array(sizeUT).fill(0);
+    for (let i = 0; i < melds; ++i) {
+        const seq = 21 * 64;
+        const tri = sizeUT;
+        const r = Math.floor(Math.random() * (seq + tri));
+        if (r >= seq) tiles[r - seq] += 3;
+        else {
+            const rr = Math.floor(r / 64);
+            const j = ColorFirstArray[Math.floor(rr / 7)] + rr % 7;
+            ++tiles[j], ++tiles[j + 1], ++tiles[j + 2];
+        }
     }
-    updateInput(handname.join(""));
+    for (let i = 0; i < head; ++i) tiles[Math.floor(Math.random() * sizeUT)] += 2;
+    let jokercount = 0;
+    for (let i = 0; i < sizeUT; ++i) if (tiles[i] > 4) jokercount += tiles[i] - 4, tiles[i] = 4;
+    let hand = [];
+    for (let i = 0; i < sizeUT; ++i) hand.push(...Array(tiles[i]).fill(i));
+    if (n % 3 === 1)
+        if (jokercount) --jokercount;
+        else hand.splice(Math.floor(Math.random() * hand.length), 1);
+    else if (hand.length > 0) {
+        const j = Math.floor(Math.random() * hand.length);
+        const id = hand[j];
+        hand.splice(j, 1);
+        hand.push(id);
+    }
+    updateInput('J'.repeat(jokercount) + joinHand(hand));
+    drawInputCards();
+    processInput();
 }
 function randomInput() {
     randomInputText();
@@ -616,8 +645,7 @@ function processGBScore() {
         document.getElementById("brief-output-score-gb").innerHTML = e.data.result.brief;
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     };
-    const { aids, substeps } = gb_worker_info;
-    gb_worker.postMessage({ task: "gb-score", aids, substeps, gw, mw, wt, info, lang, setting });
+    gb_worker.postMessage({ task: "gb-score", ...gb_worker_info, gw, mw, wt, info, lang, setting });
 }
 let jp_worker = null;
 let jp_worker_info;
@@ -660,8 +688,7 @@ function processJPScore() {
         document.getElementById("brief-output-score-jp").innerHTML = e.data.result.brief;
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
-    const { aids, substeps } = jp_worker_info;
-    jp_worker.postMessage({ task: "jp-score", aids, substeps, gw, mw, wt, info, setting, lang });
+    jp_worker.postMessage({ task: "jp-score", ...jp_worker_info, gw, mw, wt, info, setting, lang });
 }
 let qingque_worker = null;
 let qingque_worker_info;

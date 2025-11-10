@@ -1263,7 +1263,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     let [valfus, realfus, fus] = [25, 25, [10]];
     if (setting[8] === 1) valfus = realfus = JPFuArray[10] = 50;
     else if (setting[8] === 2) valfus = realfus = JPFuArray[10] = 100;
-    let [gv, gf, yakuman, realyakuman] = [0, [], infoans.yakuman, yakuman];
+    let [gv, gf, yakuman, realyakuman] = [0, [], infoans.yakuman, infoans.yakuman];
     function updateYakuman(x) {
         if (setting[2]) realyakuman = yakuman += x;
         else (yakuman = Math.max(yakuman, x)), (realyakuman += x);
@@ -1306,6 +1306,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
             if (gyk && yaku && v > gv) [gv, gf, gd, gu] = [v, f, d, u];
             else if (!gyk && yaku) ([gv, gf, gd, gu] = [v, f, d, u]), (gyk = true);
             else if (!gyk && v > gv) [gv, gf, gd, gu] = [v, f, d, u];
+            return;
         }
         const { id, range, fid } = doraf[depth];
         const [l, r] = range;

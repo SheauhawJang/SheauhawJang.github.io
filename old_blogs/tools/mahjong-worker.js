@@ -4,8 +4,8 @@ importScripts("mahjong-worker-lang.js");
 importScripts("mahjong-mmc.js");
 //console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
-const table_head = '<table style="border-collapse: collapse; padding: 0px">';
-const table_tail = "</table>";
+const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
+const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
 let aids = undefined;
 let tiles, subtiles;
 let tcnt, full_tcnt, subcnt;
@@ -31,7 +31,7 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             const cnt = CountWaitingCards(tiles, subtiles, ans);
             result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
-        return { output: table_head + result + table_tail, ans: { waiting: save } };
+        return { output: makeTable(result), ans: { waiting: save } };
     } else {
         const save = Array(sizeAT);
         const cnts = [];
@@ -64,7 +64,7 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
                 result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td></tr>`;
             } else result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
-        return { output: table_head + result + table_tail, ans: { waiting: save, subchecks } };
+        return { output: makeTable(result), ans: { waiting: save, subchecks } };
     }
 }
 function getWaitingType(step) {
@@ -98,29 +98,33 @@ function normalStep() {
     output += r.output;
     return { output, step, save: r.ans, dvd };
 }
+function updateTableGeneral(table, info) {
+    table += info;
+    postMessage({ output: makeTable(table) });
+    return table;
+}
 function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
+    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
     let substep = Array(3).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt, 4);
-    if (mask[0]) {
+    if (mask && mask[0]) {
         substep[0] = rsubstep[0];
-        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(substep[0])}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
+        updateTable(`${loc.normal}${loc.colon}`, `${getWaitingType(substep[0])}`);
     }
     if (full_tcnt === 14 && subcnt === 0) {
         if (rsubstep[1] === Infinity) rsubstep[1] = PairStep(tiles, true);
-        if (mask[1]) {
+        if (mask && mask[1]) {
             substep[1] = rsubstep[1];
-            table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(substep[1])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.pair7}${loc.colon}`, `${getWaitingType(substep[1])}`);
         }
         if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles);
-        if (mask[2]) {
+        if (mask && mask[2]) {
             substep[2] = rsubstep[2];
-            table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(substep[2])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.kokushi}${loc.colon}`, `${getWaitingType(substep[2])}`);
         }
-    }
+    } 
+    if (!mask) return rsubstep;
     const stepJP = Math.min(...substep);
     if (stepJP === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(stepJP);
@@ -130,15 +134,15 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     if (substep[2] === stepJP) stepTypeJP.push(loc.kokushi);
     output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
-    postMessage({ output: output + table_head + table + table_tail, brief });
+    postMessage({ output: output + makeTable(table), brief });
     if (rsubstep[2] !== Infinity) {
         const k = OrphanCount(tiles).count;
         let status = loc.dame;
         if (k >= 9) status = loc.OK;
         else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
-        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
+        table += makeTableLineLR(`${loc.kyushukyuhai}${loc.colon}`, `${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}`);
     }
-    output += table_head + table + table_tail;
+    output += makeTable(table);
     postMessage({ output });
     if (stepJP === -1 && full_tcnt > 0) {
         let odvd = [];
@@ -179,27 +183,26 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
 }
 function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
+    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
     let substep = Array(3).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guse3p);
-    if (mask[0]) {
+    if (mask && mask[0]) {
         substep[0] = rsubstep[0];
-        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(substep[0])}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
+        updateTable(`${loc.normal}${loc.colon}`, `${getWaitingType(substep[0])}`);
     }
     if (full_tcnt === 14 && subcnt === 0) {
         if (rsubstep[1] === Infinity) rsubstep[1] = PairStep(tiles, true, guse3p);
-        if (mask[1]) {
+        if (mask && mask[1]) {
             substep[1] = rsubstep[1];
-            table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(substep[1])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.pair7}${loc.colon}`, `${getWaitingType(substep[1])}`);
         }
         if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles);
-        if (mask[2]) {
+        if (mask && mask[2]) {
             substep[2] = rsubstep[2];
-            table += `<tr><td style="padding-left: 0px;">${loc.kokushi}${loc.colon}</td><td>${getWaitingType(substep[2])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            table += makeTableLineLR(`${loc.kokushi}${loc.colon}`, `${getWaitingType(substep[2])}`);
         }
     }
+    if (!mask) return rsubstep;
     const step3p = Math.min(...substep);
     if (step3p === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(step3p);
@@ -209,15 +212,15 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     if (substep[2] === step3p) stepTypeJP.push(loc.kokushi);
     output += `${loc.brace_left}${stepTypeJP.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
-    postMessage({ output: output + table_head + table + table_tail, brief });
+    postMessage({ output: output + makeTable(table), brief });
     if (rsubstep[2] !== Infinity) {
         const k = OrphanCount(tiles).count;
         let status = loc.dame;
         if (k >= 9) status = loc.OK;
         else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
-        table += `<tr><td style="padding-left: 0px;">${loc.kyushukyuhai}${loc.colon}</td><td>${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}</td></tr>`;
+        updateTable(`${loc.kyushukyuhai}${loc.colon}`, `${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}`);
     }
-    output += table_head + table + table_tail;
+    output += makeTable(table);
     postMessage({ output });
     if (step3p === -1 && full_tcnt > 0) {
         let odvd = [];
@@ -258,41 +261,38 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
 }
 function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5)) {
     let table = "";
+    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
     let substep = Array(5).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt);
-    if (mask[0]) {
+    if (mask && mask[0]) {
         substep[0] = rsubstep[0];
-        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(rsubstep[0])}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
+        updateTable(`${loc.normal}${loc.colon}`, `${getWaitingType(rsubstep[0])}`);
     }
     if (full_tcnt === 14 && subcnt === 0) {
         if (rsubstep[1] === Infinity) rsubstep[1] = PairStep(tiles, false);
-        if (mask[1]) {
+        if (mask && mask[1]) {
             substep[1] = rsubstep[1];
-            table += `<tr><td style="padding-left: 0px;">${loc.pair7}${loc.colon}</td><td>${getWaitingType(rsubstep[1])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.pair7}${loc.colon}`, `${getWaitingType(rsubstep[1])}`);
         }
         if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles, false);
-        if (mask[2]) {
+        if (mask && mask[2]) {
             substep[2] = rsubstep[2];
-            table += `<tr><td style="padding-left: 0px;">${loc.orphan13}${loc.colon}</td><td>${getWaitingType(rsubstep[2])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.orphan13}${loc.colon}`, `${getWaitingType(rsubstep[2])}`);
         }
         if (rsubstep[3] === Infinity) rsubstep[3] = full_tcnt - 1 - Bukao16Count(tiles);
-        if (mask[3]) {
+        if (mask && mask[3]) {
             substep[3] = rsubstep[3];
-            table += `<tr><td style="padding-left: 0px;">${loc.quanbukaoxing}${loc.colon}</td><td>${getWaitingType(rsubstep[3])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.quanbukaoxing}${loc.colon}`, `${getWaitingType(rsubstep[3])}`);
         }
     }
     if (full_tcnt >= 9) {
         if (rsubstep[4] === Infinity) rsubstep[4] = KnitDragonStep(tiles, tcnt);
-        if (mask[4]) {
+        if (mask && mask[4]) {
             substep[4] = rsubstep[4];
-            table += `<tr><td style="padding-left: 0px;">${loc.zuhelongxing}${loc.colon}</td><td>${getWaitingType(rsubstep[4])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.zuhelongxing}${loc.colon}`, `${getWaitingType(rsubstep[4])}`);
         }
     }
+    if (!mask) return rsubstep;
     const stepGB = Math.min(...substep);
     if (stepGB === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(stepGB);
@@ -304,7 +304,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
     if (substep[4] === stepGB) stepTypeGB.push(loc.zuhelongxing);
     output += `${loc.brace_left}${stepTypeGB.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
-    output += table_head + table + table_tail;
+    output += makeTable(table);
     postMessage({ output, brief });
     if (stepGB === -1 && full_tcnt > 0) {
         postMessage({ output });
@@ -361,33 +361,31 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
 }
 function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4)) {
     let table = "";
+    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
     let substep = Array(4).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt);
-    if (mask[0]) {
+    if (mask && mask[0]) {
         substep[0] = rsubstep[0];
-        table += `<tr><td style="padding-left: 0px;">${loc.normal}${loc.colon}</td><td>${getWaitingType(substep[0])}</td></tr>`;
-        postMessage({ output: table_head + table + table_tail });
+        updateTable(`${loc.normal}${loc.colon}`, `${getWaitingType(substep[0])}`);
     }
     if (full_tcnt === 17 && subcnt === 0) {
         if (rsubstep[1] === Infinity) rsubstep[1] = NiconicoStep(tiles);
-        if (mask[1]) {
+        if (mask && mask[1]) {
             substep[1] = rsubstep[1];
-            table += `<tr><td style="padding-left: 0px;">${loc.niconico}${loc.colon}</td><td>${getWaitingType(substep[1])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.niconico}${loc.colon}`, `${getWaitingType(substep[1])}`);
         }
         if (rsubstep[2] === Infinity) rsubstep[2] = OrphanMeldStep(tiles);
-        if (mask[2]) {
+        if (mask && mask[2]) {
             substep[2] = rsubstep[2];
-            table += `<tr><td style="padding-left: 0px;">${loc.orphan13}${loc.colon}</td><td>${getWaitingType(substep[2])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.orphan13}${loc.colon}`, `${getWaitingType(substep[2])}`);
         }
         if (rsubstep[3] === Infinity) rsubstep[3] = Buda16Step(tiles);
-        if (mask[3]) {
+        if (mask && mask[3]) {
             substep[3] = rsubstep[3];
-            table += `<tr><td style="padding-left: 0px;">${loc.shiliubudaxing}${loc.colon}</td><td>${getWaitingType(substep[3])}</td></tr>`;
-            postMessage({ output: table_head + table + table_tail });
+            updateTable(`${loc.shiliubudaxing}${loc.colon}`, `${getWaitingType(substep[3])}`);
         }
     }
+    if (!mask) return rsubstep;
     const stepTW = Math.min(...substep);
     if (stepTW === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
     let output = getWaitingType(stepTW);
@@ -398,7 +396,7 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
     if (substep[3] === stepTW) stepTypeTW.push(loc.shiliubudaxing);
     output += `${loc.brace_left}${stepTypeTW.join(loc.slash)}${loc.brace_right}\n`;
     let brief = output;
-    output += table_head + table + table_tail;
+    output += makeTable(table);
     postMessage({ output, brief });
     if (stepTW === -1 && full_tcnt > 0) {
         postMessage({ output });
@@ -452,16 +450,18 @@ function GBFanDiv(fan) {
     (fans[60] += fans[83]), (fans[61] += fans[83]);
     let fanopt = [];
     for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`GB_FANNAME_${i}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
-    return `${table_head}${fanopt.join("")}${table_tail}`;
+    return makeTable(fanopt.join(""));
 }
+let report = true;
 function postDebugInfoGlobal(st, m, cm, output) {
+    if (!report) return;
     const t = new Date() - st;
     const predict_t = Math.round((t * m) / cm);
     const rate = (cm / m) * 100;
     let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
     postMessage({ debug, output });
 }
-function GBScore(aids, substeps, gw, mw, wt, info, setting) {
+function GBScore(substeps, gw, mw, wt, info, setting) {
     let [infov, infof] = [0, []];
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
     if (info.includes(44))
@@ -470,7 +470,6 @@ function GBScore(aids, substeps, gw, mw, wt, info, setting) {
     if (info.includes(47) && !wt) (infov += 8), infof.push(47);
     else if (info.includes(58)) (infov += 4), infof.push(58);
     const wint = aids[0].at(-1)?.id;
-    const tiles = getTiles(aids[0]);
     let listen_cnt = 0;
     if (wint === undefined) listen_cnt = 999;
     else {
@@ -661,9 +660,9 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     let fanopt = [];
     for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`JP_YAKUNAME_${PrintSeq[i]}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
     let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${loc.fanname_format_left + JPGetFuName(i) + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
-    return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${table_head}${fanopt.join("")}${table_tail}${table_head}${fusopt.join("")}${table_tail}</div>`;
+    return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
 }
-function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
+function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray.length; ++i) if (JPScoreArray[i] <= -2) JPScoreArray[i] = -1;
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
@@ -674,7 +673,6 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ("sp" in aids[1][i][j]) ++aka;
     for (let i = 0; i < aids[2].length; ++i) if ("sp" in aids[2][i]) ++aka;
     let nukicnt = aids[2].length;
-    const tiles = getTiles(aids[0]);
     const p = MeldsPermutation(aids);
     if (info.includes(32))
         if (tsumo)
@@ -802,6 +800,21 @@ function JPScore(aids, substeps, gw, mw, tsumo, info, setting) {
     const opts = [fanfuinfo, fanfudiv, ptchange];
     return { output: opts.join(""), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
 }
+function ListenScore(f, sf) {
+    report = false;
+    let ans = "";
+    for (let i = 0; i < sizeUT; ++i) {
+        aids[0].push({ id: i }), ++tiles[i], ++tcnt;
+        const substeps = sf(false);
+        const step = Math.min(...substeps);
+        if (step === -1) {
+            const brief = f(substeps).brief;
+            ans += `${cardImage(i)}${loc.colon}${brief}<br/>`;
+        }
+        aids[0].pop(), --tiles[i], --tcnt;
+    }
+    return ans;
+}
 self.onmessage = function (e) {
     const st = new Date();
     if (e.data.lang) setLoc(e.data.lang);
@@ -840,12 +853,14 @@ self.onmessage = function (e) {
         }
         case "gb-score": {
             let { substeps, gw, mw, wt, info, setting } = e.data;
-            result = GBScore(aids, substeps, gw, mw, wt, info, setting);
+            if (full_tcnt === tcnt) result = GBScore(substeps, gw, mw, wt, info, setting);
+            else result = { output: ListenScore((substeps) => GBScore(substeps, gw, mw, wt, info, setting), GBStep), brief: "" };
             break;
         }
         case "jp-score": {
             let { substeps, gw, mw, wt, info, setting } = e.data;
-            result = JPScore(aids, substeps, gw, mw, wt, info, setting);
+            if (full_tcnt === tcnt) result = JPScore(substeps, gw, mw, wt, info, setting);
+            else result = { output: ListenScore((substeps) => JPScore(substeps, gw, mw, wt, info, setting), JPStep), brief: "" };
             break;
         }
         case "qingque-score": {

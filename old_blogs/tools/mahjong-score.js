@@ -1214,10 +1214,10 @@ function getDoraPointer(x) {
     if (ColorArray[x] === ColorArray[x - 1]) return x - 1;
     return ColorFirstArray[ColorArray[x] + 1] - 1;
 }
-const SameColorArray = [ColorArray.map((x) => (x === 0 ? 1 : 0)), ColorArray.map((x) => (x === 1 ? 1 : 0)), ColorArray.map((x) => (x === 2 ? 1 : 0))];
-const SameColorWithHonorsArray = [ColorArray.map((x, i) => (x === 0 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 || HonorArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 || HonorArray[i] ? 1 : 0))];
-const SameColorNoOrphanArray = [ColorArray.map((x, i) => (x === 0 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 1 && !OrphanArray[i] ? 1 : 0)), ColorArray.map((x, i) => (x === 2 && !OrphanArray[i] ? 1 : 0))];
-const SameColorAllOrphansArray = [SameColorWithHonorsArray[0].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[1].map((x, i) => x && OrphanArray[i]), SameColorWithHonorsArray[2].map((x, i) => x && OrphanArray[i])];
+const SameColorArray = [0, 1, 2].map(j => ColorArray.map((x) => (x === j ? 1 : 0)));
+const SameColorWithHonorsArray = [0, 1, 2].map(j => ColorArray.map((x, i) => (x === j || HonorArray[i] ? 1 : 0)));
+const SameColorNoOrphanArray = [0, 1, 2].map(j => ColorArray.map((x, i) => (x === j && !OrphanArray[i] ? 1 : 0)));
+const SameColorAllOrphansArray = [0, 1, 2].map(j => SameColorWithHonorsArray[j].map((x, i) => x && OrphanArray[i]));
 function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting) {
     let [nd, nu] = [0, 0];
     for (let i = 0; i < sizeUT; ++i) (nd += nuki[i] * doras[i]), (nu += nuki[i] * uras[i]);
@@ -1297,7 +1297,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
         { id: 46, range: [0, 3], fid: (i) => selected[i] },
         { id: 47, range: [27, 31], fid: (i) => i },
         { id: 48, range: [31, 34], fid: (i) => i },
-        { id: 49, range: [0, 2], fid: (i) => selected[i - 4] },
+        { id: 49, range: [4, 6], fid: (i) => selected[i] },
         { id: 42, range: [0, 2], fid: (i) => [selected[3], selected[6]][i] },
     ];
     function dorakernel(depth = 0) {

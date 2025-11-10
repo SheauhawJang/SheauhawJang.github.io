@@ -199,7 +199,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         if (rsubstep[2] === Infinity) rsubstep[2] = OrphanStep(tiles);
         if (mask && mask[2]) {
             substep[2] = rsubstep[2];
-            table += makeTableLineLR(`${loc.kokushi}${loc.colon}`, `${getWaitingType(substep[2])}`);
+            updateTable(`${loc.kokushi}${loc.colon}`, `${getWaitingType(substep[2])}`);
         }
     }
     if (!mask) return rsubstep;
@@ -218,7 +218,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         let status = loc.dame;
         if (k >= 9) status = loc.OK;
         else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
-        updateTable(`${loc.kyushukyuhai}${loc.colon}`, `${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}`);
+        table += makeTableLineLR(`${loc.kyushukyuhai}${loc.colon}`, `${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}`);
     }
     output += makeTable(table);
     postMessage({ output });
@@ -813,6 +813,7 @@ function ListenScore(f, sf) {
         }
         aids[0].pop(), --tiles[i], --tcnt;
     }
+    report = true;
     return ans;
 }
 self.onmessage = function (e) {

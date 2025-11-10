@@ -184,7 +184,8 @@
             </div>
             <div style="text-align: center">
                 <button onclick="processInput()" class="random-button">计算</button>
-                <button onclick="randomInput()" class="random-button">随机生成 <input type="number" id="randomCardCount" value="14" min="1" max="99" /> 张牌</button>
+                <button onclick="randomInput()" class="random-button">随机配牌 <input type="number" id="randomCardCount" value="14" min="1" max="99" />张</button>
+                <button onclick="randomWinning()" class="random-button">和牌示例 <input type="number" id="randomWinningCardCount" value="14" min="1" max="99" />张</button>
             </div>
             <div class="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
@@ -556,6 +557,15 @@
                                 <label><input type="radio" name="score-jp-setting-12" value="18,1" />关闭</label>
                                 <label><input type="radio" name="score-jp-setting-12" value="0" checked />役满</label>
                                 <label><input type="radio" name="score-jp-setting-12" value="18,2" />双倍役满</label>
+                            </div>
+                            <span>大车轮系列</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="26" />大车轮役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="27" />大竹林役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="28" />大数邻役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="29" />小车轮役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="30" />小竹林役满</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="31" />小数邻役满</label>
                             </div>
                             <span>跳符</span>
                             <div class="output-option-group">

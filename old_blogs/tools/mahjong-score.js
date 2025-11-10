@@ -791,13 +791,32 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, _, se
     (v += bind.val), (f = [...f, ...bind.fan]);
     return { val: v, fan: f };
 }
-let pairs_filer = 0;
+function isShiftPairs(cot) {
+    let c = -1;
+    let nbs = Array(9).fill(0);
+    for (let i = 0; i < cot.length; ++i) {
+        let tc = -1;
+        if (cot[i] < sizeUT) (tc = ColorArray[cot[i]]), ++nbs[NumberArray[cot[i]]];
+        else if (cot[i] in JokerColor) tc = JokerColor[cot[i]];
+        else if (cot[i] === 46 || cot[i] === JokerC) continue;
+        else if (cot[i] === 49) return null;
+        if (tc >= 3) return null;
+        if (c === -1) c = tc;
+        else if (c !== tc) return null;
+    }
+    let [maxp, minp] = [-1, 9];
+    for (let i = 0; i < 9; ++i)
+        if (nbs[i] > 1) return null;
+        else if (nbs[i]) (maxp = Math.max(maxp, i)), (minp = Math.min(minp, i));
+    if (maxp - minp >= 7) return null;
+    if (minp > 0 && maxp < 8) return { color: c, large: true };
+    return { color: c, large: false };
+}
 function GB7Pairs(tids, setting) {
     const ot = PairOutput(getTiles(tids));
     function pairLeastProduct(f, prefix = Array(7).fill(-1), count = Array(sizeUT).fill(0), i = 0) {
         if (i === 7) {
             f(prefix, count);
-            ++pairs_filer;
             return;
         }
         function next(j) {
@@ -856,8 +875,14 @@ function GB7Pairs(tids, setting) {
         if (v > gans.val) (gans.val = v), (gans.fan = f);
     }
     pairLeastProduct(pairKernel);
-    let arr = Array(5).fill(0);
     let cot = ot.map((x) => x[0]);
+    const spr = isShiftPairs(cot);
+    if (spr) {
+        let sp = { val: 88, fan: [6] };
+        if (spr.large) sp.val += 2, sp.fan.push(68);
+        if (sp.val > gans.val) gans = sp;
+    }
+    let arr = Array(5).fill(0);
     for (let i = 0; i < cot.length; ++i)
         if (cot[i] < sizeUT) ++arr[ColorArray[cot[i]]];
         else if (cot[i] in JokerColor) ++arr[JokerColor[cot[i]]];
@@ -893,30 +918,6 @@ function GB7Pairs(tids, setting) {
         for (let i = 0; i < hog; ++i) (v += 2), f.push(64);
         if (v > gans.val) (gans.val = v), (gans.fan = f);
     }
-    function isShiftPairs() {
-        let c = -1;
-        let nbs = Array(9).fill(0);
-        for (let i = 0; i < ot.length; ++i) {
-            let tc = -1;
-            if (ot[i][0] < sizeUT) (tc = ColorArray[ot[i][0]]), ++nbs[NumberArray[ot[i][0]]];
-            else if (ot[i][0] in JokerColor) tc = JokerColor[ot[i][0]];
-            else if (ot[i][0] === 46 || ot[i][0] === JokerC) continue;
-            else if (ot[i][0] === 49) return undefined;
-            if (tc >= 3) return undefined;
-            if (c === -1) c = tc;
-            else if (c !== tc) return undefined;
-        }
-        let [maxp, minp] = [-1, 9];
-        for (let i = 0; i < 9; ++i)
-            if (nbs[i] > 1) return undefined;
-            else if (nbs[i]) (maxp = Math.max(maxp, i)), (minp = Math.min(minp, i));
-        if (maxp - minp >= 7) return undefined;
-        let ans = { val: 88, fan: [6] };
-        if (minp > 0 && maxp < 8) (ans.val += 2), ans.fan.push(68);
-        return ans;
-    }
-    const sp = isShiftPairs();
-    if (sp && sp.val > gans.val) return sp;
     return gans;
 }
 const GBScoreArray = [-1, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5];
@@ -1256,21 +1257,30 @@ function selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, 
 function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     const ot = PairOutput(getTiles(tids));
     let cot = ot.map((x) => x[0]);
-    let tsuiso = true;
-    for (let i = 0; tsuiso && i < 7; ++i)
-        if (cot[i] < sizeUT && NoHonorArray[cot[i]]) tsuiso = false;
-        else if (cot[i] >= 43 && cot[i] <= 46) tsuiso = false;
-    let [valfus, realfus, fus] = [25, 25, [10]];
-    if (setting[8] === 1) valfus = realfus = JPFuArray[10] = 50;
-    else if (setting[8] === 2) valfus = realfus = JPFuArray[10] = 100;
     let [gv, gf, yakuman, realyakuman] = [0, [], infoans.yakuman, infoans.yakuman];
     function updateYakuman(x) {
         if (setting[2]) realyakuman = yakuman += x;
         else (yakuman = Math.max(yakuman, x)), (realyakuman += x);
     }
+    let [valfus, realfus, fus] = [25, 25, [10]];
+    if (setting[8] === 1) valfus = realfus = JPFuArray[10] = 50;
+    else if (setting[8] === 2) valfus = realfus = JPFuArray[10] = 100;
+    let tsuiso = true;
+    for (let i = 0; tsuiso && i < 7; ++i)
+        if (cot[i] < sizeUT && NoHonorArray[cot[i]]) tsuiso = false;
+        else if (cot[i] >= 43 && cot[i] <= 46) tsuiso = false;
     if (tsuiso)
         if (setting[1] && setting[10]) updateYakuman(2), (gf = [40]);
         else updateYakuman(1), (gf = [39]);
+    let sp = tsuiso ? null : isShiftPairs(cot);
+    if (sp) {
+        const sarr = [[[28, 56], [31, 59]], [[26, 54], [29, 57]], [[27, 55], [30, 58]]];
+        const c = sp.color;
+        const [l, r] = c === -1 ? [0, 3] : [c, c + 1];
+        let sped = false;
+        for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][0][0]] && sp.large) updateYakuman(1), gf = [sarr[i][0][1]], sped = true;
+        for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][1][0]]) updateYakuman(1), gf = [sarr[i][1][1]], sped = true;
+    }
     if (infoans.yakuman > 0) gf.push(...infoans.fan);
     if (yakuman > 0) return { val: yakuman * 8000, yakuman, realyakuman, valfan: gv, fan: gf, valfus, realfus, fus };
     let [mv, mf] = [infoans.valfan, infoans.fan.slice()];
@@ -1291,30 +1301,39 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     let gyk = false;
     let selected = Array(7).fill(0);
     const doraf = [
-        { id: 43, range: [0, 9], fid: (i) => i },
-        { id: 44, range: [9, 18], fid: (i) => i },
-        { id: 45, range: [18, 27], fid: (i) => i },
-        { id: 46, range: [0, 3], fid: (i) => selected[i] },
-        { id: 47, range: [27, 31], fid: (i) => i },
-        { id: 48, range: [31, 34], fid: (i) => i },
-        { id: 49, range: [4, 6], fid: (i) => selected[i] },
-        { id: 42, range: [0, 2], fid: (i) => [selected[3], selected[6]][i] },
+        { id: 43, range: [0, 9], joker: [0, 9], fid: (i) => i },
+        { id: 44, range: [9, 18], joker: [9, 18], fid: (i) => i },
+        { id: 45, range: [18, 27], joker: [18, 27], fid: (i) => i },
+        { id: 46, range: [0, 3], joker: [0, 27], fid: (i) => selected[i], frange: (i) => i },
+        { id: 47, range: [27, 31], joker: [27, 31], fid: (i) => i },
+        { id: 48, range: [31, 34], joker: [31, 34], fid: (i) => i },
+        { id: 49, range: [4, 6], joker: [27, 34], fid: (i) => selected[i], frange: (i) => i },
+        { id: 42, range: [0, 2], fid: (i) => [selected[3], selected[6]][i], frange: (i) => [3, 6][i] },
     ];
     function dorakernel(depth = 0) {
-        if (depth === 7) {
+        if (depth === 8) {
             let { v, f, d, u, yaku } = selectMaxPairs(cot, doras, uras, nuki, tan19, sc, scwh, hun19, hunhun, mv, setting);
             if (gyk && yaku && v > gv) [gv, gf, gd, gu] = [v, f, d, u];
             else if (!gyk && yaku) ([gv, gf, gd, gu] = [v, f, d, u]), (gyk = true);
             else if (!gyk && v > gv) [gv, gf, gd, gu] = [v, f, d, u];
             return;
         }
-        const { id, range, fid } = doraf[depth];
-        const [l, r] = range;
-        for (let i = l; i < r; ++i) {
-            selected[depth] = i;
-            (doras[fid(i)] += doras[id]), (uras[fid(i)] += uras[id]);
+        const { id, range, fid, frange } = doraf[depth];
+        if (doras[id] + uras[id] === 0) {
+            selected[depth] = -1;
             dorakernel(depth + 1);
-            (doras[fid(i)] -= doras[id]), (uras[fid(i)] -= uras[id]);
+        } else {
+            const [l, r] = range;
+            for (let i = l; i < r; ++i) {
+                const fix = fid(i);
+                const [fl, fr] = fix === -1 ? doraf[frange(i)].joker : [fix, fix + 1];
+                for (let i = fl; i < fr; ++i) {
+                    selected[depth] = i;
+                    (doras[i] += doras[id]), (uras[i] += uras[id]);
+                    dorakernel(depth + 1);
+                    (doras[i] -= doras[id]), (uras[i] -= uras[id]);
+                }
+            }
         }
     }
     dorakernel();
@@ -1328,6 +1347,6 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
     return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 30, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 47, 35, 40, 49, 37, 41, 96, 98, 99, 97];
-const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1, 3, -1];
+const PrintSeq = [1, 16, 3, 15, 12, 13, 14, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 27, 28, 31, 32, 33, 30, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97];
+const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1, 3, -1, -1, -1, -1, -1, -1, -1];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

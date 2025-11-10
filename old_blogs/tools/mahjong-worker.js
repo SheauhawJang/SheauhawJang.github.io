@@ -802,19 +802,20 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
 }
 function ListenScore(f, sf) {
     report = false;
-    let ans = "";
+    let output = "";
     for (let i = 0; i < sizeUT; ++i) {
         aids[0].push({ id: i }), ++tiles[i], ++tcnt;
         const substeps = sf(false);
         const step = Math.min(...substeps);
         if (step === -1) {
             const brief = f(substeps).brief;
-            ans += `${cardImage(i)}${loc.colon}${brief}<br/>`;
+            output += `${cardImage(i)}${loc.colon}${brief}<br/>`;
+            postMessage({ output, debug: "Calculating......" });
         }
         aids[0].pop(), --tiles[i], --tcnt;
     }
     report = true;
-    return ans;
+    return output;
 }
 self.onmessage = function (e) {
     const st = new Date();

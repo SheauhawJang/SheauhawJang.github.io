@@ -808,8 +808,8 @@ function ListenScore(f, sf) {
         const substeps = sf(false);
         const step = Math.min(...substeps);
         if (step === -1) {
-            const brief = f(substeps).brief;
-            output += `${cardImage(i)}${loc.colon}${brief}<br/>`;
+            const ans = f(substeps);
+            output += `<details ontoggle="ptsToggle(this)"><summary><span class="pts-brief">${cardImage(i)}${loc.colon}${ans.brief}</span><span class="pts-output" style="display: none;">${cardImage(i)}${loc.colon}${ans.output}</span></summary></details>`;
             postMessage({ output, debug: "Calculating......" });
         }
         aids[0].pop(), --tiles[i], --tcnt;

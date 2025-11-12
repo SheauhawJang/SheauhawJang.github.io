@@ -999,3 +999,9 @@ function switchJP34(newState) {
     e4.style.display = newState ? "block" : "none";
     e3.style.display = newState ? "none" : "block";
 }
+function ptsToggle(el) {
+    const collapsed = el.querySelector('.pts-brief');
+    const expanded = el.querySelector('.pts-output');
+    collapsed.style.display = el.open ? 'none' : '';
+    expanded.style.display = el.open ? '' : 'none';
+}

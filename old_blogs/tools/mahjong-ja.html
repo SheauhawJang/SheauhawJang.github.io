@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="立直麻雀、一般形麻雀、中国国標麻雀、十六枚麻雀、香港式台湾麻雀、及び任意枚数の麻雀の向聴数計算に対応。万能牌（オールマイティ牌、百搭牌、ジョーカーなど）に対応。立直麻雀、中国国標麻雀の点数計算に対応。">
+        <meta name="description" content="立直麻雀、一般形麻雀、中国国標麻雀、十六枚麻雀、香港式台湾麻雀、及び任意枚数の麻雀の向聴数計算に対応。万能牌（オールマイティ牌、百搭牌、ジョーカーなど）に対応。立直麻雀、中国国標麻雀の点数計算に対応。" />
         <title>麻雀牌理・点数計算ツール</title>
         <link rel="stylesheet" href="mahjong.css" />
     </head>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <h1>麻雀牌理・点数計算ツール</h1>
-        <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0;">
+        <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0">
             <li>立直麻雀、一般形麻雀、中国国標麻雀、十六枚麻雀、香港式台湾麻雀、及び任意枚数の麻雀の向聴数計算に対応。</li>
             <li>万能牌（オールマイティ牌、百搭牌、ジョーカーなど）に対応。</li>
             <li>立直麻雀、中国国標麻雀の点数計算に対応。</li>
@@ -41,49 +41,37 @@
                     <div class="input-note" id="inputNote" style="display: none">
                         入力欄は以下の形式を使用でき、以下の形式は混在可能である：
                         <ol style="margin-top: 0">
-                            <li>
-                                天鳳形式：数牌は数字（半角数字）＋色（小文字）で表します。さらに、<b>萬子=m</b>、<b>索子=s</b>、<b>筒子=p</b>。字牌の<b>東南西北白発中</b>は順に<b>1z2z3z4z5z6z7z</b>で表します。同じ綴りの色文字を持つ隣接する牌については、最も右側の牌の色文字のみを残すことが可能です。
-                            </li>
+                            <li>天鳳形式：数牌は数字（半角数字）＋色（小文字）で表します。さらに、<b>萬子=m</b>、<b>索子=s</b>、<b>筒子=p</b>。字牌の<b>東南西北白発中</b>は順に<b>1z2z3z4z5z6z7z</b>で表します。同じ綴りの色文字を持つ隣接する牌については、最も右側の牌の色文字のみを残すことが可能です。</li>
                             <li>国標小助手形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北白発中</b>は順に大文字<b>ESWNPFC</b>で表します。</li>
-                            <li>
-                                英語版麻雀の印刷形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北</b>は順に大文字<b>ESWN</b>で表しますが、<b>白=Wh</b>，<b>発=G</b>，<b>中=R</b>。
-                            </li>
+                            <li>英語版麻雀の印刷形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北</b>は順に大文字<b>ESWN</b>で表しますが、<b>白=Wh</b>，<b>発=G</b>，<b>中=R</b>。</li>
                             <li>中国語拼音形式：「天鳳形式」と同様ですが、但し、<b>萬子=w</b>、<b>筒子=b</b>。</li>
-                            <li>
-                                採譜記号格式：萬子は漢数字の<b>一二三四五六七八九</b>で表します。筒子は丸付き数字の<b>①②③④⑤⑥⑦⑧⑨</b>で表します。索子は全角数字の<b>１２３４５６７８９</b>で表します。字牌は対応する漢字で表します。
-                            </li>
+                            <li>採譜記号格式：萬子は漢数字の<b>一二三四五六七八九</b>で表します。筒子は丸付き数字の<b>①②③④⑤⑥⑦⑧⑨</b>で表します。索子は全角数字の<b>１２３４５６７８９</b>で表します。字牌は対応する漢字で表します。</li>
                             <li>Unicode形式：Unicode U+1F000 から U+1F02B までの文字を用いて対応する牌を表します。</li>
                         </ol>
-                        <p>
-                            花牌について：<b>春夏秋冬梅蘭菊竹</b>は順に<b>1h2h3h4h5h6h7h8h</b>または<b>1f2f3f4f5f6f7f8f</b>で表します。一部の麻雀ルールでは花牌を万能牌として扱いますが、本ツールの花牌にはその機能はありません。必要な場合は、専用の万能牌に変換してください。<br />
-                        </p>
+                        <p>花牌について：<b>春夏秋冬梅蘭菊竹</b>は順に<b>1h2h3h4h5h6h7h8h</b>または<b>1f2f3f4f5f6f7f8f</b>で表します。一部の麻雀ルールでは花牌を万能牌として扱いますが、本ツールの花牌にはその機能はありません。必要な場合は、専用の万能牌に変換してください。<br /></p>
                         万能牌について：
                         <ul style="margin-top: 0">
-                            <li>
-                                不定向万能牌
-                                <img
-                                    src="./cards/a1j.gif"
-                                    style="vertical-align: middle"
-                                />：任意の数牌または字牌として扱うことができます。<b>1j／J</b>で表します。（一部の麻雀ルールでは、これを「百搭牌」「オールマイティ牌」や「ジョーカー」と呼ぶことがあります。）
-                            </li>
+                            <li>不定向万能牌 <img src="./cards/a1j.gif" style="vertical-align: middle" />：任意の数牌または字牌として扱うことができます。<b>1j／J</b>で表します。（一部の麻雀ルールでは、これを「百搭牌」「オールマイティ牌」や「ジョーカー」と呼ぶことがあります。）</li>
                             <li>萬子万能牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：任意の萬子として扱うことができます。<b>2j／im／iw</b>で表します。</li>
                             <li>筒子万能牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：任意の筒子として扱うことができます。<b>3j／ip／ib</b>で表します。</li>
                             <li>索子万能牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：任意の索子として扱うことができます。<b>4j／is</b>で表します。</li>
                             <li>数牌万能牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：任意の数牌として扱うことができます。<b>5j</b>で表します。</li>
-                            <li>
-                                風牌万能牌
-                                <img src="./cards/a6j.gif" style="vertical-align: middle" />：<b>東南西北</b>のいずれかの牌として扱うことができます。<b>6j</b>で表します。
-                            </li>
-                            <li>
-                                三元万能牌
-                                <img src="./cards/a7j.gif" style="vertical-align: middle" />：<b>白発中</b>のいずれかの牌として扱うことができます。<b>7j</b>で表します。
-                            </li>
+                            <li>風牌万能牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：<b>東南西北</b>のいずれかの牌として扱うことができます。<b>6j</b>で表します。</li>
+                            <li>三元万能牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：<b>白発中</b>のいずれかの牌として扱うことができます。<b>7j</b>で表します。</li>
                             <li>字牌万能牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：任意の字牌として扱うことができます。<b>8j／iz</b>で表します。</li>
-                            <li>
-                                花牌万能牌
-                                <img src="./cards/a9j.gif" style="vertical-align: middle" />：任意の花牌として扱うことができます。<b>9j／H／X／9h／9f／ih／if</b>で表します。
-                            </li>
+                            <li>花牌万能牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：任意の花牌として扱うことができます。<b>9j／H／X／9h／9f／ih／if</b>で表します。</li>
                         </ul>
+                        副露について：
+                        <ul style="margin-top: 0">
+                            <li>一部の牌を半角の角括弧<b>[]</b>で囲むことで、固定された面子であることが表示されます。</li>
+                            <li>順子の手牌の後ろに半角数字を半角カンマで区切って追記すると、対応する位置の牌が「チー」で得た牌であることが表示され、最も左側に横向きに置かれます。</li>
+                            <li>刻子の手牌の後ろに半角数字を半角カンマで区切って追記すると、対応する位置の牌が「ポン」で得た牌であることが表示され、横向きに置かれます。</li>
+                            <li>四枚の手牌で構成される固定面子は、デフォルトでは暗槓として表示されます。</li>
+                            <li>大明槓を表す場合、四枚の手牌の後ろに1〜4の半角数字を半角カンマで区切って追記すると、対応する位置の牌が「カン」で得た牌であることが表示され、横向きに置かれます。</li>
+                            <li>加槓（小明槓）を表す場合、四枚の手牌の後ろに5〜8の半角数字を半角カンマで区切って追記すると、対応する位置の牌が「ポン」で得た牌であることが表示され、横向きに置かれます。</li>
+                        </ul>
+                        <p>補花／抜きドラについて：一部の牌を半角の丸括弧<b>()</b>で囲むことで、これらの牌が補花または抜きドラであることが表示されます。<br /></p>
+                        <p>ドラについて：一部の牌を半角の山括弧<b><></b>で囲むことで、これらの牌がドラであることが表示されます。括弧内に半角カンマがある場合、カンマの左側の牌が表ドラ表示牌、右側の牌が裏ドラ表示牌であることが表示されます。<br /></p>
                     </div>
                 </div>
             </div>
@@ -201,7 +189,7 @@
             <div class="output-box-head">
                 <div class="output-context" style="text-align: center" id="output-cnt"></div>
                 <div class="card-container" id="output-pic"></div>
-                <div class="card-container" id="output-pic-bonus" style="text-align: right;"></div>
+                <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
             </div>
             <div class="output-box">
                 <div class="title-button-container">
@@ -222,7 +210,7 @@
                         </button>
                     </div>
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">収納 ▲</button>
-                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">収納 ▲</button>
+                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
                 </div>
                 <div class="output-option-group">
                     <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般形</label>
@@ -234,7 +222,7 @@
                     <div class="output-context" id="brief-output-jp" style="display: none"></div>
                     <div class="output-time" id="time-output-jp"></div>
                 </div>
-                <div id="output-group-jp3p" style="display: none;">
+                <div id="output-group-jp3p" style="display: none">
                     <div class="output-context" id="output-jp3p"></div>
                     <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
                     <div class="output-time" id="time-output-jp3p"></div>
@@ -280,35 +268,35 @@
                     <div class="output-options">
                         <span>場風</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-global-wind" value="27" checked>東</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="28">南</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="29">西</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="30">北</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="27" checked />東</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="28" />南</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="29" />西</label>
+                            <label><input type="radio" name="score-jp-global-wind" value="30" />北</label>
                         </div>
                         <span>自風</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-local-wind" value="27" checked>東</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="28">南</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="29">西</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="30">北</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="27" checked />東</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="28" />南</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="29" />西</label>
+                            <label><input type="radio" name="score-jp-local-wind" value="30" />北</label>
                         </div>
                         <span>和了種類</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-wintype" value="0" checked>ロン</label>
-                            <label><input type="radio" name="score-jp-wintype" value="1">ツモ</label>
+                            <label><input type="radio" name="score-jp-wintype" value="0" checked />ロン</label>
+                            <label><input type="radio" name="score-jp-wintype" value="1" />ツモ</label>
                         </div>
                         <span>立直状態</span>
                         <div class="output-option-group">
-                            <label><input type="checkbox" name="score-jp-wininfo" value="1">立直</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="16">ダブル立直</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="3">一発</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="1" />立直</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="16" />ダブル立直</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="3" />一発</label>
                         </div>
                         <span>和了状態</span>
                         <div class="output-option-group">
-                            <label><input type="checkbox" name="score-jp-wininfo" value="32">第一巡目</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="13">最後の牌</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="12">嶺上開花</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="15">槍槓</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="32" />第一巡目</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="13" />最後の牌</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="12" />嶺上開花</label>
+                            <label><input type="checkbox" name="score-jp-wininfo" value="15" />槍槓</label>
                         </div>
                         <button onclick="processJPScore()" class="score-button">計算</button>
                     </div>
@@ -362,7 +350,7 @@
                                 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" />飜縛り</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="11" />役満縛り</label>
                                 <label><input type="checkbox" name="score-jp-setting-7" value="12" />表ドラを含める</label>
-                                <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting-7" value="13" checked/>一発を含める</label>
+                                <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting-7" value="13" checked />一発を含める</label>
                             </div>
                             <span>人和</span>
                             <div class="output-option-group">
@@ -372,7 +360,7 @@
                                 <label><input type="radio" name="score-jp-setting-5" value="9,4" />6 飜</label>
                                 <label><input type="radio" name="score-jp-setting-5" value="9,5" />8 飜</label>
                                 <label title="雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,2" />役満</label>
-                                <label title="連盟ルールでは適用される。"><input type="checkbox" name="score-jp-setting" value="21">通常役と複合しない</label>
+                                <label title="連盟ルールでは適用される。"><input type="checkbox" name="score-jp-setting" value="21" />通常役と複合しない</label>
                             </div>
                             <span>大七星</span>
                             <div class="output-option-group">
@@ -452,7 +440,7 @@
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
-            <div class="output-box" id="score-gb" style="display: none;">
+            <div class="output-box" id="score-gb" style="display: none">
                 <div class="title-button-container">
                     <div class="output-title">中国国標麻雀点数計算</div>
                     <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">収納 ▲</button>
@@ -461,29 +449,29 @@
                     <div class="output-options">
                         <span>圈風</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-global-wind" value="27" checked>東</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="28">南</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="29">西</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="30">北</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="27" checked />東</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="28" />南</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="29" />西</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="30" />北</label>
                         </div>
                         <span>門風</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-local-wind" value="27" checked>東</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="28">南</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="29">西</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="30">北</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="27" checked />東</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="28" />南</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="29" />西</label>
+                            <label><input type="radio" name="score-gb-local-wind" value="30" />北</label>
                         </div>
                         <span>和了種類</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-wintype" value="0" checked>出アガリ</label>
-                            <label><input type="radio" name="score-gb-wintype" value="80">ツモ</label>
+                            <label><input type="radio" name="score-gb-wintype" value="0" checked />出アガリ</label>
+                            <label><input type="radio" name="score-gb-wintype" value="80" />ツモ</label>
                         </div>
                         <span>和了状態</span>
                         <div class="output-option-group">
-                            <label><input type="checkbox" name="score-gb-wininfo" value="44">最後の牌</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="46">槓上開花</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="47">搶槓和</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="58">和絕張</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="44" />最後の牌</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="46" />槓上開花</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="47" />搶槓和</label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="58" />和絕張</label>
                         </div>
                         <button onclick="processGBScore()" class="score-button">計算</button>
                     </div>
@@ -607,7 +595,7 @@
             <div class="reference-box mobile-display-only" id="title-box"></div>
             <div class="reference-box">
                 関連ルール：
-                <ul style="margin-top: 0">   
+                <ul style="margin-top: 0">
                     <li><a href="./rules/Renmei.pdf">日本プロ麻雀連盟公式ルール及びWRCルール（連盟ルール）</a></li>
                     <li><a href="./rules/Achieve/Saikouisen.html">最高位戦日本プロ麻雀協会競技規定（最高位戦ルール）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
                     <li><a href="./rules/Achieve/ClubJPM.html">日本プロ麻雀協会競技規定（協会ルール）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
@@ -624,7 +612,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.5 Beta</div>
+            <div class="output-time">v4.7.5</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
@@ -669,7 +657,7 @@
                 loadInput();
             };
             const lang = "ja";
-            const toggleOutputLang = ["展開 ▼" , "収納 ▲"];
+            const toggleOutputLang = ["展開 ▼", "収納 ▲"];
         </script>
     </body>
 </html>

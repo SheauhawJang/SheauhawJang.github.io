@@ -41,10 +41,7 @@
                         The input field supports the following formats, which can be mixed:
                         <ol style="margin-top: 0">
                             <li>Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors, <b>East / South / West / North / White Dragon / Green Dragon / Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same color suffix can only keep the suffix of the rightmost tile.</li>
-                            <li>
-                                Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors,
-                                <b>East / South / West / North / White Dragon / Green Dragon / Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.
-                            </li>
+                            <li>Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors, <b>East / South / West / North / White Dragon / Green Dragon / Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.</li>
                             <li>English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East / South / West / North</b>, are represented by <b>ESWN</b> in order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.</li>
                             <li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Characters=w</b>,<b>Circles=b</b>.</li>
                             <li>Notation Format: Character tiles are represented by Chinese numbers <b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers <b>①②③④⑤⑥⑦⑧⑨</b>. Bamboo tiles are represented by full-width numbers <b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.</li>
@@ -53,10 +50,7 @@
                         <p>About Bonus: <b>Spring / Summer / Autumn / Winter / Plum / Orchid / Chrysanthemum / Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into joker if necessary.<br /></p>
                         About Joker:
                         <ul style="margin-top: 0">
-                            <li>
-                                Non-directional Joker
-                                <img src="./cards/a1j.gif" style="vertical-align: middle" />: Can be considered as any suit or honor tile. Represented by <b>1j/J</b>.
-                            </li>
+                            <li>Non-directional Joker <img src="./cards/a1j.gif" style="vertical-align: middle" />: Can be considered as any suit or honor tile. Represented by <b>1j/J</b>.</li>
                             <li>Characters Joker <img src="./cards/a2j.gif" style="vertical-align: middle" />: Can be considered as any character tile. Represented by <b>2j/im/iw</b>.</li>
                             <li>Circles Joker <img src="./cards/a3j.gif" style="vertical-align: middle" />: Can be considered as any circle tile. Represented by <b>3j/ip/ib</b>.</li>
                             <li>Bamboo Joker <img src="./cards/a4j.gif" style="vertical-align: middle" />: Can be considered as any bamboo tile. Represented by <b>4j/is</b>.</li>
@@ -66,6 +60,17 @@
                             <li>Honors Joker <img src="./cards/a8j.gif" style="vertical-align: middle" />: Can be considered as any honor tile. Represented by <b>8j/iz</b>.</li>
                             <li>Bonus Joker <img src="./cards/a9j.gif" style="vertical-align: middle" />: Can be considered as any bonus tile. Represented by <b>9j/H/X/9h/9f/ih/if</b>.</li>
                         </ul>
+                        About Lain Down Melds:
+                        <ul style="margin-top: 0">
+                            <li>Enclose some tiles with half-width square brackets <b>[]</b> to indicate a fixed lain down meld.
+                            <li>For a Chow (sequence), append a half-width number after the tiles and separate with a half-width comma. The corresponding tile will be marked as obtained by Chow and placed horizontally at the leftmost position.</li>
+                            <li>For a Pung (triplet), append a half-width number after the tiles and separate with a half-width comma. The corresponding tile will be marked as obtained by Pung and placed horizontally.</li>
+                            <li>A fixed set of four tiles is considered a Conceal Kong (quad) by default.</li>
+                            <li>For an Expose Kong (quad), append a half-width number from 1 to 4 after the four tiles, separated by a half-width comma. The corresponding tile will be marked as obtained by Kan and placed horizontally.</li>
+                            <li>For an Extend Kong (quad), append a half-width number from 5 to 8 after the four tiles, separated by a half-width comma. The corresponding tile will be marked as obtained by Pung and placed horizontally.</li>
+                        </ul>
+                        <p>About Replacement Bonus / Nuki Dora: Enclose some tiles with half-width parentheses <b>()</b> to indicate tiles that are replacement bonus or nuki dora.<br /></p>
+                        <p>About Dora: Enclose some tiles with half-width angle brackets <b><></b> to indicate that these tiles are dora indicators. If there is a half-width comma inside the brackets, the tiles on the left of the comma are the front dora indicators, and the tiles on the right are the ura dora indicators.<br /></p>
                     </div>
                 </div>
             </div>
@@ -605,13 +610,13 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.4</div>
+            <div class="output-time">v4.7.5</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
         <script>
             function tilesInfo(tcnt) {
- 4.7.4     const meld = Math.floor(tcnt / 3);
+                const meld = Math.floor(tcnt / 3);
                 let output = `${tcnt} tiles\n`;
                 switch (tcnt % 3) {
                     case 1:

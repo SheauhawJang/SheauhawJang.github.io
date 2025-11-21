@@ -448,6 +448,8 @@
                             <label><input type="checkbox" name="score-jp-wininfo" value="13">Last Tile</label>
                             <label><input type="checkbox" name="score-jp-wininfo" value="12">After a Kong</label>
                             <label><input type="checkbox" name="score-jp-wininfo" value="15">Robbing the Kong</label>
+                            <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />Swallow Counter</label>
+                            <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />Discard After a Kong</label>
                         </div>
                         <button onclick="processJPScore()" class="score-button">Calculate</button>
                     </div>
@@ -563,6 +565,16 @@
                                 <label><input type="checkbox" name="score-jp-setting" value="30" />Yakuman: <span class="fan">Small Bamboo Forest</span></label>
                                 <label><input type="checkbox" name="score-jp-setting" value="31" />Yakuman: <span class="fan">Small Numerous Neighbours</span></label>
                             </div>
+                            <span>Local Lucky Yaku</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>1 Fan: <span class="fan">Swallow Counter</span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>1 Fan: <span class="fan">Discard After a Kong</span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="34" />5 Fan: <span class="fan">1 Circle Under the Sea</span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="35" />5 Fan: <span class="fan">9 Circle Under the River</span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="36" />5 Fan: <span class="fan">5 Circle Blossoming</span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="37" />5 Fan: <span class="fan">Robbing the 2 Bamboo Kong</span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="38" />Yakuman: <span class="fan">Three Years on a Rock</span></label>
+                            </div>
                             <span>Minipoints Jumping</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-8" value="14" checked />ON</label>
@@ -619,7 +631,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.6</div>
+            <div class="output-time">v4.7.7</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>

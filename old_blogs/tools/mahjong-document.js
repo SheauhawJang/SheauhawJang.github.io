@@ -650,7 +650,7 @@ function processGBScore() {
 let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 16;
-const JP_SETTING_SIZE = 32;
+const JP_SETTING_SIZE = 39;
 function processJPScore() {
     if (jp_worker) {
         jp_worker.terminate();
@@ -842,7 +842,7 @@ function loadCheckbox(key) {
     if (cvstorage !== null)
         try {
             cvs = new Set(JSON.parse(cvstorage));
-            cbs.forEach((cb) => (cb.checked = cvs.has(cb.value)));
+            cbs.forEach((cb) => (cb.checked = cvs.has(cb.value), cb.dispatchEvent(new Event("change"))));
         } catch {}
 
     const cf = debounce(() => {
@@ -856,7 +856,7 @@ function loadCheckbox(key) {
 function loadRadio(key) {
     const rds = document.querySelectorAll(`input[name="${key}"]`);
     const sv = localStorage.getItem(key);
-    if (sv) rds.forEach((r) => (r.checked = r.value === sv));
+    if (sv) rds.forEach((r) => (r.checked = r.value === sv, r.dispatchEvent(new Event("change"))));
 
     const rf = debounce(() => {
         const s = Array.from(rds).find((r) => r.checked);
@@ -922,10 +922,9 @@ function processGBSetting(id) {
     const mpp = new Set(positive.map(String)),
         mpn = new Set(negative.map(String));
     cbs.forEach((cb) => {
-        if (mpp.has(cb.value)) cb.checked = true;
-        else if (mpn.has(cb.value)) cb.checked = false;
+        if (mpp.has(cb.value)) cb.checked = true, cb.dispatchEvent(new Event("change"));
+        else if (mpn.has(cb.value)) cb.checked = false, cb.dispatchEvent(new Event("change"));
     });
-    if (cbs.length) cbs[0].dispatchEvent(new Event("change"));
     for (let i = 0; i <= GB_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
         const rds = document.querySelectorAll(`input[name="score-gb-setting-${i}"]`);
@@ -934,20 +933,22 @@ function processGBSetting(id) {
     }
 }
 function processJPSetting(id) {
+    const bigwheels = [26, 27, 28, 29, 30, 31];
+    const luckylocals = [32, 33, 34, 35, 36, 37, 38];
     // prettier-ignore
     const rules = [
-        [[1, 2, 3], [21, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU (0)
-        [[3], [1, 2, 21, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU 7 Stars (1)
-        [[2, 3, 21], [1, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML (2)
-        [[2, 3, 21], [1, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML WRC (3)
-        [[2], [1, 3, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen (4)
-        [[2], [1, 3, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen Classic (5)
-        [[2], [1, 3, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // ClubJPM (6=4)
-        [[2], [1, 3, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // M.League (7=4)
-        [[], [1, 2, 3, 11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // EMA (8)
-        [[1, 2, 3, 13], [11, 24, 25, 26, 27, 28, 29, 30, 31], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Mahjong Soul (9)
-        [[1, 2, 3, 13, 26, 27, 28], [11, 24, 25, 29, 30, 31], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0]], // Mahjong Soul Local Yaku (10)
-        [[2, 3], [1, 11, 24, 25, 26, 27, 28, 29, 30, 31], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Tenhou (11)
+        [[1, 2, 3], [21, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU (0)
+        [[3], [1, 2, 21, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU 7 Stars (1)
+        [[2, 3, 21], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML (2)
+        [[2, 3, 21], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML WRC (3)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen (4)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen Classic (5)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // ClubJPM (6=4)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // M.League (7=4)
+        [[], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // EMA (8)
+        [[1, 2, 3, 13], [11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Mahjong Soul (9)
+        [[1, 2, 3, 13, 26, 27, 28, 32, 33, 34, 35, 38], [11, 24, 25, 29, 30, 31, 36, 37], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0]], // Mahjong Soul Local Yaku (10)
+        [[2, 3], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Tenhou (11)
     ];
     const positive = rules[id][0],
         negative = rules[id][1],
@@ -958,10 +959,9 @@ function processJPSetting(id) {
     const mpp = new Set(positive.map(String)),
         mpn = new Set(negative.map(String));
     cbs.forEach((cb) => {
-        if (mpp.has(cb.value)) cb.checked = true;
-        else if (mpn.has(cb.value)) cb.checked = false;
+        if (mpp.has(cb.value)) cb.checked = true, cb.dispatchEvent(new Event("change"));
+        else if (mpn.has(cb.value)) cb.checked = false, cb.dispatchEvent(new Event("change"));
     });
-    if (cbs.length) cbs[0].dispatchEvent(new Event("change"));
     for (let i = 0; i <= JP_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
         const rds = document.querySelectorAll(`input[name="score-jp-setting-${i}"]`);
@@ -1004,4 +1004,10 @@ function ptsToggle(el) {
     const expanded = el.querySelector('.pts-output');
     collapsed.style.display = el.open ? 'none' : '';
     expanded.style.display = el.open ? '' : 'none';
+}
+function SwitchOption(es, id) {
+    console.log(id);
+    const et = document.getElementById(id);
+    if (et === null) return;
+    et.style.display = es.checked ? '' : 'none';
 }

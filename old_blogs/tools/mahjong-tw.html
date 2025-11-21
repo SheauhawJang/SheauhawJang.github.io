@@ -309,6 +309,8 @@
                             <label><input type="checkbox" name="score-jp-wininfo" value="13">最後一張</label>
                             <label><input type="checkbox" name="score-jp-wininfo" value="12">嶺上開花</label>
                             <label><input type="checkbox" name="score-jp-wininfo" value="15">搶槓</label>
+                            <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返</label>
+                            <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振</label>
                         </div>
                         <button onclick="processJPScore()" class="score-button">計算</button>
                     </div>
@@ -424,6 +426,16 @@
                                 <label><input type="checkbox" name="score-jp-setting" value="29" />小車輪役滿</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="30" />小竹林役滿</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="31" />小數鄰役滿</label>
+                            </div>
+                            <span>古役偶然役</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>燕返 1 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>槓振 1 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="34" />一筒摸月 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="35" />九筒撈魚 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="36" />五筒開花 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="37" />二索搶槓 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="38" />石上三年役滿</label>
                             </div>
                             <span>跳符</span>
                             <div class="output-option-group">
@@ -633,7 +645,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.6</div>
+            <div class="output-time">v4.7.7</div>
             <div class="output-time">聯絡作者：<a href="https://x.com/sheauhaw" style="color: inherit;">三倍滿自動姬</a></div>
         </div>
         <script src="mahjong.js"></script>

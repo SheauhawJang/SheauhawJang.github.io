@@ -2,7 +2,7 @@ importScripts("mahjong.js");
 importScripts("mahjong-score.js");
 importScripts("mahjong-worker-lang.js");
 importScripts("mahjong-mmc.js");
-//console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
+console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
@@ -674,6 +674,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     for (let i = 0; i < aids[2].length; ++i) if ("sp" in aids[2][i]) ++aka;
     let nukicnt = aids[2].length;
     const p = MeldsPermutation(aids);
+    let todo = [() => kernel(substeps, p)];
     if (info.includes(32))
         if (tsumo)
             if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
@@ -691,7 +692,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
                         if (err === 2) return { output: loc.subtile_error_2, brief: "" };
                         itots((ots, ota) =>
                             itsubots((subots) => {
-                                let { listen_type, bilisten, valfus, fus } = JPGetFusMain([...ots, subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
+                                let { listen_type, bilisten, valfus, fus } = JPGetFusMain([...ots, ...subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
                                 let realfus = 0;
                                 ({ valfus, fus, realfus } = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, ots.length + subots.length >= 5 && subots.length === ck));
                                 if (realfus > grf) (gf = fus), (gvf = valfus), (grf = realfus);
@@ -710,15 +711,45 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
                     gans = { ...eans_jp, val: RenhouValueArray[setting[9]], fan: [30], valfan: renhou, fus: gf, valfus: gvf, realfus: grf, print: RenhouPrintArray[setting[9]] };
                 } else infoans.fan.push(30), (infoans.valfan += renhou);
         }
+    if (setting[38] && info.includes(16) && info.includes(13)) infoans.fan.push(66), ++infoans.yakuman;
+    function canBeFixWin(t) {
+        if (aids[0].length === 0) return false;
+        const s = aids[0].at(-1).id;
+        return [t, JokerA[t], JokerB[t], JokerC].includes(s);
+    }
+    function fixWinDo(t, sf, tf, svf, tvf) {
+        const i = infoans.fan.findIndex(e => e === sf);
+        if (i === undefined) return;
+        infoans.fan[i] = tf, infoans.valfan += tvf - svf;
+        const s = aids[0].at(-1).id;
+        --tiles[s], ++tiles[t];
+        aids[0].at(-1).id = t;
+        kernel(JPStep(), MeldsPermutation(aids));
+        aids[0].at(-1).id = s;
+        ++tiles[s], --tiles[t];
+        infoans.fan[i] = sf, infoans.valfan += svf - tvf;
+    }
     if (!infoans.yakuman) {
         if (info.includes(16)) infoans.fan.push(16), (infoans.valfan += 2), (riichi = true);
         else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan, (riichi = true);
         if (riichi && info.includes(3)) infoans.fan.push(3), ++infoans.valfan, (infoans.delete += setting[13] ? 0 : 1);
-        if (info.includes(12) && tsumo) infoans.fan.push(12), ++infoans.valfan;
-        else if (info.includes(13))
-            if (tsumo) infoans.fan.push(13), ++infoans.valfan;
-            else infoans.fan.push(14), ++infoans.valfan;
-        if (info.includes(15) && !tsumo) infoans.fan.push(15), ++infoans.valfan;
+        if (info.includes(12) && tsumo) {
+            infoans.fan.push(12), ++infoans.valfan;
+            if (setting[36] && canBeFixWin(13)) todo.push(() => fixWinDo(13, 12, 64, 1, 5));
+        } else if (info.includes(13))
+            if (tsumo) {
+                infoans.fan.push(13), ++infoans.valfan;
+                if (setting[34] && canBeFixWin(9)) todo.push(() => fixWinDo(9, 13, 62, 1, 5));
+            } else {
+                infoans.fan.push(14), ++infoans.valfan;
+                if (setting[35] && canBeFixWin(17)) todo.push(() => fixWinDo(17, 14, 63, 1, 5));
+            }
+        if (info.includes(15) && !tsumo) {
+            infoans.fan.push(15), ++infoans.valfan;
+            if (setting[37] && canBeFixWin(19)) todo.push(() => fixWinDo(19, 15, 65, 1, 5));
+        }
+        if (setting[32] && info.includes(60) && !tsumo) infoans.fan.push(60), ++infoans.valfan;
+        if (setting[33] && info.includes(61) && !tsumo) infoans.fan.push(61), ++infoans.valfan;
         infoans.valfan += aka + nukicnt;
         infoans.delete += setting[12] ? 0 : aka + nukicnt;
     }
@@ -754,35 +785,38 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         ++cm;
         if (!(cm & 1048575)) postDebugInfo();
     }
-    if (substeps[1] === -1) {
-        const ans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
-        if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
-        else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
-    }
-    if (substeps[2] === -1) {
-        let tcp = tiles.slice();
-        --tcp[aids[0].at(-1).id];
-        let listen_13 = setting[1];
-        for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {
-            const rid = getRealId(tcp, Orphan13Array[i]);
-            if (rid === -1) listen_13 = false;
-            else --tcp[rid];
+    function kernel(substeps, p) {
+        if (substeps[1] === -1) {
+            const ans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
+            if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
+            else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
         }
-        let yakuman = listen_13 ? 2 : 1;
-        yakuman = setting[2] ? yakuman + infoans.yakuman : Math.max(yakuman, infoans.yakuman);
-        let f = [listen_13 ? 37 : 36];
-        if (infoans.yakuman > 0) f.push(infoans.fan);
-        const [valfan, valfus, realfus, fus, pt] = [0, 20, 20, [8], yakuman * 8000];
-        if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
+        if (substeps[2] === -1) {
+            let tcp = tiles.slice();
+            --tcp[aids[0].at(-1).id];
+            let listen_13 = setting[1];
+            for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {
+                const rid = getRealId(tcp, Orphan13Array[i]);
+                if (rid === -1) listen_13 = false;
+                else --tcp[rid];
+            }
+            let yakuman = listen_13 ? 2 : 1;
+            yakuman = setting[2] ? yakuman + infoans.yakuman : Math.max(yakuman, infoans.yakuman);
+            let f = [listen_13 ? 37 : 36];
+            if (infoans.yakuman > 0) f.push(infoans.fan);
+            const [valfan, valfus, realfus, fus, pt] = [0, 20, 20, [8], yakuman * 8000];
+            if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
+        }
+        if (substeps[0] === -1) {
+            const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
+            m = nots * nsubots;
+            mq = ck === aids[1].length;
+            if (err === 1) return { output: loc.subtile_error_1, brief: "" };
+            if (err === 2) return { output: loc.subtile_error_2, brief: "" };
+            itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
+        }
     }
-    if (substeps[0] === -1) {
-        const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
-        m = nots * nsubots;
-        mq = ck === aids[1].length;
-        if (err === 1) return { output: loc.subtile_error_1, brief: "" };
-        if (err === 2) return { output: loc.subtile_error_2, brief: "" };
-        itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
-    }
+    todo.forEach((f) => f());
     if (gans.yakuman) aka = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
     const realpt = setting[15] ? (x) => Math.ceil(x / 100) * 100 : (x) => x;

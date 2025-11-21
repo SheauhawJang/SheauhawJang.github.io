@@ -451,6 +451,8 @@
                             <label><input type="checkbox" name="score-jp-wininfo" value="13" />最后一张</label>
                             <label><input type="checkbox" name="score-jp-wininfo" value="12" />岭上开花</label>
                             <label><input type="checkbox" name="score-jp-wininfo" value="15" />抢杠</label>
+                            <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返</label>
+                            <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />杠振</label>
                         </div>
                         <button onclick="processJPScore()" class="score-button">计算</button>
                     </div>
@@ -567,6 +569,16 @@
                                 <label><input type="checkbox" name="score-jp-setting" value="30" />小竹林役满</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="31" />小数邻役满</label>
                             </div>
+                            <span>古役偶然役</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>燕返 1 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>杠振 1 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="34" />一筒摸月 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="35" />九筒捞鱼 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="36" />五筒开花 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="37" />二索抢杠 5 番</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="38" />石上三年役满</label>
+                            </div>
                             <span>跳符</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-8" value="14" checked />开启</label>
@@ -655,7 +667,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.6 Ex</div>
+            <div class="output-time">v4.7.7 Ex</div>
             <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
         </div>
         <script src="mahjong.js"></script>

@@ -1135,14 +1135,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         (gd += cnt * doras[i]), (gu += cnt * uras[i]);
     }
     v += gd + gu;
-    if (setting[3] && v >= 13) return { val: 8000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
-    if (v >= 11) return { val: 6000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
-    if (v >= 8) return { val: 4000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
-    if (v >= 6) return { val: 3000, yakuman, realyakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
-    let pt = valfus * (1 << (2 + v));
-    if (pt >= 2000) return { val: 2000, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
-    if (setting[7] && pt >= 1920) return { val: 2000, yakuman: 0, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus, print: "kiri_mangan" };
-    return { val: pt, yakuman, valfan: v, fan: f, dora: gd, ura: gu, valfus, realfus, fus };
+    return getJPAnsNormal(setting, f, v, gd, gu, fus, valfus, realfus);
 }
 function PairSelect(cot, ad, au, mask) {
     let [d, u] = [0, 0];
@@ -1339,13 +1332,18 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     dorakernel();
     mv += infoans.delete;
     (gv += mv), gf.push(...mf);
-    if (setting[3] && gv >= 13) return { val: 8000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "counted_yakuman" };
-    if (gv >= 11) return { val: 6000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "sanbaiman" };
-    if (gv >= 8) return { val: 4000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "baiman" };
-    if (gv >= 6) return { val: 3000, yakuman: 0, realyakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "haneman" };
-    let pt = valfus * (1 << (2 + gv));
-    if (pt >= 2000) return { val: 2000, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus, print: "mangan" };
-    return { val: pt, yakuman: 0, valfan: gv, fan: gf, dora: gd, ura: gu, valfus, realfus, fus };
+    return getJPAnsNormal(setting, gf, gv, gd, gu, fus, valfus, realfus);
+}
+function getJPAnsNormal(setting, fan, valfan, dora, ura, fus, valfus, realfus) {
+    const [yakuman, realyakuman] = [0, 0];
+    if (setting[3] && valfan >= 13) return { val: 8000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "counted_yakuman" };
+    if (valfan >= 11) return { val: 6000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "sanbaiman" };
+    if (valfan >= 8) return { val: 4000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "baiman" };
+    if (valfan >= 6) return { val: 3000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "haneman" };
+    const pt = valfus * (1 << (2 + valfan));
+    if (pt >= 2000) return { val: 2000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "mangan" };
+    if (setting[7] && pt >= 1920) return { val: 2000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "kiri_mangan" };
+    return { val: pt, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus };
 }
 const PrintSeq = [1, 16, 60, 61, 3, 15, 12, 13, 14, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 27, 28, 31, 62, 63, 64, 65, 32, 33, 30, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 66, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97];
 const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1];

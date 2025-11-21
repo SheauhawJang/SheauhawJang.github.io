@@ -461,14 +461,14 @@
                         <div class="output-options">
                             <span>役满</span>
                             <div class="output-option-group">
-                                <label title="XJTU规则采用。联盟规则、最高位战规则、协会规则、M.League、XJTU七星杯、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="1" checked />双倍役满</label>
-                                <label title="联盟规则、最高位战规则、协会规则、M.League、XJTU规则采用。XJTU七星杯、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="2" checked />复合役满</label>
-                                <label title="最高位战规则、协会规则、M.League、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累计役满</label>
+                                <label title="XJTU规则采用。新报知规则、联盟规则、最高位战规则、协会规则、M.League、XJTU七星杯、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="1" checked />双倍役满</label>
+                                <label title="联盟规则、最高位战规则、协会规则、M.League、XJTU规则采用。新报知规则、XJTU七星杯、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="2" checked />复合役满</label>
+                                <label title="新报知规则、最高位战规则、协会规则、M.League、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累计役满</label>
                             </div>
                             <span>连风牌雀头</span>
                             <div class="output-option-group">
                                 <label title="雀魂、天凤、XJTU规则、EMA规则采用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
-                                <label title="联盟规则、最高位战规则、协会规则、M.League采用。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
+                                <label title="新报知规则、联盟规则、最高位战规则、协会规则、M.League采用。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
                             </div>
                             <span>切上满贯</span>
                             <div class="output-option-group">
@@ -550,6 +550,7 @@
                             <span>一色四顺</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-16" value="0" checked />关闭</label>
+                                <!--<label><input type="radio" name="score-jp-setting-16" value="22,3" />4 番</label>-->
                                 <label><input type="radio" name="score-jp-setting-16" value="22,1" />役满</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,2" />役满门前</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="23" checked />使用役名四连太宝</label>
@@ -593,10 +594,13 @@
                             <div class="output-option-group">
                                 <button onclick="processJPSetting(0)">XJTU规则</button>
                                 <button onclick="processJPSetting(1)">XJTU七星杯</button>
+                                <button onclick="processJPSetting(12)">新报知规则</button>
                                 <button onclick="processJPSetting(2)">联盟官方规则</button>
                                 <button onclick="processJPSetting(3)">联盟WRC规则</button>
-                                <button onclick="processJPSetting(4)">最高位战规则／协会规则／M.League</button>
+                                <button onclick="processJPSetting(4)">最高位战规则</button>
                                 <button onclick="processJPSetting(5)">最高位战Classic规则</button>
+                                <button onclick="processJPSetting(6)">协会规则</button>
+                                <button onclick="processJPSetting(7)">M.League</button>
                                 <button onclick="processJPSetting(8)">EMA规则</button>
                                 <button onclick="processJPSetting(9)">雀魂</button>
                                 <button onclick="processJPSetting(10)">雀魂古役模式</button>
@@ -657,6 +661,7 @@
                     <li><a href="./rules/WMO-MCR.pdf">世界麻将组织麻将竞赛规则（世麻规则）</a></li>
                     <li><a href="./rules/MIL-MCR.pdf">国际麻将联盟国标麻将规则补充细则（MIL规则）</a></li>
                     <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻将体育协会规则和番种一览（JMSA规则）</a><a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+                    <li><a href="./rules/Shinhouchi.pdf">平成版麻将新报知规则（新报知规则）</a></li>
                     <li><a href="./rules/Renmei.pdf">日本职业麻将联盟官方规则和WRC规则（联盟规则）</a></li>
                     <li><a href="./rules/Achieve/Saikouisen.html">最高位战日本职业麻将协会竞技规定和Classic规则（最高位战规则）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">原始内容</a></li>
                     <li><a href="./rules/Achieve/ClubJPM.html">日本职业麻将协会竞技规定（协会规则）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">原始内容</a></li>
@@ -667,7 +672,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.7 Ex</div>
+            <div class="output-time">v4.7.8 Ex</div>
             <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
         </div>
         <script src="mahjong.js"></script>

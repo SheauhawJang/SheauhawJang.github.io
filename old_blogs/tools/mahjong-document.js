@@ -949,6 +949,7 @@ function processJPSetting(id) {
         [[1, 2, 3, 13], [11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Mahjong Soul (9)
         [[1, 2, 3, 13, 26, 27, 28, 32, 33, 34, 35, 38], [11, 24, 25, 29, 30, 31, 36, 37], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0]], // Mahjong Soul Local Yaku (10)
         [[2, 3], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Tenhou (11)
+        [[], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Shinhouchi (12)
     ];
     const positive = rules[id][0],
         negative = rules[id][1],

@@ -458,9 +458,9 @@
                         <div class="output-options">
                             <span>Yakuman</span>
                             <div class="output-option-group">
-                                <label title="Used in XJTU Rules. Unused in JPML Rules, Saikouisen Rules, ClubJPM Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked />Double Yakuman</label>
-                                <label title="Used in JPML Rules, Saikouisen Rules, ClubJPM Rules, M.League and XJTU Rules. Unused in XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative Yakuman</label>
-                                <label title="Unused in Saikouisen Rules, ClubJPM Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked />Counted Yakuman</label>
+                                <label title="Used in XJTU Rules. Unused in New Hochi Rules, JPML Rules, Saikouisen Rules, ClubJPM Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked />Double Yakuman</label>
+                                <label title="Used in JPML Rules, Saikouisen Rules, ClubJPM Rules, M.League and XJTU Rules. Unused in New Hochi Rules, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative Yakuman</label>
+                                <label title="Unused in New Hochi Rules, Saikouisen Rules, ClubJPM Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked />Counted Yakuman</label>
                             </div>
                             <span>Double Wind Pair</span>
                             <div class="output-option-group">
@@ -589,10 +589,13 @@
                             <div class="output-option-group">
                                 <button onclick="processJPSetting(0)">XJTU Rules</button>
                                 <button onclick="processJPSetting(1)">XJTU 7-stars</button>
+                                <button onclick="processJPSetting(12)">New Hochi Rules</button>
                                 <button onclick="processJPSetting(2)">JPML Official Rules</button>
                                 <button onclick="processJPSetting(3)">JPML WRC Rules</button>
-                                <button onclick="processJPSetting(4)">Saikouisen Rules / ClubJPM Rules / M.League</button>
+                                <button onclick="processJPSetting(4)">Saikouisen Rules</button>
                                 <button onclick="processJPSetting(5)">Saikouisen Classic Rules</button>
+                                <button onclick="processJPSetting(6)">ClubJPM Rules</button>
+                                <button onclick="processJPSetting(7)">M.League</button>
                                 <button onclick="processJPSetting(8)">EMA Rules</button>
                                 <button onclick="processJPSetting(9)">MahjongSoul</button>
                                 <button onclick="processJPSetting(10)">MahjongSoul Local Yaku Mode</button>
@@ -621,6 +624,7 @@
                     <li><a href="./rules/WMO-MCR.pdf">World Mahjong Organization Mahjong Competition Rules (WMO Rules)</a></li>
                     <li><a href="./rules/MIL-MCR.pdf">Supplementary Rules of Mahjong International League to Chinese Official Mahjong Rules (MIL Rules)</a></li>
                     <li><a href="./rules/Achieve/JMSA-MCR.html">Japan Mahjong Sports Association Rules and Overview of Fan (JMSA Rules)</a> <a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">the original</a></li>
+                    <li><a href="./rules/Shinhouchi.pdf">Heisei Edition Mahjong New Hochi Rules (New Hochi Rules)</a></li>
                     <li><a href="./rules/Renmei.pdf">Japan Professional Mahjong League Official Rules and WRC Rules (JPML Rules)</a></li>
                     <li><a href="./rules/Achieve/Saikouisen.html">Saikouisen Nihon Pro Mahjong Association Competition Rules (Saikouisen Rules)</a> <a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">the original</a></li>
                     <li><a href="./rules/Achieve/ClubJPM.html">Nihon Pro Mahjong Association Competition Rules (ClubJPM Rules)</a> <a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">the original</a></li>
@@ -631,7 +635,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.7</div>
+            <div class="output-time">v4.7.8</div>
         </div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>

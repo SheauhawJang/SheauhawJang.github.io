@@ -773,7 +773,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         }
         if (substeps[0] === -1) {
             const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
-            m = nots * nsubots;
+            [cm, m] = [0, nots * nsubots];
             mq = ck === aids[1].length;
             if (err === 1) return { output: loc.subtile_error_1, brief: "" };
             if (err === 2) return { output: loc.subtile_error_2, brief: "" };

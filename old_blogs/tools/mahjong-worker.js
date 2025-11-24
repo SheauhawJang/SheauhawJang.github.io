@@ -684,7 +684,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             const renhou = (JPScoreArray[30] = RenhouScoreArray[setting[9]]);
             if (renhou < 0) infoans.fan.push(30), (infoans.yakuman += -renhou);
             else if (renhou > 0)
-                if (setting[21]) fixYakuSearch(30, renhou);
+                if (setting[39]) fixYakuSearch(30, renhou);
                 else infoans.fan.push(30), (infoans.valfan += renhou);
         }
     if (setting[38] && info.includes(16) && info.includes(13)) infoans.fan.push(66), ++infoans.yakuman;

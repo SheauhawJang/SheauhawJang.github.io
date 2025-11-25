@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,500,700,900&display=swap&subset=japanese');
+@import url('fontello.css');
+@import url('base.css');
+@import url('common.css?update=20241030');
+
+.prepend-20200807{display:none;}

@@ -1,0 +1,292 @@
+// ヘッダーナビ
+(function (){
+	var id = 'nv_'+$('.page').attr('id');
+	$('#'+id).addClass('here');
+}());
+
+$click = false;
+// ページトップ表示
+$(function() {
+	var topBtn = $('#pagetop');
+	topBtn.hide();
+	$(window).scroll(function (){
+		if (!$click){
+			if ($(this).scrollTop() > 300){
+				topBtn.fadeIn();
+			}
+			else{
+				topBtn.fadeOut();
+			}
+		}
+	});
+});
+
+// インデックスメニュー
+function indexMenu(it,name){
+	$('#'+name+' a').removeClass('active');
+	$('.'+name).hide();
+	$(it).addClass('active');
+	$('#'+name+' a').each(function(i){
+		if ($(this).hasClass('active')){
+			$('#'+name+(i+1)).fadeIn();
+		}
+	});
+}
+
+// 折りたたみメニュー
+function toggleMenu(it){
+	var toggle = $(it).next().css('display');
+	$(it).next().slideToggle();
+	$('i',it).toggleClass('icon-plus icon-minus');
+}
+
+
+// ヘッダーナビ
+function headerNav(){
+	if ($('#blackout').length === 0){
+		$('#header').after('<div id="blackout"></div>');
+	}
+	$('#blackout').fadeToggle();
+	$('#pulldown').slideToggle();
+}
+
+// スムーススクロール
+$(function(){
+	$('a[href^=#]').click(function(){
+		var url = $(this).attr('href');
+		if (url.indexOf('#') === url.length-1){var position = 0;}
+		else{
+			var target = $('#'+url.split('#')[1]);
+			var position = target.offset().top-(($(window).width() >= 768)?110:70);
+		}
+		$('body,html').animate({scrollTop:position}, 400, 'swing');
+		return false;
+	});
+});
+
+// 2桁
+function digit(n){
+	if (n >= 10){return n+'';}
+	else{return '0'+n;}
+}
+
+// 時間/分/秒
+function getTime(){
+	var time = new Date(),
+	hour = time.getHours(),
+	min = time.getMinutes()
+	return digit(hour)+''+digit(min);
+}
+
+// 曜日取得
+function getDay(n){
+	var week = ['日','月','火','水','木','金','土'];
+	var s = n+'';
+	var year = s.substring(0,4);
+	var month = s.substring(4,6);
+	var day = s.substring(6,8);
+	myDate = new Date(year,month,day);
+	myWeek = myDate.getDay();
+	return week[myWeek];
+}
+
+// 今日
+function getToday(){
+	var hiduke=new Date(); 
+	var year = hiduke.getFullYear();
+	var month = hiduke.getMonth()+1;
+	var week = hiduke.getDay();
+	var day = hiduke.getDate();
+	return (year+''+digit(month)+''+digit(day))*1;
+}
+
+function pager(id,page){
+	var array = [];
+	if (id == undefined){id = 1;}
+	if (page == undefined){page = 1;}
+	// tab
+	$('#index'+id).fadeIn();
+	for (i=1; i<3; i+=1){
+		if (id == i){$('#tab'+i+' a').addClass('active');}
+		$('#tab'+i+' a').attr('href','?id='+i+'&page=1');
+	}
+	// list
+	page = page*1;
+	var li = '#index'+id+' ul > li';
+	$(li).hide();
+	for (i=1; i<11; i+=1){
+		n = (page-1)*10+i;
+		$(li+':nth-child('+n+')').show();
+		array[i] = n;
+	}
+	// pager
+	var max = Math.floor($(li).length/10)+1;
+	var rem = $(li).length%10;
+	var code = '';
+	if (max !== 1){
+		if (page == 1){
+			code += '<span class="prev off">&lt;&nbsp;</i>前へ</span>　';
+			code += '<span class="next"><a href="?id='+id+'&page=2">次へ</a>&nbsp;&gt;</span>';
+		}
+		else if (page == max || (page+1 == max && rem == 0)){
+			code += '<span class="prev">&lt;&nbsp;<a href="?id='+id+'&page='+(page-1)+'">前へ</a></span>　';
+			code += '<span class="next off">次へ&nbsp;&gt;</span>';
+		}
+		else{
+			code += '<span class="prev">&lt;&nbsp;<a href="?id='+id+'&page='+(page-1)+'">前へ</a></span>　';
+			code += '<span class="next"><a href="?id='+id+'&page='+(page+1)+'">次へ</a>&nbsp;&gt;</span>';
+		}
+	}
+	$('#pager').html(code);
+}
+
+// 読み込み時
+$(document).ready(function (){
+	// ページ内アンカーへスクロール
+	// ----------------------------------------------
+	$(function(){
+		var url = location.href;
+		// #を含む
+		if(url.indexOf('#') > -1){
+			var target = $('#'+url.split('#')[1]);
+			var position = target.offset().top-(($(window).width() >= 768)?110:70);
+			$('body,html').animate({scrollTop:position}, 400, 'swing');
+		}
+		// News&Media
+		if (url.indexOf('/news/') > 0){
+			// get取得
+			var queryString = window.location.search;
+			var queryObject = new Object();
+			if(queryString){
+				queryString = queryString.substring(1);
+				var parameters = queryString.split('&');
+				for (var i = 0; i < parameters.length; i++){
+					var element = parameters[i].split('=');
+					var paramName = decodeURIComponent(element[0]);
+					var paramValue = decodeURIComponent(element[1]);
+					queryObject[paramName] = paramValue;
+				}
+			}
+			pager(queryObject['id'],queryObject['page']);
+		}
+	});
+	// 公開日指定
+	// ----------------------------------------------
+	var url = location.href,
+		classes = '',
+		from = false,
+		end = false,
+		flg,
+		now = getToday()+''+getTime();
+	// 公開
+	if (url.indexOf('?showall') === -1 && url.indexOf('?timer=') === -1){
+		$('.todo').each(function(i){
+			flg = true;
+			classes = ($(this).attr('class'));
+			// 公開前
+			if (classes.indexOf('from-') > -1){
+				from = classes.split('from-')[1].split(' ')[0];
+				from = from.split('-')[0]+''+from.split('-')[1];
+				if (now*1 < from*1){flg = false;}
+			}
+			// 公開終了
+			if (classes.indexOf('to-') > -1){
+				end = classes.split('to-')[1].split(' ')[0];
+				end = end.split('-')[0]+''+end.split('-')[1];
+				if (now*1 >= end*1){flg = false;}
+			}
+			if (flg){$(this).show();}
+		});
+	}
+	// 時間設定
+	else if (url.indexOf('?showall') === -1 && url.indexOf('?timer=') > -1){
+		var time = url.split('?timer=')[1];
+		now = time.split('-')[0]+time.split('-')[1];
+		$('.todo').each(function(i){
+			flg = true;
+			classes = ($(this).attr('class'));
+			// 公開前
+			if (classes.indexOf('from-') > -1){
+				from = classes.split('from-')[1].split(' ')[0];
+				from = from.split('-')[0]+''+from.split('-')[1];
+				if (now*1 < from*1){flg = false;}
+			}
+			// 公開終了
+			if (classes.indexOf('to-') > -1){
+				end = classes.split('to-')[1].split(' ')[0];
+				end = end.split('-')[0]+''+end.split('-')[1];
+				if (now*1 >= end*1){flg = false;}
+			}
+			if (flg){$(this).show();}
+		});
+	}
+	// すべて表示
+	else{
+		$('.todo').each(function(i){
+			var text = '';
+			classes = ($(this).attr('class'));
+			// 公開前
+			if (classes.indexOf('from-') > -1){
+				from = classes.split('from-')[1].split(' ')[0];
+				text = from.slice(0,4)+'/'+from.slice(4,6)+'/'+from.slice(6,8)+' '+from.slice(9,11)+':'+from.slice(11,13);
+				text += ' から ';
+			}
+			// 公開終了
+			if (classes.indexOf('to-') > -1){
+				end = classes.split('to-')[1].split(' ')[0];
+				text += end.slice(0,4)+'/'+end.slice(4,6)+'/'+end.slice(6,8)+' '+end.slice(9,11)+':'+end.slice(11,13);
+				text += ' まで ';
+			}
+			text += '表示';
+			$(this).addClass('showall');
+			$(this).prepend('<div class="timer">'+text+'</div>');
+			$(this).show();
+		});
+	}
+});
+
+// メニュー現在地
+function activeMenu(){
+	var url = location.href;
+	var list = $('#pulldown li > a');
+	for (var i=0; i<list.length; i+=1){
+		if (url.indexOf($(list[i]).attr('name')) > 0){
+			$(list[i]).addClass('active');
+		}
+	}
+}
+
+$(document).ready(function (){
+	activeMenu();
+});
+
+// ブラウザサイズ変更時
+$(window).on('load resize', function(){
+	// 共通
+	// PC
+	if($(window).width() >= 768){
+		// プルダウン表示調整
+		$('#pulldown').show();
+	}
+	//SP
+	else{
+		// プルダウン表示調整
+		$('#pulldown, #blackout').hide();
+	}
+});
+
+// クリック時
+$(document).on('click touchend', function(event) {
+	// PC
+	if($(window).width() >= 768){
+	}
+	//SP
+	else{
+		// プルダウンメニュー 非表示
+		if (!$(event.target).closest('#nav > i').length) {
+			$('#pulldown').slideUp();
+			$('#blackout').fadeOut();
+		}
+	}
+});
+

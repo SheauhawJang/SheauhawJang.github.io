@@ -1,0 +1,85 @@
+/*
+Calendar
+*/
+.xo-event-calendar { font-family: "Helvetica Neue", Helvetica, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif; }
+.xo-event-calendar table { table-layout: fixed; border-collapse: separate; border-spacing: 0; margin: 0; padding: 0; width: 100%; background-color: #fff; color: #333; }
+.xo-event-calendar table tr { display: table-row; }
+.xo-event-calendar table td,
+.xo-event-calendar table th { display: table-cell; padding: 0; }
+
+.xo-event-calendar { position: relative; }
+.xo-event-calendar .xo-month { position: relative; }
+
+.xo-event-calendar table.xo-month { margin: 0 0 8px 0; padding: 0; border: 1px solid #ccc; border-width: 1px 0 1px 1px; }
+.xo-event-calendar table.xo-month th,
+.xo-event-calendar table.xo-month td { padding: 0; border: 1px solid #ccc; }
+
+.xo-event-calendar table.xo-month > caption { /*background-color: #fff;*/ caption-side: top; text-align: center; }
+.xo-event-calendar table.xo-month .month-header { margin: 2px 0 4px; }
+.xo-event-calendar table.xo-month .month-header > span { display: inline-block; text-align: center; font-size: 120%; vertical-align: middle; line-height: 28px; }
+.xo-event-calendar table.xo-month button { margin: 0; padding: 0; color: #333; background-color: transparent; border: 0; box-shadow: none; text-shadow: none; cursor: pointer; width: 28px; }
+.xo-event-calendar table.xo-month button[disabled] { opacity: 0.3; cursor: default; }
+.xo-event-calendar table.xo-month button > span { width: 28px; height: 28px; line-height: 28px; font-size: 22px; text-align: center; vertical-align: middle; }
+.xo-event-calendar table.xo-month button span.nav-prev { display: inline-block; background: url("../images/nav-prev.svg") no-repeat center center; background-size: 14px 18px; width: 28px; height: 28px; font-size: 0; }
+.xo-event-calendar table.xo-month button span.nav-next { display: inline-block; background: url("../images/nav-next.svg") no-repeat center center; background-size: 14px 18px; width: 28px; height: 28px; font-size: 0; }
+.xo-event-calendar table.xo-month .month-prev { float: left; }
+.xo-event-calendar table.xo-month .month-next { float: right; }
+
+.xo-event-calendar table.xo-month > thead th { border-width: 0 1px 0 0; padding: 1px 0; text-align: center; font-size: 100%; font-weight: bold; }
+.xo-event-calendar table.xo-month > thead th.sunday { color: #d00; }
+.xo-event-calendar table.xo-month > thead th.saturday { color: #00d; }
+
+.xo-event-calendar table.xo-month .month-week { position: relative; padding: 0; border: 0; width: 100%; overflow: hidden; }
+.xo-event-calendar table.xo-month .month-week table { border: 0; margin: 0; padding: 0; }
+.xo-event-calendar table.xo-month .month-dayname { position: absolute; top: 0; left: 0; bottom: 0; right: 0; border-width: 1px 0 0 1px; }
+.xo-event-calendar table.xo-month .month-dayname td { border-width: 1px 1px 0 0; padding: 0; }
+.xo-event-calendar table.xo-month .month-dayname td div { height: 1000px; padding: 4px; border-width: 1px 1px 0 0; text-align: right; font-size: 100%; line-height: 1.2em; }
+.xo-event-calendar table.xo-month .month-dayname td div.other-month { opacity: 0.6; }
+.xo-event-calendar table.xo-month .month-dayname td div.today { color: #00d; font-weight: bold; }
+.xo-event-calendar table.xo-month .month-dayname-space { position: relative; top: 0; height: 1.5em; }
+.xo-event-calendar table.xo-month .month-event { position: relative; top: 0; background-color: transparent; }
+.xo-event-calendar table.xo-month .month-event td { padding: 0 1px 2px 1px; border-width: 0 1px 0 0; }
+.xo-event-calendar table.xo-month .month-event-space { height: 1.5em; background-color: transparent; }
+.xo-event-calendar table.xo-month .month-event-space td { border-width: 0 1px 0 0; }
+.xo-event-calendar table.xo-month .month-event tr,
+.xo-event-calendar table.xo-month .month-event-space tr { background-color: transparent; }
+.xo-event-calendar table.xo-month .month-event-title { padding: 0 3px; display: block; color: #666; text-align: left; font-size: 0.8em; background-color: #ccc; border-radius: 3px; white-space: nowrap; overflow: hidden; }
+
+.xo-event-calendar p.holiday-title { margin: 0; padding: 2px 0; font-size: 90%; vertical-align: middle; }
+.xo-event-calendar p.holiday-title span { margin: 0 6px 0 0; padding: 0 0 0 18px; border: 1px solid #ccc; }
+
+.widget .xo-event-calendar table.xo-month > thead th { font-size: 90%; }
+
+/*
+Loading animation
+*/
+.xo-event-calendar .loading-animation { position: absolute; top: 50%; left: 50%; margin: -20px 0 0 -20px; }
+.xoec-loading .xo-months { opacity: 0.5; }
+
+.xoec-loading .loading-animation {
+	width: 40px; height: 40px;
+	border: 5px rgba(0,0,0,0.2) solid;
+	border-top: 5px #4285f4 solid;
+	border-radius: 50%;
+	-webkit-animation: loadingCircRot .8s infinite linear;
+	animation: loadingCircRot .8s infinite linear;
+}
+@-webkit-keyframes loadingCircRot {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(359deg); }
+}
+@keyframes loadingCircRot {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(359deg); }
+}
+
+/*
+Event Content
+*/
+.xo-event-meta { padding: 3.8461% 0; }
+.xo-event-meta span { display: block; }
+
+/*
+Twenty Nineteen theme
+*/
+html[lang="ja"] .xo-event-calendar .dashicons { font-family: dashicons !important; }

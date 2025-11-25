@@ -1,0 +1,67 @@
+div.whatsnew {
+  margin: 10px 0;
+  font-size: 100%;
+  word-break: break-all;
+  overflow: hidden;
+}
+
+div.whatsnew a {
+  padding: 7px 0;
+  display: block;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+div.whatsnew a:hover {
+  background-color: #f5f5f5;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+div.whatsnew hr {
+  margin: 0;
+  padding: 0;
+}
+
+div.whatsnew .newmark {
+  font-size: 74%;
+  padding: 1px 5px;
+  vertical-align: middle;
+  color: White;
+  background-color: #ff4500;
+  border-radius: 3px;
+}
+
+div.whatsnew dl {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+div.whatsnew dt {
+  margin: 0 0 0 0.3em;
+  padding: 0;
+  border: 0;
+  color: Gray;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+div.whatsnew dd {
+  margin: 0;
+  padding: 0 2px;
+}
+
+@media screen and (min-width: 600px) {
+  div.whatsnew dl {
+    overflow: hidden;
+  }
+  div.whatsnew dt {
+    float: left;
+    width: 8.1em;
+    overflow: hidden;
+  }
+  div.whatsnew dd {
+    overflow: hidden;
+  }
+}

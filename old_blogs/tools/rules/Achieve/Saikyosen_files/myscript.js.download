@@ -1,0 +1,18 @@
+﻿/*---------------------------------------------
+	Slide Menu
+  ---------------------------------------------*/
+
+(function($){
+
+$(function(){
+  $("#gnav-btn").on("click",
+  function(){
+    $("#gnav").slideToggle();
+    $("header").toggleClass("clicked");
+  });
+});
+
+})(jQuery);
+
+
+

@@ -321,18 +321,18 @@
                         <div class="output-options">
                             <span>役滿</span>
                             <div class="output-option-group">
-                                <label title="XJTU規則採用。新報知規則、最高位戰規則、聯盟規則、協會規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked />雙倍役滿</label>
-                                <label title="最高位戰規則、聯盟規則、協會規則、M.League、XJTU規則採用。新報知規則、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />複合役滿</label>
-                                <label title="新報知規則、最高位戰規則、協會規則、M.League、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累計役滿</label>
+                                <label title="XJTU規則採用。新報知規則、最高位戰規則、聯盟規則、協會規則、RMU規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked />雙倍役滿</label>
+                                <label title="最高位戰規則、聯盟規則、協會規則、RMU規則、M.League、XJTU規則採用。新報知規則、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />複合役滿</label>
+                                <label title="新報知規則、最高位戰規則、協會規則、RMU規則、M.League、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="3" checked />累計役滿</label>
                             </div>
                             <span>連風牌雀頭</span>
                             <div class="output-option-group">
                                 <label title="雀魂、天鳳、XJTU規則、EMA規則採用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
-                                <label title="新報知規則、最高位戰規則、聯盟規則、協會規則、M.League採用。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
+                                <label title="新報知規則、最高位戰規則、聯盟規則、協會規則、RMU規則、M.League採用。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
                             </div>
                             <span>切上滿貫</span>
                             <div class="output-option-group">
-                                <label title="最高位戰規則、聯盟WRC規則、協會規則、M.League採用。最高位戰Classic規則、聯盟官方規則不採用。"><input type="radio" name="score-jp-setting-3" value="7" />開啟</label>
+                                <label title="最高位戰規則、聯盟WRC規則、協會規則、RMU規則、M.League採用。最高位戰Classic規則、聯盟官方規則不採用。"><input type="radio" name="score-jp-setting-3" value="7" />開啟</label>
                                 <label><input type="radio" name="score-jp-setting-3" value="0" checked />關閉</label>
                             </div>
                             <span>食斷</span>
@@ -376,7 +376,7 @@
                                 <label><input type="radio" name="score-jp-setting-5" value="9,4" />6 番</label>
                                 <label><input type="radio" name="score-jp-setting-5" value="9,5" />8 番</label>
                                 <label title="雀魂古役模式採用。"><input type="radio" name="score-jp-setting-5" value="9,2" />役滿</label>
-                                <label title="聯盟規則採用。"><input type="checkbox" name="score-jp-setting" value="39">不與通常役複合</label>
+                                <label title="聯盟規則、EMA規則採用。"><input type="checkbox" name="score-jp-setting" value="39">不與通常役複合</label>
                             </div>
                             <span>大七星</span>
                             <div class="output-option-group">
@@ -458,8 +458,9 @@
                                 <button onclick="processJPSetting(5)">最高位戰Classic規則</button>
                                 <button onclick="processJPSetting(2)">聯盟官方規則</button>
                                 <button onclick="processJPSetting(3)">聯盟WRC規則</button>
-                                <button onclick="processJPSetting(12)">μ規則</button>
+                                <button onclick="processJPSetting(13)">μ規則</button>
                                 <button onclick="processJPSetting(6)">協會規則</button>
+                                <button onclick="processJPSetting(14)">RMU規則</button>
                                 <button onclick="processJPSetting(7)">M.League</button>
                                 <button onclick="processJPSetting(8)">EMA規則</button>
                                 <button onclick="processJPSetting(9)">雀魂</button>
@@ -640,7 +641,7 @@
                     <li><a href="./rules/JPML-Riichi.pdf">日本職業麻將聯盟官方規則和WRC規則（聯盟規則）</a></li>
                     <li><a href="./rules/Mu-Riichi.pdf">麻將聯合官方規則（μ規則）</a></li>
                     <li><a href="./rules/Achieve/ClubJPM.html">日本職業麻將協會競技規定（協會規則）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-<!--No Summary-->   <li><a href="./rules/Achieve/RMU.html">RMU規則</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                    <li><a href="./rules/Achieve/RMU.html">RMU規則</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">原始內容</a></li>
 <!--No Summary-->   <li><a href="./rules/Zendanshin.pdf">全國麻將段位審查會競技規定（全段審規則）</a></li>
 <!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">日本健康麻將協會健康麻將規則（健康規則）</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">學生麻將聯盟競技規定（学雀聯規則）</a><a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">原始內容</a></li>

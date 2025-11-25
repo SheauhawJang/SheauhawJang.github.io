@@ -460,18 +460,18 @@
                         <div class="output-options">
                             <span>Yakuman</span>
                             <div class="output-option-group">
-                                <label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubJPM Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked />Double Yakuman</label>
-                                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative Yakuman</label>
-                                <label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubJPM Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked />Counted Yakuman</label>
+                                <label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked />Double Yakuman</label>
+                                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative Yakuman</label>
+                                <label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubJPM Rules, RMU Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked />Counted Yakuman</label>
                             </div>
                             <span>Double Wind Pair</span>
                             <div class="output-option-group">
                                 <label title="Used in MahjongSoul, Tenhou, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-1" value="0" checked />4 Minipoints</label>
-                                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 Minipoints</label>
+                                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 Minipoints</label>
                             </div>
                             <span>Rounded-up Mangan</span>
                             <div class="output-option-group">
-                                <label title="Used in Saikouisen Rules, JPML WRC Rules, ClubJPM Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
+                                <label title="Used in Saikouisen Rules, JPML WRC Rules, ClubJPM Rules, RMU Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
                                 <label><input type="radio" name="score-jp-setting-3" value="0" checked />OFF</label>
                             </div>
                             <span>Open <span class="fan">All Simples</span></span>
@@ -515,7 +515,7 @@
                                 <label><input type="radio" name="score-jp-setting-5" value="9,4" />6 Fan</label>
                                 <label><input type="radio" name="score-jp-setting-5" value="9,5" />8 Fan</label>
                                 <label title="Used in MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-5" value="9,2" />Yakuman</label>
-                                <label title="Used in JPML Rules."><input type="checkbox" name="score-jp-setting" value="39">Calculate Independently</label>
+                                <label title="Used in JPML Rules and EMA Rules."><input type="checkbox" name="score-jp-setting" value="39">Calculate Independently</label>
                             </div>
                             <span><span class="fan">Big Seven Stars</span></span>
                             <div class="output-option-group">
@@ -596,8 +596,9 @@
                                 <button onclick="processJPSetting(5)">Saikouisen Classic Rules</button>
                                 <button onclick="processJPSetting(2)">JPML Official Rules</button>
                                 <button onclick="processJPSetting(3)">JPML WRC Rules</button>
-                                <button onclick="processJPSetting(12)">μ Rules</button>
+                                <button onclick="processJPSetting(13)">μ Rules</button>
                                 <button onclick="processJPSetting(6)">ClubJPM Rules</button>
+                                <button onclick="processJPSetting(14)">RMU Rules</button>
                                 <button onclick="processJPSetting(7)">M.League</button>
                                 <button onclick="processJPSetting(8)">EMA Rules</button>
                                 <button onclick="processJPSetting(9)">MahjongSoul</button>
@@ -632,7 +633,7 @@
                     <li><a href="./rules/JPML-Riichi.pdf">Japan Professional Mahjong League Official Rules and WRC Rules (JPML Rules)</a></li>
                     <li><a href="./rules/Mu-Riichi.pdf">Mahjong Union Official Rules (μ Rules)</a></li>
                     <li><a href="./rules/Achieve/ClubJPM.html">Nihon Pro Mahjong Association Competition Rules (ClubJPM Rules)</a> <a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">the original</a></li>
-<!--No Summary-->   <li><a href="./rules/Achieve/RMU.html">RMU Rules</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">the original</a></li>
+                    <li><a href="./rules/Achieve/RMU.html">RMU Rules</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">the original</a></li>
 <!--No Summary-->   <li><a href="./rules/Zendanshin.pdf">National Mahjong Rank Committee Competition Rules (Zendanshin Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">Japan Kenko-Mahjong Assciation Healthy Mahjong Rules (Healthy Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">Student Mahjong Assciation Competition Rules (Gakujanren Rules)</a> <a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">the original</a></li>

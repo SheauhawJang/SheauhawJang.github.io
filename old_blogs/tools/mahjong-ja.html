@@ -309,14 +309,14 @@
                         <div class="output-options">
                             <span>役満</span>
                             <div class="output-option-group">
-                                <label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked />ダブル役満</label>
-                                <label title="最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTUルールでは適用される。新報知ルール・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="2" checked />役満複合</label>
-                                <label title="新報知ルール・最高位戦ルール・協会ルール・RMUルール・Mリーグ・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="3" checked />数え役満</label>
+                                <label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked />ダブル役満</label>
+                                <label title="最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTUルールでは適用される。新報知ルール・全段審ルール・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="2" checked />役満複合</label>
+                                <label title="新報知ルール・最高位戦ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="3" checked />数え役満</label>
                             </div>
                             <span>連風牌雀頭</span>
                             <div class="output-option-group">
                                 <label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
-                                <label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
+                                <label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
                             </div>
                             <span>切り上げ満貫</span>
                             <div class="output-option-group">
@@ -356,10 +356,10 @@
                                 <label><input type="checkbox" name="score-jp-setting-7" value="12" />表ドラを含める</label>
                                 <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting-7" value="13" checked />一発を含める</label>
                             </div>
-                            <span>人和</span>
+                            <span title="只今「ロン」と「第一巡目」の両方が選択されている場合に人和として計算します。人和の定義には揺れがあるため、「第一巡目」に該当するかは採用ルールに応じて利用者ご自身で判断してください。">人和</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-5" value="0" />なし</label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,3" />4 飜</label>
+                                <label title="全段審ルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,3" />4 飜</label>
                                 <label title="連盟ルール・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 飜</label>
                                 <label><input type="radio" name="score-jp-setting-5" value="9,4" />6 飜</label>
                                 <label><input type="radio" name="score-jp-setting-5" value="9,5" />8 飜</label>
@@ -449,6 +449,7 @@
                                 <button onclick="processJPSetting(13)">μルール</button>
                                 <button onclick="processJPSetting(6)">協会ルール</button>
                                 <button onclick="processJPSetting(14)">RMUルール</button>
+                                <button onclick="processJPSetting(15)">全段審ルール</button>
                                 <button onclick="processJPSetting(7)">Mリーグ</button>
                                 <button onclick="processJPSetting(8)">EMAルール</button>
                                 <button onclick="processJPSetting(9)">雀魂</button>
@@ -630,7 +631,7 @@
                     <li><a href="./rules/Mu-Riichi.pdf">麻将連合公式ルール（μルール）</a></li>
                     <li><a href="./rules/Achieve/ClubJPM.html">日本プロ麻雀協会競技規定（協会ルール）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
                     <li><a href="./rules/Achieve/RMU.html">RMUルール</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-<!--No Summary-->   <li><a href="./rules/Zendanshin.pdf">全国麻雀段位審査会競技規定（全段審ルール）</a></li>
+                    <li><a href="./rules/Zendanshin.pdf">全国麻雀段位審査会競技規定（全段審ルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">日本健康麻将協会健康マージャンルール（健康ルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">学生麻雀連盟競技規定（学雀連ルール）</a><a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
                     <li><a href="./rules/Achieve/MLeague.html">Mリーグの公式戦ルール（Mリーグ）</a><a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>

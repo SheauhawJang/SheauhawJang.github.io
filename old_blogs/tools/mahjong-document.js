@@ -649,8 +649,8 @@ function processGBScore() {
 }
 let jp_worker = null;
 let jp_worker_info;
-const JP_RADIO_MAX = 16;
-const JP_SETTING_SIZE = 40;
+const JP_RADIO_MAX = 17;
+const JP_SETTING_SIZE = 44;
 function processJPScore() {
     if (jp_worker) {
         jp_worker.terminate();
@@ -935,24 +935,25 @@ function processGBSetting(id) {
 function processJPSetting(id) {
     const bigwheels = [26, 27, 28, 29, 30, 31];
     const luckylocals = [32, 33, 34, 35, 36, 37, 38];
+    const localyaku0 = Array(8).fill(0);
     // prettier-ignore
     const rules = [
-        [[1, 2, 3], [39, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU (0)
-        [[3], [1, 2, 39, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // XJTU 7 Stars (1)
-        [[2, 3, 39], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML (2)
-        [[2, 3, 39], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // JPML WRC (3)
-        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen (4)
-        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Saikouisen Classic (5)
-        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // ClubJPM (6=4)
-        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // M.League (7=4)
-        [[39], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // EMA (8)
-        [[1, 2, 3, 13], [11, 24, 25, ...bigwheels, ...luckylocals], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Mahjong Soul (9)
-        [[1, 2, 3, 13, 26, 27, 28, 32, 33, 34, 35, 38], [11, 24, 25, 29, 30, 31, 36, 37], [4, 0, 6, 0, 0, "9,2", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0]], // Mahjong Soul Local Yaku (10)
-        [[2, 3], [1, 11, 24, 25, ...bigwheels, ...luckylocals], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Tenhou (11)
-        [[], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Shinhouchi (12)
-        [[], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Mu (13=12)
-        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // RMU (14=4)
-        [[], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals], [4, 5, 6, 0, 0, "9,3", 0, undefined, 14, 15, 0, 0, 0, 0, 0, 0, 0]], // Zendanshin (15)
+        [[1, 2, 3], [39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, ...localyaku0]], // XJTU (0)
+        [[3], [1, 2, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, ...localyaku0]], // XJTU 7 Stars (1)
+        [[2, 3, 39], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0]], // JPML (2)
+        [[2, 3, 39], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, ...localyaku0]], // JPML WRC (3)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // Saikouisen (4)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // Saikouisen Classic (5)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // ClubJPM (6=4)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // M.League (7=4)
+        [[39], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0]], // EMA (8)
+        [[1, 2, 3, 13], [11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // Mahjong Soul (9)
+        [[1, 2, 3, 13, 26, 27, 28, 32, 33, 34, 35, 38], [11, 24, 25, 29, 30, 31, 36, 37, 41, 42, 43], [4, 0, 6, 0, 0, "9,2", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0, "40,2"]], // Mahjong Soul Local Yaku (10)
+        [[2, 3], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // Tenhou (11)
+        [[], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // Shinhouchi (12)
+        [[], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // Mu (13=12)
+        [[2], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0]], // RMU (14=4)
+        [[], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, "9,3", 0, undefined, 14, 15, ...localyaku0]], // Zendanshin (15)
     ];
     const positive = rules[id][0],
         negative = rules[id][1],
@@ -1010,7 +1011,6 @@ function ptsToggle(el) {
     expanded.style.display = el.open ? '' : 'none';
 }
 function SwitchOption(es, id) {
-    console.log(id);
     const et = document.getElementById(id);
     if (et === null) return;
     et.style.display = es.checked ? '' : 'none';

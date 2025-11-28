@@ -666,6 +666,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray.length; ++i) if (JPScoreArray[i] <= -2) JPScoreArray[i] = -1;
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
+    JPScoreArray[67] = [0, 1, 2, 1.5, 2, 5, -1, -1][setting[40]];
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
     let aka = 0;

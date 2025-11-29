@@ -1144,6 +1144,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     (v += tri[33]), f.push(...Array(tri[33]).fill(9));
     if (melds.length >= 5 && (mq || setting[4]) && isMask(marr, NoOrphanArray)) ++v, f.push(4);
     if (mq && tsumo) ++v, f.push(2);
+    if (setting[44] && aids[0].length === 2 && aids[1].length >= 4 && ck === 0) ++v, f.push(68);
     let [gd, gu] = [0, 0];
     let vaildora = nuki.slice();
     for (let i = 0; i < melds.length; ++i)
@@ -1365,6 +1366,6 @@ function getJPAnsNormal(setting, fan, valfan, dora, ura, fus, valfus, realfus) {
     if (setting[7] && pt >= 1920) return { val: 2000, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus, print: "kiri_mangan" };
     return { val: pt, yakuman, realyakuman, valfan, fan, dora, ura, valfus, realfus, fus };
 }
-const PrintSeq = [1, 16, 60, 61, 3, 15, 65, 12, 64, 13, 62, 14, 63, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 67, 27, 28, 31, 32, 33, 30, 66, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97];
+const PrintSeq = [1, 16, 60, 61, 68, 3, 15, 65, 12, 64, 13, 62, 14, 63, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 67, 27, 28, 31, 32, 33, 30, 66, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97];
 const JPScoreArray = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1.5, 2, 1.5, 2, 2, 1.5, 2, 2, 2.5, 2.5, 3, 5, 5.5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1.5, -2, 2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

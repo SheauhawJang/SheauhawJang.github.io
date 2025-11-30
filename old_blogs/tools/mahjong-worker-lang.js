@@ -735,7 +735,7 @@ const en_loc = {
     win: "Win",
     ready: "Ready",
     steps: "steps to ready",
-    tuixiang: "Theory of back-tracking steps to ready",
+    tuixiang: "Theory of back-tracking steps to ready<wbr>",
     windvd: "Winning tiles division",
     windvd_else_head: "And other",
     windvd_else_tail: "winning tiles dividing ways.",

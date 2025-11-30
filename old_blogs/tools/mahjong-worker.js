@@ -104,7 +104,7 @@ function normalStep() {
     }
     const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g) => NormalWaiting(tiles, step + i, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt));
     output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}${loc.brace_left}${getWaitingType(step + 1)}${loc.brace_right}${r.output[1]}`;
+    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(step + 1)}${loc.brace_right}</span>${r.output[1]}`;
     return { output, step, save: r.ans, dvd };
 }
 function updateTableGeneral(table, info) {
@@ -182,7 +182,7 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     }
     const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g) => JPWaiting(tiles, stepJP + i, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt));
     output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}${loc.brace_left}${getWaitingType(stepJP + 1)}${loc.brace_right}${r.output[1]}`;
+    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(stepJP + 1)}${loc.brace_right}</span>${r.output[1]}`;
     return { output, substep: rsubstep, dvds };
 }
 function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
@@ -255,7 +255,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     }
     const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g) => JP3pWaiting(tiles, step3p + i, substep, full_tcnt, d, g), () => JP3pPrecheck(tiles, step3p, substep, full_tcnt));
     output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}${loc.brace_left}${getWaitingType(step3p + 1)}${loc.brace_right}${r.output[1]}`;
+    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(step3p + 1)}${loc.brace_right}</span>${r.output[1]}`;
     return { output, substep: rsubstep, dvds };
 }
 function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5)) {
@@ -349,7 +349,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
     }
     const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g, f) => GBWaiting(tiles, stepGB + i, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks));
     output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}${loc.brace_left}${getWaitingType(stepGB + 1)}${loc.brace_right}${r.output[1]}`;
+    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(stepGB + 1)}${loc.brace_right}</span>${r.output[1]}`;
     return { output, substep: rsubstep, dvds };
 }
 function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4)) {
@@ -427,7 +427,7 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
     }
     const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g, f) => TWWaiting(tiles, stepTW + i, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks));
     output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}${loc.brace_left}${getWaitingType(stepTW + 1)}${loc.brace_right}${r.output[1]}`;
+    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(stepTW + 1)}${loc.brace_right}</span>${r.output[1]}`;
     return { output, substep: rsubstep, dvds };
 }
 function GBFanDiv(fan) {

@@ -93,13 +93,13 @@ input[type="text"] {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0px 10px
+    gap: 0px 5px
 }
 
 .devided-waiting-container {
     display: flex; 
     white-space: nowrap;
-    gap: 0px 10px
+    gap: 0px 5px
 }
 
 .devided-waiting-brief {

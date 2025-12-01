@@ -2,7 +2,7 @@ importScripts("mahjong.js");
 importScripts("mahjong-score.js");
 importScripts("mahjong-worker-lang.js");
 importScripts("mahjong-mmc.js");
-console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
+//console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
@@ -15,11 +15,12 @@ function cardImage(id) {
 function cardImageDivide(id) {
     return `<div class="card-div"><img src="./cards/${cardName(id)}.gif" class="no-helper"></div>`;
 }
+const maskMultiply = (result, mask) => result.map((x, i) => mask[i] ? x : Infinity);
 const divideSpace = `<div class="card-div card-padding"></div>`;
-function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks) {
+function printWaiting(step, getWaiting, getSubchecks, fk) {
     if (full_tcnt !== tcnt) {
         let result = "";
-        const save = getWaiting(0, undefined, undefined, (s) => s);
+        const save = getWaiting(step, undefined, undefined, (s) => s);
         const { ans, gans } = save;
         if (gans !== undefined) {
             const bcnt = CountWaitingCards(tiles, subtiles, ans);
@@ -31,54 +32,78 @@ function printWaiting(tiles, tcnt, full_tcnt, subtiles, getWaiting, getSubchecks
             const cnt = CountWaitingCards(tiles, subtiles, ans);
             result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
         }
-        return { output: [makeTable(result)], ans: { waiting: save } };
+        return { output: makeTable(result), ans: { waiting: save } };
     } else {
-        let [result, nxt_result] = ["", ""];
-        const [save, nxt_save] = [Array(sizeAT), Array(sizeAT)];
-        const [cnts, nxt_cnts] = [[], []];
+        let [result, nxt_result, kang_result] = ["", "", ""];
+        const [save, nxt_save, kang_save] = [Array(sizeAT), Array(sizeAT), Array(sizeUT)];
+        const [cnts, nxt_cnts, kang_cnts] = [[], [], []];
         const subchecks = getSubchecks();
         const { dischecks, getchecks } = subchecks;
         for (let i = 0; i < sizeAT; ++i) {
             if (!tiles[i]) continue;
-            tiles[i]--, subtiles[i]++;
-            save[i] = getWaiting(0, dischecks[i], getchecks, (s) => s?.[i]);
+            --tiles[i], ++subtiles[i];
+            save[i] = getWaiting(step, dischecks[i], getchecks, (s) => s?.[i]);
             const { ans, gans, checked } = save[i];
             if (checked) {
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {
                     const gcnt = CountWaitingCards(tiles, subtiles, gans);
                     cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i });
-                } else cnts.push({ cnt: cnt, id: i });
+                } else cnts.push({ cnt, id: i });
             } else {
-                nxt_save[i] = getWaiting(1, undefined, undefined, () => undefined);
+                nxt_save[i] = getWaiting(step + 1, undefined, undefined, () => undefined);
                 const { ans, gans } = nxt_save[i];
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {
                     const gcnt = CountWaitingCards(tiles, subtiles, gans);
                     nxt_cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i });
-                } else nxt_cnts.push({ cnt: cnt, id: i });
+                } else nxt_cnts.push({ cnt, id: i });
             }
-            tiles[i]++, --subtiles[i];
+            ++tiles[i], --subtiles[i];
+            if (i < sizeUT && tiles[i] >= 4) {
+                tiles[i] -= 4, subtiles[i] += 4, full_tcnt -= 3, tcnt -= 4, ++subcnt;
+                const stepk = fk();
+                if (stepk < step) continue;
+                kang_save[i] = getWaiting(stepk, undefined, undefined, () => undefined);
+                const pushf = stepk === step ? ((u, id) => cnts.push({...u, id: id + sizeAT})) : ((u, id) => kang_cnts.push({...u, id, step: stepk}));
+                const { ans, gans } = kang_save[i];
+                const cnt = CountWaitingCards(tiles, subtiles, ans);
+                if (gans !== undefined) {
+                    const gcnt = CountWaitingCards(tiles, subtiles, gans);
+                    pushf({ cnt: cnt + gcnt, bcnt: cnt, gcnt }, i);
+                } else pushf({ cnt }, i);
+                tiles[i] += 4, subtiles[i] -= 4, full_tcnt += 3, tcnt += 4, --subcnt;
+            }
         }
         const cmp = (a, b) => {
+            if ("step" in a && "step" in b && a.step !== b.step) return a.step - b.step;
             if (b.cnt !== a.cnt) return b.cnt - a.cnt;
             if ("gcnt" in a && "gcnt" in b) return b.gcnt - a.gcnt;
             return 0;
         }
         cnts.sort(cmp);
         nxt_cnts.sort(cmp);
+        kang_cnts.sort(cmp);
         for (const { cnt, bcnt, gcnt, id } of cnts) {
-            const verb = isFlower(id) ? loc.bu : loc.da;
-            if (gcnt !== undefined) result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
-            else result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${save[id].ans.map(cardImage).join("")}</td></tr>`;
+            const rid = id >= sizeAT ? id - sizeAT : id;
+            const verb = rid !== id ? loc.kang : (isFlower(rid) ? loc.bu : loc.da);
+            const rsave = rid !== id ? kang_save[rid] : save[rid];
+            if (gcnt !== undefined) result += `<tr><td class="waiting-brief">${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
+            else result += `<tr><td class="waiting-brief">${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${rsave.ans.map(cardImage).join("")}</td></tr>`;
         }
         for (const { cnt, bcnt, gcnt, id } of nxt_cnts) {
             const verb = isFlower(id) ? loc.bu : loc.da;
             if (gcnt !== undefined) nxt_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${nxt_save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${nxt_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
             else nxt_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${nxt_save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
-        let output = [makeTable(result)];
-        if (nxt_result !== "") output.push(makeTable(nxt_result));
+        for (const { cnt, bcnt, gcnt, id, step } of kang_cnts) {
+            const verb = loc.kang;
+            if (gcnt !== undefined) kang_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
+            else kang_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${kang_save[id].ans.map(cardImage).join("")}</td></tr>`;
+        }
+        let output = makeTable(result);
+        if (nxt_result !== "") output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(step + 1)}${loc.brace_right}</span>${makeTable(nxt_result)}`;
+        if (kang_result !== "") output += `${loc.kang_list}${makeTable(kang_result)}`;
         return { output, ans: { waiting: save, subchecks } };
     }
 }
@@ -102,9 +127,8 @@ function normalStep() {
         output += ots.map((a) => `<div class="card-container">${getWinningLine(a)}</div>`).join("");
         if (ots.length < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - ots.length} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g) => NormalWaiting(tiles, step + i, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt));
-    output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(step + 1)}${loc.brace_right}</span>${r.output[1]}`;
+    const r = printWaiting(step, (s, d, g) => NormalWaiting(tiles, s, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt), () => Step(tiles, tcnt, full_tcnt));
+    output += r.output;
     return { output, step, save: r.ans, dvd };
 }
 function updateTableGeneral(table, info) {
@@ -180,9 +204,8 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
-    const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g) => JPWaiting(tiles, stepJP + i, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt));
-    output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(stepJP + 1)}${loc.brace_right}</span>${r.output[1]}`;
+    const r = printWaiting(stepJP, (s, d, g) => JPWaiting(tiles, s, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt), () => Math.min(...maskMultiply(JPStep(), mask)));
+    output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
@@ -253,9 +276,8 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
-    const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g) => JP3pWaiting(tiles, step3p + i, substep, full_tcnt, d, g), () => JP3pPrecheck(tiles, step3p, substep, full_tcnt));
-    output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(step3p + 1)}${loc.brace_right}</span>${r.output[1]}`;
+    const r = printWaiting(step3p, (s, d, g) => JP3pWaiting(tiles, s, substep, full_tcnt, d, g), () => JP3pPrecheck(tiles, step3p, substep, full_tcnt), () => Math.min(...maskMultiply(JP3pStep(), mask)));
+    output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5)) {
@@ -347,9 +369,8 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g, f) => GBWaiting(tiles, stepGB + i, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks));
-    output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(stepGB + 1)}${loc.brace_right}</span>${r.output[1]}`;
+    const r = printWaiting(stepGB, (s, d, g, f) => GBWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(GBStep(), mask)));
+    output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4)) {
@@ -425,9 +446,8 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(tiles, tcnt, full_tcnt, subtiles, (i, d, g, f) => TWWaiting(tiles, stepTW + i, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks));
-    output += r.output[0];
-    if (r.output.length > 1) output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(stepTW + 1)}${loc.brace_right}</span>${r.output[1]}`;
+    const r = printWaiting(stepTW, (s, d, g, f) => TWWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(TWStep(), mask)));
+    output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function GBFanDiv(fan) {

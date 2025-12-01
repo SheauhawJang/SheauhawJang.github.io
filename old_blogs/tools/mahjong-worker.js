@@ -6,6 +6,7 @@ importScripts("mahjong-mmc.js");
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
+const makeGridDiv = (i) => `<div class="output-options">${i}</div>`;
 let aids = undefined;
 let tiles, subtiles;
 let tcnt, full_tcnt, subcnt;
@@ -27,12 +28,12 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             const gcnt = CountWaitingCards(tiles, subtiles, gans);
             const cnt = gcnt + bcnt;
             const ratio = (gcnt / cnt) * 100;
-            result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></td>`;
+            result += `<div>${loc.wait} ${cnt} ${loc.counts}</div><div class="devided-waiting-td"><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${gans.map(cardImage).join("")}</div></div><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${ratio.toFixed(2)}%</div></div>`;
         } else {
             const cnt = CountWaitingCards(tiles, subtiles, ans);
-            result += `<td class="waiting-brief">${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${ans.map(cardImage).join("")}</td>`;
+            result += `<div>${loc.wait} ${cnt} ${loc.counts}</div><div>${ans.map(cardImage).join("")}</div>`;
         }
-        return { output: makeTable(result), ans: { waiting: save } };
+        return { output: makeGridDiv(result), ans: { waiting: save } };
     } else {
         let [result, nxt_result, kang_result] = ["", "", ""];
         const [save, nxt_save, kang_save] = [Array(sizeAT), Array(sizeAT), Array(sizeUT)];
@@ -87,22 +88,22 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             const rid = id >= sizeAT ? id - sizeAT : id;
             const verb = rid !== id ? loc.kang : (isFlower(rid) ? loc.bu : loc.da);
             const rsave = rid !== id ? kang_save[rid] : save[rid];
-            if (gcnt !== undefined) result += `<tr><td class="waiting-brief">${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
-            else result += `<tr><td class="waiting-brief">${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${rsave.ans.map(cardImage).join("")}</td></tr>`;
+            if (gcnt !== undefined) result += `<div>${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</div><div class="devided-waiting-td"><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.gans.map(cardImage).join("")}</div></div><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></div>`;
+            else result += `<div>${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</div><div>${rsave.ans.map(cardImage).join("")}</div>`;
         }
         for (const { cnt, bcnt, gcnt, id } of nxt_cnts) {
             const verb = isFlower(id) ? loc.bu : loc.da;
-            if (gcnt !== undefined) nxt_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${nxt_save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${nxt_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
-            else nxt_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${nxt_save[id].ans.map(cardImage).join("")}</td></tr>`;
+            if (gcnt !== undefined) nxt_result += `<div>${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</div><div class="devided-waiting-td"><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${nxt_save[id].gans.map(cardImage).join("")}</div></div><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${nxt_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></div>`;
+            else nxt_result += `<div>${verb} ${cardImage(id)} ${loc.wait} ${cnt} ${loc.counts}</div><div>${nxt_save[id].ans.map(cardImage).join("")}</div>`;
         }
         for (const { cnt, bcnt, gcnt, id, step } of kang_cnts) {
             const verb = loc.kang;
-            if (gcnt !== undefined) kang_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</td><td class="devided-waiting-td"><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].gans.map(cardImage).join("")}</div></div><div style="display: flex; white-space: nowrap;"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></td></tr>`;
-            else kang_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${kang_save[id].ans.map(cardImage).join("")}</td></tr>`;
+            if (gcnt !== undefined) kang_result += `<div>${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</div><div class="devided-waiting-td"><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].gans.map(cardImage).join("")}</div></div><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></div>`;
+            else kang_result += `<div>${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</div><div>${kang_save[id].ans.map(cardImage).join("")}</div>`;
         }
-        let output = makeTable(result);
-        if (nxt_result !== "") output += `${loc.tuixiang}${loc.brace_left}<span style="white-space: nowrap;">${getWaitingType(step + 1)}</span>${loc.brace_right}${makeTable(nxt_result)}`;
-        if (kang_result !== "") output += `${loc.kang_list}${makeTable(kang_result)}`;
+        let output = makeGridDiv(result);
+        if (nxt_result !== "") output += `${loc.tuixiang}${loc.brace_left}<span style="white-space: nowrap;">${getWaitingType(step + 1)}</span>${loc.brace_right}${makeGridDiv(nxt_result)}`;
+        if (kang_result !== "") output += `${loc.kang_list}${makeGridDiv(kang_result)}`;
         return { output, ans: { waiting: save, subchecks } };
     }
 }

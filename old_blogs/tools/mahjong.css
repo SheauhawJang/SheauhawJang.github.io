@@ -93,17 +93,22 @@ input[type="text"] {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 0px 10px
+}
+
+.devided-waiting-container {
+    display: flex; 
+    white-space: nowrap;
+    gap: 0px 10px
 }
 
 .devided-waiting-brief {
     white-space: nowrap;
-    padding-left: 10px;
     display: inline-block;
 }
 
 .devided-waiting-cards {
     white-space: normal;
-    padding-left: 10px;
     display: inline-block;
 }
 
@@ -420,7 +425,7 @@ html {
 
 .output-options {
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: fit-content(100%) 1fr;
     gap: 0px 10px;
     align-items: top;
 }

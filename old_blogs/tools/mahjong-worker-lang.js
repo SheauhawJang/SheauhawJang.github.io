@@ -744,7 +744,7 @@ const ja_loc = {
 }
 const en_loc = {
     wait: "Wait",
-    counts: "tiles",
+    counts: "",
     goodshape: "Good shape",
     badshape: "Bad shape",
     goodshaperate: "Good shape rate",

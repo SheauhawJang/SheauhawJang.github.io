@@ -6,7 +6,7 @@ importScripts("mahjong-mmc.js");
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
-const makeGridDiv = (i) => `<div class="output-options">${i}</div>`;
+const makeGridDiv = (i) => `<div class="output-grid-div">${i}</div>`;
 let aids = undefined;
 let tiles, subtiles;
 let tcnt, full_tcnt, subcnt;

@@ -430,6 +430,13 @@ html {
     align-items: top;
 }
 
+.output-grid-div {
+    display: grid;
+    grid-template-columns: fit-content(100%) 1fr;
+    gap: 0px 10px;
+    align-items: top;
+}
+
 .output-option-group {
     display: flex;
     flex-wrap: wrap;

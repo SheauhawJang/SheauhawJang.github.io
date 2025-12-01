@@ -107,11 +107,6 @@ input[type="text"] {
     display: inline-block;
 }
 
-.devided-waiting-brief-short {
-    white-space: nowrap;
-    display: none;
-}
-
 .devided-waiting-cards {
     white-space: normal;
     display: inline-block;
@@ -577,6 +572,13 @@ input[type="checkbox"] {
     transform: translateX(calc(var(--w) - var(--h)));
 }
 
+.cmp-word-long {
+    display: inline-block;
+}
+.cmp-word-short {
+    display: none;
+}
+
 @media screen and (max-width: 512px) {
     body {
         padding: 6px;
@@ -633,14 +635,6 @@ input[type="checkbox"] {
         width: 1%;
     }
 
-    .devided-waiting-brief {
-        display: none;
-    }
-
-    .devided-waiting-brief-short {
-        display: inline-block;
-    }
-
     .input-keyboard {
         flex-direction: column;
         align-items: center;
@@ -670,5 +664,12 @@ input[type="checkbox"] {
     .output-options > *:nth-child(even) {
         padding-left: 20px;
         grid-column: 1 / -1;
+    }
+
+    .cmp-word-long {
+        display: none;
+    }
+    .cmp-word-short {
+        display: inline-block;
     }
 }

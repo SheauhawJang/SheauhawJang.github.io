@@ -103,12 +103,12 @@ input[type="text"] {
 }
 
 .devided-waiting-brief {
-    white-space: normal;
+    white-space: nowrap;
     display: inline-block;
 }
 
 .devided-waiting-brief-short {
-    white-space: normal;
+    white-space: nowrap;
     display: none;
 }
 

@@ -63,9 +63,9 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             if (i < sizeUT && tiles[i] >= 4) {
                 tiles[i] -= 4, subtiles[i] += 4, full_tcnt -= 3, tcnt -= 4, ++subcnt;
                 const stepk = fk();
-                if (stepk < step) continue;
+                //if (stepk < step) continue;
                 kang_save[i] = getWaiting(stepk, undefined, undefined, () => undefined);
-                const pushf = stepk === step ? ((u, id) => cnts.push({...u, id: id + sizeAT})) : ((u, id) => kang_cnts.push({...u, id, step: stepk}));
+                const pushf = stepk <= step ? ((u, id) => cnts.push({...u, id: id + sizeAT})) : ((u, id) => kang_cnts.push({...u, id, step: stepk}));
                 const { ans, gans } = kang_save[i];
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {

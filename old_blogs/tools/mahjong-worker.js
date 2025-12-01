@@ -101,7 +101,7 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             else kang_result += `<tr><td class="waiting-brief">${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</td><td style="padding-left: 10px;">${kang_save[id].ans.map(cardImage).join("")}</td></tr>`;
         }
         let output = makeTable(result);
-        if (nxt_result !== "") output += `${loc.tuixiang}<span style="white-space: nowrap;">${loc.brace_left}${getWaitingType(step + 1)}${loc.brace_right}</span>${makeTable(nxt_result)}`;
+        if (nxt_result !== "") output += `${loc.tuixiang}${loc.brace_left}<span style="white-space: nowrap;">${getWaitingType(step + 1)}</span>${loc.brace_right}${makeTable(nxt_result)}`;
         if (kang_result !== "") output += `${loc.kang_list}${makeTable(kang_result)}`;
         return { output, ans: { waiting: save, subchecks } };
     }

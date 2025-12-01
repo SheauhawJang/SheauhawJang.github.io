@@ -48,8 +48,8 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {
                     const gcnt = CountWaitingCards(tiles, subtiles, gans);
-                    cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i, step });
-                } else cnts.push({ cnt, id: i, step });
+                    cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i });
+                } else cnts.push({ cnt, id: i });
             } else {
                 nxt_save[i] = getWaiting(step + 1, undefined, undefined, () => undefined);
                 const { ans, gans } = nxt_save[i];
@@ -63,8 +63,9 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             if (i < sizeUT && tiles[i] >= 4) {
                 tiles[i] -= 4, subtiles[i] += 4, full_tcnt -= 3, tcnt -= 4, ++subcnt;
                 const stepk = fk();
+                if (stepk < step) continue;
                 kang_save[i] = getWaiting(stepk, undefined, undefined, () => undefined);
-                const pushf = stepk <= step ? ((u, id) => cnts.push({...u, id: id + sizeAT, step: stepk})) : ((u, id) => kang_cnts.push({...u, id, step: stepk}));
+                const pushf = stepk === step ? ((u, id) => cnts.push({...u, id: id + sizeAT})) : ((u, id) => kang_cnts.push({...u, id, step: stepk}));
                 const { ans, gans } = kang_save[i];
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {

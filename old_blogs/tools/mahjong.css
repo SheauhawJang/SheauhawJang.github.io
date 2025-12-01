@@ -396,12 +396,14 @@ html {
 
 .language-bar > div:last-child {
     margin-left: auto;
+    justify-content: right;
 }
 
 .language-bar-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0px 12px;
+    flex-wrap: wrap;
 }
 
 .language-bar a {
@@ -409,6 +411,7 @@ html {
     text-decoration: none;
     font-weight: bold;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .language-bar a:hover {

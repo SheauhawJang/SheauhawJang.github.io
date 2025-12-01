@@ -57,8 +57,8 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {
                     const gcnt = CountWaitingCards(tiles, subtiles, gans);
-                    nxt_cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i });
-                } else nxt_cnts.push({ cnt, id: i });
+                    if (ans.length + gans.length > 0) nxt_cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i });
+                } else if (ans.length > 0) nxt_cnts.push({ cnt, id: i });
             }
             ++tiles[i], --subtiles[i];
             if (i < sizeUT && tiles[i] >= 4) {

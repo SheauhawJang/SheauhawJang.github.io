@@ -10,17 +10,9 @@
         <link rel="shortcut icon" href="head.ico" type="image/x-icon">
         <style>
             @media screen and (max-width: 512px) {
-                .output-grid-div {
-                    display: flex;
-                    flex-wrap: wrap;
-                    margin-left: 10px;
-                    gap: 0px 0px;
-                }
-                .output-grid-div > *:nth-child(odd) {
-                    margin-left: -10px;
-                }
                 .output-grid-div > *:nth-child(even) {
-                    padding-left: 10px;
+                    padding-left: 20px;
+                    grid-column: 1 / -1;
                 }
             }
         </style>

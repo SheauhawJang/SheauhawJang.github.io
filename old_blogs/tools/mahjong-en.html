@@ -546,6 +546,7 @@
                             <span><span class="fan">Mixed Straight</span></span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-11" value="0" checked />OFF</label>
+                                <!--<label><input type="radio" name="score-jp-setting-11" value="17,2" />1 Fan</label>-->
                                 <label><input type="radio" name="score-jp-setting-11" value="17" />2 Fan (1 if Open)</label>
                             </div>
                             <span><span class="fan">Pure Triple Chow</span></span>
@@ -562,6 +563,8 @@
                                 <label><input type="radio" name="score-jp-setting-16" value="0" checked />OFF</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,3" />4 Fan</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,4" />5 Fan</label>
+                                <label><input type="radio" name="score-jp-setting-16" value="22,5" />6 Fan</label>
+                                <label><input type="radio" name="score-jp-setting-16" value="22,6" />6 Fan (5 if Open)</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,1" />Yakuman</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,2" />Yakuman Concealed</label>
                             </div>
@@ -603,10 +606,16 @@
                                 <label><input type="radio" name="score-jp-setting-8" value="14" checked />ON</label>
                                 <label><input type="radio" name="score-jp-setting-8" value="0" />OFF</label>
                             </div>
-                            <span>Scores Rounding up</span>
+                            <span>Base Value</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />ON</label>
-                                <label><input type="radio" name="score-jp-setting-9" value="0" />OFF</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="45,1" />Round to the nearest ten</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="45,2" />Ceil to the nearesy hundred</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="0" checked />No modification</label>
+                            </div>
+                            <span>Scores Payment</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />Ceil to the nearesy hundred</label>
+                                <label><input type="radio" name="score-jp-setting-9" value="0" />No modification</label>
                             </div>
                             <span>Quick Start</span>
                             <div class="output-option-group">
@@ -672,7 +681,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.12</div>
+            <div class="output-time">v4.7.13</div>
             <div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
         </div>
         <script src="mahjong.js"></script>

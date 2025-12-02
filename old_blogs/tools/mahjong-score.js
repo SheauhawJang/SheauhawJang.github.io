@@ -1065,27 +1065,27 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let [must_hunyise, must_quandai] = [false, false];
     if (melds.length >= 5 && isSameColor(melds)) (v += mq ? 6 : 5), f.push(31), (must_hunyise = true);
     init_seq();
-    let [same3, same4] = [0, 0];
+    let [beikou, same3, same4] = [0, 0, 0];
     const Same3Array = [0, 2, 1.5, 2.5, 2, 3];
     const Same3RealArray = mq ? [0, 2, 2, 3, 2, 3] : [0, 2, 1, 2, 0, 0];
+    const Same4Array = [0, -1, -1, 4, 5, 6, 5.5];
+    const Same4RealArray = mq ? [0, -1, -1, 4, 5, 6, 6] : [0, -1, -1, 4, 5, 6, 5];
     if (setting[22] >= 3) {
-        JPScoreArray[53] = [0, -1, -1, 4, 5][setting[22]];
+        JPScoreArray[53] = Same4Array[setting[22]];
         for (let i = 0; i < 25; ++i) same4 += Math.floor(seq[i] / 4);
-        (v += JPScoreArray[53] * same4), f.push(...Array(same4).fill(53));
+        (v += Same4RealArray[setting[22]] * same4), f.push(...Array(same4).fill(53));
+        beikou -= 2 * same4, same3 -= same4;
     }
     if (Same3RealArray[setting[21]] !== 0) {
         JPScoreArray[52] = Same3Array[setting[21]];
         for (let i = 0; i < 25; ++i) same3 += Math.floor(seq[i] / 3);
-        same3 -= same4;
         (v += Same3RealArray[setting[21]] * same3), f.push(...Array(same3).fill(52));
+        beikou -= same3;
     }
     if (mq) {
-        let beikou = 0;
         for (let i = 0; i < 25; ++i) beikou += Math.floor(seq[i] / 2);
-        const b1 = beikou % 2,
-            b2 = Math.floor(beikou / 2) - same4;
-        (v += b1 + 3 * b2), f.push(...Array(b2).fill(29));
-        if (!same3 && !same4 && b1) f.push(11);
+        const [b1, b2] = [beikou % 2, Math.floor(beikou / 2)];
+        (v += b1 + 3 * b2), f.push(...Array(b1).fill(11), ...Array(b2).fill(29));
     }
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) (v += mq ? 3 : 2), f.push(28);
     if (melds.length >= 5 && isMask(marr, OrphanArray)) (v += 2), f.push(25), (must_quandai = true);

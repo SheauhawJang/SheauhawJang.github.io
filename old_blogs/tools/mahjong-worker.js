@@ -828,6 +828,9 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     searchList.forEach((f) => f());
     if (gans.yakuman) aka = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
+    let base = gans.val;
+    if (setting[45] === 1) base = Math.round(base / 10) * 10;
+    else if (setting[45] === 2) base = Math.ceil(base / 100) * 100;
     const realpt = setting[15] ? (x) => Math.ceil(x / 100) * 100 : (x) => x;
     let [score, exinfo] = [0, ""];
     if (tsumo)

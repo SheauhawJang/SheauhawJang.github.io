@@ -395,6 +395,7 @@
                             <span>三色通貫</span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-11" value="0" checked />なし</label>
+                                <!--<label><input type="radio" name="score-jp-setting-11" value="17,2" />1 飜</label>-->
                                 <label><input type="radio" name="score-jp-setting-11" value="17" />2 飜・食い下がり</label>
                             </div>
                             <span>一色三順</span>
@@ -411,6 +412,8 @@
                                 <label><input type="radio" name="score-jp-setting-16" value="0" checked />なし</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,3" />4 飜</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,4" />5 飜</label>
+                                <label><input type="radio" name="score-jp-setting-16" value="22,5" />6 飜</label>
+                                <label><input type="radio" name="score-jp-setting-16" value="22,6" />6 飜・食い下がり</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,1" />役満</label>
                                 <label><input type="radio" name="score-jp-setting-16" value="22,2" />役満・門前のみ</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="23" checked />四連太宝と呼ぶ</label>
@@ -453,10 +456,16 @@
                                 <label><input type="radio" name="score-jp-setting-8" value="14" checked />あり</label>
                                 <label><input type="radio" name="score-jp-setting-8" value="0" />なし</label>
                             </div>
-                            <span>点数切り上げ</span>
+                            <span>基本点</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />あり</label>
-                                <label><input type="radio" name="score-jp-setting-9" value="0" />なし</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="45,1" />10単位で四捨六入</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="45,2" />100単位で切り上げ</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="0" checked />修正なし</label>
+                            </div>
+                            <span>負担額</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />100単位で切り上げ</label>
+                                <label><input type="radio" name="score-jp-setting-9" value="0" />修正なし</label>
                             </div>
                             <span>簡単設定</span>
                             <div class="output-option-group">
@@ -674,7 +683,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.12</div>
+            <div class="output-time">v4.7.13</div>
             <div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
         </div>
         <script src="mahjong.js"></script>

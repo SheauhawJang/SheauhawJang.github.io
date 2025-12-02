@@ -1071,7 +1071,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (setting[22] >= 3) {
         JPScoreArray[53] = [0, -1, -1, 4, 5][setting[22]];
         for (let i = 0; i < 25; ++i) same4 += Math.floor(seq[i] / 4);
-        (v += 4 * same4), f.push(...Array(same4).fill(53));
+        (v += JPScoreArray[53] * same4), f.push(...Array(same4).fill(53));
     }
     if (Same3RealArray[setting[21]] !== 0) {
         JPScoreArray[52] = Same3Array[setting[21]];

@@ -1083,7 +1083,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         let beikou = 0;
         for (let i = 0; i < 25; ++i) beikou += Math.floor(seq[i] / 2);
         const b1 = beikou % 2,
-            b2 = Math.floor(beikou / 2);
+            b2 = Math.floor(beikou / 2) - same4;
         (v += b1 + 3 * b2), f.push(...Array(b2).fill(29));
         if (!same3 && !same4 && b1) f.push(11);
     }

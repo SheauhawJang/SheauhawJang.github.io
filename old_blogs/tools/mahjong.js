@@ -749,8 +749,8 @@ function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
         .fill(null)
         .map(() => Array(5).fill(false));
     if (step >= substep[0]) {
-        for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck.dischecks[i];
-        for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck.getchecks[i];
+        for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck ? savecheck.dischecks[i] : StepCheck(tiles, step + 1, tcnt - 1, tcnt);
+        for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck ? savecheck.getchecks[i] : StepCheck(tiles, step, tcnt + 1, tcnt);
     }
     if (tcnt === 14 && step >= substep[1]) {
         initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, false) <= step));
@@ -778,8 +778,8 @@ function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
         .fill(null)
         .map(() => Array(4).fill(false));
     if (step >= substep[0]) {
-        for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck.dischecks[i];
-        for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck.getchecks[i];
+        for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck ? savecheck.dischecks[i] : StepCheck(tiles, step + 1, tcnt - 1, tcnt);
+        for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck ? savecheck.getchecks[i] : StepCheck(tiles, step, tcnt + 1, tcnt);
     }
     if (tcnt === 17 && step >= substep[1]) {
         initDischecks(tiles, (i) => (dischecks[i][1] = NiconicoStep(tiles) <= step));

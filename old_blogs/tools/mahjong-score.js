@@ -977,7 +977,7 @@ function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilis
     if ((setting[6] || !tsumo) && (mq || setting[24]) && fus.length === 1 && bilisten && yakuman === 0) ++v, f.push(10);
     else {
         if (listen_type) (valfus += 2), fus.push(listen_type);
-        if (tsumo && !(setting[16] && yakuman === 0 && infoans.fan.includes(12))) (valfus += 2), fus.push(11);
+        if (tsumo && !(setting[16] && yakuman === 0 && (infoans.fan.includes(12) || infoans.fan.includes(64)))) (valfus += 2), fus.push(11);
     }
     if (!setting[25] && !mq && valfus <= 20) valfus += 2;
     const realfus = valfus;

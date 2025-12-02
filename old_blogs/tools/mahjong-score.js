@@ -1068,8 +1068,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let [same3, same4] = [0, 0];
     const Same3Array = [0, 2, 1.5, 2.5, 2, 3];
     const Same3RealArray = mq ? [0, 2, 2, 3, 2, 3] : [0, 2, 1, 2, 0, 0];
-    if (setting[22] === 3) {
-        JPScoreArray[53] = 4;
+    if (setting[22] >= 3) {
+        JPScoreArray[53] = [0, -1, -1, 4, 5][setting[22]];
         for (let i = 0; i < 25; ++i) same4 += Math.floor(seq[i] / 4);
         (v += 4 * same4), f.push(...Array(same4).fill(53));
     }

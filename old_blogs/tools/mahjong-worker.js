@@ -33,7 +33,28 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             const cnt = CountWaitingCards(tiles, subtiles, ans);
             result += `<div>${loc.wait} ${cnt} ${loc.counts}</div><div>${ans.map(cardImage).join("")}</div>`;
         }
-        return { output: makeGridDiv(result), ans: { waiting: save } };
+        let output = makeGridDiv(result);
+        if (1) {
+            let opentip = [[], []];
+            function updateopen(i, j, verb) {
+                --tiles[i], --tiles[j], subtiles[i] += 3, full_tcnt -= 3, tcnt -= 2, ++subcnt;
+                const openstep = fk();
+                if (openstep < step && openstep >= 0) opentip[0].push({hand: [i, j], verb});
+                else if (openstep === step) opentip[1].push({hand: [i, j], verb})
+                ++tiles[i], ++tiles[j], subtiles[i] -= 3, full_tcnt += 3, tcnt += 2, --subcnt;
+            }
+            for (let i = 0; i < sizeUT; ++i) if (tiles[i] >= 2) updateopen(i, i, loc.pong);
+            for (let i = 0; i < sizeUT; ++i) {
+                if ((SeqCheck(i) || SeqCheck(i - 1)) && tiles[i] >= 1 && tiles[i + 1] >= 1) updateopen(i, i + 1, loc.chi);
+                if (SeqCheck(i) && tiles[i] >= 1 && tiles[i + 2] >= 1) updateopen(i, i + 2, loc.chi);
+            }
+            let openout = "";
+            const optmap = (x) => `<div class="devided-waiting-brief">${x.verb} ${x.hand.map(cardImage).join('')}</div>`;
+            if (opentip[0].length > 0) openout += `<div>${loc.goodopen}</div><div class="devided-waiting-container">${opentip[0].map(optmap).join("")}</div>`;
+            //if (opentip[1].length > 0) openout += `<div>${loc.badopen}</div><div class="devided-waiting-container">${opentip[1].map(optmap).join("")}</div>`;
+            if (openout !== "") output += makeGridDiv(openout);
+        }
+        return { output, ans: { waiting: save } };
     } else {
         let [result, nxt_result, kang_result] = ["", "", ""];
         const [save, nxt_save, kang_save] = [Array(sizeAT), Array(sizeAT), Array(sizeUT)];

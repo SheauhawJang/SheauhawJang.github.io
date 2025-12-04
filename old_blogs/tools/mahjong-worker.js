@@ -18,7 +18,7 @@ function cardImageDivide(id) {
 }
 const maskMultiply = (result, mask) => result.map((x, i) => mask[i] ? x : Infinity);
 const divideSpace = `<div class="card-div card-padding"></div>`;
-function printWaiting(step, getWaiting, getSubchecks, fk) {
+function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
     if (full_tcnt !== tcnt) {
         let result = "";
         const save = getWaiting(step, undefined, undefined, (s) => s);
@@ -45,8 +45,8 @@ function printWaiting(step, getWaiting, getSubchecks, fk) {
             }
             for (let i = 0; i < sizeUT; ++i) if (tiles[i] >= 2) updateopen(i, i, loc.pong);
             for (let i = 0; i < sizeUT; ++i) {
-                if ((SeqCheck(i) || SeqCheck(i - 1)) && tiles[i] >= 1 && tiles[i + 1] >= 1) updateopen(i, i + 1, loc.chi);
-                if (SeqCheck(i) && tiles[i] >= 1 && tiles[i + 2] >= 1) updateopen(i, i + 2, loc.chi);
+                if ((sq(i) || sq(i - 1)) && tiles[i] >= 1 && tiles[i + 1] >= 1) updateopen(i, i + 1, loc.chi);
+                if (sq(i) && tiles[i] >= 1 && tiles[i + 2] >= 1) updateopen(i, i + 2, loc.chi);
             }
             let openout = "";
             const optmap = (x) => `<div class="devided-waiting-brief">${x.verb} ${x.hand.map(cardImage).join('')}</div>`;
@@ -148,7 +148,7 @@ function normalStep() {
         output += ots.map((a) => `<div class="card-container">${getWinningLine(a)}</div>`).join("");
         if (ots.length < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - ots.length} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(step, (s, d, g) => NormalWaiting(tiles, s, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt), () => Step(tiles, tcnt, full_tcnt));
+    const r = printWaiting(step, (s, d, g) => NormalWaiting(tiles, s, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt), () => Step(tiles, tcnt, full_tcnt), SeqCheck);
     output += r.output;
     return { output, step, save: r.ans, dvd };
 }
@@ -225,7 +225,7 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
-    const r = printWaiting(stepJP, (s, d, g) => JPWaiting(tiles, s, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt), () => Math.min(...maskMultiply(JPStep(), mask)));
+    const r = printWaiting(stepJP, (s, d, g) => JPWaiting(tiles, s, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt), () => Math.min(...maskMultiply(JPStep(), mask)), SeqCheck);
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
@@ -297,7 +297,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
-    const r = printWaiting(step3p, (s, d, g) => JP3pWaiting(tiles, s, substep, full_tcnt, d, g), () => JP3pPrecheck(tiles, step3p, substep, full_tcnt), () => Math.min(...maskMultiply(JP3pStep(), mask)));
+    const r = printWaiting(step3p, (s, d, g) => JP3pWaiting(tiles, s, substep, full_tcnt, d, g), () => JP3pPrecheck(tiles, step3p, substep, full_tcnt), () => Math.min(...maskMultiply(JP3pStep(), mask)), () => false);
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
@@ -390,7 +390,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(stepGB, (s, d, g, f) => GBWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(GBStep(), mask)));
+    const r = printWaiting(stepGB, (s, d, g, f) => GBWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(GBStep(), mask)), SeqCheck);
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
@@ -467,7 +467,7 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(stepTW, (s, d, g, f) => TWWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(TWStep(), mask)));
+    const r = printWaiting(stepTW, (s, d, g, f) => TWWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(TWStep(), mask)), SeqCheck);
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }

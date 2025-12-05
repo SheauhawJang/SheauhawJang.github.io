@@ -3,6 +3,7 @@ importScripts("mahjong-score.js");
 importScripts("mahjong-worker-lang.js");
 importScripts("mahjong-mmc.js");
 //console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
+//console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
@@ -671,10 +672,11 @@ function JPPrintName(yakuman, printname) {
     return "";
 }
 function JPGetFanCount(mq, i) {
+    const JPScoreArray = mq ? JPScoreArray0 : JPScoreArray1;
     if (i >= JPScoreArray.length) return `${1} ${loc.JP_FAN_unit}`;
-    if (JPScoreArray[i] === -1) return `${loc.yakuman}`;
-    if (JPScoreArray[i] <= -2) return `${loc[`times_${-JPScoreArray[i]}`]}${loc.yakuman}`;
-    const s = mq ? Math.ceil(JPScoreArray[i]) : Math.floor(JPScoreArray[i]);
+    const s = JPScoreArray[i];
+    if (s === -1) return `${loc.yakuman}`;
+    if (s <= -2) return `${loc[`times_${-s}`]}${loc.yakuman}`;
     return `${s} ${loc.JP_FAN_unit}`;
 }
 function JPGetFuName(i) {
@@ -693,9 +695,11 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
 }
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;
-    if (!setting[1]) for (let i = 0; i < JPScoreArray.length; ++i) if (JPScoreArray[i] <= -2) JPScoreArray[i] = -1;
+    if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i]), JPScoreArray1[i] = Math.max(-1, JPScoreArray0[i]);
+    if (setting[21]) JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]], JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]];
+    if (setting[22]) JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]], JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]];
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
-    JPScoreArray[67] = [0, 1, 2, 1.5, 2, 5, -1, -1][setting[40]];
+    if (setting[40]) JPScoreArray0[67] = [0, 1, 2, 2, 2, 5][setting[40]], JPScoreArray1[67] = [0, 1, 2, 1, 0, 5][setting[40]];
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
     let aka = 0;
@@ -705,45 +709,44 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let nukicnt = aids[2].length;
     const p = MeldsPermutation(aids);
     let searchList = [() => normalSearch(substeps, p)];
+    const infoupdate = (id) => JPUpdateFan(infoans, setting, id);
     if (info.includes(32))
         if (tsumo)
-            if (mw === 27) infoans.fan.push(32), ++infoans.yakuman;
-            else infoans.fan.push(33), ++infoans.yakuman;
+            if (mw === 27) infoupdate(32);
+            else infoupdate(33);
         else {
             const RenhouScoreArray = [0, 5, -1, 4, 6, 8];
-            const renhou = (JPScoreArray[30] = RenhouScoreArray[setting[9]]);
-            if (renhou < 0) infoans.fan.push(30), (infoans.yakuman += -renhou);
-            else if (renhou > 0)
-                if (setting[39]) fixYakuSearch(30, renhou);
-                else infoans.fan.push(30), (infoans.valfan += renhou);
+            const renhou = (JPScoreArray0[30] = JPScoreArray1[30] = RenhouScoreArray[setting[9]]);
+            if (renhou > 0 && setting[39]) fixYakuSearch(30, renhou);
+            else infoupdate(30);
         }
-    if (setting[38] && info.includes(16) && info.includes(13)) infoans.fan.push(66), ++infoans.yakuman;
+    if (setting[38] && info.includes(16) && info.includes(13)) infoupdate(66);
     function canBeFixWin(t) {
         if (aids[0].length === 0) return false;
         const s = aids[0].at(-1).id;
         return [t, JokerA[t], JokerB[t], JokerC].includes(s);
     }
     if (!infoans.yakuman) {
-        if (info.includes(16)) infoans.fan.push(16), (infoans.valfan += 2), (riichi = true);
-        else if (info.includes(1)) infoans.fan.push(1), ++infoans.valfan, (riichi = true);
-        if (riichi && info.includes(3)) infoans.fan.push(3), ++infoans.valfan, (infoans.delete += setting[13] ? 0 : 1);
+        if (info.includes(16)) infoupdate(16), (riichi = true);
+        else if (info.includes(1)) infoupdate(1), (riichi = true);
+        if (riichi && info.includes(3)) infoupdate(3), (infoans.delete += setting[13] ? 0 : 1);
         if (info.includes(12) && tsumo) {
-            infoans.fan.push(12), ++infoans.valfan;
+            infoupdate(12);
             if (setting[36] && canBeFixWin(13)) searchList.push(() => fixWinTileSearch(13, 12, 64, 1, 5));
         } else if (info.includes(13))
             if (tsumo) {
-                infoans.fan.push(13), ++infoans.valfan;
+                infoupdate(13);
                 if (setting[34] && canBeFixWin(9)) searchList.push(() => fixWinTileSearch(9, 13, 62, 1, 5));
             } else {
-                infoans.fan.push(14), ++infoans.valfan;
+                iJPUpdateFan(infoans, 14);
                 if (setting[35] && canBeFixWin(17)) searchList.push(() => fixWinTileSearch(17, 14, 63, 1, 5));
             }
         if (info.includes(15) && !tsumo) {
-            infoans.fan.push(15), ++infoans.valfan;
+            infoupdate(15);
             if (setting[37] && canBeFixWin(19)) searchList.push(() => fixWinTileSearch(19, 15, 65, 1, 5));
         }
-        if (setting[32] && info.includes(60) && !tsumo) infoans.fan.push(60), ++infoans.valfan;
-        if (setting[33] && info.includes(61) && !tsumo) infoans.fan.push(61), ++infoans.valfan;
+        if (setting[32] && info.includes(60) && !tsumo) infoupdate(60);
+        if (setting[33] && info.includes(61) && !tsumo) infoupdate(61);
         infoans.valfan += aka + nukicnt;
         infoans.delete += setting[12] ? 0 : aka + nukicnt;
     }
@@ -772,19 +775,17 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
                     if (ans.valfan > gans.valfan) return true;
                     else if (ans.valfan === gans.valfan) if (ans.realfus > gans.realfus) return true;
     }
-    function cal(ots, ota, subots, ck, ek) {
-        const ans = JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting);
+    function updateAns(ans) {
         if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
         else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
+    }
+    function cal(ots, ota, subots, ck, ek) {
+        updateAns(JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting));
         ++cm;
         if (!(cm & 1048575)) postDebugInfo();
     }
     function normalSearch(substeps, p) {
-        if (substeps[1] === -1) {
-            const ans = JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting);
-            if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
-            else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
-        }
+        if (substeps[1] === -1) updateAns(JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting));
         if (substeps[2] === -1) {
             let tcp = tiles.slice();
             --tcp[aids[0].at(-1).id];
@@ -794,12 +795,24 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
                 if (rid === -1) listen_13 = false;
                 else --tcp[rid];
             }
-            let yakuman = listen_13 ? 2 : 1;
-            yakuman = setting[2] ? yakuman + infoans.yakuman : Math.max(yakuman, infoans.yakuman);
-            let f = [listen_13 ? 37 : 36];
-            if (infoans.yakuman > 0) f.push(infoans.fan);
-            const [valfan, valfus, realfus, fus, pt] = [0, 20, 20, [8], yakuman * 8000];
-            if (pt > gans.val || (pt === gans.val && yakuman > gans.yakuman)) gans = { val: pt, yakuman, valfan, fan: f, valfus, realfus, fus };
+            let kksans = { ...infoans, fan: infoans.fan.slice() };
+            JPUpdateFan(kksans, setting, listen_13 ? 37 : 36);
+            JPUpdateFan(kksans, setting, 25);
+            if (setting[40] && !setting[42] && !setting[43]) JPUpdateFan(kksans, setting, 67);
+            if (tsumo) JPUpdateFan(kksans, setting, 2);
+            let [gd, gu] = [0, 0];
+            let vaildora = nukis.slice();
+            for (let i = 0; i < Orphan13Array.length; ++i) ++vaildora[Orphan13Array[i]];
+            const head = OrphanOutput(tiles).at(-1)[0];
+            for (let i = 0; i < Orphan13Array.length; ++i) {
+                if (!isJokerEqual(head, Orphan13Array[i])) continue; 
+                ++vaildora[Orphan13Array[i]];
+                let [d, u] = getDoras(vaildora, doras, uras);
+                if (d + u > gd + gu) [gd, gu] = [d, u];
+                --vaildora[Orphan13Array[i]];
+            }
+            kksans.valfan += gd + gu;
+            updateAns(getJPAnsUnion(setting, kksans, [8], 20, 20, gd, gu));
         }
         if (substeps[0] === -1) {
             const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
@@ -829,7 +842,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             const sf = (JPFuArray[10] = SevenPairsFusArray[setting[8]]);
             if (sf >= gvf) (gvf = grf = sf), (gf = [10]);
         }
-        const ans = getJPAnsNormal(setting, [fan], valfan, 0, 0, gf, gvf, grf);
+        const ans = getJPAns(setting, [fan], valfan, 0, 0, gf, gvf, grf);
         if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
         else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
     }

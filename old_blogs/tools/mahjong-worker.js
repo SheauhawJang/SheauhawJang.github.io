@@ -699,7 +699,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     if (setting[21]) JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]], JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]];
     if (setting[22]) JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]], JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]];
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
-    if (setting[40]) JPScoreArray0[67] = [0, 1, 2, 2, 2, 5][setting[40]], JPScoreArray1[67] = [0, 1, 2, 1, 0, 5][setting[40]];
+    if (setting[40]) JPScoreArray0[67] = [0, 1, 2, 2, 2, 5, -1, -1][setting[40]], JPScoreArray1[67] = [0, 1, 2, 1, 0, 5, -1, 0][setting[40]];
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
     let aka = 0;

@@ -33,6 +33,15 @@ function putWorkerResult(e, task) {
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
     return false; // remain results need to be put
 }
+function opencheck(openids) {
+    for (let i = 0; i < openids.length; ++i) {
+        let wfc = openids[i].map((x) => x.id);
+        if (wfc.length > 4 || wfc.length < 3) return false;
+        if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
+        if (!isMeld(wfc) && !isQuad(wfc)) return false;
+    }
+    return true;
+}
 function processInput() {
     if (worker) {
         worker.terminate();
@@ -86,7 +95,7 @@ function processInput() {
         }
         switch (task) {
             case 1:
-                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt) {
+                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt && opencheck(aids[1])) {
                     document.getElementById("output-score-jp").textContent = "";
                     document.getElementById("brief-output-score-jp").textContent = "";
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
@@ -96,7 +105,7 @@ function processInput() {
                 }
                 break;
             case 2:
-                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt) {
+                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt && opencheck(aids[1])) {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
@@ -835,10 +844,10 @@ function debounce(f, delay = 20) {
         }, delay);
     };
 }
-function loadCheckbox(key) {
+function loadCheckbox(key, st = localStorage) {
     const cbs = document.querySelectorAll(`input[name="${key}"]`);
     let cvs = new Set();
-    const cvstorage = localStorage.getItem(key);
+    const cvstorage = st.getItem(key);
     if (cvstorage !== null)
         try {
             cvs = new Set(JSON.parse(cvstorage));
@@ -849,28 +858,28 @@ function loadCheckbox(key) {
         const cvstorage = Array.from(cbs)
             .filter((cb) => cb.checked)
             .map((cb) => cb.value);
-        localStorage.setItem(key, JSON.stringify(cvstorage));
+        st.setItem(key, JSON.stringify(cvstorage));
     }, 20);
     cbs.forEach((cb) => cb.addEventListener("change", cf));
 }
-function loadRadio(key) {
+function loadRadio(key, st = localStorage) {
     const rds = document.querySelectorAll(`input[name="${key}"]`);
-    const sv = localStorage.getItem(key);
+    const sv = st.getItem(key);
     if (sv) rds.forEach((r) => (r.checked = r.value === sv, r.dispatchEvent(new Event("change"))));
 
     const rf = debounce(() => {
         const s = Array.from(rds).find((r) => r.checked);
-        if (s) localStorage.setItem(key, s.value);
-        else localStorage.removeItem(key);
+        if (s) st.setItem(key, s.value);
+        else st.removeItem(key);
     });
     rds.forEach((r) => r.addEventListener("change", rf));
 }
-function loadInputbox(key) {
+function loadInputbox(key, st = localStorage) {
     const e = document.getElementById(key);
-    const s = localStorage.getItem(key);
+    const s = st.getItem(key);
     if (s !== null) e.value = s;
 
-    e.addEventListener("change", () => localStorage.setItem(key, e.value));
+    e.addEventListener("change", () => st.setItem(key, e.value));
 }
 function loadGBStorage() {
     loadCheckbox("score-gb-setting");
@@ -879,12 +888,22 @@ function loadGBStorage() {
     loadInputbox("score-gb-setting-fan");
     loadInputbox("score-gb-setting-blind");
     loadInputbox("score-gb-setting-maxfan");
+
+    loadRadio("score-gb-global-wind", sessionStorage);
+    loadRadio("score-gb-local-wind", sessionStorage);
+    loadCheckbox("score-gb-wintype", sessionStorage);
+    loadCheckbox("score-gb-wininfo", sessionStorage);
 }
 function loadJPStorage() {
     loadCheckbox("score-jp-setting");
     for (let i = 0; i <= JP_RADIO_MAX; ++i) loadRadio(`score-jp-setting-${i}`);
 
     loadInputbox("score-jp-setting-fan");
+
+    loadRadio("score-jp-global-wind", sessionStorage);
+    loadRadio("score-jp-local-wind", sessionStorage);
+    loadCheckbox("score-jp-wintype", sessionStorage);
+    loadCheckbox("score-jp-wininfo", sessionStorage);
 }
 function loadStorage() {
     updateCardSkin(localStorage.getItem("cardskin"));

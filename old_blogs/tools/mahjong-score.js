@@ -1037,7 +1037,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         return update(44);
     }
     if (melds.length >= 5 && isMask(marr, GreenArray)) updateGreen();
-    if (melds.length >= 5 && ck + ek >= 4) update(43);
+    if (ck + ek >= 4) update(43, Math.floor((ck + ek) / 4));
     let windcount = Array(4).fill(0);
     let dragoncount = Array(3).fill(0);
     for (let i = 0; i < melds.length; ++i)
@@ -1052,8 +1052,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (melds.length >= 5 && isMask(marr, HonorArray)) update(39);
     const bgdragon = update(38, Math.min(...dragoncount));
     if (ck + cp >= 4)
-        if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) update(35);
-        else update(34);
+        if (setting[1] && head !== -1 && canBeListen(tiles, ta, tb, head, wint)) update(35, Math.floor((ck + cp) / 4));
+        else update(34, Math.floor((ck + cp) / 4));
     let [tri, seq] = [null, null];
     function init_tri() {
         if (tri !== null) return;
@@ -1117,10 +1117,12 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         for (let j4 = 0; j4 <= max4; ++j4) {
             const max3 = v3 > 0 ? Math.floor((seq[i] - j4 * 4) / 3) : 0;
             for (let j3 = 0; j3 <= max3; ++j3) {
-                const fixed = j4 * 4 + j3 * 3;
-                let free = seq[i] - fixed;
-                if (free > fixed) free = fixed + Math.floor((free - fixed) / 2);
-                let [p, s] = [Math.floor(free / 2), free % 2];
+                let [s, p, f4, f3, pot, free] = [0, 0, j4, j3, j4 * 4 + j3 * 3, seq[i] - j4 * 4 - j3 * 3];
+                const [s4, s3] = [Math.floor(f4 / 2), Math.floor(f3 / 2)];
+                s += s4 * 4 + s3 * 3, pot -= s4 * 8 + s3 * 6, f4 -= s4 * 2, f3 -= s3 * 2;
+                if (f4 && f3) s += 3, pot -= 6;
+                const sfp = Math.min(pot, free);
+                s += sfp, free -= sfp, s += Math.floor(free / 2), p = Math.floor(s / 2), s -= 2 * p;
                 if (s === 1) {
                     dpsame[fisame(i, 0)] = [fdpsame(i, 0), fusame(fdpsame(i - 1, 0), j4, j3, p, 0), fusame(fdpsame(i - 1, 1), j4, j3, p + 1, -1)].reduce(frsame);
                     dpsame[fisame(i, 1)] = [fdpsame(i, 1), fusame(fdpsame(i - 1, 0), j4, j3, p, 1), fusame(fdpsame(i - 1, 1), j4, j3, p, 0)].reduce(frsame);
@@ -1142,8 +1144,8 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         ++dragoncount[head - 31];
         if (Math.min(...dragoncount) > bgdragon) update(26);
     }
-    if (ck + ek === 3) update(23);
-    if (ck + cp === 3) update(22);
+    if (ck + ek >= 3) update(23, Math.floor((ck + ek) / 3));
+    if (ck + cp >= 3) update(22, Math.floor((ck + cp) / 3));
     let itsu = 0;
     for (let i = 0; i < 3; ++i) itsu += Math.min(seq[i * 9], seq[i * 9 + 3], seq[i * 9 + 6]);
     update(21, itsu);

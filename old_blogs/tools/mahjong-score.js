@@ -67,9 +67,7 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
     let nsubots = 1;
     for (let i = 0; i < aids[1].length; ++i) {
         let wfc = aids[1][i].map((x) => x.id);
-        if (wfc.length > 4 || wfc.length < 3) return { err: 1 };
         if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
-        if (!isMeld(wfc) && !isQuad(wfc)) return { err: 2 };
         if (isSeq(wfc))
             if (wfc[2] < sizeUT) submeld[i].push(wfc);
             else {
@@ -985,9 +983,12 @@ function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilis
     if (setting[14]) valfus = Math.ceil(valfus / 10) * 10;
     return { fus, valfus, realfus, fans };
 }
+function JPGetFanValue(id, mq = true) {
+    return mq ? JPScoreArray0[id] : JPScoreArray1[id];
+}
 function JPUpdateFan(ans, setting, id, n = 1, mq = true) {
     if (n === 0) return 0;
-    const nv = mq ? JPScoreArray0[id] : JPScoreArray1[id];
+    const nv = JPGetFanValue(id, mq);
     if (nv === 0) return 0;
     if (nv < 0) {
         if (!setting[46]) return 0;
@@ -1076,12 +1077,11 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             }
         update(51, shift4);
     }
-    let [beikou, same3, same4] = [0, 0, 0];
-    if (setting[22]) {
+    if (JPGetFanValue(53, mq) < 0) {
+        let same4 = 0;
         init_seq();
         for (let i = 0; i < 25; ++i) same4 += Math.floor(seq[i] / 4);
         same4 = update(53, same4);
-        beikou -= 2 * same4, same3 -= same4;
     }
     let alltri = false;
     if (melds.length >= 5 && isAllTri(melds)) alltri = true;
@@ -1100,15 +1100,39 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     let [must_hunyise, must_quandai] = [false, false];
     if (melds.length >= 5 && isSameColor(melds)) update(31, 1), (must_hunyise = true);
     init_seq();
-    if (setting[21]) {
-        for (let i = 0; i < 25; ++i) same3 += Math.floor(seq[i] / 3);
-        same3 = update(21, same3);
-        beikou -= same3;
+    let dpsame = Array(52).fill(null);
+    const [v4, v3, vp, vs] = [JPGetFanValue(53, mq), JPGetFanValue(52, mq), JPGetFanValue(29, mq), JPGetFanValue(11, mq)];
+    const fisame = (i, j) => i * 2 + j + 2;
+    const fdpsame = (i, j) => dpsame[fisame(i, j)];
+    const fusame = (x, i, j, k, s) => x ? [x[0] + i * v4 + j * v3 + k * vp + s * vs, x[1] + i, x[2] + j, x[3] + k, x[4] + s] : null;
+    function cmpsame(x, y) {
+        if (x[0] !== y[0]) return x[0] > y[0];
+        if (x[3] !== y[3]) return x[3] > y[3];
+        return x[4] > y[4];
     }
-    if (mq) {
-        for (let i = 0; i < 25; ++i) beikou += Math.floor(seq[i] / 2);
-        update(11, beikou % 2), update(29, Math.floor(beikou / 2));
+    const frsame = (x, y) => !x ? y : !y ? x : (cmpsame(x, y) > 0 ? x : y);
+    for (let i = -1; i < 25; ++i) dpsame[fisame(i, 0)] = [0, 0, 0, 0, 0];
+    for (let i = 0; i < 25; ++i) {
+        const max4 = v4 > 0 ? Math.floor(seq[i] / 4) : 0;
+        for (let j4 = 0; j4 <= max4; ++j4) {
+            const max3 = v3 > 0 ? Math.floor((seq[i] - j4 * 4) / 3) : 0;
+            for (let j3 = 0; j3 <= max3; ++j3) {
+                const fixed = j4 * 4 + j3 * 3;
+                let free = seq[i] - fixed;
+                if (free > fixed) free = fixed + Math.floor((free - fixed) / 2);
+                let [p, s] = [Math.floor(free / 2), free % 2];
+                if (s === 1) {
+                    dpsame[fisame(i, 0)] = [fdpsame(i, 0), fusame(fdpsame(i - 1, 0), j4, j3, p, 0), fusame(fdpsame(i - 1, 1), j4, j3, p + 1, -1)].reduce(frsame);
+                    dpsame[fisame(i, 1)] = [fdpsame(i, 1), fusame(fdpsame(i - 1, 0), j4, j3, p, 1), fusame(fdpsame(i - 1, 1), j4, j3, p, 0)].reduce(frsame);
+                } else {
+                    dpsame[fisame(i, 0)] = [fdpsame(i, 0), fusame(fdpsame(i - 1, 0), j4, j3, p, 0)].reduce(frsame);
+                    dpsame[fisame(i, 1)] = [fdpsame(i, 1), fusame(fdpsame(i - 1, 1), j4, j3, p, 0)].reduce(frsame);
+                }
+            }
+        }
     }
+    let ansame = [fdpsame(24, 0), fdpsame(24, 1)].reduce(frsame);
+    update(53, ansame[1]), update(52, ansame[2]), update(29, ansame[3]), update(11, ansame[4]);
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) update(28, 1);
     if (melds.length >= 5 && isMask(marr, OrphanArray)) update(25), (must_quandai = true);
     if (melds.length >= 5 && isContains19(melds))

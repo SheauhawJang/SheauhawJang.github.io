@@ -95,17 +95,19 @@ function processInput() {
         }
         switch (task) {
             case 1:
-                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt && opencheck(aids[1])) {
+                const newstepjp = worker_substeps[task].slice();
+                if (worker_substeps[0] === -1) newstepjp[0] = -1;
+                if ((Math.min(...newstepjp) <= -1 + full_tcnt - tcnt) && opencheck(aids[1])) {
                     document.getElementById("output-score-jp").textContent = "";
                     document.getElementById("brief-output-score-jp").textContent = "";
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     document.getElementById("score-jp").style.display = "block";
                     jp_worker = null;
-                    jp_worker_info = { aids, tiles, substeps: worker_substeps[task] };
+                    jp_worker_info = { aids, tiles, substeps: newstepjp };
                 }
                 break;
             case 2:
-                if (Math.min(...worker_substeps[task]) === -1 + full_tcnt - tcnt && opencheck(aids[1])) {
+                if (Math.min(...worker_substeps[task]) <= -1 + full_tcnt - tcnt && opencheck(aids[1])) {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
@@ -1033,4 +1035,8 @@ function SwitchOption(es, id) {
     const et = document.getElementById(id);
     if (et === null) return;
     et.style.display = es.checked ? '' : 'none';
+}
+function debugopen(id) {
+    const e = document.getElementById(id);
+    if (e) e.style.display = '';
 }

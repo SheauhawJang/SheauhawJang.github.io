@@ -62,13 +62,14 @@ function id(name) {
             break;
         case "z":
             if (x === -1) return { id: 31, sp: 1 };
+            if (x === 7) return { id: 47 };
+            if (x === 8) return { id: 48 };
             x += 27;
-            if (x >= sizeUT) x = 50;
             break;
         case "h":
         case "f":
+            if (x === -1 || x === 8) return { id: 50 };
             x += 34;
-            if (x >= 42) x = 50;
             break;
         case "j":
             if (x === -1) return { id: 42, sp: 1 };

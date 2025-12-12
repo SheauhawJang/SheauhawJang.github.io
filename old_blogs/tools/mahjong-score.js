@@ -112,7 +112,6 @@ function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].l
             if (n.s) (ota[i + 1] -= n.s), (ota[i + 2] -= n.s);
         }
     }
-    console.log(cnt, nsubots, cnt * nsubots);
     return { itsubots: (g) => cartesianProduct(g, submeld), itots: dfs, nsubots, nots: cnt, ck, ek };
 }
 function RemoveMeldsByIndex(s, v, skipi) {
@@ -850,7 +849,7 @@ function GB7Pairs(tids, setting) {
         let shadow = -1;
         for (let j = l; j < r; ++j) {
             if (count[j]) shadow = j;
-            if (count[j] % 2 === 1) break;
+            if (count[j] & 1) break;
         }
         if (shadow >= 0) next(shadow);
         else for (let j = l; j < r; ++j) next(j);
@@ -943,7 +942,7 @@ function JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, 
             if (canBeListen(tiles, ta, tb, melds[i][0], wint))
                 if (NumberArray[melds[i][0]] === 6) listen_type ||= 17;
                 else bilisten = true;
-            else if (canBeListen(tiles, ta, tb, melds[i][1], wint) && !listen_type) listen_type = 18;
+            else if (canBeListen(tiles, ta, tb, melds[i][1], wint)) listen_type ||= 18;
             else if (canBeListen(tiles, ta, tb, melds[i][2], wint))
                 if (NumberArray[melds[i][2]] === 2) listen_type ||= 17;
                 else bilisten = true;
@@ -972,8 +971,8 @@ function JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, 
     return { head, listen_type, cp, bilisten, valfus, fus };
 }
 function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq) {
-    let fans = [];
-    if ((setting[6] || !tsumo) && (mq || setting[24]) && fus.length === 1 && bilisten && yakuman === 0) fans.push((ans) => JPUpdateFan(ans, setting, 10));
+    let pinfu = false;
+    if ((setting[6] || !tsumo) && (mq || setting[24]) && fus.length === 1 && bilisten && yakuman === 0) pinfu = true;
     else {
         if (listen_type) (valfus += 2), fus.push(listen_type);
         if (tsumo && !(setting[16] && yakuman === 0 && (infoans.fan.includes(12) || infoans.fan.includes(64)))) (valfus += 2), fus.push(11);
@@ -981,7 +980,7 @@ function JPGetFusRemain(yakuman, infoans, tsumo, fus, valfus, listen_type, bilis
     if (!setting[25] && !mq && valfus <= 20) valfus += 2;
     const realfus = valfus;
     if (setting[14]) valfus = Math.ceil(valfus / 10) * 10;
-    return { fus, valfus, realfus, fans };
+    return { fus, valfus, realfus, pinfu };
 }
 function JPGetFanValue(id, mq = true) {
     return mq ? JPScoreArray0[id] : JPScoreArray1[id];
@@ -1092,49 +1091,56 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
         update(67);
     })();
     if (alltri) update(18);
-    let realfus, fans;
-    ({ fus, valfus, realfus, fans } = JPGetFusRemain(ans.yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq));
-    fans.forEach(f => f(ans));
+    let realfus, pinfu;
+    ({ fus, valfus, realfus, pinfu } = JPGetFusRemain(ans.yakuman, infoans, tsumo, fus, valfus, listen_type, bilisten, setting, mq));
     if (ans.yakuman > 0) return getJPAnsUnion(setting, ans, fus, valfus, realfus);
     if (gans.yakuman > 0) return eans_jp;
     let [must_hunyise, must_quandai] = [false, false];
     if (melds.length >= 5 && isSameColor(melds)) update(31, 1), (must_hunyise = true);
     init_seq();
-    let dpsame = Array(52).fill(null);
     const [v4, v3, vp, vs] = [JPGetFanValue(53, mq), JPGetFanValue(52, mq), JPGetFanValue(29, mq), JPGetFanValue(11, mq)];
-    const fisame = (i, j) => i * 2 + j + 2;
-    const fdpsame = (i, j) => dpsame[fisame(i, j)];
-    const fusame = (x, i, j, k, s) => x ? [x[0] + i * v4 + j * v3 + k * vp + s * vs, x[1] + i, x[2] + j, x[3] + k, x[4] + s] : null;
-    function cmpsame(x, y) {
-        if (x[0] !== y[0]) return x[0] > y[0];
-        if (x[3] !== y[3]) return x[3] > y[3];
-        return x[4] > y[4];
-    }
-    const frsame = (x, y) => !x ? y : !y ? x : (cmpsame(x, y) > 0 ? x : y);
-    for (let i = -1; i < 25; ++i) dpsame[fisame(i, 0)] = [0, 0, 0, 0, 0];
-    for (let i = 0; i < 25; ++i) {
-        const max4 = v4 > 0 ? Math.floor(seq[i] / 4) : 0;
-        for (let j4 = 0; j4 <= max4; ++j4) {
-            const max3 = v3 > 0 ? Math.floor((seq[i] - j4 * 4) / 3) : 0;
-            for (let j3 = 0; j3 <= max3; ++j3) {
-                let [s, p, f4, f3, pot, free] = [0, 0, j4, j3, j4 * 4 + j3 * 3, seq[i] - j4 * 4 - j3 * 3];
-                const [s4, s3] = [Math.floor(f4 / 2), Math.floor(f3 / 2)];
-                s += s4 * 4 + s3 * 3, pot -= s4 * 8 + s3 * 6, f4 -= s4 * 2, f3 -= s3 * 2;
-                if (f4 && f3) s += 3, pot -= 6;
-                const sfp = Math.min(pot, free);
-                s += sfp, free -= sfp, s += Math.floor(free / 2), p = Math.floor(s / 2), s -= 2 * p;
-                if (s === 1) {
-                    dpsame[fisame(i, 0)] = [fdpsame(i, 0), fusame(fdpsame(i - 1, 0), j4, j3, p, 0), fusame(fdpsame(i - 1, 1), j4, j3, p + 1, -1)].reduce(frsame);
-                    dpsame[fisame(i, 1)] = [fdpsame(i, 1), fusame(fdpsame(i - 1, 0), j4, j3, p, 1), fusame(fdpsame(i - 1, 1), j4, j3, p, 0)].reduce(frsame);
-                } else {
-                    dpsame[fisame(i, 0)] = [fdpsame(i, 0), fusame(fdpsame(i - 1, 0), j4, j3, p, 0)].reduce(frsame);
-                    dpsame[fisame(i, 1)] = [fdpsame(i, 1), fusame(fdpsame(i - 1, 1), j4, j3, p, 0)].reduce(frsame);
+    if (v4 > 0 || v3 > 0) {
+        let dpl = [[0, 0, 0, 0, 0], null];
+        const fusame = (x, i, j, k, s) => {
+            if (!x) return x;
+            const dv = i * v4 + j * v3 + k * vp + s * vs;
+            if (dv === 0) return x;
+            return [x[0] + dv, x[1] + i, x[2] + j, x[3] + k, x[4] + s];
+        };
+        const cmpsame = (x, y) => x[0] - y[0];
+        const frsame = (x, y) => !x ? y : !y ? x : (cmpsame(x, y) > 0 ? x : y);
+        for (let i = 0; i < 25; ++i) {
+            if (seq[i] < 2) continue;
+            let dpr = [[0, 0, 0, 0, 0], null];
+            const max4 = v4 > 0 ? Math.floor(seq[i] / 4) : 0;
+            for (let j4 = 0; j4 <= max4; ++j4) {
+                const [u4, s4] = [j4 * 4, j4 >> 1];
+                const max3 = v3 > 0 ? Math.floor((seq[i] - u4) / 3) : 0;
+                for (let j3 = 0; j3 <= max3; ++j3) {
+                    const [u3, s3] = [j3 * 4, j3 >> 1];
+                    let [s, p, pot, free, sb] = [0, 0, j4, j3, u4 + u3, seq[i] - u4 - u3, s4 * 4 + s3 * 3];
+                    s += sb, pot -= sb * 2;
+                    if (j4 % 2 && j3 % 2) s += 3, pot -= 6;
+                    const sfp = Math.min(pot, free);
+                    s += sfp, free -= sfp, s += free >> 1, p = s >> 1, s &= 1;
+                    if (s === 1) {
+                        dpr[0] = [dpr[0], fusame(dpl[0], j4, j3, p, 0), fusame(dpl[1], j4, j3, p + 1, -1)].reduce(frsame);
+                        dpr[1] = [dpr[1], fusame(dpl[0], j4, j3, p, 1), fusame(dpl[1], j4, j3, p, 0)].reduce(frsame);
+                    } else {
+                        dpr[0] = [dpr[0], fusame(dpl[0], j4, j3, p, 0)].reduce(frsame);
+                        dpr[1] = [dpr[1], fusame(dpl[1], j4, j3, p, 0)].reduce(frsame);
+                    }
                 }
             }
+            dpl = dpr;
         }
+        let ansame = dpl.reduce(frsame);
+        update(53, ansame[1]), update(52, ansame[2]), update(29, ansame[3]), update(11, ansame[4]);
+    } else {
+        let s = 0;
+        for (let i = 0; i < 25; ++i) s += seq[i] >> 1;
+        update(29, s >> 1), update(11, s & 1);
     }
-    let ansame = [fdpsame(24, 0), fdpsame(24, 1)].reduce(frsame);
-    update(53, ansame[1]), update(52, ansame[2]), update(29, ansame[3]), update(11, ansame[4]);
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) update(28, 1);
     if (melds.length >= 5 && isMask(marr, OrphanArray)) update(25), (must_quandai = true);
     if (melds.length >= 5 && isContains19(melds))
@@ -1180,6 +1186,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     if (melds.length >= 5 && (mq || setting[4]) && isMask(marr, NoOrphanArray)) update(4);
     if (mq && tsumo) update(2);
     if (setting[44] && aids[0].length === 2 && aids[1].length >= 4 && ck === 0) update(68);
+    if (pinfu) update(10);
     let vaildora = nuki.slice();
     for (let i = 0; i < melds.length; ++i)
         if (melds[i].length === 3) for (let j = 0; j < 3; ++j) ++vaildora[melds[i][j]];

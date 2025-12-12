@@ -491,6 +491,9 @@ function postDebugInfoGlobal(st, m, cm, output) {
     let debug = `Calculating...... / Calculated ${rate.toFixed(2)}% / Used ${t} ms / Estimated ${predict_t} ms / Remaining ${predict_t - t} ms`;
     postMessage({ debug, output });
 }
+function debugPermutation(p, title = "Permutation") {
+    console.log(title, p.nots, p.nsubots, p.nots * p.nsubots);
+}
 function GBScore(substeps, gw, mw, wt, info, setting) {
     let [infov, infof] = [0, []];
     if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
@@ -516,7 +519,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     let gans = { val: 0, fan: [] };
     let [cm, m] = [0, 0];
     let p = Array(7).fill(null);
-    if (substeps[0] === -1) p[6] = MeldsPermutation(aids, tiles);
+    if (substeps[0] === -1) p[6] = MeldsPermutation(aids, tiles), debugPermutation(p[6]);
     if (substeps[1] === -1) ++m;
     if (substeps[2] === -1) ++m;
     if (substeps[4] === -1)
@@ -634,8 +637,6 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (substeps[0] === -1) {
         const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
         const { err, itots, itsubots, ek, ck } = p[6];
-        if (err === 1) return { output: loc.subtile_error_1, brief: "" };
-        if (err === 2) return { output: loc.subtile_error_2, brief: "" };
         let addk = false;
         for (let i = 0; i < aids[1].length; ++i) if (getUnifiedType(aids[1][i]) > 4) addk = true;
         if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) (must_single_listen = true), (infov += 6), infof.push(52);
@@ -648,12 +649,12 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         for (let i = 0; i < 6; ++i) {
             if (!p[i]) continue;
             const { err, itots, itsubots, ek, ck } = p[i];
-            if (err === 1) return { output: loc.subtile_error_1, brief: "" };
-            if (err === 2) return { output: loc.subtile_error_2, brief: "" };
             const other = [KnitDragonSave[i].slice(0, 3), KnitDragonSave[i].slice(3, 6), KnitDragonSave[i].slice(6, 9)];
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
             postDebugInfo();
         }
+    seqsave.clear(), trisave.clear();
+    console.log(filter_cnt), filter_cnt = 0;
     let basept = (setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val) + aids[2].length;
     (gans.val += aids[2].length), gans.fan.push(...Array(aids[2].length).fill(81));
     let fanreview = `${gans.val} ${loc.GB_FAN_unit}`;
@@ -696,6 +697,7 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i]), JPScoreArray1[i] = Math.max(-1, JPScoreArray0[i]);
+    if (setting[17]) JPScoreArray0[48] = [0, 2, 1][setting[17]], JPScoreArray1[52] = 1;
     if (setting[21]) JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]], JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]];
     if (setting[22]) JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]], JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]];
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
@@ -708,6 +710,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     for (let i = 0; i < aids[2].length; ++i) if ("sp" in aids[2][i]) ++aka;
     let nukicnt = aids[2].length;
     const p = MeldsPermutation(aids);
+    debugPermutation(p);
     let searchList = [() => normalSearch(substeps, p)];
     const infoupdate = (id) => JPUpdateFan(infoans, setting, id);
     if (info.includes(32))
@@ -818,8 +821,6 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
             [cm, m] = [0, nots * nsubots];
             mq = ck === aids[1].length;
-            if (err === 1) return { output: loc.subtile_error_1, brief: "" };
-            if (err === 2) return { output: loc.subtile_error_2, brief: "" };
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
         }
     }
@@ -833,8 +834,6 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         }
         if (substeps[0] === -1) {
             const { err, itots, itsubots, ck, ek } = p;
-            if (err === 1) return { output: loc.subtile_error_1, brief: "" };
-            if (err === 2) return { output: loc.subtile_error_2, brief: "" };
             itots((ots, ota) => itsubots((subots) => calfu(ots, ota, subots, ck, ek)));
         }
         if (substeps[1] === -1) {

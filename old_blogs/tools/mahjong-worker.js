@@ -192,8 +192,8 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     postMessage({ output: output + makeTable(table), brief });
     if (rsubstep[2] !== Infinity) {
         const k = OrphanCount(tiles).count;
-        let status = loc.dame;
-        if (k >= 9) status = loc.OK;
+        let status = loc.unavailable;
+        if (k >= 9) status = loc.available;
         else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
         table += makeTableLineLR(`${loc.kyushukyuhai}${loc.colon}`, `${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}`);
     }
@@ -264,8 +264,8 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     postMessage({ output: output + makeTable(table), brief });
     if (rsubstep[2] !== Infinity) {
         const k = OrphanCount(tiles).count;
-        let status = loc.dame;
-        if (k >= 9) status = loc.OK;
+        let status = loc.unavailable;
+        if (k >= 9) status = loc.available;
         else if (k === 8 && full_tcnt !== tcnt) status = loc.waiting;
         table += makeTableLineLR(`${loc.kyushukyuhai}${loc.colon}`, `${status}${loc.brace_left}${k} ${loc.shukyuhai}${loc.brace_right}`);
     }
@@ -702,12 +702,13 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     if (setting[22]) JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]], JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]];
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
     if (setting[40]) JPScoreArray0[67] = [0, 1, 2, 2, 2, 5, -1, -1][setting[40]], JPScoreArray1[67] = [0, 1, 2, 1, 0, 5, -1, 0][setting[40]];
+    JPScoreArray0[29] = [3, 2, { id: 11, n: 2 }, 4][setting[47]];
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
     let riichi = false;
     let aka = 0;
-    for (let i = 0; i < aids[0].length; ++i) if ("sp" in aids[0][i]) ++aka;
-    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if ("sp" in aids[1][i][j]) ++aka;
-    for (let i = 0; i < aids[2].length; ++i) if ("sp" in aids[2][i]) ++aka;
+    for (let i = 0; i < aids[0].length; ++i) if (aids[0][i].sp) ++aka;
+    for (let i = 0; i < aids[1].length; ++i) for (let j = 0; j < aids[1][i].length; ++j) if (aids[1][i][j].sp) ++aka;
+    for (let i = 0; i < aids[2].length; ++i) if (aids[2][i].sp) ++aka;
     let nukicnt = aids[2].length;
     const p = MeldsPermutation(aids);
     debugPermutation(p);

@@ -301,19 +301,19 @@ function getCardHelperDiv(tile, width, unit = "%", t = "") {
 }
 let cardskin = "jp";
 function hasGBCard(id) {
-    if ("sp" in id) return false;
+    if (id.sp) return false;
     if (id.id >= JokerC) return false;
     return true;
 }
 function hasJPCard(id) {
     if (id.id >= sizeUT) return false;
-    if (id.id >= 27 && "sp" in id) return false;
+    if (id.id >= 27 && id.sp) return false;
     return true;
 }
 function hasQQCard(id) {
     if (id.id === JokerC) return true;
     if (id.id === JokerC + 7) return true;
-    if ("sp" in id) return false;
+    if (id.sp) return false;
     if (id.id >= JokerC + 4) return false;
     return true;
 }
@@ -654,8 +654,8 @@ function processGBScore() {
 }
 let jp_worker = null;
 let jp_worker_info;
-const JP_RADIO_MAX = 19;
-const JP_SETTING_SIZE = 47;
+const JP_RADIO_MAX = 20;
+const JP_SETTING_SIZE = 48;
 function processJPScore() {
     if (jp_worker) {
         jp_worker.terminate();

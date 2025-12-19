@@ -988,7 +988,8 @@ function JPGetFanValue(id, mq = true) {
 function JPUpdateFan(ans, setting, id, n = 1, mq = true) {
     if (n === 0) return 0;
     const nv = JPGetFanValue(id, mq);
-    if (nv === 0) return 0;
+    if (!nv) return 0;
+    if (nv?.id) return JPUpdateFan(ans, setting, nv.id, n * (nv.n ?? 1), mq);
     if (nv < 0) {
         if (!setting[46]) return 0;
         if (ans.yakuman === 0) ans.fan.length = 0;
@@ -1117,8 +1118,9 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
                 const [u4, s4] = [j4 * 4, j4 >> 1];
                 const max3 = v3 > 0 ? Math.floor((seq[i] - u4) / 3) : 0;
                 for (let j3 = 0; j3 <= max3; ++j3) {
-                    const [u3, s3] = [j3 * 4, j3 >> 1];
-                    let [s, p, pot, free, sb] = [0, 0, j4, j3, u4 + u3, seq[i] - u4 - u3, s4 * 4 + s3 * 3];
+                    const [u3, s3] = [j3 * 3, j3 >> 1];
+                    let [s, p, pot, free, sb] = [0, 0, u4 + u3, seq[i] - u4 - u3, s4 * 4 + s3 * 3];
+                    console.log(s, p, pot, free, sb)
                     s += sb, pot -= sb * 2;
                     if (j4 % 2 && j3 % 2) s += 3, pot -= 6;
                     const sfp = Math.min(pot, free);
@@ -1139,6 +1141,7 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     } else {
         let s = 0;
         for (let i = 0; i < 25; ++i) s += seq[i] >> 1;
+        console.log(s);
         update(29, s >> 1), update(11, s & 1);
     }
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) update(28, 1);

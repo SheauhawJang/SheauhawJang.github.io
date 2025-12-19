@@ -82,8 +82,8 @@ function id(name) {
     return { id: x };
 }
 function cardName(ip) {
-    const id = typeof ip === "number" ? ip : ip.id;
-    if (typeof ip === "object" && "sp" in ip)
+    const id = typeof ip === "number" ? ip : ip?.id;
+    if (ip?.sp)
         switch (id) {
             case 4:
                 return "0m";

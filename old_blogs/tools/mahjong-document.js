@@ -324,10 +324,10 @@ function getOverlay(path, t) {
 }
 function getCardImage(id, t = "", onclick = "") {
     let [name, overlay] = [cardName(id), null];
-    if (cardskin === "qq" && hasQQCard(id)) overlay = getOverlay(`./qqcards/${name}.png`);
-    if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.gif`);
-    if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`);
-    if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`);
+    if (cardskin === "qq" && hasQQCard(id)) overlay = getOverlay(`./qqcards/${name}.png`, t);
+    if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.gif`, t);
+    if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`, t);
+    if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
     if (cardskin === "jp") 
         switch (id.id) {
             case 42: name = "ij"; break;
@@ -803,6 +803,21 @@ function addReferenceMark() {
         e.setAttribute("title", removeFanSpans(t));
     });
     box.innerHTML = notes.join("<br/>");
+}
+function replacei18n() {
+    setLoc(lang);
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        let text = loc[key];
+        if (!text) return;
+        switch (el.getAttribute('data-i18n-case')) {
+            case "lower": text = text.toLowerCase(); break;
+            case "upper": text = text.toUpperCase(); break;
+            case "capitalize": text = text.charAt(0).toUpperCase() + text.slice(1); break;
+            case "title": text = text.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
+        el.innerHTML = text;
+    });
 }
 const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-img-overlay-rr-0", "card-img-overlay-rr-1"]);
 function updateCardSkin(skin) {

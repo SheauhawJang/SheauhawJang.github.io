@@ -331,11 +331,11 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "jp") 
         switch (id.id) {
             case 42: name = "ij"; break;
-            case 43: name = "im", overlay = getOverlay(`./cards/im.png`); break;
-            case 44: name = "ip", overlay = getOverlay(`./cards/ip.png`); break;
-            case 45: name = "is", overlay = getOverlay(`./cards/is.png`); break;
-            case 47: name = "8z", overlay = getOverlay(`./cards/8z.png`); break;
-            case 48: name = "9z", overlay = getOverlay(`./cards/9z.png`); break;
+            case 43: name = "im", overlay = getOverlay(`./cards/im.png`, t); break;
+            case 44: name = "ip", overlay = getOverlay(`./cards/ip.png`, t); break;
+            case 45: name = "is", overlay = getOverlay(`./cards/is.png`, t); break;
+            case 47: name = "8z", overlay = getOverlay(`./cards/8z.png`, t); break;
+            case 48: name = "9z", overlay = getOverlay(`./cards/9z.png`, t); break;
         }
     if (overlay) return `${overlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     return `<img src="./cards/${t}${name}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;

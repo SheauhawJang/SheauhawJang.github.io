@@ -14,8 +14,6 @@ function Qingque_Calculate(aids, info, substeps) {
         ck = 0;
     if (substeps[0] === -1) {
         const p = MeldsPermutation(aids);
-        if (p.err === 1) return cn_loc.subtile_error_1;
-        if (p.err === 2) return cn_loc.subtile_error_2;
         p.itots((ots) => p.itsubots((subots) => decom.push([...ots, ...subots])));
         (ek = p.ek), (ck = p.ck);
     }

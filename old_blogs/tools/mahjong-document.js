@@ -115,7 +115,7 @@ function processInput() {
                     gb_worker = null;
                     gb_worker_info = { aids, tiles, substeps: worker_substeps[task] };
                 }
-                if (Math.min(worker_substeps[1][0], worker_substeps[2][1]) === -1) {
+                if (Math.min(worker_substeps[1][0], worker_substeps[2][1]) === -1 && opencheck(aids[1])) {
                     let show_qingque = Boolean(document.getElementById("score-qingque"));
                     if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
                     for (let i = 0; show_qingque && i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
@@ -968,22 +968,22 @@ function processJPSetting(id) {
     const localyaku0 = Array(9).fill(0);
     // prettier-ignore
     const rules = [
-        [[1, 2, 3, 46], [39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, ...localyaku0, 0]], // XJTU (0)
-        [[3, 46], [1, 2, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, ...localyaku0, 0]], // XJTU 7 Stars (1)
-        [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0]], // JPML (2)
-        [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0]], // JPML WRC (3)
-        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // Saikouisen (4)
-        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // Saikouisen Classic (5)
-        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // ClubJPM (6=4)
-        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // M.League (7=4)
-        [[39, 46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0]], // EMA (8)
-        [[1, 2, 3, 13, 46], [11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // Mahjong Soul (9)
-        [[1, 2, 3, 13, 26, 27, 28, 32, 33, 34, 35, 38, 46], [11, 24, 25, 29, 30, 31, 36, 37, 41, 42, 43], [4, 0, 6, 0, 0, "9,2", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0, "40,2", "44", 0]], // Mahjong Soul Local Yaku (10)
-        [[2, 3, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // Tenhou (11)
-        [[46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // Shinhouchi (12)
-        [[46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // Mu (13=12)
-        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0]], // RMU (14=4)
-        [[46], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, "9,3", 0, undefined, 14, 15, ...localyaku0, 0]], // Zendanshin (15)
+        [[1, 2, 3, 46], [39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, ...localyaku0, 0, 0]], // XJTU (0)
+        [[3, 46], [1, 2, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 10, undefined, 14, 15, ...localyaku0, 0, 0]], // XJTU 7 Stars (1)
+        [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0]], // JPML (2)
+        [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0]], // JPML WRC (3)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Saikouisen (4)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Saikouisen Classic (5)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // ClubJPM (6=4)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // M.League (7=4)
+        [[39, 46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0]], // EMA (8)
+        [[1, 2, 3, 13, 46], [11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Mahjong Soul (9)
+        [[1, 2, 3, 13, 26, 27, 28, 32, 33, 34, 35, 38, 46], [11, 24, 25, 29, 30, 31, 36, 37, 41, 42, 43], [4, 0, 6, 0, 0, "9,2", 10, undefined, 14, 15, 0, 0, 0, 19, 0, "21,3", 0, "40,2", "44", 0, 0]], // Mahjong Soul Local Yaku (10)
+        [[2, 3, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [undefined, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Tenhou (11)
+        [[46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Shinhouchi (12)
+        [[46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Mu (13=12)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0]], // RMU (14=4)
+        [[46], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43], [4, 5, 6, 0, 0, "9,3", 0, undefined, 14, 15, ...localyaku0, 0, 0]], // Zendanshin (15)
     ];
     const positive = rules[id][0],
         negative = rules[id][1],

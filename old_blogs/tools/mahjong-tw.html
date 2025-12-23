@@ -43,29 +43,17 @@
                     <div class="input-note" id="inputNote" style="display: none">
                         輸入欄支援以下格式，以下格式可混合使用：
                         <ol style="margin-top: 0">
-                            <li>
-                                天鳳格式：序數牌使用序數(阿拉伯數字)＋顏色(小寫字母)表示，其中：<b>萬=m</b>，<b>索/條=s</b>，<b>筒/餅=p</b>。字牌之<b>東南西北白發中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母後綴的相鄰牌可以只保留最右側牌的字母後綴。
-                            </li>
+                            <li>天鳳格式：序數牌使用序數(阿拉伯數字)＋顏色(小寫字母)表示，其中：<b>萬=m</b>，<b>索/條=s</b>，<b>筒/餅=p</b>。字牌之<b>東南西北白發中</b>依次使用<b>1z2z3z4z5z6z7z</b>表示。同字母後綴的相鄰牌可以只保留最右側牌的字母後綴。</li>
                             <li>國標小助手格式：序數牌同「天鳳格式」，字牌之<b>東南西北白發中</b>依次使用大寫字母<b>ESWNPFC</b>表示。</li>
                             <li>英文麻將印刷格式：序數牌同「天鳳格式」，字牌之<b>東南西北</b>依次使用大寫字母<b>ESWN</b>表示，<b>白=Wh</b>，<b>發=G</b>，<b>中=R</b>。</li>
                             <li>漢語拼音格式：同天鳳格式。惟<b>萬=w</b>，<b>餅/筒=b</b>。</li>
-                            <li>
-                                採譜記號格式：萬字使用漢數字<b>一二三四五六七八九</b>表示，筒子/餅子使用帶圈數字<b>①②③④⑤⑥⑦⑧⑨</b>表示，索子/條子使用全形數字<b>１２３４５６７８９</b>表示，字牌使用對應漢字表示。
-                            </li>
+                            <li>採譜記號格式：萬字使用漢數字<b>一二三四五六七八九</b>表示，筒子/餅子使用帶圈數字<b>①②③④⑤⑥⑦⑧⑨</b>表示，索子/條子使用全形數字<b>１２３４５６７８９</b>表示，字牌使用對應漢字表示。</li>
                             <li>Unicode格式：使用Unicode U+1F000 至 U+1F02B 的字符表示對應的牌。</li>
                         </ol>
-                        <p>
-                            關於花牌：<b>春夏秋冬梅蘭菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻將把花牌視作百搭牌，本計算器的花牌無此功能，如有需要請轉化為專門的百搭牌。<br />
-                        </p>
+                        <p>關於花牌：<b>春夏秋冬梅蘭菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻將把花牌視作百搭牌，本計算器的花牌無此功能，如有需要請轉化為專門的百搭牌。<br /></p>
                         關於百搭牌：
                         <ul style="margin-top: 0">
-                            <li>
-                                不定向百搭牌
-                                <img
-                                    src="./cards/a1j.gif"
-                                    style="vertical-align: middle"
-                                />：可以視作任何一張序數牌或字牌。使用<b>1j/J</b>表示。（部分地方麻將可能稱為癩子或者混兒）
-                            </li>
+                            <li>不定向百搭牌<img src="./cards/a1j.gif" style="vertical-align: middle" />：可以視作任何一張序數牌或字牌。使用<b>1j/J</b>表示。（部分地方麻將可能稱為癩子或者混兒）</li>
                             <li>萬字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以視作任何一張萬字。使用<b>2j/im/iw</b>表示。</li>
                             <li>餅子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以視作任何一張筒子/餅子。使用<b>3j/ip/ib</b>表示。</li>
                             <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以視作任何一張索子/條子。使用<b>4j/is</b>表示。</li>
@@ -313,7 +301,7 @@
                     <details>
                         <summary>規則設定</summary>
                         <div class="output-options">
-                            <span><span data-i18n="yakuman"></span></span>
+                            <span data-i18n="yakuman"></span>
                             <div class="output-option-group">
                                 <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span>役</label>
                                 <label title="XJTU規則採用。新報知規則、最高位戰規則、聯盟規則、協會規則、RMU規則、全段審規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
@@ -373,7 +361,7 @@
                                 <label><input type="radio" name="score-jp-setting-12" value="0" checked /><span data-i18n="JP_YAKUNAME_44"></span></label>
                                 <label><input type="radio" name="score-jp-setting-12" value="18,2" /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
                             </div>
-                            <span data-i18n="JP_FUNAME_10"></span>
+                            <span data-i18n="JP_YAKUNAME_17"></span>
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 <span data-i18n="JP_FAN_unit"></span> 25 <span data-i18n="JP_FU_unit"></span></label>
                                 <label><input type="radio" name="score-jp-setting-4" value="8,1" />1 <span data-i18n="JP_FAN_unit"></span> 50 <span data-i18n="JP_FU_unit"></span></label>
@@ -595,7 +583,7 @@
                             <span data-i18n="GB_FANNAME_46"></span>
                             <div class="output-option-group">
                                 <label><input type="checkbox" name="score-gb-setting" value="31,1" />不計<span data-i18n="GB_FANNAME_74"></span></label>
-                                <label title="疑難解析採用。"><input type="checkbox" name="score-gb-setting" value="31,2" />不計<span data-i18n="GB_FANNAME_74">且<span data-i18n="GB_FANNAME_67"></span>减 1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label title="疑難解析採用。"><input type="checkbox" name="score-gb-setting" value="31,2" />不計<span data-i18n="GB_FANNAME_74"></span>且<span data-i18n="GB_FANNAME_67"></span>减 1 <span data-i18n="GB_FAN_unit"></span></label>
                                 <label title="問答規則、MIL規則、JMSA規則採用。"><input type="checkbox" name="score-gb-setting" value="32" checked />可複合<span data-i18n="GB_FANNAME_44"></span></label>
                             </div>
                             <span>不計<span data-i18n="GB_FANNAME_73"></span></span>

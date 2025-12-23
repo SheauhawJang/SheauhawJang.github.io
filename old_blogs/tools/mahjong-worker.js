@@ -479,7 +479,7 @@ function GBFanDiv(fan) {
         else --fans[-fan[i]];
     (fans[60] += fans[83]), (fans[61] += fans[83]);
     let fanopt = [];
-    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`GB_FANNAME_${i}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
+    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc._fanname_format_left}${loc[`GB_FANNAME_${i}`]}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
     return makeTable(fanopt.join(""));
 }
 let report = true;
@@ -690,8 +690,8 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki) {
     for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
     fans.push(d, u, aka, nuki);
     let fanopt = [];
-    for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc.fanname_format_left + loc[`JP_YAKUNAME_${PrintSeq[i]}`] + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
-    let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${loc.fanname_format_left + JPGetFuName(i) + loc.fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
+    for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc._fanname_format_left}${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
+    let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${loc._fanname_format_left}${JPGetFuName(i)}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
     return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
 }
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
@@ -899,7 +899,10 @@ function ListenScore(f, sf) {
 }
 self.onmessage = function (e) {
     const st = new Date();
-    if (e.data.lang) setLoc(e.data.lang);
+    if (e.data.lang) {
+        setLoc(e.data.lang);
+        for (const [key, val] of Object.entries(loc)) if (key[0] !== '_') loc[key] = `<span data-i18n="${key}">${val}</span>`;
+    }
     let task = e.data.task;
     let result;
     if (aids === undefined) {

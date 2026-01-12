@@ -244,7 +244,7 @@ const loc_all = {
     baiman: { cn: "倍满", hk: "倍滿", tw: "倍滿", ja: "倍満", en: "Baiman" },
     sanbaiman: { cn: "三倍满", hk: "三倍滿", tw: "三倍滿", ja: "三倍満", en: "Sanbaiman" },
     counted_yakuman: { cn: "累计役满", hk: "累計役滿", tw: "數役滿", ja: "数え役満", en: "Counted Yakuman" },
-    JP_FAN_unit: { cn: "番", hk: "番", tw: "番", ja: "飜", en: "Han" },
+    JP_FAN_unit: { cn: "番", hk: "番", tw: "番", ja: "飜", en: "Fan" },
     JP_FU_unit: { cn: "符", hk: "符", tw: "分", ja: "符", en: "Minipoints" },
     kiri_mangan: { cn: "切上满贯", hk: "切上滿貫", tw: "切上滿貫", ja: "切り上げ満貫", en: "Rounded-Up Mangan" },
     wrong_win: { cn: "错和", hk: "錯和", tw: "錯胡", ja: "錯和", en: "False Win" },

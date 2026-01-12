@@ -597,4 +597,143 @@
                                 <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-5" value="0" checked />不計一个<span data-i18n="GB_FANNAME_73"></span></label>
                                 <label><input type="radio" name="score-gb-setting-5" value="27" />不計所有<span data-i18n="GB_FANNAME_73"></span></label>
                             </div>
-                            <span title="�
+                            <span title="國標原文、問答規則、世麻規則、MIL規則允許缺一門複合大三元至一色四節高。"><span data-i18n="GB_FANNAME_75"></span>複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="13" checked /><span data-i18n="GB_FANNAME_2"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="14" checked /><span data-i18n="GB_FANNAME_10"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="15" checked /><span data-i18n="GB_FANNAME_38"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="16" checked /><span data-i18n="GB_FANNAME_14"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="44" checked /><span data-i18n="GB_FANNAME_16"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="17" checked /><span data-i18n="GB_FANNAME_15"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="18" /><span data-i18n="GB_FANNAME_40"></span></label>
+                            </div>
+                            <span title="國標原文、問答規則、MIL規則允許混一色複合大四喜、小四喜；不允許混一色複合綠一色。世麻規則允許混一色複合下述所有台種。"><span data-i18n="GB_FANNAME_49"></span>複合</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span data-i18n="GB_FANNAME_1"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span data-i18n="GB_FANNAME_9"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="22" /><span data-i18n="GB_FANNAME_3"></span></label>
+                            </div>
+                            <span><span data-i18n="GB_FANNAME_8"></span>複合</span>
+                            <div class="output-option-group">
+                                <label title="世麻規則採用。問答規則、MIL規則不採用。"><input type="checkbox" name="score-gb-setting" value="28" /><span data-i18n="GB_FANNAME_65"></span></label>
+                                <label title="國標原文為「不計同刻」，若非筆誤則不採用。"><input type="checkbox" name="score-gb-setting" value="29" checked /><span data-i18n="GB_FANNAME_32"></span></label>
+                            </div>
+                            <span><span data-i18n="GB_FANNAME_35"></span>和牌</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-3" value="25" />和牌張可解釋為<span data-i18n="GB_FANNAME_35"></span>部分時不計<span data-i18n="GB_FANNAME_77"></span>/<span data-i18n="GB_FANNAME_78"></span>/<span data-i18n="GB_FANNAME_79"></span></label>
+                                <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-3" value="0" checked />和牌張可解釋為順子或雀頭部分時可計<span data-i18n="GB_FANNAME_77"></span>/<span data-i18n="GB_FANNAME_78"></span>/<span data-i18n="GB_FANNAME_79"></span></label>
+                            </div>
+                            <span>多面聽和牌</span>
+                            <div class="output-option-group">
+                                <label title="問答規則、世麻規則、MIL規則採用。疑難解析建議採用。"><input type="radio" name="score-gb-setting-4" value="0" checked />不計<span data-i18n="GB_FANNAME_77"></span>/<span data-i18n="GB_FANNAME_78"></span>/<span data-i18n="GB_FANNAME_79"></span></label>
+                                <label><input type="radio" name="score-gb-setting-4" value="26" />可計<span data-i18n="GB_FANNAME_77"></span>/<span data-i18n="GB_FANNAME_78"></span>/<span data-i18n="GB_FANNAME_79"></span></label>
+                            </div>
+                            <span>加槓<span data-i18n="GB_FANNAME_52"></span></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-7" value="0" checked />開啟</label>
+                                <label><input type="radio" name="score-gb-setting-7" value="36" />關閉</label>
+                            </div>
+                            <span>授受法</span>
+                            <div class="output-option-group">
+                                <label><input type="number" id="score-gb-setting-fan" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>起和</label>
+                                <label><input type="number" id="score-gb-setting-blind" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>底<span data-i18n="GB_FAN_unit"></span></label>
+                                <label title="JMSA規則採用 88 台封頂。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span>封頂</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="39" />自摸分三</label>
+                            </div>
+                            <span>快捷設定</span>
+                            <div class="output-option-group">
+                                <button onclick="processGBSetting(0)">MIL規則</button>
+                                <button onclick="processGBSetting(1)">世麻規則</button>
+                                <button onclick="processGBSetting(2)">JMSA規則</button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="output-context" id="output-score-gb"></div>
+                <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
+                <div class="output-time" id="time-output-score-gb">Ready to start!</div>
+            </div>
+            <div class="reference-box mobile-display-only" id="title-box"></div>
+            <div class="reference-box">
+                相關規則：
+                <ul style="margin-top: 0">   
+                    <li><a href="./rules/Shinhouchi.pdf">平成版麻將新報知規則（新報知規則）</a></li>
+                    <li><a href="./rules/Achieve/Saikouisen.html">最高位戰日本職業麻將協會競技規定（最高位戰規則）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                    <li><a href="./rules/JPML-Riichi.pdf">日本職業麻將聯盟官方規則和WRC規則（聯盟規則）</a></li>
+                    <li><a href="./rules/Mu-Riichi.pdf">麻將聯合官方規則（μ規則）</a></li>
+                    <li><a href="./rules/Achieve/ClubJPM.html">日本職業麻將協會競技規定（協會規則）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                    <li><a href="./rules/Achieve/RMU.html">RMU規則</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                    <li><a href="./rules/Zendanshin.pdf">全國麻將段位審查會競技規定（全段審規則）</a></li>
+<!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">日本健康麻將協會健康麻將規則（健康規則）</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">學生麻將聯盟競技規定（学雀聯規則）</a><a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                    <li><a href="./rules/Achieve/MLeague.html">M.League正式比賽規則（M.League）</a><a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/Saikyosen.html">麻將最強戰規則（最強戰）</a><a class="small-a" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-Riichi.html">日本麻將聯盟立直麻將規則</a> <a class="small-a" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                    <li><a href="./rules/XJTU-Riichi.pdf">西安交通大學立直麻將比賽規則（XJTU規則）和西安交通大學七星杯立直麻將公開賽規則（XJTU七星杯）</a></li>
+                    <li><a href="./rules/EMA-Riichi.pdf">歐洲麻將聯盟立直麻將規則（EMA規則）</a></li>
+<!--No Summary-->   <li><a href="./rules/WRC.pdf">世界立直麻將錦標賽規則（WRC規則）</a></li>
+<!--No Summary-->   <li><a href="./rules/Shingendai.pdf">民國64年制定新《周刊現代規則》（新現代規則）</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-22.html">日本麻將聯盟二十二麻將規則</a> <a class="small-a" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+<!--No Summary-->   <li><a href="./rules/101.pdf">日本麻將101競技聯盟101競技規定（101規則）</a></li>
+                    <li><a href="./rules/GB98.pdf">中國麻將競賽規則（國標原文）</a></li>
+                    <li><a href="./rules/GB98-EC.pdf">中國麻將競賽規則疑難解析（疑難解析）</a></li>
+                    <li><a href="./rules/GB98-FAQ.pdf">《中國麻將競賽規則（試行）》問答（問答規則）</a></li>
+                    <li><a href="./rules/WMO-MCR.pdf">世界麻將組織麻將競賽規則（世麻規則）</a></li>
+                    <li><a href="./rules/MIL-MCR.pdf">國際麻將聯盟國標麻將規則補充細則（MIL規則）</a></li>
+                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻將體育協會規則和<span data-i18n="GB_FAN_unit"></span>種一覽（JMSA規則）</a><a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">原始內容</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="section title-button-container">
+            <div class="output-time">v4.7.14</div>
+            <div class="output-time">聯絡作者：<a href="https://x.com/akiko36000" style="color: inherit;">三倍滿自動姬</a></div>
+        </div>
+        <script src="mahjong.js"></script>
+        <script src="mahjong-document.js"></script>
+        <script src="mahjong-worker-lang.js"></script>
+        <script>
+            function tilesInfo(tcnt) {
+                const meld = Math.floor(tcnt / 3);
+                let output = `${tcnt} 張手牌\n`;
+                switch (tcnt % 3) {
+                    case 1:
+                        output += `3n+1 型: 和牌需要 ${meld} 個面子和 ${1} 個雀頭`;
+                        break;
+                    case 2:
+                        output += `3n+2 型: 和牌需要 ${meld} 個面子和 ${1} 個雀頭`;
+                        break;
+                    case 0:
+                        output += `3n 型: 和牌需要 ${meld} 個面子和 ${0} 個雀頭`;
+                        break;
+                }
+                return output;
+            }
+            function toggleInput() {
+                const board = document.getElementById("boardInput");
+                const button = document.getElementById("inputButton");
+                const text = document.getElementById("textInput");
+                const isVisible = board.style.display !== "none";
+                board.style.display = isVisible ? "none" : "block";
+                text.style.display = isVisible ? "block" : "none";
+                button.textContent = isVisible ? "開啟輸入面板 ▼" : "關閉輸入面板 ▲";
+                if (!isVisible) drawInputCards();
+                if (!isVisible) adjustButtonsFontSize();
+            }
+            function toggleNote() {
+                const note = document.getElementById("inputNote");
+                const button = document.getElementById("inputNoteButton");
+                const isVisible = note.style.display !== "none";
+                note.style.display = isVisible ? "none" : "block";
+                button.textContent = isVisible ? "顯示輸入說明 ▼" : "隱藏輸入說明 ▲";
+            }
+            window.onload = function () {
+                loadStorage();
+                addReferenceMark();
+                replacei18n();
+                loadInput();
+            };
+            const lang = "tw";
+            const toggleOutputLang = ["展開 ▼" , "摺疊 ▲"];
+        </script>
+    </body>
+</html>

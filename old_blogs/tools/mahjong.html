@@ -584,4 +584,189 @@
                                 <label><input type="checkbox" name="score-jp-setting" value="28" /><span data-i18n="JP_YAKUNAME_56"></span><span data-i18n="yakuman"></span></label>
                                 <label><input type="checkbox" name="score-jp-setting" value="29" /><span data-i18n="JP_YAKUNAME_57"></span><span data-i18n="yakuman"></span></label>
                                 <label><input type="checkbox" name="score-jp-setting" value="30" /><span data-i18n="JP_YAKUNAME_58"></span><span data-i18n="yakuman"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="31" /><span dat
+                                <label><input type="checkbox" name="score-jp-setting" value="31" /><span data-i18n="JP_YAKUNAME_59"></span><span data-i18n="yakuman"></span></label>
+                            </div>
+                            <span data-i18n="JP_YAKUNAME_68"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-18" value="0" checked />关闭</label>
+                                <label><input type="radio" name="score-jp-setting-18" value="44" />1 <span data-i18n="JP_FAN_unit"></span></label>
+                            </div>
+                            <span>古役偶然役</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/><span data-i18n="JP_YAKUNAME_60"></span> 1 <span data-i18n="JP_FAN_unit"></span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/><span data-i18n="JP_YAKUNAME_61"></span> 1 <span data-i18n="JP_FAN_unit"></span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="34" /><span data-i18n="JP_YAKUNAME_62"></span> 5 <span data-i18n="JP_FAN_unit"></span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="35" /><span data-i18n="JP_YAKUNAME_63"></span> 5 <span data-i18n="JP_FAN_unit"></span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="36" /><span data-i18n="JP_YAKUNAME_64"></span> 5 <span data-i18n="JP_FAN_unit"></span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="37" /><span data-i18n="JP_YAKUNAME_65"></span> 5 <span data-i18n="JP_FAN_unit"></span></label>
+                                <label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="JP_YAKUNAME_66"></span><span data-i18n="yakuman"></span></label>
+                            </div>
+                            <span>跳<span data-i18n="JP_FU_unit"></span></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-8" value="14" checked />开启</label>
+                                <label><input type="radio" name="score-jp-setting-8" value="0" />关闭</label>
+                            </div>
+                            <span>基本点</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-19" value="45,1" />十位四舍六入</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="45,2" />百位上取整</label>
+                                <label><input type="radio" name="score-jp-setting-19" value="0" checked />不修改</label>
+                            </div>
+                            <span>支付点数</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />百位上取整</label>
+                                <label><input type="radio" name="score-jp-setting-9" value="0" />不修改</label>
+                            </div>
+                            <span>副露<span data-i18n="JP_YAKUNAME_10"></span>型</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-jp-setting" value="24" /><span data-i18n="JP_YAKUNAME_10"></span>役</label>
+                                <label><input type="checkbox" name="score-jp-setting" value="25" />允许 20 <span data-i18n="JP_FU_unit"></span></label>
+                            </div>
+                            <span>快速设置</span>
+                            <div class="output-option-group">
+                                <button onclick="processJPSetting(0)">XJTU规则</button>
+                                <button onclick="processJPSetting(1)">XJTU七星杯</button>
+                                <button onclick="processJPSetting(12)">新报知规则</button>
+                                <button onclick="processJPSetting(4)">最高位战规则</button>
+                                <button onclick="processJPSetting(5)">最高位战Classic规则</button>
+                                <button onclick="processJPSetting(2)">联盟官方规则</button>
+                                <button onclick="processJPSetting(3)">联盟WRC规则</button>
+                                <button onclick="processJPSetting(13)">μ规则</button>
+                                <button onclick="processJPSetting(6)">协会规则</button>
+                                <button onclick="processJPSetting(14)">RMU规则</button>
+                                <button onclick="processJPSetting(15)">全段审规则</button>
+                                <button onclick="processJPSetting(7)">M.League</button>
+                                <button onclick="processJPSetting(8)">EMA规则</button>
+                                <button onclick="processJPSetting(9)">雀魂</button>
+                                <button onclick="processJPSetting(10)">雀魂古役模式</button>
+                                <button onclick="processJPSetting(11)">天凤</button>
+                            </div>
+                        </div>
+                    </details>
+                    <div class="output-options">
+                        <span><span data-i18n="JP_YAKUNAME_96"></span>指示牌</span>
+                        <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
+                        <span><span data-i18n="JP_YAKUNAME_97"></span>指示牌</span>
+                        <div class="card-container" id="output-pic-uras" style="text-align: left"></div>
+                    </div>
+                </div>
+                <div class="output-context" id="output-score-jp"></div>
+                <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
+                <div class="output-time" id="time-output-score-jp">Ready to start!</div>
+            </div>
+            <div class="output-box" id="score-qingque">
+                <div class="title-button-container">
+                    <div class="output-title">青雀算分器</div>
+                    <button class="toggle-button" id="toggle-output-score-qingque" onclick="toggleOutput(6)">折叠 ▲</button>
+                </div>
+                <div id="options-output-score-qingque">
+                    <div class="output-options">
+                        <span>门风</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-qingque-local-wind" value="27" checked />东</label>
+                            <label><input type="radio" name="score-qingque-local-wind" value="28" />南</label>
+                            <label><input type="radio" name="score-qingque-local-wind" value="29" />西</label>
+                            <label><input type="radio" name="score-qingque-local-wind" value="30" />北</label>
+                        </div>
+                        <span>和牌方式</span>
+                        <div class="output-option-group">
+                            <label><input type="radio" name="score-qingque-wintype" value="0" checked />点和</label>
+                            <label><input type="radio" name="score-qingque-wintype" value="1" />自摸</label>
+                        </div>
+                        <span>和牌状态</span>
+                        <div class="output-option-group">
+                            <label><input type="checkbox" name="score-qingque-wininfo" value="2" />开杠相关</label>
+                            <label><input type="checkbox" name="score-qingque-wininfo" value="3" />最后一张</label>
+                            <label><input type="checkbox" name="score-qingque-wininfo" value="4" />天地和</label>
+                        </div>
+                        <button onclick="processQingqueScore()" class="score-button">计算</button>
+                    </div>
+                </div>
+                <div class="output-context" id="output-score-qingque"></div>
+                <div class="output-context" id="brief-output-score-qingque" style="display: none"></div>
+                <div class="output-time" id="time-output-score-qingque">Ready to start!</div>
+            </div>
+            <div class="reference-box mobile-display-only" id="title-box"></div>
+            <div class="reference-box">
+                相关规则：
+                <ul style="margin-top: 0">
+                    <li><a href="./rules/GB98.pdf">中国麻将竞赛规则（国标原文）</a></li>
+                    <li><a href="./rules/GB98-EC.pdf">中国麻将竞赛规则疑难解析（疑难解析）</a></li>
+                    <li><a href="./rules/GB98-FAQ.pdf">《中国麻将竞赛规则（试行）》问答（问答规则）</a></li>
+                    <li><a href="./rules/WMO-MCR.pdf">世界麻将组织麻将竞赛规则（世麻规则）</a></li>
+                    <li><a href="./rules/MIL-MCR.pdf">国际麻将联盟国标麻将规则补充细则（MIL规则）</a></li>
+                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻将体育协会规则和<span data-i18n="GB_FAN_unit"></span>种一览（JMSA规则）</a><a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+                    <li><a href="./rules/Shinhouchi.pdf">平成版麻将新报知规则（新报知规则）</a></li>
+                    <li><a href="./rules/Achieve/Saikouisen.html">最高位战日本职业麻将协会竞技规定和Classic规则（最高位战规则）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+                    <li><a href="./rules/JPML-Riichi.pdf">日本职业麻将联盟官方规则和WRC规则（联盟规则）</a></li>
+                    <li><a href="./rules/Mu-Riichi.pdf">麻将联合官方规则（μ规则）</a></li>
+                    <li><a href="./rules/Achieve/ClubJPM.html">日本职业麻将协会竞技规定（协会规则）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+                    <li><a href="./rules/Achieve/RMU.html">RMU规则</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+                    <li><a href="./rules/Zendanshin.pdf">全国麻将段位审查会竞技规定（全段审规则）</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">学生麻将联盟竞技规定（学雀联规则）</a><a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+<!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">日本健康麻将协会健康麻将规则（健康规则）</a></li>
+                    <li><a href="./rules/Achieve/MLeague.html">M.League正式比赛规则（M.League）</a><a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/Saikyosen.html">麻将最强战规则（最强战）</a><a class="small-a" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-Riichi.html">日本麻将联盟立直麻将规则（日雀联立直规则）</a><a class="small-a" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+                    <li><a href="./rules/XJTU-Riichi.pdf">西安交通大学立直麻将比赛规则（XJTU规则）和西安交通大学七星杯立直麻将公开赛规则（XJTU七星杯）</a></li>
+                    <li><a href="./rules/EMA-Riichi.pdf">欧洲麻将联盟立直麻将规则（EMA规则）</a></li>
+<!--No Summary-->   <li><a href="./rules/WRC.pdf">世界立直麻将锦标赛规则（WRC规则）</a></li>
+<!--No Summary-->   <li><a href="./rules/Shingendai.pdf">1975年制定新《周刊现代规则》（新现代规则）</a></li>
+<!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-22.html">日本麻将联盟二十二麻将规则（日雀联规则）</a><a class="small-a" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">原始内容</a></li>
+<!--No Summary-->   <li><a href="./rules/101.pdf">日本麻将101竞技联盟101竞技规定（101规则）</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="section title-button-container">
+            <div class="output-time">v4.7.14 Ex</div>
+            <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
+        </div>
+        <script src="mahjong.js"></script>
+        <script src="mahjong-document.js"></script>
+        <script src="mahjong-worker-lang.js"></script>
+        <script>
+            function tilesInfo(tcnt) {
+                const meld = Math.floor(tcnt / 3);
+                let output = `${tcnt} 张手牌\n`;
+                switch (tcnt % 3) {
+                    case 1:
+                        output += `3n+1 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
+                        break;
+                    case 2:
+                        output += `3n+2 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
+                        break;
+                    case 0:
+                        output += `3n 型: 和牌需要 ${meld} 个面子和 ${0} 个雀头`;
+                        break;
+                }
+                return output;
+            }
+            function toggleInput() {
+                const board = document.getElementById("boardInput");
+                const button = document.getElementById("inputButton");
+                const text = document.getElementById("textInput");
+                const isVisible = board.style.display !== "none";
+                board.style.display = isVisible ? "none" : "block";
+                text.style.display = isVisible ? "block" : "none";
+                button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
+                if (!isVisible) drawInputCards();
+                if (!isVisible) adjustButtonsFontSize();
+            }
+            function toggleNote() {
+                const note = document.getElementById("inputNote");
+                const button = document.getElementById("inputNoteButton");
+                const isVisible = note.style.display !== "none";
+                note.style.display = isVisible ? "none" : "block";
+                button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
+            }
+            window.onload = function () {
+                loadStorage();
+                addReferenceMark();
+                replacei18n();
+                loadInput();
+            };
+            const lang = "cn";
+            const toggleOutputLang = ["展开 ▼", "折叠 ▲"];
+        </script>
+    </body>
+</html>

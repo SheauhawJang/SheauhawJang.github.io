@@ -51,8 +51,8 @@ function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
             }
             let openout = "";
             const optmap = (x) => `<div class="devided-waiting-brief">${x.verb} ${x.hand.map(cardImage).join('')}</div>`;
-            if (opentip[0].length > 0) openout += `<div>${loc.goodopen}</div><div class="devided-waiting-container">${opentip[0].map(optmap).join("")}</div>`;
-            //if (opentip[1].length > 0) openout += `<div>${loc.badopen}</div><div class="devided-waiting-container">${opentip[1].map(optmap).join("")}</div>`;
+            if (opentip[0].length > 0) openout += `<div>${loc.goodopen}</div><div class="devided-waiting-td">${opentip[0].map(optmap).join("")}</div>`;
+            //if (opentip[1].length > 0) openout += `<div>${loc.badopen}</div><div class="devided-waiting-td">${opentip[1].map(optmap).join("")}</div>`;
             if (openout !== "") output += makeGridDiv(openout);
         }
         return { output, ans: { waiting: save } };

@@ -581,6 +581,8 @@ input[type="checkbox"] {
 }
 
 .output-box .tabs {
+    position: sticky;
+    top: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;

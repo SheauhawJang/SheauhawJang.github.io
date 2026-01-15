@@ -10,685 +10,703 @@
         <link rel="shortcut icon" href="head.ico" type="image/x-icon">
     </head>
     <body>
-        <div class="language-bar">
-            <div class="language-bar-group">
-                <a onclick="updateCardSkin('jp')">雀魂牌画</a>
-                <a onclick="updateCardSkin('gb')">雀渣牌画</a>
-                <a onclick="updateCardSkin('qq')">ＱＱ牌画</a>
-                <a onclick="updateCardSkin('hk')">開台ラ牌画</a>
-                <a onclick="updateCardSkin('tw')">神来也牌画</a>
-                <a onclick="updateCardSkin('op')">その研牌画</a>
-            </div>
-            <div class="language-bar-group">
-                <a href="mahjong.html">简体中文</a>
-                <a href="mahjong-tw.html">正體中文</a>
-                <a>日本語</a>
-                <a href="mahjong-en.html">English</a>
-            </div>
-        </div>
-        <h1>麻雀牌理・点数計算ツール</h1>
-        <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0">
-            <li>立直麻雀、一般形麻雀、中国国標麻雀、十六枚麻雀、香港式台湾麻雀、及び任意枚数の麻雀の向聴数計算に対応。</li>
-            <li>万能牌（オールマイティ牌、百搭牌、ジョーカーなど）に対応。</li>
-            <li>立直麻雀、中国国標麻雀の点数計算に対応。</li>
-        </ul>
-        <div class="section">
-            <div class="title-button-container">
-                <label for="inputText">手牌を入力してください</label>
-                <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">入力パネルを開く ▼</button>
-            </div>
-            <div class="input-area" id="textInput">
-                <input type="text" id="inputText" placeholder="例えば：1112345678999mE" />
-                <div class="input-note-wrapper">
-                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">入力説明を表示する ▼</button>
-                    <div class="input-note" id="inputNote" style="display: none">
-                        入力欄は以下の形式を使用でき、以下の形式は混在可能である：
-                        <ol style="margin-top: 0">
-                            <li>天鳳形式：数牌は数字（半角数字）＋色（小文字）で表します。さらに、<b>萬子=m</b>、<b>索子=s</b>、<b>筒子=p</b>。字牌の<b>東南西北白発中</b>は順に<b>1z2z3z4z5z6z7z</b>で表します。同じ綴りの色文字を持つ隣接する牌については、最も右側の牌の色文字のみを残すことが可能です。</li>
-                            <li>国標小助手形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北白発中</b>は順に大文字<b>ESWNPFC</b>で表します。</li>
-                            <li>英語版麻雀の印刷形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北</b>は順に大文字<b>ESWN</b>で表しますが、<b>白=Wh</b>，<b>発=G</b>，<b>中=R</b>。</li>
-                            <li>中国語拼音形式：「天鳳形式」と同様ですが、但し、<b>萬子=w</b>、<b>筒子=b</b>。</li>
-                            <li>採譜記号格式：萬子は漢数字の<b>一二三四五六七八九</b>で表します。筒子は丸付き数字の<b>①②③④⑤⑥⑦⑧⑨</b>で表します。索子は全角数字の<b>１２３４５６７８９</b>で表します。字牌は対応する漢字で表します。</li>
-                            <li>Unicode形式：Unicode U+1F000 から U+1F02B までの文字を用いて対応する牌を表します。</li>
-                        </ol>
-                        <p>花牌について：<b>春夏秋冬梅蘭菊竹</b>は順に<b>1h2h3h4h5h6h7h8h</b>または<b>1f2f3f4f5f6f7f8f</b>で表します。一部の麻雀ルールでは花牌を万能牌として扱いますが、本ツールの花牌にはその機能はありません。必要な場合は、専用の万能牌に変換してください。<br /></p>
-                        万能牌について：
-                        <ul style="margin-top: 0">
-                            <li>不定向万能牌 <img src="./cards/a1j.gif" style="vertical-align: middle" />：任意の数牌または字牌として扱うことができます。<b>1j／J</b>で表します。（一部の麻雀ルールでは、これを「百搭牌」「オールマイティ牌」や「ジョーカー」と呼ぶことがあります。）</li>
-                            <li>萬子万能牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：任意の萬子として扱うことができます。<b>2j／im／iw</b>で表します。</li>
-                            <li>筒子万能牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：任意の筒子として扱うことができます。<b>3j／ip／ib</b>で表します。</li>
-                            <li>索子万能牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：任意の索子として扱うことができます。<b>4j／is</b>で表します。</li>
-                            <li>数牌万能牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：任意の数牌として扱うことができます。<b>5j</b>で表します。</li>
-                            <li>風牌万能牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：<b>東南西北</b>のいずれかの牌として扱うことができます。<b>6j</b>で表します。</li>
-                            <li>三元万能牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：<b>白発中</b>のいずれかの牌として扱うことができます。<b>7j</b>で表します。</li>
-                            <li>字牌万能牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：任意の字牌として扱うことができます。<b>8j／iz</b>で表します。</li>
-                            <li>花牌万能牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：任意の花牌として扱うことができます。<b>9j／H／X／9h／9f／ih／if</b>で表します。</li>
-                        </ul>
-                        副露について：
-                        <ul style="margin-top: 0">
-                            <li>一部の牌を半角の角括弧<b>[]</b>で囲むことで、固定された面子であることが表示されます。</li>
-                            <li>順子の手牌の後ろに半角数字を半角カンマで区切って追記すると、対応する位置の牌が「チー」で得た牌であることが表示され、最も左側に横向きに置かれます。</li>
-                            <li>刻子の手牌の後ろに半角数字を半角カンマで区切って追記すると、対応する位置の牌が「ポン」で得た牌であることが表示され、横向きに置かれます。</li>
-                            <li>四枚の手牌で構成される固定面子は、デフォルトでは暗槓として表示されます。</li>
-                            <li>大明槓を表す場合、四枚の手牌の後ろに1〜4の半角数字を半角カンマで区切って追記すると、対応する位置の牌が「カン」で得た牌であることが表示され、横向きに置かれます。</li>
-                            <li>加槓（小明槓）を表す場合、四枚の手牌の後ろに5〜8の半角数字を半角カンマで区切って追記すると、対応する位置の牌が「ポン」で得た牌であることが表示され、横向きに置かれます。</li>
-                        </ul>
-                        <p>補花／抜きドラについて：一部の牌を半角の丸括弧<b>()</b>で囲むことで、これらの牌が補花または抜きドラであることが表示されます。<br /></p>
-                        <p>ドラについて：一部の牌を半角の山括弧<b><></b>で囲むことで、これらの牌がドラであることが表示されます。括弧内に半角カンマがある場合、カンマの左側の牌が表ドラ表示牌、右側の牌が裏ドラ表示牌であることが表示されます。<br /></p>
-                    </div>
-                </div>
-            </div>
-            <div class="input-area" id="boardInput" style="display: none">
-                <div class="card-container" id="input-pic"></div>
-                <div class="input-keyboard">
-                    <div class="input-mainkey">
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1m.gif" onclick="addInput(0)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2m.gif" onclick="addInput(1)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3m.gif" onclick="addInput(2)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4m.gif" onclick="addInput(3)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5m.gif" onclick="addInput(4)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6m.gif" onclick="addInput(5)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7m.gif" onclick="addInput(6)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8m.gif" onclick="addInput(7)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9m.gif" onclick="addInput(8)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0m.gif" onclick="addInput({ id: 4, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1p.gif" onclick="addInput(9)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2p.gif" onclick="addInput(10)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3p.gif" onclick="addInput(11)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4p.gif" onclick="addInput(12)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5p.gif" onclick="addInput(13)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6p.gif" onclick="addInput(14)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7p.gif" onclick="addInput(15)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8p.gif" onclick="addInput(16)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9p.gif" onclick="addInput(17)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0p.gif" onclick="addInput({ id: 13, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1s.gif" onclick="addInput(18)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2s.gif" onclick="addInput(19)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3s.gif" onclick="addInput(20)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4s.gif" onclick="addInput(21)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5s.gif" onclick="addInput(22)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6s.gif" onclick="addInput(23)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7s.gif" onclick="addInput(24)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8s.gif" onclick="addInput(25)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9s.gif" onclick="addInput(26)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0s.gif" onclick="addInput({ id: 22, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1z.gif" onclick="addInput(27)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2z.gif" onclick="addInput(28)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3z.gif" onclick="addInput(29)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4z.gif" onclick="addInput(30)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5z.gif" onclick="addInput(31)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6z.gif" onclick="addInput(32)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7z.gif" onclick="addInput(33)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0z.gif" onclick="addInput({ id: 31, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1h.gif" onclick="addInput(34)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2h.gif" onclick="addInput(35)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3h.gif" onclick="addInput(36)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4h.gif" onclick="addInput(37)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5h.gif" onclick="addInput(38)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6h.gif" onclick="addInput(39)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7h.gif" onclick="addInput(40)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8h.gif" onclick="addInput(41)" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1j.gif" onclick="addInput(42)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2j.gif" onclick="addInput(43)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3j.gif" onclick="addInput(44)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4j.gif" onclick="addInput(45)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5j.gif" onclick="addInput(46)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6j.gif" onclick="addInput(47)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7j.gif" onclick="addInput(48)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8j.gif" onclick="addInput(49)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9j.gif" onclick="addInput(50)" /></div>
-                            <div></div>
-                        </div>
-                        <div class="card-container" id="input-pic-bonus"></div>
-                        <div class="output-options">
-                            <span>ドラ表示牌</span>
-                            <div class="card-container" id="input-pic-dorap"></div>
-                            <span>裏ドラ表示牌</span>
-                            <div class="card-container" id="input-pic-urap"></div>
-                        </div>
-                    </div>
-                    <div class="input-subkeys">
-                        <button onclick="clearInput()" class="subkey-button">クリア</button>
-                        <button onclick="sortInput()" class="subkey-button">理牌</button>
-                        <button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty">削除</button>
-                        <button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi">チー</button>
-                        <button onclick="subtileInput(1)" class="subkey-button enabled-no-flower">ポン</button>
-                        <button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower">大明槓</button>
-                        <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">加槓</button>
-                        <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">暗槓</button>
-                        <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">抜き</button>
-                        <button onclick="subtileInput(4)" class="subkey-button enable-no-empty">ドラ表示</button>
-                        <button onclick="subtileInput(5)" class="subkey-button enable-no-empty">裏ドラ表示</button>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: center">
-                <button onclick="processInput()" class="random-button">計算</button>
-                <button onclick="randomInput()" class="random-button"><input type="number" id="randomCardCount" value="14" min="1" max="99" /> 枚ランダム配牌</button>
-                <button onclick="randomWinning()" class="random-button"><input type="number" id="randomWinningCardCount" value="14" min="1" max="99" /> 枚和了サンプル</button>
-            </div>
-            <div class="output-box-head">
-                <div class="output-context" style="text-align: center" id="output-cnt"></div>
-                <div class="card-container" id="output-pic"></div>
-                <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">一般形牌理</div>
-                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">収納 ▲</button>
-                </div>
-                <div class="output-context" id="output-std"></div>
-                <div class="output-context" id="brief-output-std" style="display: none"></div>
-                <div class="output-time" id="time-output-std"></div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">立直麻雀標準形牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
-                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">収納 ▲</button>
-                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
-                </div>
-                <div class="output-option-group">
-                    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般形</label>
-                    <label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七対形</label>
-                    <label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />国士無双形</label>
-                </div>
-                <div id="output-group-jp">
-                    <div class="output-context" id="output-jp"></div>
-                    <div class="output-context" id="brief-output-jp" style="display: none"></div>
-                    <div class="output-time" id="time-output-jp"></div>
-                </div>
-                <div id="output-group-jp3p" style="display: none">
-                    <div class="output-context" id="output-jp3p"></div>
-                    <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
-                    <div class="output-time" id="time-output-jp3p"></div>
-                </div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">中国国標麻雀標準形牌理</div>
-                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">収納 ▲</button>
-                </div>
-                <div class="output-option-group">
-                    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般形</label>
-                    <label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七対形</label>
-                    <label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么形</label>
-                    <label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠形</label>
-                    <label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合竜形</label>
-                </div>
-                <div class="output-context" id="output-gb"></div>
-                <div class="output-context" id="brief-output-gb" style="display: none"></div>
-                <div class="output-time" id="time-output-gb"></div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">香港式台湾麻雀牌理</div>
-                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">収納 ▲</button>
-                </div>
-                <div class="output-option-group">
-                    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般形</label>
-                    <label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />ニコニコ形</label>
-                    <label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么形</label>
-                    <label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不塔形</label>
-                </div>
-                <div class="output-context" id="output-tw"></div>
-                <div class="output-time" id="time-output-tw"></div>
-                <div class="output-context" id="brief-output-tw" style="display: none"></div>
-            </div>
-            <div class="output-box" id="score-jp">
-                <div class="title-button-container">
-                    <div class="output-title">立直麻雀点数計算</div>
-                    <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">収納 ▲</button>
-                </div>
-                <div id="options-output-score-jp">
-                    <div class="output-options">
-                        <span>場風</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-global-wind" value="27" checked />東</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="28" />南</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="29" />西</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="30" />北</label>
-                        </div>
-                        <span>自風</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-local-wind" value="27" checked />東</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="28" />南</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="29" />西</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="30" />北</label>
-                        </div>
-                        <span>和了種類</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-wintype" value="0" checked />ロン</label>
-                            <label><input type="radio" name="score-jp-wintype" value="1" />ツモ</label>
-                        </div>
-                        <span>立直状態</span>
-                        <div class="output-option-group">
-                            <label><input type="checkbox" name="score-jp-wininfo" value="1" />立直</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="16" />ダブル立直</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="3" />一発</label>
-                        </div>
-                        <span>和了状態</span>
-                        <div class="output-option-group">
-                            <label><input type="checkbox" name="score-jp-wininfo" value="32" />第一巡目</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="13" />最後の牌</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="12" />嶺上開花</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="15" />槍槓</label>
-                            <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返し</label>
-                            <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振り</label>
-                        </div>
-                        <button onclick="processJPScore()" class="score-button">計算</button>
-                    </div>
-                    <details>
-                        <summary>ルール設定</summary>
-                        <div class="output-options">
-                            <span>役満</span>
-                            <div class="output-option-group">
-                                <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked />役満役</label>
-                                <label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked />ダブル役満</label>
-                                <label title="最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTUルールでは適用される。新報知ルール・全段審ルール・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="2" checked />役満複合</label>
-                                <label title="新報知ルール・最高位戦ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="3" checked />数え役満</label>
-                            </div>
-                            <span>連風牌雀頭</span>
-                            <div class="output-option-group">
-                                <label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
-                                <label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
-                            </div>
-                            <span>切り上げ満貫</span>
-                            <div class="output-option-group">
-                                <label title="最高位戦ルール・連盟WRCルール・協会ルール・RMUルール・Mリーグでは適用される。最高位戦Classicルール・連盟公式ルールでは適用されない。"><input type="radio" name="score-jp-setting-3" value="7" />あり</label>
-                                <label><input type="radio" name="score-jp-setting-3" value="0" checked />なし</label>
-                            </div>
-                            <span>喰い断</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-0" value="4" checked />あり</label>
-                                <label><input type="radio" name="score-jp-setting-0" value="0" />なし</label>
-                            </div>
-                            <span>自摸平和</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-2" value="6" checked />平和の役</label>
-                                <label><input type="radio" name="score-jp-setting-2" value="0" />自摸の符</label>
-                            </div>
-                            <span>嶺上開花</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-10" value="0" checked />ツモ符を加算する</label>
-                                <label><input type="radio" name="score-jp-setting-10" value="16" />ツモ符を認めない</label>
-                            </div>
-                            <span>縛り</span>
-                            <div class="output-option-group">
-                                <label><input type="number" id="score-jp-setting-fan" value="1" min="0" />飜縛り</label>
-                                <label><input type="checkbox" name="score-jp-setting-7" value="11" />役満縛り</label>
-                                <label><input type="checkbox" name="score-jp-setting-7" value="12" />表ドラを含める</label>
-                                <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting-7" value="13" checked />一発を含める</label>
-                            </div>
-                            <span title="只今「ロン」と「第一巡目」の両方が選択されている場合に人和として計算します。人和の定義には揺れがあるため、「第一巡目」に該当するかは採用ルールに応じて利用者ご自身で判断してください。">人和</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-5" value="0" />なし</label>
-                                <label title="全段審ルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,3" />4 飜</label>
-                                <label title="連盟ルール・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 飜</label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,4" />6 飜</label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,5" />8 飜</label>
-                                <label title="雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,2" />役満</label>
-                                <label title="連盟ルール・EMAルールでは適用される。"><input type="checkbox" name="score-jp-setting" value="39" />通常役と複合しない</label>
-                            </div>
-                            <span>大七星</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-6" value="0" />字一色</label>
-                                <label title="XJTUルール・雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-6" value="10" checked />ダブル役満</label>
-                            </div>
-                            <span>発無し緑一色</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-12" value="18,1" />断么九・清一色</label>
-                                <label><input type="radio" name="score-jp-setting-12" value="0" checked />緑一色</label>
-                                <label><input type="radio" name="score-jp-setting-12" value="18,2" />ダブル役満</label>
-                            </div>
-                            <span>七対子</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 飜 25 符</label>
-                                <label><input type="radio" name="score-jp-setting-4" value="8,1" />1 飜 50 符</label>
-                                <label><input type="radio" name="score-jp-setting-4" value="8,2" />0 飜 100 符</label>
-                            </div>
-                            <span>二盃口</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-20" value="47,2" />一盃口二つ</label>
-                                <label><input type="radio" name="score-jp-setting-20" value="47,1" />2 飜・門前のみ</label>
-                                <label><input type="radio" name="score-jp-setting-20" value="0" checked />3 飜・門前のみ</label>
-                                <label><input type="radio" name="score-jp-setting-20" value="47,3" />4 飜・門前のみ</label>
-                            </div>
-                            <span>三連刻</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-13" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-13" value="19" />2 飜</label>
-                            </div>
-                            <span>四連刻</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-14" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-14" value="20" />役満</label>
-                            </div>
-                            <span>三色通貫</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-11" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-11" value="17,2" />1 飜</label>
-                                <label><input type="radio" name="score-jp-setting-11" value="17" />2 飜・食い下がり</label>
-                            </div>
-                            <span>一色三順</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-15" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,1" />2 飜</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,2" />2 飜・食い下がり</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,3" />3 飜・食い下がり</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,4" />2 飜・門前のみ</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,5" />3 飜・門前のみ</label>
-                            </div>
-                            <span>一色四順</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-16" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,3" />4 飜</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,4" />5 飜</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,5" />6 飜</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,6" />6 飜・食い下がり</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,1" />役満</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,2" />役満・門前のみ</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="23" checked />四連太宝と呼ぶ</label>
-                            </div>
-                            <span>五門斉</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-17" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,1" />1 飜</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,2" />2 飜</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,3" />2 飜・食い下がり</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,4" />2 飜・門前のみ</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,5" />5 飜</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,6" />役満</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,7" />役満・門前のみ</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="41" />七対子不可</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="42" />対々和限定</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="43" />自風牌雀頭限定</label>
-                            </div>
-                            <span>大車輪系統</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="26" />大車輪役満</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="27" />大竹林役満</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="28" />大数隣役満</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="29" />小車輪役満</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="30" />小竹林役満</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="31" />小数隣役満</label>
-                            </div>
-                            <span>十二落抬</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-18" value="0" checked />なし</label>
-                                <label><input type="radio" name="score-jp-setting-18" value="44" />1 飜</label>
-                            </div>
-                            <span>ﾛｰｶﾙ偶然役</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>燕返し 1 飜</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>槓振り 1 飜</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="34" />一筒摸月 5 飜</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="35" />九筒撈魚 5 飜</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="36" />五筒開花 5 飜</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="37" />二索槍槓 5 飜</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="38" />石の上にも三年・役満</label>
-                            </div>
-                            <span>符跳ね</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-8" value="14" checked />あり</label>
-                                <label><input type="radio" name="score-jp-setting-8" value="0" />なし</label>
-                            </div>
-                            <span>基本点</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-19" value="45,1" />10単位で四捨六入</label>
-                                <label><input type="radio" name="score-jp-setting-19" value="45,2" />100単位で切り上げ</label>
-                                <label><input type="radio" name="score-jp-setting-19" value="0" checked />修正なし</label>
-                            </div>
-                            <span>負担額</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />100単位で切り上げ</label>
-                                <label><input type="radio" name="score-jp-setting-9" value="0" />修正なし</label>
-                            </div>
-                            <span>副露平和形</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="24" />喰い平和あり</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="25" />20 符可能</label>
-                            </div>
-                            <span>簡単設定</span>
-                            <div class="output-option-group">
-                                <button onclick="processJPSetting(0)">XJTUルール</button>
-                                <button onclick="processJPSetting(1)">XJTU七星杯</button>
-                                <button onclick="processJPSetting(12)">新報知ルール</button>
-                                <button onclick="processJPSetting(4)">最高位戦ルール</button>
-                                <button onclick="processJPSetting(5)">最高位戦Classicルール</button>
-                                <button onclick="processJPSetting(2)">連盟公式ルール</button>
-                                <button onclick="processJPSetting(3)">連盟WRCルール</button>
-                                <button onclick="processJPSetting(13)">μルール</button>
-                                <button onclick="processJPSetting(6)">協会ルール</button>
-                                <button onclick="processJPSetting(14)">RMUルール</button>
-                                <button onclick="processJPSetting(15)">全段審ルール</button>
-                                <button onclick="processJPSetting(7)">Mリーグ</button>
-                                <button onclick="processJPSetting(8)">EMAルール</button>
-                                <button onclick="processJPSetting(9)">雀魂</button>
-                                <button onclick="processJPSetting(10)">雀魂ﾛｰｶﾙ役モード</button>
-                                <button onclick="processJPSetting(11)">天鳳</button>
-                            </div>
-                        </div>
-                    </details>
-                    <div class="output-options">
-                        <span>ドラ表示牌</span>
-                        <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
-                        <span>裏ドラ表示牌</span>
-                        <div class="card-container" id="output-pic-uras" style="text-align: left"></div>
-                    </div>
-                </div>
-                <div class="output-context" id="output-score-jp"></div>
-                <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
-                <div class="output-time" id="time-output-score-jp">Ready to start!</div>
-            </div>
-            <div class="output-box" id="score-gb" style="display: none">
-                <div class="title-button-container">
-                    <div class="output-title">中国国標麻雀点数計算</div>
-                    <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">収納 ▲</button>
-                </div>
-                <div id="options-output-score-gb">
-                    <div class="output-options">
-                        <span>圈風</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-global-wind" value="27" checked />東</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="28" />南</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="29" />西</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="30" />北</label>
-                        </div>
-                        <span>門風</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-local-wind" value="27" checked />東</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="28" />南</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="29" />西</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="30" />北</label>
-                        </div>
-                        <span>和了種類</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-wintype" value="0" checked />出アガリ</label>
-                            <label><input type="radio" name="score-gb-wintype" value="80" />ツモ</label>
-                        </div>
-                        <span>和了状態</span>
-                        <div class="output-option-group">
-                            <label><input type="checkbox" name="score-gb-wininfo" value="44" />最後の牌</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="46" />槓上開花</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="47" />搶槓和</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="58" />和絕張</label>
-                        </div>
-                        <button onclick="processGBScore()" class="score-button">計算</button>
-                    </div>
-                    <details>
-                        <summary>ルール設定</summary>
-                        <div class="output-options">
-                            <span title="国標原文に記載された不求人の定義は一般形に限定される。問答集ルール・MILルール・JMSAルールでは不求人と以下のすべての役との複合が許可されない。WMOルールでは不求人と以下のすべての役との複合が許可される。疑問解説では不求人と以下のすべての役との複合の許可が推奨される。">不求人の複合</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="19" />九蓮宝燈/四暗刻</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="41" />七対/連七対</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="42" />十三么</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="43" />全不靠/七星不靠</label>
-                            </div>
-                            <span title="国標原文に記載された以下の役の定義は一般形に限定されるが、七対と字一色・清么九との複合の牌例も記載される。疑問解説では七対と清一色・混一色・五門斉との複合が許可される。問答集ルールでは七対と清一色から混么九までの各役との複合の許可が推奨され、MILルールでは上述の複合が正式に許可される。WMOルールでは七対と清一色から五門斉までの各役との複合が許可される。JMSAルールでは七対と清一色から推不倒まで及び字一色から混么九までの各役との複合が許可される。">七対の複合</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="1" checked />緑一色</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="6" checked />全大/全中/全小</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="7" checked />大于五/小于五</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="9" checked />推不倒</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="11" checked />五門斉</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="3" checked />字一色</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="2" checked />清么九</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="4" checked />混么九</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="40" checked />全帶么</label>
-                                <label title="枚数制限のため成立しない。"><input type="checkbox" name="score-gb-setting" value="8" checked />全帯五</label>
-                                <label title="現行の各ルールではいずれも許可されない。"><input type="checkbox" name="score-gb-setting" value="12" />全双刻</label>
-                            </div>
-                            <span>双暗槓</span>
-                            <div class="output-option-group">
-                                <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 点</label>
-                                <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="23" />8 点</label>
-                            </div>
-                            <span>明暗槓</span>
-                            <div class="output-option-group">
-                                <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 点</label>
-                                <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 点</label>
-                                <label title="1999年全国麻雀運動競技大会補足規定（疑問解説を参照）。"><input type="radio" name="score-gb-setting-2" value="24,2" />明槓+暗槓</label>
-                                <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,3" />双明槓+暗槓</label>
-                            </div>
-                            <span>三槓・四槓</span>
-                            <div class="output-option-group">
-                                <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="0" checked />暗刻加算・暗槓不加算</label>
-                                <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,1" />暗刻・暗槓ともに加算</label>
-                                <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,2" />とある複雑な計算法</label>
-                            </div>
-                            <span>槓上開花</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="31,1" />明槓加算なし</label>
-                                <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="31,2" />明槓加算なし・暗槓 1 点除く</label>
-                                <label title="問答集ルール、MILルール、JMSAルールでは適用される。"><input type="checkbox" name="score-gb-setting" value="32" checked />妙手回春と複合できる</label>
-                            </div>
-                            <span>么九刻除外時</span>
-                            <div class="output-option-group">
-                                <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="33" />圈風刻・門風刻・箭刻は 1 点を除く</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="34" />三風刻と么九刻と複合する</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="35" />小四喜と么九刻と複合する</label>
-                            </div>
-                            <span>九蓮宝燈</span>
-                            <div class="output-option-group">
-                                <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの么九刻を加算しない</label>
-                                <label><input type="radio" name="score-gb-setting-5" value="27" />全ての么九刻を加算しない</label>
-                            </div>
-                            <span title="國標原文・問答集ルール・WMOルール・MILルールでは缺一門と大三元から一色四節高までの各役との複合が許可される。">缺一門の複合</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="15" checked />三風刻</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="16" checked />一色四同順</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="44" checked />一色四歩高</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四節高</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
-                            </div>
-                            <span title="國標原文・問答集ルール・MILルールでは混一色と大四喜・小四喜との複合が許可されており、混一色と緑一色との複合が許可されない。WMOルールでは混一色と以下のすべての役との複合が許可される。">混一色の複合</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="22" />緑一色</label>
-                            </div>
-                            <span>清么九の複合</span>
-                            <div class="output-option-group">
-                                <label title="WMOルールでは適用される。問答集ルール・MILルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="28" />双同刻</label>
-                                <label title="国標原文では「同刻と複合しない」と記載されており、誤記でなければ適用されない。"><input type="checkbox" name="score-gb-setting" value="29" checked />三同刻</label>
-                            </div>
-                            <span>組合竜和了</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-3" value="25" />和了牌が組合竜の一部と解釈できる場合は辺張・坎張・単釣将を加算しない</label>
-                                <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="0" checked />和了牌が順子又は雀頭の一部と解釈できる場合は辺張・坎張・単釣将を加算しうる</label>
-                            </div>
-                            <span>多面待ち和了</span>
-                            <div class="output-option-group">
-                                <label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨される。"><input type="radio" name="score-gb-setting-4" value="0" checked />辺張・坎張・単釣将を加算しない</label>
-                                <label><input type="radio" name="score-gb-setting-4" value="26" />辺張・坎張・単釣将を加算しうる</label>
-                            </div>
-                            <span>加槓全求人</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-7" value="0" checked />あり</label>
-                                <label><input type="radio" name="score-gb-setting-7" value="36" />なし</label>
-                            </div>
-                            <span>点数計算</span>
-                            <div class="output-option-group">
-                                <label><input type="number" id="score-gb-setting-fan" value="8" min="0" />点縛り</label>
-                                <label><input type="number" id="score-gb-setting-blind" value="8" min="0" />点底点</label>
-                                <label title="JMSAルールでは 88 点満貫制が適用される。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" />点満貫</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="39" />ツモ点数を三分割</label>
-                            </div>
-                            <span>簡単設定</span>
-                            <div class="output-option-group">
-                                <button onclick="processGBSetting(0)">MILルール</button>
-                                <button onclick="processGBSetting(1)">WMOルール</button>
-                                <button onclick="processGBSetting(2)">JMSAルール</button>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-                <div class="output-context" id="output-score-gb"></div>
-                <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
-                <div class="output-time" id="time-output-score-gb">Ready to start!</div>
-            </div>
-            <div class="reference-box mobile-display-only" id="title-box"></div>
-            <div class="reference-box">
-                関連ルール：
-                <ul style="margin-top: 0">
-                    <li><a href="./rules/Shinhouchi.pdf">平成版麻雀新報知ルール（新報知ルール）</a></li>
-                    <li><a href="./rules/Achieve/Saikouisen.html">最高位戦日本プロ麻雀協会競技規定（最高位戦ルール）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-                    <li><a href="./rules/JPML-Riichi.pdf">日本プロ麻雀連盟公式ルール及びWRCルール（連盟ルール）</a></li>
-                    <li><a href="./rules/Mu-Riichi.pdf">麻将連合公式ルール（μルール）</a></li>
-                    <li><a href="./rules/Achieve/ClubJPM.html">日本プロ麻雀協会競技規定（協会ルール）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-                    <li><a href="./rules/Achieve/RMU.html">RMUルール</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-                    <li><a href="./rules/Zendanshin.pdf">全国麻雀段位審査会競技規定（全段審ルール）</a></li>
+<div class="language-bar">
+<div class="language-bar-group">
+<a onclick="updateCardSkin('jp')">雀魂牌画</a>
+<a onclick="updateCardSkin('gb')">雀渣牌画</a>
+<a onclick="updateCardSkin('qq')">ＱＱ牌画</a>
+<a onclick="updateCardSkin('hk')">開台ラ牌画</a>
+<a onclick="updateCardSkin('tw')">神来也牌画</a>
+<a onclick="updateCardSkin('op')">その研牌画</a>
+</div>
+<div class="language-bar-group">
+<a href="mahjong.html">简体中文</a>
+<a href="mahjong-tw.html">正體中文</a>
+<a>日本語</a>
+<a href="mahjong-en.html">English</a>
+</div>
+</div>
+<h1>麻雀牌理・点数計算ツール</h1>
+<ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0">
+<li>立直麻雀、一般形麻雀、中国国標麻雀、十六枚麻雀、香港式台湾麻雀、及び任意枚数の麻雀の向聴数計算に対応。</li>
+<li>万能牌（オールマイティ牌、百搭牌、ジョーカーなど）に対応。</li>
+<li>立直麻雀、中国国標麻雀の点数計算に対応。</li>
+</ul>
+<div class="section">
+<div class="title-button-container">
+<label for="inputText">手牌を入力してください</label>
+<button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">入力パネルを開く ▼</button>
+</div>
+<div class="input-area" id="textInput">
+<input type="text" id="inputText" placeholder="例えば：1112345678999mE" />
+<div class="input-note-wrapper">
+<button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">入力説明を表示する ▼</button>
+<div class="input-note" id="inputNote" style="display: none">
+入力欄は以下の形式を使用でき、以下の形式は混在可能である：
+<ol style="margin-top: 0">
+<li>天鳳形式：数牌は数字（半角数字）＋色（小文字）で表します。さらに、<b>萬子=m</b>、<b>索子=s</b>、<b>筒子=p</b>。字牌の<b>東南西北白発中</b>は順に<b>1z2z3z4z5z6z7z</b>で表します。同じ綴りの色文字を持つ隣接する牌については、最も右側の牌の色文字のみを残すことが可能です。</li>
+<li>国標小助手形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北白発中</b>は順に大文字<b>ESWNPFC</b>で表します。</li>
+<li>英語版麻雀の印刷形式：数牌は「天鳳形式」と同様です。字牌の<b>東南西北</b>は順に大文字<b>ESWN</b>で表しますが、<b>白=Wh</b>，<b>発=G</b>，<b>中=R</b>。</li>
+<li>中国語拼音形式：「天鳳形式」と同様ですが、但し、<b>萬子=w</b>、<b>筒子=b</b>。</li>
+<li>採譜記号格式：萬子は漢数字の<b>一二三四五六七八九</b>で表します。筒子は丸付き数字の<b>①②③④⑤⑥⑦⑧⑨</b>で表します。索子は全角数字の<b>１２３４５６７８９</b>で表します。字牌は対応する漢字で表します。</li>
+<li>Unicode形式：Unicode U+1F000 から U+1F02B までの文字を用いて対応する牌を表します。</li>
+</ol>
+<p>花牌について：<b>春夏秋冬梅蘭菊竹</b>は順に<b>1h2h3h4h5h6h7h8h</b>または<b>1f2f3f4f5f6f7f8f</b>で表します。一部の麻雀ルールでは花牌を万能牌として扱いますが、本ツールの花牌にはその機能はありません。必要な場合は、専用の万能牌に変換してください。<br /></p>
+万能牌について：
+<ul style="margin-top: 0">
+<li>不定向万能牌 <img src="./cards/a1j.gif" style="vertical-align: middle" />：任意の数牌または字牌として扱うことができます。<b>1j／J</b>で表します。（一部の麻雀ルールでは、これを「百搭牌」「オールマイティ牌」や「ジョーカー」と呼ぶことがあります。）</li>
+<li>萬子万能牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：任意の萬子として扱うことができます。<b>2j／im／iw</b>で表します。</li>
+<li>筒子万能牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：任意の筒子として扱うことができます。<b>3j／ip／ib</b>で表します。</li>
+<li>索子万能牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：任意の索子として扱うことができます。<b>4j／is</b>で表します。</li>
+<li>数牌万能牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：任意の数牌として扱うことができます。<b>5j</b>で表します。</li>
+<li>風牌万能牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：<b>東南西北</b>のいずれかの牌として扱うことができます。<b>6j</b>で表します。</li>
+<li>三元万能牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：<b>白発中</b>のいずれかの牌として扱うことができます。<b>7j</b>で表します。</li>
+<li>字牌万能牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：任意の字牌として扱うことができます。<b>8j／iz</b>で表します。</li>
+<li>花牌万能牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：任意の花牌として扱うことができます。<b>9j／H／X／9h／9f／ih／if</b>で表します。</li>
+</ul>
+副露について：
+<ul style="margin-top: 0">
+<li>一部の牌を半角の角括弧<b>[]</b>で囲むことで、固定された面子であることが表示されます。</li>
+<li>順子の手牌の後ろに半角数字を半角カンマで区切って追記すると、対応する位置の牌が「チー」で得た牌であることが表示され、最も左側に横向きに置かれます。</li>
+<li>刻子の手牌の後ろに半角数字を半角カンマで区切って追記すると、対応する位置の牌が「ポン」で得た牌であることが表示され、横向きに置かれます。</li>
+<li>四枚の手牌で構成される固定面子は、デフォルトでは暗槓として表示されます。</li>
+<li>大明槓を表す場合、四枚の手牌の後ろに1〜4の半角数字を半角カンマで区切って追記すると、対応する位置の牌が「カン」で得た牌であることが表示され、横向きに置かれます。</li>
+<li>加槓（小明槓）を表す場合、四枚の手牌の後ろに5〜8の半角数字を半角カンマで区切って追記すると、対応する位置の牌が「ポン」で得た牌であることが表示され、横向きに置かれます。</li>
+</ul>
+<p>補花／抜きドラについて：一部の牌を半角の丸括弧<b>()</b>で囲むことで、これらの牌が補花または抜きドラであることが表示されます。<br /></p>
+<p>ドラについて：一部の牌を半角の山括弧<b><></b>で囲むことで、これらの牌がドラであることが表示されます。括弧内に半角カンマがある場合、カンマの左側の牌が表ドラ表示牌、右側の牌が裏ドラ表示牌であることが表示されます。<br /></p>
+</div>
+</div>
+</div>
+<div class="input-area" id="boardInput" style="display: none">
+<div class="card-container" id="input-pic"></div>
+<div class="input-keyboard">
+<div class="input-mainkey">
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1m.gif" onclick="addInput(0)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2m.gif" onclick="addInput(1)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3m.gif" onclick="addInput(2)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4m.gif" onclick="addInput(3)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5m.gif" onclick="addInput(4)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6m.gif" onclick="addInput(5)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7m.gif" onclick="addInput(6)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8m.gif" onclick="addInput(7)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9m.gif" onclick="addInput(8)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0m.gif" onclick="addInput({ id: 4, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1p.gif" onclick="addInput(9)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2p.gif" onclick="addInput(10)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3p.gif" onclick="addInput(11)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4p.gif" onclick="addInput(12)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5p.gif" onclick="addInput(13)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6p.gif" onclick="addInput(14)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7p.gif" onclick="addInput(15)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8p.gif" onclick="addInput(16)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9p.gif" onclick="addInput(17)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0p.gif" onclick="addInput({ id: 13, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1s.gif" onclick="addInput(18)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2s.gif" onclick="addInput(19)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3s.gif" onclick="addInput(20)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4s.gif" onclick="addInput(21)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5s.gif" onclick="addInput(22)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6s.gif" onclick="addInput(23)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7s.gif" onclick="addInput(24)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8s.gif" onclick="addInput(25)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9s.gif" onclick="addInput(26)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0s.gif" onclick="addInput({ id: 22, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1z.gif" onclick="addInput(27)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2z.gif" onclick="addInput(28)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3z.gif" onclick="addInput(29)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4z.gif" onclick="addInput(30)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5z.gif" onclick="addInput(31)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6z.gif" onclick="addInput(32)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7z.gif" onclick="addInput(33)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0z.gif" onclick="addInput({ id: 31, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1h.gif" onclick="addInput(34)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2h.gif" onclick="addInput(35)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3h.gif" onclick="addInput(36)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4h.gif" onclick="addInput(37)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5h.gif" onclick="addInput(38)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6h.gif" onclick="addInput(39)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7h.gif" onclick="addInput(40)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8h.gif" onclick="addInput(41)" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1j.gif" onclick="addInput(42)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2j.gif" onclick="addInput(43)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3j.gif" onclick="addInput(44)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4j.gif" onclick="addInput(45)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5j.gif" onclick="addInput(46)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6j.gif" onclick="addInput(47)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7j.gif" onclick="addInput(48)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8j.gif" onclick="addInput(49)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9j.gif" onclick="addInput(50)" /></div>
+<div></div>
+</div>
+<div class="card-container" id="input-pic-bonus"></div>
+<div class="output-grid-div">
+<span>ドラ表示牌</span>
+<div class="card-container" id="input-pic-dorap"></div>
+<span>裏ドラ表示牌</span>
+<div class="card-container" id="input-pic-urap"></div>
+</div>
+</div>
+<div class="input-subkeys">
+<button onclick="clearInput()" class="subkey-button">クリア</button>
+<button onclick="sortInput()" class="subkey-button">理牌</button>
+<button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty">削除</button>
+<button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi">チー</button>
+<button onclick="subtileInput(1)" class="subkey-button enabled-no-flower">ポン</button>
+<button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower">大明槓</button>
+<button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">加槓</button>
+<button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">暗槓</button>
+<button onclick="subtileInput(3)" class="subkey-button enable-no-empty">抜き</button>
+<button onclick="subtileInput(4)" class="subkey-button enable-no-empty">ドラ表示</button>
+<button onclick="subtileInput(5)" class="subkey-button enable-no-empty">裏ドラ表示</button>
+</div>
+</div>
+</div>
+<div style="text-align: center">
+<button onclick="processInput()" class="random-button">計算</button>
+<button onclick="randomInput()" class="random-button"><input type="number" id="randomCardCount" value="14" min="1" max="99" /> 枚ランダム配牌</button>
+<button onclick="randomWinning()" class="random-button"><input type="number" id="randomWinningCardCount" value="14" min="1" max="99" /> 枚和了サンプル</button>
+</div>
+<div class="output-box-head">
+<div class="output-context" style="text-align: center" id="output-cnt"></div>
+<div class="card-container" id="output-pic"></div>
+<div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
+</div>
+<div class="output-box">
+<div class="tabs">
+<button class="tab" data-steptabid="0", onclick="switchStepTab(0)">一般形牌理</button>
+<button class="tab" data-steptabid="2", onclick="switchStepTab(2)">立直麻雀標準形牌理</button>
+<button class="tab" data-steptabid="1", onclick="switchStepTab(1)">中国国標麻雀標準形牌理</button>
+<button class="tab" data-steptabid="3", onclick="switchStepTab(3)">香港式台湾麻雀牌理</button>
+</div>
+<div id="steps-global-viewer"></div>
+</div>
+<div class="output-box" id="steps-std" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">一般形牌理</div>
+<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">収納 ▲</button>
+</div>
+<div class="output-context" id="output-std"></div>
+<div class="output-context" id="brief-output-std" style="display: none"></div>
+<div class="output-time" id="time-output-std"></div>
+</div>
+<div class="output-box" id="steps-jp" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">立直麻雀標準形牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
+<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
+</div>
+<div class="output-option-group">
+<label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般形</label>
+<label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七対形</label>
+<label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />国士無双形</label>
+</div>
+<div id="output-group-jp">
+<div class="output-context" id="output-jp"></div>
+<div class="output-context" id="brief-output-jp" style="display: none"></div>
+<div class="output-time" id="time-output-jp"></div>
+</div>
+<div id="output-group-jp3p" style="display: none">
+<div class="output-context" id="output-jp3p"></div>
+<div class="output-context" id="brief-output-jp3p" style="display: none"></div>
+<div class="output-time" id="time-output-jp3p"></div>
+</div>
+</div>
+<div class="output-box" id="steps-gb" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">中国国標麻雀標準形牌理</div>
+<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">収納 ▲</button>
+</div>
+<div class="output-option-group">
+<label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般形</label>
+<label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七対形</label>
+<label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么形</label>
+<label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠形</label>
+<label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合竜形</label>
+</div>
+<div class="output-context" id="output-gb"></div>
+<div class="output-context" id="brief-output-gb" style="display: none"></div>
+<div class="output-time" id="time-output-gb"></div>
+</div>
+<div class="output-box" id="steps-tw" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">香港式台湾麻雀牌理</div>
+<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">収納 ▲</button>
+</div>
+<div class="output-option-group">
+<label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般形</label>
+<label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />ニコニコ形</label>
+<label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么形</label>
+<label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不塔形</label>
+</div>
+<div class="output-context" id="output-tw"></div>
+<div class="output-time" id="time-output-tw"></div>
+<div class="output-context" id="brief-output-tw" style="display: none"></div>
+</div>
+<div class="output-box" id="score-global">
+<div class="tabs">
+<button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">立直麻雀点数計算</button>
+<button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">中国国標麻雀点数計算</button>
+</div>
+<div id="score-global-viewer"></div>
+</div>
+<div style="display: none;">
+<div class="output-box" id="score-jp">
+<div class="title-button-container">
+<div class="output-title">立直麻雀点数計算</div>
+<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">収納 ▲</button>
+</div>
+<div id="options-output-score-jp">
+<div class="output-grid-div">
+<span>場風</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-global-wind" value="27" checked />東</label>
+<label><input type="radio" name="score-jp-global-wind" value="28" />南</label>
+<label><input type="radio" name="score-jp-global-wind" value="29" />西</label>
+<label><input type="radio" name="score-jp-global-wind" value="30" />北</label>
+</div>
+<span>自風</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-local-wind" value="27" checked />東</label>
+<label><input type="radio" name="score-jp-local-wind" value="28" />南</label>
+<label><input type="radio" name="score-jp-local-wind" value="29" />西</label>
+<label><input type="radio" name="score-jp-local-wind" value="30" />北</label>
+</div>
+<span>和了種類</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-wintype" value="0" checked />ロン</label>
+<label><input type="radio" name="score-jp-wintype" value="1" />ツモ</label>
+</div>
+<span>立直状態</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-wininfo" value="1" />立直</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="16" />ダブル立直</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="3" />一発</label>
+</div>
+<span>和了状態</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-wininfo" value="32" />第一巡目</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="13" />最後の牌</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="12" />嶺上開花</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="15" />槍槓</label>
+<label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返し</label>
+<label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振り</label>
+</div>
+<button onclick="processJPScore()" class="score-button">計算</button>
+</div>
+<details>
+<summary>ルール設定</summary>
+<div class="output-options">
+<span>役満</span>
+<div class="output-option-group">
+<label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked />役満役</label>
+<label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked />ダブル役満</label>
+<label title="最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTUルールでは適用される。新報知ルール・全段審ルール・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="2" checked />役満複合</label>
+<label title="新報知ルール・最高位戦ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="3" checked />数え役満</label>
+</div>
+<span>連風牌雀頭</span>
+<div class="output-option-group">
+<label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
+<label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
+</div>
+<span>切り上げ満貫</span>
+<div class="output-option-group">
+<label title="最高位戦ルール・連盟WRCルール・協会ルール・RMUルール・Mリーグでは適用される。最高位戦Classicルール・連盟公式ルールでは適用されない。"><input type="radio" name="score-jp-setting-3" value="7" />あり</label>
+<label><input type="radio" name="score-jp-setting-3" value="0" checked />なし</label>
+</div>
+<span>喰い断</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-0" value="4" checked />あり</label>
+<label><input type="radio" name="score-jp-setting-0" value="0" />なし</label>
+</div>
+<span>自摸平和</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-2" value="6" checked />平和の役</label>
+<label><input type="radio" name="score-jp-setting-2" value="0" />自摸の符</label>
+</div>
+<span>嶺上開花</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-10" value="0" checked />ツモ符を加算する</label>
+<label><input type="radio" name="score-jp-setting-10" value="16" />ツモ符を認めない</label>
+</div>
+<span>縛り</span>
+<div class="output-option-group">
+<label><input type="number" id="score-jp-setting-fan" value="1" min="0" />飜縛り</label>
+<label><input type="checkbox" name="score-jp-setting-7" value="11" />役満縛り</label>
+<label><input type="checkbox" name="score-jp-setting-7" value="12" />表ドラを含める</label>
+<label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting-7" value="13" checked />一発を含める</label>
+</div>
+<span title="只今「ロン」と「第一巡目」の両方が選択されている場合に人和として計算します。人和の定義には揺れがあるため、「第一巡目」に該当するかは採用ルールに応じて利用者ご自身で判断してください。">人和</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-5" value="0" />なし</label>
+<label title="全段審ルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,3" />4 飜</label>
+<label title="連盟ルール・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 飜</label>
+<label><input type="radio" name="score-jp-setting-5" value="9,4" />6 飜</label>
+<label><input type="radio" name="score-jp-setting-5" value="9,5" />8 飜</label>
+<label title="雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,2" />役満</label>
+<label title="連盟ルール・EMAルールでは適用される。"><input type="checkbox" name="score-jp-setting" value="39" />通常役と複合しない</label>
+</div>
+<span>大七星</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-6" value="0" />字一色</label>
+<label title="XJTUルール・雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-6" value="10" checked />ダブル役満</label>
+</div>
+<span>発無し緑一色</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-12" value="18,1" />断么九・清一色</label>
+<label><input type="radio" name="score-jp-setting-12" value="0" checked />緑一色</label>
+<label><input type="radio" name="score-jp-setting-12" value="18,2" />ダブル役満</label>
+</div>
+<span>七対子</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-4" value="0" checked />2 飜 25 符</label>
+<label><input type="radio" name="score-jp-setting-4" value="8,1" />1 飜 50 符</label>
+<label><input type="radio" name="score-jp-setting-4" value="8,2" />0 飜 100 符</label>
+</div>
+<span>二盃口</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-20" value="47,2" />一盃口二つ</label>
+<label><input type="radio" name="score-jp-setting-20" value="47,1" />2 飜・門前のみ</label>
+<label><input type="radio" name="score-jp-setting-20" value="0" checked />3 飜・門前のみ</label>
+<label><input type="radio" name="score-jp-setting-20" value="47,3" />4 飜・門前のみ</label>
+</div>
+<span>三連刻</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-13" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-13" value="19" />2 飜</label>
+</div>
+<span>四連刻</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-14" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-14" value="20" />役満</label>
+</div>
+<span>三色通貫</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-11" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-11" value="17,2" />1 飜</label>
+<label><input type="radio" name="score-jp-setting-11" value="17" />2 飜・食い下がり</label>
+</div>
+<span>一色三順</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-15" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,1" />2 飜</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,2" />2 飜・食い下がり</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,3" />3 飜・食い下がり</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,4" />2 飜・門前のみ</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,5" />3 飜・門前のみ</label>
+</div>
+<span>一色四順</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-16" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,3" />4 飜</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,4" />5 飜</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,5" />6 飜</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,6" />6 飜・食い下がり</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,1" />役満</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,2" />役満・門前のみ</label>
+<label><input type="checkbox" name="score-jp-setting" value="23" checked />四連太宝と呼ぶ</label>
+</div>
+<span>五門斉</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-17" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,1" />1 飜</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,2" />2 飜</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,3" />2 飜・食い下がり</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,4" />2 飜・門前のみ</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,5" />5 飜</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,6" />役満</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,7" />役満・門前のみ</label>
+<label><input type="checkbox" name="score-jp-setting" value="41" />七対子不可</label>
+<label><input type="checkbox" name="score-jp-setting" value="42" />対々和限定</label>
+<label><input type="checkbox" name="score-jp-setting" value="43" />自風牌雀頭限定</label>
+</div>
+<span>大車輪系統</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="26" />大車輪役満</label>
+<label><input type="checkbox" name="score-jp-setting" value="27" />大竹林役満</label>
+<label><input type="checkbox" name="score-jp-setting" value="28" />大数隣役満</label>
+<label><input type="checkbox" name="score-jp-setting" value="29" />小車輪役満</label>
+<label><input type="checkbox" name="score-jp-setting" value="30" />小竹林役満</label>
+<label><input type="checkbox" name="score-jp-setting" value="31" />小数隣役満</label>
+</div>
+<span>十二落抬</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-18" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-18" value="44" />1 飜</label>
+</div>
+<span>ﾛｰｶﾙ偶然役</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>燕返し 1 飜</label>
+<label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>槓振り 1 飜</label>
+<label><input type="checkbox" name="score-jp-setting" value="34" />一筒摸月 5 飜</label>
+<label><input type="checkbox" name="score-jp-setting" value="35" />九筒撈魚 5 飜</label>
+<label><input type="checkbox" name="score-jp-setting" value="36" />五筒開花 5 飜</label>
+<label><input type="checkbox" name="score-jp-setting" value="37" />二索槍槓 5 飜</label>
+<label><input type="checkbox" name="score-jp-setting" value="38" />石の上にも三年・役満</label>
+</div>
+<span>符跳ね</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-8" value="14" checked />あり</label>
+<label><input type="radio" name="score-jp-setting-8" value="0" />なし</label>
+</div>
+<span>基本点</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-19" value="45,1" />10単位で四捨六入</label>
+<label><input type="radio" name="score-jp-setting-19" value="45,2" />100単位で切り上げ</label>
+<label><input type="radio" name="score-jp-setting-19" value="0" checked />修正なし</label>
+</div>
+<span>負担額</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-9" value="15" checked />100単位で切り上げ</label>
+<label><input type="radio" name="score-jp-setting-9" value="0" />修正なし</label>
+</div>
+<span>副露平和形</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="24" />喰い平和あり</label>
+<label><input type="checkbox" name="score-jp-setting" value="25" />20 符可能</label>
+</div>
+<span>簡単設定</span>
+<div class="output-option-group">
+<button onclick="processJPSetting(0)">XJTUルール</button>
+<button onclick="processJPSetting(1)">XJTU七星杯</button>
+<button onclick="processJPSetting(12)">新報知ルール</button>
+<button onclick="processJPSetting(4)">最高位戦ルール</button>
+<button onclick="processJPSetting(5)">最高位戦Classicルール</button>
+<button onclick="processJPSetting(2)">連盟公式ルール</button>
+<button onclick="processJPSetting(3)">連盟WRCルール</button>
+<button onclick="processJPSetting(13)">μルール</button>
+<button onclick="processJPSetting(6)">協会ルール</button>
+<button onclick="processJPSetting(14)">RMUルール</button>
+<button onclick="processJPSetting(15)">全段審ルール</button>
+<button onclick="processJPSetting(7)">Mリーグ</button>
+<button onclick="processJPSetting(8)">EMAルール</button>
+<button onclick="processJPSetting(9)">雀魂</button>
+<button onclick="processJPSetting(10)">雀魂ﾛｰｶﾙ役モード</button>
+<button onclick="processJPSetting(11)">天鳳</button>
+</div>
+</div>
+</details>
+<div class="output-grid-div">
+<span>ドラ表示牌</span>
+<div class="card-container" id="output-pic-doras" style="text-align: left"></div>
+<span>裏ドラ表示牌</span>
+<div class="card-container" id="output-pic-uras" style="text-align: left"></div>
+</div>
+</div>
+<div class="output-context" id="output-score-jp"></div>
+<div class="output-context" id="brief-output-score-jp" style="display: none"></div>
+<div class="output-time" id="time-output-score-jp">Ready to start!</div>
+</div>
+<div class="output-box" id="score-gb">
+<div class="title-button-container">
+<div class="output-title">中国国標麻雀点数計算</div>
+<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">収納 ▲</button>
+</div>
+<div id="options-output-score-gb">
+<div class="output-grid-div">
+<span>圈風</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-global-wind" value="27" checked />東</label>
+<label><input type="radio" name="score-gb-global-wind" value="28" />南</label>
+<label><input type="radio" name="score-gb-global-wind" value="29" />西</label>
+<label><input type="radio" name="score-gb-global-wind" value="30" />北</label>
+</div>
+<span>門風</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-local-wind" value="27" checked />東</label>
+<label><input type="radio" name="score-gb-local-wind" value="28" />南</label>
+<label><input type="radio" name="score-gb-local-wind" value="29" />西</label>
+<label><input type="radio" name="score-gb-local-wind" value="30" />北</label>
+</div>
+<span>和了種類</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-wintype" value="0" checked />出アガリ</label>
+<label><input type="radio" name="score-gb-wintype" value="80" />ツモ</label>
+</div>
+<span>和了状態</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-wininfo" value="44" />最後の牌</label>
+<label><input type="checkbox" name="score-gb-wininfo" value="46" />槓上開花</label>
+<label><input type="checkbox" name="score-gb-wininfo" value="47" />搶槓和</label>
+<label><input type="checkbox" name="score-gb-wininfo" value="58" />和絕張</label>
+</div>
+<button onclick="processGBScore()" class="score-button">計算</button>
+</div>
+<details>
+<summary>ルール設定</summary>
+<div class="output-options">
+<span title="国標原文に記載された不求人の定義は一般形に限定される。問答集ルール・MILルール・JMSAルールでは不求人と以下のすべての役との複合が許可されない。WMOルールでは不求人と以下のすべての役との複合が許可される。疑問解説では不求人と以下のすべての役との複合の許可が推奨される。">不求人の複合</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="19" />九蓮宝燈/四暗刻</label>
+<label><input type="checkbox" name="score-gb-setting" value="41" />七対/連七対</label>
+<label><input type="checkbox" name="score-gb-setting" value="42" />十三么</label>
+<label><input type="checkbox" name="score-gb-setting" value="43" />全不靠/七星不靠</label>
+</div>
+<span title="国標原文に記載された以下の役の定義は一般形に限定されるが、七対と字一色・清么九との複合の牌例も記載される。疑問解説では七対と清一色・混一色・五門斉との複合が許可される。問答集ルールでは七対と清一色から混么九までの各役との複合の許可が推奨され、MILルールでは上述の複合が正式に許可される。WMOルールでは七対と清一色から五門斉までの各役との複合が許可される。JMSAルールでは七対と清一色から推不倒まで及び字一色から混么九までの各役との複合が許可される。">七対の複合</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
+<label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
+<label><input type="checkbox" name="score-gb-setting" value="1" checked />緑一色</label>
+<label><input type="checkbox" name="score-gb-setting" value="6" checked />全大/全中/全小</label>
+<label><input type="checkbox" name="score-gb-setting" value="7" checked />大于五/小于五</label>
+<label><input type="checkbox" name="score-gb-setting" value="9" checked />推不倒</label>
+<label><input type="checkbox" name="score-gb-setting" value="11" checked />五門斉</label>
+<label><input type="checkbox" name="score-gb-setting" value="3" checked />字一色</label>
+<label><input type="checkbox" name="score-gb-setting" value="2" checked />清么九</label>
+<label><input type="checkbox" name="score-gb-setting" value="4" checked />混么九</label>
+<label><input type="checkbox" name="score-gb-setting" value="40" checked />全帶么</label>
+<label title="枚数制限のため成立しない。"><input type="checkbox" name="score-gb-setting" value="8" checked />全帯五</label>
+<label title="現行の各ルールではいずれも許可されない。"><input type="checkbox" name="score-gb-setting" value="12" />全双刻</label>
+</div>
+<span>双暗槓</span>
+<div class="output-option-group">
+<label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 点</label>
+<label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="23" />8 点</label>
+</div>
+<span>明暗槓</span>
+<div class="output-option-group">
+<label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 点</label>
+<label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 点</label>
+<label title="1999年全国麻雀運動競技大会補足規定（疑問解説を参照）。"><input type="radio" name="score-gb-setting-2" value="24,2" />明槓+暗槓</label>
+<label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,3" />双明槓+暗槓</label>
+</div>
+<span>三槓・四槓</span>
+<div class="output-option-group">
+<label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="0" checked />暗刻加算・暗槓不加算</label>
+<label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,1" />暗刻・暗槓ともに加算</label>
+<label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,2" />とある複雑な計算法</label>
+</div>
+<span>槓上開花</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="31,1" />明槓加算なし</label>
+<label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="31,2" />明槓加算なし・暗槓 1 点除く</label>
+<label title="問答集ルール、MILルール、JMSAルールでは適用される。"><input type="checkbox" name="score-gb-setting" value="32" checked />妙手回春と複合できる</label>
+</div>
+<span>么九刻除外時</span>
+<div class="output-option-group">
+<label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="33" />圈風刻・門風刻・箭刻は 1 点を除く</label>
+<label><input type="checkbox" name="score-gb-setting" value="34" />三風刻と么九刻と複合する</label>
+<label><input type="checkbox" name="score-gb-setting" value="35" />小四喜と么九刻と複合する</label>
+</div>
+<span>九蓮宝燈</span>
+<div class="output-option-group">
+<label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの么九刻を加算しない</label>
+<label><input type="radio" name="score-gb-setting-5" value="27" />全ての么九刻を加算しない</label>
+</div>
+<span title="國標原文・問答集ルール・WMOルール・MILルールでは缺一門と大三元から一色四節高までの各役との複合が許可される。">缺一門の複合</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
+<label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
+<label><input type="checkbox" name="score-gb-setting" value="15" checked />三風刻</label>
+<label><input type="checkbox" name="score-gb-setting" value="16" checked />一色四同順</label>
+<label><input type="checkbox" name="score-gb-setting" value="44" checked />一色四歩高</label>
+<label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四節高</label>
+<label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
+</div>
+<span title="國標原文・問答集ルール・MILルールでは混一色と大四喜・小四喜との複合が許可されており、混一色と緑一色との複合が許可されない。WMOルールでは混一色と以下のすべての役との複合が許可される。">混一色の複合</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
+<label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
+<label><input type="checkbox" name="score-gb-setting" value="22" />緑一色</label>
+</div>
+<span>清么九の複合</span>
+<div class="output-option-group">
+<label title="WMOルールでは適用される。問答集ルール・MILルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="28" />双同刻</label>
+<label title="国標原文では「同刻と複合しない」と記載されており、誤記でなければ適用されない。"><input type="checkbox" name="score-gb-setting" value="29" checked />三同刻</label>
+</div>
+<span>組合竜和了</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-setting-3" value="25" />和了牌が組合竜の一部と解釈できる場合は辺張・坎張・単釣将を加算しない</label>
+<label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="0" checked />和了牌が順子又は雀頭の一部と解釈できる場合は辺張・坎張・単釣将を加算しうる</label>
+</div>
+<span>多面待ち和了</span>
+<div class="output-option-group">
+<label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨される。"><input type="radio" name="score-gb-setting-4" value="0" checked />辺張・坎張・単釣将を加算しない</label>
+<label><input type="radio" name="score-gb-setting-4" value="26" />辺張・坎張・単釣将を加算しうる</label>
+</div>
+<span>加槓全求人</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-setting-7" value="0" checked />あり</label>
+<label><input type="radio" name="score-gb-setting-7" value="36" />なし</label>
+</div>
+<span>点数計算</span>
+<div class="output-option-group">
+<label><input type="number" id="score-gb-setting-fan" value="8" min="0" />点縛り</label>
+<label><input type="number" id="score-gb-setting-blind" value="8" min="0" />点底点</label>
+<label title="JMSAルールでは 88 点満貫制が適用される。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" />点満貫</label>
+<label><input type="checkbox" name="score-gb-setting" value="39" />ツモ点数を三分割</label>
+</div>
+<span>簡単設定</span>
+<div class="output-option-group">
+<button onclick="processGBSetting(0)">MILルール</button>
+<button onclick="processGBSetting(1)">WMOルール</button>
+<button onclick="processGBSetting(2)">JMSAルール</button>
+</div>
+</div>
+</details>
+</div>
+<div class="output-context" id="output-score-gb"></div>
+<div class="output-context" id="brief-output-score-gb" style="display: none"></div>
+<div class="output-time" id="time-output-score-gb">Ready to start!</div>
+</div>
+</div>
+<div class="reference-box mobile-display-only" id="title-box"></div>
+<div class="reference-box">
+関連ルール：
+<ul style="margin-top: 0">
+<li><a href="./rules/Shinhouchi.pdf">平成版麻雀新報知ルール（新報知ルール）</a></li>
+<li><a href="./rules/Achieve/Saikouisen.html">最高位戦日本プロ麻雀協会競技規定（最高位戦ルール）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
+<li><a href="./rules/JPML-Riichi.pdf">日本プロ麻雀連盟公式ルール及びWRCルール（連盟ルール）</a></li>
+<li><a href="./rules/Mu-Riichi.pdf">麻将連合公式ルール（μルール）</a></li>
+<li><a href="./rules/Achieve/ClubJPM.html">日本プロ麻雀協会競技規定（協会ルール）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
+<li><a href="./rules/Achieve/RMU.html">RMUルール</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
+<li><a href="./rules/Zendanshin.pdf">全国麻雀段位審査会競技規定（全段審ルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">日本健康麻将協会健康マージャンルール（健康ルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">学生麻雀連盟競技規定（学雀連ルール）</a><a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-                    <li><a href="./rules/Achieve/MLeague.html">Mリーグの公式戦ルール（Mリーグ）</a><a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
+<li><a href="./rules/Achieve/MLeague.html">Mリーグの公式戦ルール（Mリーグ）</a><a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/Saikyosen.html">麻雀最強戦ルール（最強戦）</a><a class="small-a" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-Riichi.html">日本麻雀連盟リーチ麻雀ルール</a> <a class="small-a" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-                    <li><a href="./rules/XJTU-Riichi.pdf">西安交通大学立直麻雀競技規則（XJTUルール）及び西安交通大学七星杯立直麻雀オープン大会ルール（XJTU七星杯）</a></li>
-                    <li><a href="./rules/EMA-Riichi.pdf">欧州麻雀協会立直ルール（EMAルール）</a></li>
+<li><a href="./rules/XJTU-Riichi.pdf">西安交通大学立直麻雀競技規則（XJTUルール）及び西安交通大学七星杯立直麻雀オープン大会ルール（XJTU七星杯）</a></li>
+<li><a href="./rules/EMA-Riichi.pdf">欧州麻雀協会立直ルール（EMAルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/WRC.pdf">リーチ麻雀世界選手権ルール（WRCルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/Shingendai.pdf">昭和50年度制定新「週刊現代ルール」（新現代ルール）</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-22.html">日本麻雀連盟アルシーアル麻雀ルール</a> <a class="small-a" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
 <!--No Summary-->   <li><a href="./rules/101.pdf">日本麻雀101競技連盟101競技規定（101ルール）</a></li>
-                    <li><a href="./rules/GB98.pdf">中国麻雀競技規則（國標原文）</a></li>
-                    <li><a href="./rules/GB98-EC.pdf">中国麻雀競技規則疑問解説（疑問解説）</a></li>
-                    <li><a href="./rules/GB98-FAQ.pdf">《中国麻雀競技規則（試行）》問答集（問答集ルール）</a></li>
-                    <li><a href="./rules/WMO-MCR.pdf">世界麻雀組織麻雀競技規則（WMOルール）</a></li>
-                    <li><a href="./rules/MIL-MCR.pdf">国際麻雀連盟国標麻雀規則補足細則（MILルール）</a></li>
-                    <li><a href="./rules/Achieve/JMSA-MCR.html">日本麻將體育協會ルール及び役の一覧（JMSAルール）</a><a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="section title-button-container">
-            <div class="output-time">v4.7.14</div>
-            <div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
-        </div>
+<li><a href="./rules/GB98.pdf">中国麻雀競技規則（國標原文）</a></li>
+<li><a href="./rules/GB98-EC.pdf">中国麻雀競技規則疑問解説（疑問解説）</a></li>
+<li><a href="./rules/GB98-FAQ.pdf">《中国麻雀競技規則（試行）》問答集（問答集ルール）</a></li>
+<li><a href="./rules/WMO-MCR.pdf">世界麻雀組織麻雀競技規則（WMOルール）</a></li>
+<li><a href="./rules/MIL-MCR.pdf">国際麻雀連盟国標麻雀規則補足細則（MILルール）</a></li>
+<li><a href="./rules/Achieve/JMSA-MCR.html">日本麻將體育協會ルール及び役の一覧（JMSAルール）</a><a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">オリジナル</a></li>
+</ul>
+</div>
+</div>
+<div class="section title-button-container">
+<div class="output-time">v4.8.0</div>
+<div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
+</div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
         <script>

@@ -10,684 +10,702 @@
         <link rel="shortcut icon" href="head.ico" type="image/x-icon">
     </head>
     <body>
-        <div class="language-bar">
-            <div class="language-bar-group">
-                <a onclick="updateCardSkin('jp')"><span class="fan">Mahjong Soul</span> Skin</a>
-                <a onclick="updateCardSkin('gb')"><span class="fan">Tziakcha</span> Skin</a>
-                <a onclick="updateCardSkin('qq')"><span class="fan">Tencent</span> Skin</a>
-                <a onclick="updateCardSkin('hk')"><span class="fan">Let's Mahjong</span> Skin</a>
-                <a onclick="updateCardSkin('tw')"><span class="fan">GodGame</span> Skin</a>
-                <a onclick="updateCardSkin('op')"><span class="fan">Sonoken</span> Skin</a>
-            </div>
-            <div class="language-bar-group">
-                <a href="mahjong.html">简体中文</a>
-                <a href="mahjong-tw.html">正體中文</a>
-                <a href="mahjong-ja.html">日本語</a>
-                <a>English</a>
-            </div>
-        </div>
-        <h1>Mahjong Theory & Score Calculator</h1>
-        <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0;">
-            <li>Supports Mahjong Theory calculation for <span data-i18n="normal"></span> Mahjong, Chinese Official Mahjong (MCR), Japanese Riichi Mahjong (RCR), 16-tile Mahjong, Hong Kong Style Taiwanese Mahjong, and any-tile-count Mahjong.</li>
-            <li>Supports Joker (wild tile, universal tile, laizi, magic tile, etc.).</li>
-            <li>Supports point or score calculation for Chinese Official Mahjong (MCR) and Japanese Riichi Mahjong (RCR).</li>
-        </ul>
-        <div class="section">
-            <div class="title-button-container">
-                <label for="inputText">Please enter your hand</label>
-                <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">Open Input Panel ▼</button>
-            </div>
-            <div class="input-area" id="textInput">
-                <input type="text" id="inputText" placeholder="For example：1112345678999mE" />
-                <div class="input-note-wrapper">
-                    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">Show input instructions ▼</button>
-                    <div class="input-note" id="inputNote" style="display: none">
-                        The input field supports the following formats, which can be mixed:
-                        <ol style="margin-top: 0">
-                            <li>Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same color suffix can only keep the suffix of the rightmost tile.</li>
-                            <li>Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.</li>
-                            <li>English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North</b>, are represented by <b>ESWN</b> in order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.</li>
-                            <li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Characters=w</b>,<b>Circles=b</b>.</li>
-                            <li>Notation Format: Character tiles are represented by Chinese numbers <b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers <b>①②③④⑤⑥⑦⑧⑨</b>. Bamboo tiles are represented by full-width numbers <b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.</li>
-                            <li>Unicode Format: Use Unicode U+1F000 to U+1F02B characters to represent the corresponding cards.</li>
-                        </ol>
-                        <p>About Bonus: <b>Spring<span data-i18n="slash"></span>Summer<span data-i18n="slash"></span>Autumn<span data-i18n="slash"></span>Winter<span data-i18n="slash"></span>Plum<span data-i18n="slash"></span>Orchid<span data-i18n="slash"></span>Chrysanthemum<span data-i18n="slash"></span>Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into joker if necessary.<br /></p>
-                        About Joker:
-                        <ul style="margin-top: 0">
-                            <li>Non-directional Joker <img src="./cards/a1j.gif" style="vertical-align: middle" />: Can be considered as any suit or honor tile. Represented by <b>1j/J</b>.</li>
-                            <li>Characters Joker <img src="./cards/a2j.gif" style="vertical-align: middle" />: Can be considered as any character tile. Represented by <b>2j/im/iw</b>.</li>
-                            <li>Circles Joker <img src="./cards/a3j.gif" style="vertical-align: middle" />: Can be considered as any circle tile. Represented by <b>3j/ip/ib</b>.</li>
-                            <li>Bamboo Joker <img src="./cards/a4j.gif" style="vertical-align: middle" />: Can be considered as any bamboo tile. Represented by <b>4j/is</b>.</li>
-                            <li>Suits Joker <img src="./cards/a5j.gif" style="vertical-align: middle" />: Can be considered as any suit tile. Represented by <b>5j</b>.</li>
-                            <li>Winds Joker <img src="./cards/a6j.gif" style="vertical-align: middle" />: Can be considered as any wind tile. Represented by <b>6j</b>.</li>
-                            <li>Dragons Joker <img src="./cards/a7j.gif" style="vertical-align: middle" />: Can be considered as any dragon tile. Represented by <b>7j</b>.</li>
-                            <li>Honors Joker <img src="./cards/a8j.gif" style="vertical-align: middle" />: Can be considered as any honor tile. Represented by <b>8j/iz</b>.</li>
-                            <li>Bonus Joker <img src="./cards/a9j.gif" style="vertical-align: middle" />: Can be considered as any bonus tile. Represented by <b>9j/H/X/9h/9f/ih/if</b>.</li>
-                        </ul>
-                        About Lain Down Melds:
-                        <ul style="margin-top: 0">
-                            <li>Enclose some tiles with half-width square brackets <b>[]</b> to indicate a fixed lain down meld.
-                            <li>For a Chow (sequence), append a half-width number after the tiles and separate with a half-width comma. The corresponding tile will be marked as obtained by Chow and placed horizontally at the leftmost position.</li>
-                            <li>For a Pung (triplet), append a half-width number after the tiles and separate with a half-width comma. The corresponding tile will be marked as obtained by Pung and placed horizontally.</li>
-                            <li>A fixed set of four tiles is considered a Conceal Kong (quad) by default.</li>
-                            <li>For an Expose Kong (quad), append a half-width number from 1 to 4 after the four tiles, separated by a half-width comma. The corresponding tile will be marked as obtained by Kan and placed horizontally.</li>
-                            <li>For an Extend Kong (quad), append a half-width number from 5 to 8 after the four tiles, separated by a half-width comma. The corresponding tile will be marked as obtained by Pung and placed horizontally.</li>
-                        </ul>
-                        <p>About Replacement Bonus<span data-i18n="slash"></span><span data-i18n="JP_YAKUNAME_99"></span>: Enclose some tiles with half-width parentheses <b>()</b> to indicate tiles that are replacement bonus or <span data-i18n="JP_YAKUNAME_99" data-i18n-case="lower"></span>.<br /></p>
-                        <p>About <span data-i18n="JP_YAKUNAME_96"></span>: Enclose some tiles with half-width angle brackets <b><></b> to indicate that these tiles are <span data-i18n="JP_YAKUNAME_96" data-i18n-case="lower"></span> indicators. If there is a half-width comma inside the brackets, the tiles on the left of the comma are the <span data-i18n="JP_YAKUNAME_96_EX" data-i18n-case="lower"></span> indicators, and the tiles on the right are the <span data-i18n="JP_YAKUNAME_97" data-i18n-case="lower"></span> indicators.<br /></p>
-                    </div>
-                </div>
-            </div>
-            <div class="input-area" id="boardInput" style="display: none">
-                <div class="card-container" id="input-pic"></div>
-                <div class="input-keyboard">
-                    <div class="input-mainkey">
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1m.gif" onclick="addInput(0)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2m.gif" onclick="addInput(1)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3m.gif" onclick="addInput(2)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4m.gif" onclick="addInput(3)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5m.gif" onclick="addInput(4)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6m.gif" onclick="addInput(5)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7m.gif" onclick="addInput(6)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8m.gif" onclick="addInput(7)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9m.gif" onclick="addInput(8)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0m.gif" onclick="addInput({ id: 4, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1p.gif" onclick="addInput(9)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2p.gif" onclick="addInput(10)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3p.gif" onclick="addInput(11)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4p.gif" onclick="addInput(12)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5p.gif" onclick="addInput(13)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6p.gif" onclick="addInput(14)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7p.gif" onclick="addInput(15)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8p.gif" onclick="addInput(16)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9p.gif" onclick="addInput(17)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0p.gif" onclick="addInput({ id: 13, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1s.gif" onclick="addInput(18)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2s.gif" onclick="addInput(19)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3s.gif" onclick="addInput(20)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4s.gif" onclick="addInput(21)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5s.gif" onclick="addInput(22)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6s.gif" onclick="addInput(23)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7s.gif" onclick="addInput(24)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8s.gif" onclick="addInput(25)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9s.gif" onclick="addInput(26)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0s.gif" onclick="addInput({ id: 22, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1z.gif" onclick="addInput(27)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2z.gif" onclick="addInput(28)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3z.gif" onclick="addInput(29)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4z.gif" onclick="addInput(30)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5z.gif" onclick="addInput(31)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6z.gif" onclick="addInput(32)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7z.gif" onclick="addInput(33)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/0z.gif" onclick="addInput({ id: 31, sp: 1 })" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1h.gif" onclick="addInput(34)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2h.gif" onclick="addInput(35)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3h.gif" onclick="addInput(36)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4h.gif" onclick="addInput(37)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5h.gif" onclick="addInput(38)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6h.gif" onclick="addInput(39)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7h.gif" onclick="addInput(40)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8h.gif" onclick="addInput(41)" /></div>
-                            <div></div>
-                        </div>
-                        <div class="input-row">
-                            <div></div>
-                            <div class="card-div input-card-button"><img src="./cards/1j.gif" onclick="addInput(42)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/2j.gif" onclick="addInput(43)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/3j.gif" onclick="addInput(44)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/4j.gif" onclick="addInput(45)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/5j.gif" onclick="addInput(46)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/6j.gif" onclick="addInput(47)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/7j.gif" onclick="addInput(48)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/8j.gif" onclick="addInput(49)" /></div>
-                            <div class="card-div input-card-button"><img src="./cards/9j.gif" onclick="addInput(50)" /></div>
-                            <div></div>
-                        </div>
-                        <div class="card-container" id="input-pic-bonus"></div>
-                        <div class="output-options">
-                            <span><span data-i18n="JP_YAKUNAME_96"></span> Indicator</span>
-                            <div class="card-container" id="input-pic-dorap"></div>
-                            <span><span data-i18n="JP_YAKUNAME_97"></span> Indicator</span>
-                            <div class="card-container" id="input-pic-urap"></div>
-                        </div>
-                    </div>
-                    <div class="input-subkeys">
-                        <button onclick="clearInput()" class="subkey-button">Clear</button>
-                        <button onclick="sortInput()" class="subkey-button">Sort</button>
-                        <button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty">Delete</button>
-                        <button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi">Chow</button>
-                        <button onclick="subtileInput(1)" class="subkey-button enabled-no-flower">Pung</button>
-                        <button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower">Expose Kong</button>
-                        <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">Extend Kong</button>
-                        <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">Conceal Kong</button>
-                        <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">+Bonus</button>
-                        <button onclick="subtileInput(4)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_96"></span> Indicate</button>
-                        <button onclick="subtileInput(5)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span> Indicate</button>
-                    </div>
-                </div>
-            </div>
-            <div style="text-align: center">
-                <button onclick="processInput()" class="random-button">Calculate</button>
-                <button onclick="randomInput()" class="random-button">Get <input type="number" id="randomCardCount" value="14" min="1" max="99" /> random tiles</button>
-                <button onclick="randomWinning()" class="random-button">Get <input type="number" id="randomWinningCardCount" value="14" min="1" max="99" /> winning tiles</button>
-            </div>
-            <div class="output-box-head">
-                <div class="output-context" style="text-align: center" id="output-cnt"></div>
-                <div class="card-container" id="output-pic"></div>
-                <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title"><div><span data-i18n="normal"></span> Theory</div></div>
-                    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">Fold ▲</button>
-                </div>
-                <div class="output-context" id="output-std"></div>
-                <div class="output-context" id="brief-output-std" style="display: none"></div>
-                <div class="output-time" id="time-output-std"></div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">Chinese Official Mahjong (MCR) Standard Type Theory</div>
-                    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">Fold ▲</button>
-                </div>
-                <div class="output-option-group">
-                    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
-                    <label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label>
-                    <label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label>
-                    <label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label>
-                    <label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label>
-                </div>
-                <div class="output-context" id="output-gb"></div>
-                <div class="output-context" id="brief-output-gb" style="display: none"></div>
-                <div class="output-time" id="time-output-gb"></div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">Japanese Riichi Mahjong (RCR) Standard Type Theory<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '4P', '3P', switchJP34)"><span class="label-text">4P</span><span class="thumb"></span></button></div>
-                    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">Fold ▲</button>
-                    <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">Fold ▲</button>
-                </div>
-                <div class="output-option-group">
-                    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
-                    <label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label>
-                    <label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="orphan13"></span></label>
-                </div>
-                <div id="output-group-jp">
-                    <div class="output-context" id="output-jp"></div>
-                    <div class="output-context" id="brief-output-jp" style="display: none"></div>
-                    <div class="output-time" id="time-output-jp"></div>
-                </div>
-                <div id="output-group-jp3p" style="display: none;">
-                    <div class="output-context" id="output-jp3p"></div>
-                    <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
-                    <div class="output-time" id="time-output-jp3p"></div>
-                </div>
-            </div>
-            <div class="output-box">
-                <div class="title-button-container">
-                    <div class="output-title">Hong Kong Style Taiwanese Mahjong Theory</div>
-                    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">Fold ▲</button>
-                </div>
-                <div class="output-option-group">
-                    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
-                    <label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label>
-                    <label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label>
-                    <label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label>
-                </div>
-                <div class="output-context" id="output-tw"></div>
-                <div class="output-context" id="brief-output-tw" style="display: none"></div>
-                <div class="output-time" id="time-output-tw"></div>
-            </div>
-            <div class="output-box" id="score-gb">
-                <div class="title-button-container">
-                    <div class="output-title"><div>Chinese Official Mahjong (MCR) <span data-i18n="GB_FAN_unit"></span> Calculator</div></div>
-                    <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">Fold ▲</button>
-                </div>
-                <div id="options-output-score-gb">
-                    <div class="output-options">
-                        <span>Prevalent</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-global-wind" value="27" checked />East</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="28" />South</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="29" />West</label>
-                            <label><input type="radio" name="score-gb-global-wind" value="30" />North</label>
-                        </div>
-                        <span>Seat</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-local-wind" value="27" checked />East</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="28" />South</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="29" />West</label>
-                            <label><input type="radio" name="score-gb-local-wind" value="30" />North</label>
-                        </div>
-                        <span>Winning Way</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-wintype" value="0" checked />Claim</label>
-                            <label><input type="radio" name="score-gb-wintype" value="80" />Draw</label>
-                        </div>
-                        <span>Winning Status</span>
-                        <div class="output-option-group">
-                            <label><input type="checkbox" name="score-gb-wininfo" value="44" />Last Tile</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="46" /><span data-i18n="GB_FANNAME_46"></span></label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="47" /><span data-i18n="GB_FANNAME_47"></span></label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="58" /><span data-i18n="GB_FANNAME_58"></span></label>
-                        </div>
-                        <button onclick="processGBScore()" class="score-button">Calculate</button>
-                    </div>
-                    <details>
-                        <summary>Rules Settings</summary>
-                        <div class="output-options">
-                            <span title="The definition of &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; in GB original is restricted to the normal type. &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; is disallowed to combine with following fan in Q&A Rules, MIL Rules and JMSA Rules. &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; is allowed to combine with following fan in WMO Rules. &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; is allowed to combine with following fan in GB Analysis' suggestion."><span class="fan">Fully Conc. Hand</span> with</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="19" /><span class="fan" data-i18n="GB_FANNAME_4"></span><span data-i18n="slash"></span><span class="fan" data-i18n="GB_FANNAME_12"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="41" /><span class="fan">Seven (Shifted) Pairs</span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="42" /><span class="fan" data-i18n="GB_FANNAME_7"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="43" /><span class="fan">Honors and Knitted Tiles</span></label>
-                            </div>
-                            <span title="The definitions of following fan in GB original are restricted to the normal type even if the examples of &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; combining with &lt;span class=&quot;fan&quot;&gt;All Honors&lt;/span&gt; or &lt;span class=&quot;fan&quot;&gt;All Terminals&lt;/span&gt; are included in GB original. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt;, &lt;span class=&quot;fan&quot;&gt;Half Flush&lt;/span&gt; or &lt;span class=&quot;fan&quot;&gt;All Types&lt;/span&gt; in GB Analysis. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;All Terminals and Honors&lt;/span&gt; in Q&A Rules' suggestion and MIL Rules. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;All Types&lt;/span&gt; in WMO Rules. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;All Terminals and Honors&lt;/span&gt; except &lt;span class=&quot;fan&quot;&gt;All Types&lt;/span&gt;."><span class="fan" data-i18n="GB_FANNAME_19"></span> with</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="5" checked /><span class="fan" data-i18n="GB_FANNAME_22"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="10" checked /><span class="fan" data-i18n="GB_FANNAME_49"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="1" checked /><span class="fan" data-i18n="GB_FANNAME_3"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="6" checked /><span class="fan">Upper/Middle/Lower Tiles</span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="7" checked /><span class="fan">Upper/Lower Four</span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="9" checked /><span class="fan" data-i18n="GB_FANNAME_40"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="11" checked /><span class="fan" data-i18n="GB_FANNAME_51"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="3" checked /><span class="fan" data-i18n="GB_FANNAME_11"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="2" checked /><span class="fan" data-i18n="GB_FANNAME_8"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="4" checked /><span class="fan" data-i18n="GB_FANNAME_18"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="40" checked /><span class="fan" data-i18n="GB_FANNAME_55"></span></label>
-                                <label title="Never appear due to the limitation on the number of tiles."><input type="checkbox" name="score-gb-setting" value="8" checked /><span class="fan" data-i18n="GB_FANNAME_31"></span></label>
-                                <label title="Disallowed in all exist rules."><input type="checkbox" name="score-gb-setting" value="12" /><span class="fan" data-i18n="GB_FANNAME_21"></span></label>
-                            </div>
-                            <span><span class="fan">Two Conc. Kongs</span></span>
-                            <div class="output-option-group">
-                                <label title="Used in GB original, Q&A Rules, MIL Rules and JMSA Rules."><input type="radio" name="score-gb-setting-1" value="0" checked />6 <span data-i18n="GB_FAN_unit"></span></label>
-                                <label title="Used in WMO Rules."><input type="radio" name="score-gb-setting-1" value="23" />8 <span data-i18n="GB_FAN_unit"></span></label>
-                            </div>
-                            <span><span class="fan">Conc. and Melded Kong</span></span>
-                            <div class="output-option-group">
-                                <label title="Used in MIL Rules and JMSA Rules."><input type="radio" name="score-gb-setting-2" value="0" checked />5 <span data-i18n="GB_FAN_unit"></span></label>
-                                <label title="Used in WMO Rules."><input type="radio" name="score-gb-setting-2" value="24,1" />6 <span data-i18n="GB_FAN_unit"></span></label>
-                                <label title="Used in Supplementary Rules of 1999 National Mahjong Sports Competition (Refer to GB Analysis)."><input type="radio" name="score-gb-setting-2" value="24,2" /><span class="fan" data-i18n="GB_FANNAME_74"></span> + <span class="fan" data-i18n="GB_FANNAME_67"></span></label>
-                                <label title="Used in Q&A Rules."><input type="radio" name="score-gb-setting-2" value="24,3" /><span class="fan" data-i18n="GB_FANNAME_57"></span> + <span class="fan" data-i18n="GB_FANNAME_67"></span></label>
-                            </div>
-                            <span><span class="fan">Three/Four Kongs</span></span>
-                            <div class="output-option-group">
-                                <label title="Used in MIL Rules and JMSA Rules."><input type="radio" name="score-gb-setting-6" value="0" checked />Combine with <span class="fan">Concealed Pungs</span>, without <span class="fan">Concealed Kongs</span></label>
-                                <label title="Used in WMO Rules."><input type="radio" name="score-gb-setting-6" value="30,1" />Combine with <span class="fan">Concealed Pungs</span> and <span class="fan">Concealed Kongs</span></label>
-                                <label title="Used in Q&A Rules."><input type="radio" name="score-gb-setting-6" value="30,2" />A Certain Combination</label>
-                            </div>
-                            <span><span class="fan" data-i18n="GB_FANNAME_46"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="31,1" />Combine without <span class="fan" data-i18n="GB_FANNAME_74"></span></label>
-                                <label title="Used in GB Analysis."><input type="checkbox" name="score-gb-setting" value="31,2" />1 point deducted in <span class="fan">Melded/Concealed Kong</span></label>
-                                <label title="Used in Q&A Rules, MIL Rules and JMSA Rules."><input type="checkbox" name="score-gb-setting" value="32" checked />Combine with <span class="fan" data-i18n="GB_FANNAME_44"></span></label>
-                            </div>
-                            <span>Omit <span class="fan">Pung of Term./Hon.</span></span>
-                            <div class="output-option-group">
-                                <label title="Used in GB Analysis."><input type="checkbox" name="score-gb-setting" value="33" />1 point deducted in <span class="fan" data-i18n="GB_FANNAME_60"></span><span data-i18n="slash"></span><span class="fan" data-i18n="GB_FANNAME_61"></span><span data-i18n="slash"></span><span class="fan" data-i18n="GB_FANNAME_59"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="34" /><span class="fan" data-i18n="GB_FANNAME_38"></span> does not omit</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="35" /><span class="fan" data-i18n="GB_FANNAME_9"></span> does not omit</label>
-                            </div>
-                            <span><span class="fan" data-i18n="GB_FANNAME_4"></span></span>
-                            <div class="output-option-group">
-                                <label title="Used in MIL Rules."><input type="radio" name="score-gb-setting-5" value="0" checked />Omit one <span class="fan" data-i18n="GB_FANNAME_73"></span></label>
-                                <label><input type="radio" name="score-gb-setting-5" value="27" />Omit all <span class="fan" data-i18n="GB_FANNAME_73"></span></label>
-                            </div>
-                            <span title="&lt;span class=&quot;fan&quot;&gt;One Voided Suit&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Big Three Dragons&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;Four Pure Shifted Pungs&lt;/span&gt; in GB Original, Q&A Rules, WMO Rules and MIL Rules."><span class="fan" data-i18n="GB_FANNAME_75"></span> with</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="13" checked /><span class="fan" data-i18n="GB_FANNAME_2"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="14" checked /><span class="fan" data-i18n="GB_FANNAME_10"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="15" checked /><span class="fan" data-i18n="GB_FANNAME_38"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="16" checked /><span class="fan" data-i18n="GB_FANNAME_14"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="44" checked /><span class="fan" data-i18n="GB_FANNAME_16"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="17" checked /><span class="fan" data-i18n="GB_FANNAME_15"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="18" /><span class="fan" data-i18n="GB_FANNAME_40"></span></label>
-                            </div>
-                            <span title="&lt;span class=&quot;fan&quot;&gt;Half Flush&lt;/span&gt; is allowed to combine with &lt;span class=&quot;fan&quot;&gt;Big Four Winds&lt;/span&gt; or &lt;span class=&quot;fan&quot;&gt;Little Four Winds&lt;/span&gt;, disallowed to combine with &lt;span class=&quot;fan&quot;&gt;All Green&lt;/span&gt; in GB Original, Q&A Rules and MIL Rules. &lt;span class=&quot;fan&quot;&gt;Half Flush&lt;/span&gt; is allowed to combine with all following fan in WMO Rules."><span class="fan" data-i18n="GB_FANNAME_49"></span> with</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span class="fan" data-i18n="GB_FANNAME_1"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span class="fan" data-i18n="GB_FANNAME_9"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="22" /><span class="fan" data-i18n="GB_FANNAME_3"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="GB_FANNAME_8"></span> with</span>
-                            <div class="output-option-group">
-                                <label title="Used in WMO Rules. Unused in Q&A Rules and MIL Rules."><input type="checkbox" name="score-gb-setting" value="28" /><span class="fan" data-i18n="GB_FANNAME_65"></span></label>
-                                <label title="Unused in GB original if the text &quot;Omit &lt;span class=&quot;fan&quot;&gt;Same Pung&lt;/span&gt;&quot; in GB original is not a typographical error."><input type="checkbox" name="score-gb-setting" value="29" checked /><span class="fan" data-i18n="GB_FANNAME_32"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="GB_FANNAME_35"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-3" value="25" />Omit <span class="fan">Edge/Closed/Pair Wait</span> when winning tile can be considered as part of <span class="fan" data-i18n="GB_FANNAME_35"></span></label>
-                                <label title="Used in MIL Rules."><input type="radio" name="score-gb-setting-3" value="0" checked />Allow <span class="fan">Edge/Closed/Pair Wait</span> when winning tile can be considered as part of chow or pair</label>
-                            </div>
-                            <span>Multi-Wait</span>
-                            <div class="output-option-group">
-                                <label title="Used in Q&A Rules, WMO Rules and MIL Rules. Suggested using in GB Analysis."><input type="radio" name="score-gb-setting-4" value="0" checked />Omit <span class="fan">Edge/Closed/Pair Wait</span></label>
-                                <label><input type="radio" name="score-gb-setting-4" value="26" />Allow <span class="fan">Edge/Closed/Pair Wait</span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="GB_FANNAME_52"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-7" value="0" checked />Extended Kong allowed</label>
-                                <label><input type="radio" name="score-gb-setting-7" value="36" />Extended Kong disallowed</label>
-                            </div>
-                            <span>Payment Method</span>
-                            <div class="output-option-group">
-                                <label>Minimum limit <input type="number" id="score-gb-setting-fan" value="8" min="0" /> <span data-i18n="GB_FAN_unit"></span></label>
-                                <label>Extra <span data-i18n="GB_FAN_unit"></span> <input type="number" id="score-gb-setting-blind" value="8" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
-                                <label title="JMSA Rules use 88 points as maximum limit."><input type="checkbox" name="score-gb-setting" value="38" />Maximum limit <input type="number" id="score-gb-setting-maxfan" value="88" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
-                                <label><input type="checkbox" name="score-gb-setting" value="39" /><span data-i18n="GB_FAN_unit"></span> divided by 3 when self-drawn</label>
-                            </div>
-                            <span>Quick Start</span>
-                            <div class="output-option-group">
-                                <button onclick="processGBSetting(0)">MIL Rules</button>
-                                <button onclick="processGBSetting(1)">WMO Rules</button>
-                                <button onclick="processGBSetting(2)">JMSA Rules</button>
-                            </div>
-                        </div>
-                    </details>
-                </div>
-                <div class="output-context" id="output-score-gb"></div>
-                <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
-                <div class="output-time" id="time-output-score-gb">Ready to start!</div>
-            </div>
-            <div class="output-box" id="score-jp">
-                <div class="title-button-container">
-                    <div class="output-title">Japanese Riichi Mahjong (RCR) Scores Calculator</div>
-                    <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">Fold ▲</button>
-                </div>
-                <div id="options-output-score-jp">
-                    <div class="output-options">
-                        <span>Prevailing</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-global-wind" value="27" checked>East</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="28">South</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="29">West</label>
-                            <label><input type="radio" name="score-jp-global-wind" value="30">North</label>
-                        </div>
-                        <span>Seat</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-local-wind" value="27" checked>East</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="28">South</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="29">West</label>
-                            <label><input type="radio" name="score-jp-local-wind" value="30">North</label>
-                        </div>
-                        <span>Winning Way</span>
-                        <div class="output-option-group">
-                            <label><input type="radio" name="score-jp-wintype" value="0" checked>Claim</label>
-                            <label><input type="radio" name="score-jp-wintype" value="1">Draw</label>
-                        </div>
-                        <span>Riichi Status</span>
-                        <div class="output-option-group">
-                            <label><input type="checkbox" name="score-jp-wininfo" value="1"><span data-i18n="JP_YAKUNAME_1"></span></label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="16"><span data-i18n="JP_YAKUNAME_16"></span></label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="3"><span data-i18n="JP_YAKUNAME_3"></span></label>
-                        </div>
-                        <span>Winning Status</span>
-                        <div class="output-option-group">
-                            <label><input type="checkbox" name="score-jp-wininfo" value="32">First Turn</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="13">Last Tile</label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="12"><span data-i18n="JP_YAKUNAME_12"></span></label>
-                            <label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
-                            <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
-                            <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
-                        </div>
-                        <button onclick="processJPScore()" class="score-button">Calculate</button>
-                    </div>
-                    <details>
-                        <summary>Rules Settings</summary>
-                        <div class="output-options">
-                            <span data-i18n="yakuman"></span>
-                            <div class="output-option-group">
-                                <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span> Yaku</label>
-                                <label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-                                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative <span data-i18n="yakuman"></span></label>
-                                <label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
-                            </div>
-                            <span>Double Wind Pair</span>
-                            <div class="output-option-group">
-                                <label title="Used in MahjongSoul, Tenhou, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
-                                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
-                            </div>
-                            <span data-i18n="kiri_mangan"></span>
-                            <div class="output-option-group">
-                                <label title="Used in Saikouisen Rules, JPML WRC Rules, ClubJPM Rules, RMU Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
-                                <label><input type="radio" name="score-jp-setting-3" value="0" checked />OFF</label>
-                            </div>
-                            <span>Open <span class="fan" data-i18n="JP_YAKUNAME_4"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-0" value="4" checked />ON</label>
-                                <label><input type="radio" name="score-jp-setting-0" value="0" />OFF</label>
-                            </div>
-                            <span>Self-drawn <span class="fan" data-i18n="JP_YAKUNAME_10"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-2" value="6" checked /><span class="fan" data-i18n="JP_YAKUNAME_10"></span> Yaku</label>
-                                <label><input type="radio" name="score-jp-setting-2" value="0" /><span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_12"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-10" value="0" checked />Add <span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
-                                <label><input type="radio" name="score-jp-setting-10" value="16" />Omit <span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
-                            </div>
-                            <span><span data-i18n="JP_FAN_unit"></span> Limit</span>
-                            <div class="output-option-group">
-                                <label><input type="number" id="score-jp-setting-fan" value="1" min="0" /> <span data-i18n="JP_FAN_unit"></span> Limit</label>
-                                <label><input type="checkbox" name="score-jp-setting-7" value="11" /><span data-i18n="yakuman"></span> Limit</label>
-                                <label><input type="checkbox" name="score-jp-setting-7" value="12" /><span class="fan"><span data-i18n="JP_YAKUNAME_96_EX"></span></span> Included</label>
-                                <label title="Used in Mahjong Han Limit Mode."><input type="checkbox" name="score-jp-setting-7" value="13" checked/><span class="fan" data-i18n="JP_YAKUNAME_3"></span> Included</label>
-                            </div>
-                            <span title='&lt;span class=&quot;fan&quot;&gt;Blessing of Man&lt;/span&gt; will be counted when both &lt;i&gt;Claim&lt;/i&gt; and &lt;i&gt;First Turn&lt;/i&gt; are selected. Since the definition of &lt;span class=&quot;fan&quot;&gt;Blessing of Man&lt;/span&gt; varies, whether it qualifies as &lt;i&gt;First Turn&lt;/i&gt; should be determined by the user according to the rules being applied.'><span class="fan" data-i18n="JP_YAKUNAME_30"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-5" value="0" />OFF</label>
-                                <label title="Used in Zendanshin Rules."><input type="radio" name="score-jp-setting-5" value="9,3" />4 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label title="Used in JPML Rules, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,4" />6 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-5" value="9,5" />8 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label title="Used in MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-5" value="9,2" /><span data-i18n="yakuman"></span></label>
-                                <label title="Used in JPML Rules and EMA Rules."><input type="checkbox" name="score-jp-setting" value="39">Calculate Independently</label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_40"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-6" value="0" /><span class="fan" data-i18n="JP_YAKUNAME_39"></span></label>
-                                <label title="Used in XJTU Rules and MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-6" value="10" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_49"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-12" value="18,1" /><span class="fan" data-i18n="JP_YAKUNAME_31"></span> + <span class="fan" data-i18n="JP_YAKUNAME_4"></span></label>
-                                <label><input type="radio" name="score-jp-setting-12" value="0" checked /><span class="fan" data-i18n="JP_YAKUNAME_44"></span></label>
-                                <label><input type="radio" name="score-jp-setting-12" value="18,2" /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_17"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-4" value="0" checked />2 <span data-i18n="JP_FAN_unit"></span> 25 <span data-i18n="JP_FU_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-4" value="8,1" />1 <span data-i18n="JP_FAN_unit"></span> 50 <span data-i18n="JP_FU_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-4" value="8,2" />0 <span data-i18n="JP_FAN_unit"></span> 100 <span data-i18n="JP_FU_unit"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_29"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-20" value="47,2" /><span class="fan" data-i18n="JP_YAKUNAME_11"></span> ×2</label>
-                                <label><input type="radio" name="score-jp-setting-20" value="47,1" />2 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
-                                <label><input type="radio" name="score-jp-setting-20" value="0" checked />3 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
-                                <label><input type="radio" name="score-jp-setting-20" value="47,3" />4 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_50"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-13" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-13" value="19" />2 <span data-i18n="JP_FAN_unit"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_51"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-14" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-14" value="20" /><span data-i18n="yakuman"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_48"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-11" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-11" value="17,2" />1 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-11" value="17" />2 <span data-i18n="JP_FAN_unit"></span> (1 if Open)</label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_52"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-15" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,1" />2 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,2" />2 <span data-i18n="JP_FAN_unit"></span> (1 if Open)</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,3" />3 <span data-i18n="JP_FAN_unit"></span> (2 if Open)</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,4" />2 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
-                                <label><input type="radio" name="score-jp-setting-15" value="21,5" />3 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_53"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-16" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,3" />4 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,4" />5 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,5" />6 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,6" />6 <span data-i18n="JP_FAN_unit"></span> (5 if Open)</label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,1" /><span data-i18n="yakuman"></span></label>
-                                <label><input type="radio" name="score-jp-setting-16" value="22,2" /><span data-i18n="yakuman"></span> Concealed</label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_67"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-17" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,1" />1 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,2" />2 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,3" />2 <span data-i18n="JP_FAN_unit"></span> (1 if Open)</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,4" />2 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,5" />5 <span data-i18n="JP_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,6" /><span data-i18n="yakuman"></span></label>
-                                <label><input type="radio" name="score-jp-setting-17" value="40,7" /><span data-i18n="yakuman"></span> Concealed</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="41" /><span class="fan" data-i18n="JP_YAKUNAME_17"></span> Disallowed</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="42" /><span class="fan" data-i18n="JP_YAKUNAME_18"></span> Needed</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="43" /><span class="fan" data-i18n="JP_FUNAME_12"></span> Needed</label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_54"></span> Series</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="26" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_54"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="27" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_55"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="28" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_56"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="29" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_57"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="30" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_58"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="31" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_59"></span></label>
-                            </div>
-                            <span><span class="fan" data-i18n="JP_YAKUNAME_68"></span></span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-18" value="0" checked />OFF</label>
-                                <label><input type="radio" name="score-jp-setting-18" value="44" />1 <span data-i18n="JP_FAN_unit"></span></label>
-                            </div>
-                            <span>Local Lucky Yaku</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>1 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_60"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>1 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_61"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="34" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_62"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="35" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_63"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="36" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_64"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="37" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_65"></span></label>
-                                <label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_66"></span></label>
-                            </div>
-                            <span><span data-i18n="JP_FU_unit"></span> Jumping</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-8" value="14" checked />ON</label>
-                                <label><input type="radio" name="score-jp-setting-8" value="0" />OFF</label>
-                            </div>
-                            <span>Base Value</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-19" value="45,1" />Round to the nearest ten</label>
-                                <label><input type="radio" name="score-jp-setting-19" value="45,2" />Ceil to the nearest hundred</label>
-                                <label><input type="radio" name="score-jp-setting-19" value="0" checked />No modification</label>
-                            </div>
-                            <span>Scores Payment</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-jp-setting-9" value="15" checked />Ceil to the nearest hundred</label>
-                                <label><input type="radio" name="score-jp-setting-9" value="0" />No modification</label>
-                            </div>
-                            <span>Open <span class="fan" data-i18n="JP_YAKUNAME_10"></span> Shape</span>
-                            <div class="output-option-group">
-                                <label><input type="checkbox" name="score-jp-setting" value="24" />Enable <span class="fan" data-i18n="JP_YAKUNAME_10"></span> Yaku</label>
-                                <label><input type="checkbox" name="score-jp-setting" value="25" />Allow 20 <span data-i18n="JP_FU_unit"></span></label>
-                            </div>
-                            <span>Quick Start</span>
-                            <div class="output-option-group">
-                                <button onclick="processJPSetting(0)">XJTU Rules</button>
-                                <button onclick="processJPSetting(1)">XJTU 7-stars</button>
-                                <button onclick="processJPSetting(12)">New Hōchi Rules</button>
-                                <button onclick="processJPSetting(4)">Saikouisen Rules</button>
-                                <button onclick="processJPSetting(5)">Saikouisen Classic Rules</button>
-                                <button onclick="processJPSetting(2)">JPML Official Rules</button>
-                                <button onclick="processJPSetting(3)">JPML WRC Rules</button>
-                                <button onclick="processJPSetting(13)">μ Rules</button>
-                                <button onclick="processJPSetting(6)">ClubJPM Rules</button>
-                                <button onclick="processJPSetting(14)">RMU Rules</button>
-                                <button onclick="processJPSetting(15)">Zendanshin Rules</button>
-                                <button onclick="processJPSetting(7)">M.League</button>
-                                <button onclick="processJPSetting(8)">EMA Rules</button>
-                                <button onclick="processJPSetting(9)">MahjongSoul</button>
-                                <button onclick="processJPSetting(10)">MahjongSoul Local Yaku Mode</button>
-                                <button onclick="processJPSetting(11)">Tenhou</button>
-                            </div>
-                        </div>
-                    </details>
-                    <div class="output-options">
-                        <span><span data-i18n="JP_YAKUNAME_96"></span> Indicator</span>
-                        <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
-                        <span><span data-i18n="JP_YAKUNAME_97"></span> Indicator</span>
-                        <div class="card-container" id="output-pic-uras" style="text-align: left"></div>
-                    </div>
-                </div>
-                <div class="output-context" id="output-score-jp"></div>
-                <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
-                <div class="output-time" id="time-output-score-jp">Ready to start!</div>
-            </div>
-            <div class="reference-box mobile-display-only" id="title-box"></div>
-            <div class="reference-box">
-                Related Rules:
-                <ul style="margin-top: 0">   
-                    <li><a href="./rules/GB98.pdf">Chinese Mahjong Competition Rules (GB Original)</a></li>
-                    <li><a href="./rules/GB98-EC.pdf">Analysis of Difficult Issues in Chinese Mahjong Competition Rules (GB Analysis)</a></li>
-                    <li><a href="./rules/GB98-FAQ.pdf"><i>Chinese Mahjong Competition Rules (Trial)</i> Questions and Answers (Q&A Rules)</a></li>
-                    <li><a href="./rules/WMO-MCR.pdf">World Mahjong Organization Mahjong Competition Rules (WMO Rules)</a></li>
-                    <li><a href="./rules/MIL-MCR.pdf">Supplementary Rules of Mahjong International League to Chinese Official Mahjong Rules (MIL Rules)</a></li>
-                    <li><a href="./rules/Achieve/JMSA-MCR.html">Japan Mahjong Sports Association Rules and Overview of <span data-i18n="JP_FAN_unit"></span> (JMSA Rules)</a> <a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">the original</a></li>
-                    <li><a href="./rules/Shinhouchi.pdf">Heisei Edition Mahjong New Hōchi Rules (New Hōchi Rules)</a></li>
-                    <li><a href="./rules/Achieve/Saikouisen.html">Saikouisen Nihon Pro Mahjong Association Competition Rules (Saikouisen Rules)</a> <a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">the original</a></li>
-                    <li><a href="./rules/JPML-Riichi.pdf">Japan Professional Mahjong League Official Rules and WRC Rules (JPML Rules)</a></li>
-                    <li><a href="./rules/Mu-Riichi.pdf">Mahjong Union Official Rules (μ Rules)</a></li>
-                    <li><a href="./rules/Achieve/ClubJPM.html">Nihon Pro Mahjong Association Competition Rules (ClubJPM Rules)</a> <a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">the original</a></li>
-                    <li><a href="./rules/Achieve/RMU.html">RMU Rules</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">the original</a></li>
-                    <li><a href="./rules/Zendanshin.pdf">National Mahjong Rank Committee Competition Rules (Zendanshin Rules)</a></li>
+<div class="language-bar">
+<div class="language-bar-group">
+<a onclick="updateCardSkin('jp')"><span class="fan">Mahjong Soul</span> Skin</a>
+<a onclick="updateCardSkin('gb')"><span class="fan">Tziakcha</span> Skin</a>
+<a onclick="updateCardSkin('qq')"><span class="fan">Tencent</span> Skin</a>
+<a onclick="updateCardSkin('hk')"><span class="fan">Let's Mahjong</span> Skin</a>
+<a onclick="updateCardSkin('tw')"><span class="fan">GodGame</span> Skin</a>
+<a onclick="updateCardSkin('op')"><span class="fan">Sonoken</span> Skin</a>
+</div>
+<div class="language-bar-group">
+<a href="mahjong.html">简体中文</a>
+<a href="mahjong-tw.html">正體中文</a>
+<a href="mahjong-ja.html">日本語</a>
+<a>English</a>
+</div>
+</div>
+<h1>Mahjong Theory & Score Calculator</h1>
+<ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0;">
+<li>Supports Mahjong Theory calculation for <span data-i18n="normal"></span> Mahjong, Chinese Official Mahjong (MCR), Japanese Riichi Mahjong (RCR), 16-tile Mahjong, Hong Kong Style Taiwanese Mahjong, and any-tile-count Mahjong.</li>
+<li>Supports Joker (wild tile, universal tile, laizi, magic tile, etc.).</li>
+<li>Supports point or score calculation for Chinese Official Mahjong (MCR) and Japanese Riichi Mahjong (RCR).</li>
+</ul>
+<div class="section">
+<div class="title-button-container">
+<label for="inputText">Please enter your hand</label>
+<button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">Open Input Panel ▼</button>
+</div>
+<div class="input-area" id="textInput">
+<input type="text" id="inputText" placeholder="For example：1112345678999mE" />
+<div class="input-note-wrapper">
+<button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">Show input instructions ▼</button>
+<div class="input-note" id="inputNote" style="display: none">
+The input field supports the following formats, which can be mixed:
+<ol style="margin-top: 0">
+<li>Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same color suffix can only keep the suffix of the rightmost tile.</li>
+<li>Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.</li>
+<li>English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North</b>, are represented by <b>ESWN</b> in order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.</li>
+<li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Characters=w</b>,<b>Circles=b</b>.</li>
+<li>Notation Format: Character tiles are represented by Chinese numbers <b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers <b>①②③④⑤⑥⑦⑧⑨</b>. Bamboo tiles are represented by full-width numbers <b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.</li>
+<li>Unicode Format: Use Unicode U+1F000 to U+1F02B characters to represent the corresponding cards.</li>
+</ol>
+<p>About Bonus: <b>Spring<span data-i18n="slash"></span>Summer<span data-i18n="slash"></span>Autumn<span data-i18n="slash"></span>Winter<span data-i18n="slash"></span>Plum<span data-i18n="slash"></span>Orchid<span data-i18n="slash"></span>Chrysanthemum<span data-i18n="slash"></span>Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into joker if necessary.<br /></p>
+About Joker:
+<ul style="margin-top: 0">
+<li>Non-directional Joker <img src="./cards/a1j.gif" style="vertical-align: middle" />: Can be considered as any suit or honor tile. Represented by <b>1j/J</b>.</li>
+<li>Characters Joker <img src="./cards/a2j.gif" style="vertical-align: middle" />: Can be considered as any character tile. Represented by <b>2j/im/iw</b>.</li>
+<li>Circles Joker <img src="./cards/a3j.gif" style="vertical-align: middle" />: Can be considered as any circle tile. Represented by <b>3j/ip/ib</b>.</li>
+<li>Bamboo Joker <img src="./cards/a4j.gif" style="vertical-align: middle" />: Can be considered as any bamboo tile. Represented by <b>4j/is</b>.</li>
+<li>Suits Joker <img src="./cards/a5j.gif" style="vertical-align: middle" />: Can be considered as any suit tile. Represented by <b>5j</b>.</li>
+<li>Winds Joker <img src="./cards/a6j.gif" style="vertical-align: middle" />: Can be considered as any wind tile. Represented by <b>6j</b>.</li>
+<li>Dragons Joker <img src="./cards/a7j.gif" style="vertical-align: middle" />: Can be considered as any dragon tile. Represented by <b>7j</b>.</li>
+<li>Honors Joker <img src="./cards/a8j.gif" style="vertical-align: middle" />: Can be considered as any honor tile. Represented by <b>8j/iz</b>.</li>
+<li>Bonus Joker <img src="./cards/a9j.gif" style="vertical-align: middle" />: Can be considered as any bonus tile. Represented by <b>9j/H/X/9h/9f/ih/if</b>.</li>
+</ul>
+About Lain Down Melds:
+<ul style="margin-top: 0">
+<li>Enclose some tiles with half-width square brackets <b>[]</b> to indicate a fixed lain down meld.
+<li>For a Chow (sequence), append a half-width number after the tiles and separate with a half-width comma. The corresponding tile will be marked as obtained by Chow and placed horizontally at the leftmost position.</li>
+<li>For a Pung (triplet), append a half-width number after the tiles and separate with a half-width comma. The corresponding tile will be marked as obtained by Pung and placed horizontally.</li>
+<li>A fixed set of four tiles is considered a Conceal Kong (quad) by default.</li>
+<li>For an Expose Kong (quad), append a half-width number from 1 to 4 after the four tiles, separated by a half-width comma. The corresponding tile will be marked as obtained by Kan and placed horizontally.</li>
+<li>For an Extend Kong (quad), append a half-width number from 5 to 8 after the four tiles, separated by a half-width comma. The corresponding tile will be marked as obtained by Pung and placed horizontally.</li>
+</ul>
+<p>About Replacement Bonus<span data-i18n="slash"></span><span data-i18n="JP_YAKUNAME_99"></span>: Enclose some tiles with half-width parentheses <b>()</b> to indicate tiles that are replacement bonus or <span data-i18n="JP_YAKUNAME_99" data-i18n-case="lower"></span>.<br /></p>
+<p>About <span data-i18n="JP_YAKUNAME_96"></span>: Enclose some tiles with half-width angle brackets <b><></b> to indicate that these tiles are <span data-i18n="JP_YAKUNAME_96" data-i18n-case="lower"></span> indicators. If there is a half-width comma inside the brackets, the tiles on the left of the comma are the <span data-i18n="JP_YAKUNAME_96_EX" data-i18n-case="lower"></span> indicators, and the tiles on the right are the <span data-i18n="JP_YAKUNAME_97" data-i18n-case="lower"></span> indicators.<br /></p>
+</div>
+</div>
+</div>
+<div class="input-area" id="boardInput" style="display: none">
+<div class="card-container" id="input-pic"></div>
+<div class="input-keyboard">
+<div class="input-mainkey">
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1m.gif" onclick="addInput(0)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2m.gif" onclick="addInput(1)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3m.gif" onclick="addInput(2)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4m.gif" onclick="addInput(3)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5m.gif" onclick="addInput(4)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6m.gif" onclick="addInput(5)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7m.gif" onclick="addInput(6)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8m.gif" onclick="addInput(7)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9m.gif" onclick="addInput(8)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0m.gif" onclick="addInput({ id: 4, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1p.gif" onclick="addInput(9)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2p.gif" onclick="addInput(10)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3p.gif" onclick="addInput(11)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4p.gif" onclick="addInput(12)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5p.gif" onclick="addInput(13)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6p.gif" onclick="addInput(14)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7p.gif" onclick="addInput(15)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8p.gif" onclick="addInput(16)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9p.gif" onclick="addInput(17)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0p.gif" onclick="addInput({ id: 13, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1s.gif" onclick="addInput(18)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2s.gif" onclick="addInput(19)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3s.gif" onclick="addInput(20)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4s.gif" onclick="addInput(21)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5s.gif" onclick="addInput(22)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6s.gif" onclick="addInput(23)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7s.gif" onclick="addInput(24)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8s.gif" onclick="addInput(25)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9s.gif" onclick="addInput(26)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0s.gif" onclick="addInput({ id: 22, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1z.gif" onclick="addInput(27)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2z.gif" onclick="addInput(28)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3z.gif" onclick="addInput(29)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4z.gif" onclick="addInput(30)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5z.gif" onclick="addInput(31)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6z.gif" onclick="addInput(32)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7z.gif" onclick="addInput(33)" /></div>
+<div class="card-div input-card-button"><img src="./cards/0z.gif" onclick="addInput({ id: 31, sp: 1 })" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1h.gif" onclick="addInput(34)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2h.gif" onclick="addInput(35)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3h.gif" onclick="addInput(36)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4h.gif" onclick="addInput(37)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5h.gif" onclick="addInput(38)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6h.gif" onclick="addInput(39)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7h.gif" onclick="addInput(40)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8h.gif" onclick="addInput(41)" /></div>
+<div></div>
+</div>
+<div class="input-row">
+<div></div>
+<div class="card-div input-card-button"><img src="./cards/1j.gif" onclick="addInput(42)" /></div>
+<div class="card-div input-card-button"><img src="./cards/2j.gif" onclick="addInput(43)" /></div>
+<div class="card-div input-card-button"><img src="./cards/3j.gif" onclick="addInput(44)" /></div>
+<div class="card-div input-card-button"><img src="./cards/4j.gif" onclick="addInput(45)" /></div>
+<div class="card-div input-card-button"><img src="./cards/5j.gif" onclick="addInput(46)" /></div>
+<div class="card-div input-card-button"><img src="./cards/6j.gif" onclick="addInput(47)" /></div>
+<div class="card-div input-card-button"><img src="./cards/7j.gif" onclick="addInput(48)" /></div>
+<div class="card-div input-card-button"><img src="./cards/8j.gif" onclick="addInput(49)" /></div>
+<div class="card-div input-card-button"><img src="./cards/9j.gif" onclick="addInput(50)" /></div>
+<div></div>
+</div>
+<div class="card-container" id="input-pic-bonus"></div>
+<div class="output-grid-div">
+<span><span data-i18n="JP_YAKUNAME_96"></span> Indicator</span>
+<div class="card-container" id="input-pic-dorap"></div>
+<span><span data-i18n="JP_YAKUNAME_97"></span> Indicator</span>
+<div class="card-container" id="input-pic-urap"></div>
+</div>
+</div>
+<div class="input-subkeys">
+<button onclick="clearInput()" class="subkey-button">Clear</button>
+<button onclick="sortInput()" class="subkey-button">Sort</button>
+<button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty">Delete</button>
+<button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi">Chow</button>
+<button onclick="subtileInput(1)" class="subkey-button enabled-no-flower">Pung</button>
+<button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower">Expose Kong</button>
+<button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">Extend Kong</button>
+<button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">Conceal Kong</button>
+<button onclick="subtileInput(3)" class="subkey-button enable-no-empty">+Bonus</button>
+<button onclick="subtileInput(4)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_96"></span> Indicate</button>
+<button onclick="subtileInput(5)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span> Indicate</button>
+</div>
+</div>
+</div>
+<div style="text-align: center">
+<button onclick="processInput()" class="random-button">Calculate</button>
+<button onclick="randomInput()" class="random-button">Get <input type="number" id="randomCardCount" value="14" min="1" max="99" /> random tiles</button>
+<button onclick="randomWinning()" class="random-button">Get <input type="number" id="randomWinningCardCount" value="14" min="1" max="99" /> winning tiles</button>
+</div>
+<div class="output-box-head">
+<div class="output-context" style="text-align: center" id="output-cnt"></div>
+<div class="card-container" id="output-pic"></div>
+<div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
+</div>
+<div class="output-box">
+<div class="tabs">
+<button class="tab" data-steptabid="0", onclick="switchStepTab(0)"><span data-i18n="normal"></span></button>
+<button class="tab" data-steptabid="1", onclick="switchStepTab(1)">CN Off. (MCR) Std-T</button>
+<button class="tab" data-steptabid="2", onclick="switchStepTab(2)">JP Riichi (RCR) Std-T</button>
+<button class="tab" data-steptabid="3", onclick="switchStepTab(3)">HK Style TW Maj.</button>
+</div>
+<div id="steps-global-viewer"></div>
+</div>
+<div class="output-box" id="steps-std" style="display: none;">
+<div class="title-button-container">
+<div class="output-title"><div><span data-i18n="normal"></span> Theory</div></div>
+<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">Fold ▲</button>
+</div>
+<div class="output-context" id="output-std"></div>
+<div class="output-context" id="brief-output-std" style="display: none"></div>
+<div class="output-time" id="time-output-std"></div>
+</div>
+<div class="output-box" id="steps-gb" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">Chinese Official Mahjong (MCR) Standard Type Theory</div>
+<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">Fold ▲</button>
+</div>
+<div class="output-option-group">
+<label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
+<label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label>
+<label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label>
+<label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label>
+<label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label>
+</div>
+<div class="output-context" id="output-gb"></div>
+<div class="output-context" id="brief-output-gb" style="display: none"></div>
+<div class="output-time" id="time-output-gb"></div>
+</div>
+<div class="output-box" id="steps-jp" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">Japanese Riichi Mahjong (RCR) Standard Type Theory<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '4P', '3P', switchJP34)"><span class="label-text">4P</span><span class="thumb"></span></button></div>
+<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-jp3p" style="display: none;">Fold ▲</button>
+</div>
+<div class="output-option-group">
+<label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
+<label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label>
+<label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="orphan13"></span></label>
+</div>
+<div id="output-group-jp">
+<div class="output-context" id="output-jp"></div>
+<div class="output-context" id="brief-output-jp" style="display: none"></div>
+<div class="output-time" id="time-output-jp"></div>
+</div>
+<div id="output-group-jp3p" style="display: none;">
+<div class="output-context" id="output-jp3p"></div>
+<div class="output-context" id="brief-output-jp3p" style="display: none"></div>
+<div class="output-time" id="time-output-jp3p"></div>
+</div>
+</div>
+<div class="output-box" id="steps-tw" style="display: none;">
+<div class="title-button-container">
+<div class="output-title">Hong Kong Style Taiwanese Mahjong Theory</div>
+<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">Fold ▲</button>
+</div>
+<div class="output-option-group">
+<label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
+<label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label>
+<label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label>
+<label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label>
+</div>
+<div class="output-context" id="output-tw"></div>
+<div class="output-context" id="brief-output-tw" style="display: none"></div>
+<div class="output-time" id="time-output-tw"></div>
+</div>
+<div class="output-box" id="score-global">
+<div class="tabs">
+<button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">CN Off. (MCR) <span data-i18n="GB_FAN_unit"></span> Calc.</button>
+<button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">JP Riichi (RCR) Scores Calc.</button>
+</div>
+<div id="score-global-viewer"></div>
+</div>
+<div style="display: none;">
+<div class="output-box" id="score-gb">
+<div class="title-button-container">
+<div class="output-title"><div>Chinese Official Mahjong (MCR) <span data-i18n="GB_FAN_unit"></span> Calculator</div></div>
+<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">Fold ▲</button>
+</div>
+<div id="options-output-score-gb">
+<div class="output-grid-div">
+<span>Prevalent</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-global-wind" value="27" checked />East</label>
+<label><input type="radio" name="score-gb-global-wind" value="28" />South</label>
+<label><input type="radio" name="score-gb-global-wind" value="29" />West</label>
+<label><input type="radio" name="score-gb-global-wind" value="30" />North</label>
+</div>
+<span>Seat</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-local-wind" value="27" checked />East</label>
+<label><input type="radio" name="score-gb-local-wind" value="28" />South</label>
+<label><input type="radio" name="score-gb-local-wind" value="29" />West</label>
+<label><input type="radio" name="score-gb-local-wind" value="30" />North</label>
+</div>
+<span>Winning Way</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-wintype" value="0" checked />Claim</label>
+<label><input type="radio" name="score-gb-wintype" value="80" />Draw</label>
+</div>
+<span>Winning Status</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-wininfo" value="44" />Last Tile</label>
+<label><input type="checkbox" name="score-gb-wininfo" value="46" /><span data-i18n="GB_FANNAME_46"></span></label>
+<label><input type="checkbox" name="score-gb-wininfo" value="47" /><span data-i18n="GB_FANNAME_47"></span></label>
+<label><input type="checkbox" name="score-gb-wininfo" value="58" /><span data-i18n="GB_FANNAME_58"></span></label>
+</div>
+<button onclick="processGBScore()" class="score-button">Calculate</button>
+</div>
+<details>
+<summary>Rules Settings</summary>
+<div class="output-options">
+<span title="The definition of &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; in GB original is restricted to the normal type. &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; is disallowed to combine with following fan in Q&A Rules, MIL Rules and JMSA Rules. &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; is allowed to combine with following fan in WMO Rules. &lt;span class=&quot;fan&quot;&gt;Fully Concealed Hand&lt;/span&gt; is allowed to combine with following fan in GB Analysis' suggestion."><span class="fan">Fully Conc. Hand</span> with</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="19" /><span class="fan" data-i18n="GB_FANNAME_4"></span><span data-i18n="slash"></span><span class="fan" data-i18n="GB_FANNAME_12"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="41" /><span class="fan">Seven (Shifted) Pairs</span></label>
+<label><input type="checkbox" name="score-gb-setting" value="42" /><span class="fan" data-i18n="GB_FANNAME_7"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="43" /><span class="fan">Honors and Knitted Tiles</span></label>
+</div>
+<span title="The definitions of following fan in GB original are restricted to the normal type even if the examples of &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; combining with &lt;span class=&quot;fan&quot;&gt;All Honors&lt;/span&gt; or &lt;span class=&quot;fan&quot;&gt;All Terminals&lt;/span&gt; are included in GB original. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt;, &lt;span class=&quot;fan&quot;&gt;Half Flush&lt;/span&gt; or &lt;span class=&quot;fan&quot;&gt;All Types&lt;/span&gt; in GB Analysis. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;All Terminals and Honors&lt;/span&gt; in Q&A Rules' suggestion and MIL Rules. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;All Types&lt;/span&gt; in WMO Rules. &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Full Flush&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;All Terminals and Honors&lt;/span&gt; except &lt;span class=&quot;fan&quot;&gt;All Types&lt;/span&gt;."><span class="fan" data-i18n="GB_FANNAME_19"></span> with</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="5" checked /><span class="fan" data-i18n="GB_FANNAME_22"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="10" checked /><span class="fan" data-i18n="GB_FANNAME_49"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="1" checked /><span class="fan" data-i18n="GB_FANNAME_3"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="6" checked /><span class="fan">Upper/Middle/Lower Tiles</span></label>
+<label><input type="checkbox" name="score-gb-setting" value="7" checked /><span class="fan">Upper/Lower Four</span></label>
+<label><input type="checkbox" name="score-gb-setting" value="9" checked /><span class="fan" data-i18n="GB_FANNAME_40"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="11" checked /><span class="fan" data-i18n="GB_FANNAME_51"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="3" checked /><span class="fan" data-i18n="GB_FANNAME_11"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="2" checked /><span class="fan" data-i18n="GB_FANNAME_8"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="4" checked /><span class="fan" data-i18n="GB_FANNAME_18"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="40" checked /><span class="fan" data-i18n="GB_FANNAME_55"></span></label>
+<label title="Never appear due to the limitation on the number of tiles."><input type="checkbox" name="score-gb-setting" value="8" checked /><span class="fan" data-i18n="GB_FANNAME_31"></span></label>
+<label title="Disallowed in all exist rules."><input type="checkbox" name="score-gb-setting" value="12" /><span class="fan" data-i18n="GB_FANNAME_21"></span></label>
+</div>
+<span><span class="fan">Two Conc. Kongs</span></span>
+<div class="output-option-group">
+<label title="Used in GB original, Q&A Rules, MIL Rules and JMSA Rules."><input type="radio" name="score-gb-setting-1" value="0" checked />6 <span data-i18n="GB_FAN_unit"></span></label>
+<label title="Used in WMO Rules."><input type="radio" name="score-gb-setting-1" value="23" />8 <span data-i18n="GB_FAN_unit"></span></label>
+</div>
+<span><span class="fan">Conc. and Melded Kong</span></span>
+<div class="output-option-group">
+<label title="Used in MIL Rules and JMSA Rules."><input type="radio" name="score-gb-setting-2" value="0" checked />5 <span data-i18n="GB_FAN_unit"></span></label>
+<label title="Used in WMO Rules."><input type="radio" name="score-gb-setting-2" value="24,1" />6 <span data-i18n="GB_FAN_unit"></span></label>
+<label title="Used in Supplementary Rules of 1999 National Mahjong Sports Competition (Refer to GB Analysis)."><input type="radio" name="score-gb-setting-2" value="24,2" /><span class="fan" data-i18n="GB_FANNAME_74"></span> + <span class="fan" data-i18n="GB_FANNAME_67"></span></label>
+<label title="Used in Q&A Rules."><input type="radio" name="score-gb-setting-2" value="24,3" /><span class="fan" data-i18n="GB_FANNAME_57"></span> + <span class="fan" data-i18n="GB_FANNAME_67"></span></label>
+</div>
+<span><span class="fan">Three/Four Kongs</span></span>
+<div class="output-option-group">
+<label title="Used in MIL Rules and JMSA Rules."><input type="radio" name="score-gb-setting-6" value="0" checked />Combine with <span class="fan">Concealed Pungs</span>, without <span class="fan">Concealed Kongs</span></label>
+<label title="Used in WMO Rules."><input type="radio" name="score-gb-setting-6" value="30,1" />Combine with <span class="fan">Concealed Pungs</span> and <span class="fan">Concealed Kongs</span></label>
+<label title="Used in Q&A Rules."><input type="radio" name="score-gb-setting-6" value="30,2" />A Certain Combination</label>
+</div>
+<span><span class="fan" data-i18n="GB_FANNAME_46"></span></span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="31,1" />Combine without <span class="fan" data-i18n="GB_FANNAME_74"></span></label>
+<label title="Used in GB Analysis."><input type="checkbox" name="score-gb-setting" value="31,2" />1 point deducted in <span class="fan">Melded/Concealed Kong</span></label>
+<label title="Used in Q&A Rules, MIL Rules and JMSA Rules."><input type="checkbox" name="score-gb-setting" value="32" checked />Combine with <span class="fan" data-i18n="GB_FANNAME_44"></span></label>
+</div>
+<span>Omit <span class="fan">Pung of Term./Hon.</span></span>
+<div class="output-option-group">
+<label title="Used in GB Analysis."><input type="checkbox" name="score-gb-setting" value="33" />1 point deducted in <span class="fan" data-i18n="GB_FANNAME_60"></span><span data-i18n="slash"></span><span class="fan" data-i18n="GB_FANNAME_61"></span><span data-i18n="slash"></span><span class="fan" data-i18n="GB_FANNAME_59"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="34" /><span class="fan" data-i18n="GB_FANNAME_38"></span> does not omit</label>
+<label><input type="checkbox" name="score-gb-setting" value="35" /><span class="fan" data-i18n="GB_FANNAME_9"></span> does not omit</label>
+</div>
+<span><span class="fan" data-i18n="GB_FANNAME_4"></span></span>
+<div class="output-option-group">
+<label title="Used in MIL Rules."><input type="radio" name="score-gb-setting-5" value="0" checked />Omit one <span class="fan" data-i18n="GB_FANNAME_73"></span></label>
+<label><input type="radio" name="score-gb-setting-5" value="27" />Omit all <span class="fan" data-i18n="GB_FANNAME_73"></span></label>
+</div>
+<span title="&lt;span class=&quot;fan&quot;&gt;One Voided Suit&lt;/span&gt; is allowed to combine with following fan from &lt;span class=&quot;fan&quot;&gt;Big Three Dragons&lt;/span&gt; to &lt;span class=&quot;fan&quot;&gt;Four Pure Shifted Pungs&lt;/span&gt; in GB Original, Q&A Rules, WMO Rules and MIL Rules."><span class="fan" data-i18n="GB_FANNAME_75"></span> with</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="13" checked /><span class="fan" data-i18n="GB_FANNAME_2"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="14" checked /><span class="fan" data-i18n="GB_FANNAME_10"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="15" checked /><span class="fan" data-i18n="GB_FANNAME_38"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="16" checked /><span class="fan" data-i18n="GB_FANNAME_14"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="44" checked /><span class="fan" data-i18n="GB_FANNAME_16"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="17" checked /><span class="fan" data-i18n="GB_FANNAME_15"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="18" /><span class="fan" data-i18n="GB_FANNAME_40"></span></label>
+</div>
+<span title="&lt;span class=&quot;fan&quot;&gt;Half Flush&lt;/span&gt; is allowed to combine with &lt;span class=&quot;fan&quot;&gt;Big Four Winds&lt;/span&gt; or &lt;span class=&quot;fan&quot;&gt;Little Four Winds&lt;/span&gt;, disallowed to combine with &lt;span class=&quot;fan&quot;&gt;All Green&lt;/span&gt; in GB Original, Q&A Rules and MIL Rules. &lt;span class=&quot;fan&quot;&gt;Half Flush&lt;/span&gt; is allowed to combine with all following fan in WMO Rules."><span class="fan" data-i18n="GB_FANNAME_49"></span> with</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-gb-setting" value="20" checked /><span class="fan" data-i18n="GB_FANNAME_1"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="21" checked /><span class="fan" data-i18n="GB_FANNAME_9"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="22" /><span class="fan" data-i18n="GB_FANNAME_3"></span></label>
+</div>
+<span><span class="fan" data-i18n="GB_FANNAME_8"></span> with</span>
+<div class="output-option-group">
+<label title="Used in WMO Rules. Unused in Q&A Rules and MIL Rules."><input type="checkbox" name="score-gb-setting" value="28" /><span class="fan" data-i18n="GB_FANNAME_65"></span></label>
+<label title="Unused in GB original if the text &quot;Omit &lt;span class=&quot;fan&quot;&gt;Same Pung&lt;/span&gt;&quot; in GB original is not a typographical error."><input type="checkbox" name="score-gb-setting" value="29" checked /><span class="fan" data-i18n="GB_FANNAME_32"></span></label>
+</div>
+<span><span class="fan" data-i18n="GB_FANNAME_35"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-setting-3" value="25" />Omit <span class="fan">Edge/Closed/Pair Wait</span> when winning tile can be considered as part of <span class="fan" data-i18n="GB_FANNAME_35"></span></label>
+<label title="Used in MIL Rules."><input type="radio" name="score-gb-setting-3" value="0" checked />Allow <span class="fan">Edge/Closed/Pair Wait</span> when winning tile can be considered as part of chow or pair</label>
+</div>
+<span>Multi-Wait</span>
+<div class="output-option-group">
+<label title="Used in Q&A Rules, WMO Rules and MIL Rules. Suggested using in GB Analysis."><input type="radio" name="score-gb-setting-4" value="0" checked />Omit <span class="fan">Edge/Closed/Pair Wait</span></label>
+<label><input type="radio" name="score-gb-setting-4" value="26" />Allow <span class="fan">Edge/Closed/Pair Wait</span></label>
+</div>
+<span><span class="fan" data-i18n="GB_FANNAME_52"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-gb-setting-7" value="0" checked />Extended Kong allowed</label>
+<label><input type="radio" name="score-gb-setting-7" value="36" />Extended Kong disallowed</label>
+</div>
+<span>Payment Method</span>
+<div class="output-option-group">
+<label>Minimum limit <input type="number" id="score-gb-setting-fan" value="8" min="0" /> <span data-i18n="GB_FAN_unit"></span></label>
+<label>Extra <span data-i18n="GB_FAN_unit"></span> <input type="number" id="score-gb-setting-blind" value="8" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
+<label title="JMSA Rules use 88 points as maximum limit."><input type="checkbox" name="score-gb-setting" value="38" />Maximum limit <input type="number" id="score-gb-setting-maxfan" value="88" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
+<label><input type="checkbox" name="score-gb-setting" value="39" /><span data-i18n="GB_FAN_unit"></span> divided by 3 when self-drawn</label>
+</div>
+<span>Quick Start</span>
+<div class="output-option-group">
+<button onclick="processGBSetting(0)">MIL Rules</button>
+<button onclick="processGBSetting(1)">WMO Rules</button>
+<button onclick="processGBSetting(2)">JMSA Rules</button>
+</div>
+</div>
+</details>
+</div>
+<div class="output-context" id="output-score-gb"></div>
+<div class="output-context" id="brief-output-score-gb" style="display: none"></div>
+<div class="output-time" id="time-output-score-gb">Ready to start!</div>
+</div>
+<div class="output-box" id="score-jp">
+<div class="title-button-container">
+<div class="output-title">Japanese Riichi Mahjong (RCR) Scores Calculator</div>
+<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">Fold ▲</button>
+</div>
+<div id="options-output-score-jp">
+<div class="output-grid-div">
+<span>Prevailing</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-global-wind" value="27" checked>East</label>
+<label><input type="radio" name="score-jp-global-wind" value="28">South</label>
+<label><input type="radio" name="score-jp-global-wind" value="29">West</label>
+<label><input type="radio" name="score-jp-global-wind" value="30">North</label>
+</div>
+<span>Seat</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-local-wind" value="27" checked>East</label>
+<label><input type="radio" name="score-jp-local-wind" value="28">South</label>
+<label><input type="radio" name="score-jp-local-wind" value="29">West</label>
+<label><input type="radio" name="score-jp-local-wind" value="30">North</label>
+</div>
+<span>Winning Way</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-wintype" value="0" checked>Claim</label>
+<label><input type="radio" name="score-jp-wintype" value="1">Draw</label>
+</div>
+<span>Riichi Status</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-wininfo" value="1"><span data-i18n="JP_YAKUNAME_1"></span></label>
+<label><input type="checkbox" name="score-jp-wininfo" value="16"><span data-i18n="JP_YAKUNAME_16"></span></label>
+<label><input type="checkbox" name="score-jp-wininfo" value="3"><span data-i18n="JP_YAKUNAME_3"></span></label>
+</div>
+<span>Winning Status</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-wininfo" value="32">First Turn</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="13">Last Tile</label>
+<label><input type="checkbox" name="score-jp-wininfo" value="12"><span data-i18n="JP_YAKUNAME_12"></span></label>
+<label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
+<label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
+<label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
+</div>
+<button onclick="processJPScore()" class="score-button">Calculate</button>
+</div>
+<details>
+<summary>Rules Settings</summary>
+<div class="output-options">
+<span data-i18n="yakuman"></span>
+<div class="output-option-group">
+<label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span> Yaku</label>
+<label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+<label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative <span data-i18n="yakuman"></span></label>
+<label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
+</div>
+<span>Double Wind Pair</span>
+<div class="output-option-group">
+<label title="Used in MahjongSoul, Tenhou, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
+<label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
+</div>
+<span data-i18n="kiri_mangan"></span>
+<div class="output-option-group">
+<label title="Used in Saikouisen Rules, JPML WRC Rules, ClubJPM Rules, RMU Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
+<label><input type="radio" name="score-jp-setting-3" value="0" checked />OFF</label>
+</div>
+<span>Open <span class="fan" data-i18n="JP_YAKUNAME_4"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-0" value="4" checked />ON</label>
+<label><input type="radio" name="score-jp-setting-0" value="0" />OFF</label>
+</div>
+<span>Self-drawn <span class="fan" data-i18n="JP_YAKUNAME_10"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-2" value="6" checked /><span class="fan" data-i18n="JP_YAKUNAME_10"></span> Yaku</label>
+<label><input type="radio" name="score-jp-setting-2" value="0" /><span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_12"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-10" value="0" checked />Add <span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
+<label><input type="radio" name="score-jp-setting-10" value="16" />Omit <span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
+</div>
+<span><span data-i18n="JP_FAN_unit"></span> Limit</span>
+<div class="output-option-group">
+<label><input type="number" id="score-jp-setting-fan" value="1" min="0" /> <span data-i18n="JP_FAN_unit"></span> Limit</label>
+<label><input type="checkbox" name="score-jp-setting-7" value="11" /><span data-i18n="yakuman"></span> Limit</label>
+<label><input type="checkbox" name="score-jp-setting-7" value="12" /><span class="fan"><span data-i18n="JP_YAKUNAME_96_EX"></span></span> Included</label>
+<label title="Used in Mahjong Han Limit Mode."><input type="checkbox" name="score-jp-setting-7" value="13" checked/><span class="fan" data-i18n="JP_YAKUNAME_3"></span> Included</label>
+</div>
+<span title='&lt;span class=&quot;fan&quot;&gt;Blessing of Man&lt;/span&gt; will be counted when both &lt;i&gt;Claim&lt;/i&gt; and &lt;i&gt;First Turn&lt;/i&gt; are selected. Since the definition of &lt;span class=&quot;fan&quot;&gt;Blessing of Man&lt;/span&gt; varies, whether it qualifies as &lt;i&gt;First Turn&lt;/i&gt; should be determined by the user according to the rules being applied.'><span class="fan" data-i18n="JP_YAKUNAME_30"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-5" value="0" />OFF</label>
+<label title="Used in Zendanshin Rules."><input type="radio" name="score-jp-setting-5" value="9,3" />4 <span data-i18n="JP_FAN_unit"></span></label>
+<label title="Used in JPML Rules, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-5" value="9,1" checked />5 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-5" value="9,4" />6 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-5" value="9,5" />8 <span data-i18n="JP_FAN_unit"></span></label>
+<label title="Used in MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-5" value="9,2" /><span data-i18n="yakuman"></span></label>
+<label title="Used in JPML Rules and EMA Rules."><input type="checkbox" name="score-jp-setting" value="39">Calculate Independently</label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_40"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-6" value="0" /><span class="fan" data-i18n="JP_YAKUNAME_39"></span></label>
+<label title="Used in XJTU Rules and MahjongSoul Local Yaku Mode."><input type="radio" name="score-jp-setting-6" value="10" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_49"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-12" value="18,1" /><span class="fan" data-i18n="JP_YAKUNAME_31"></span> + <span class="fan" data-i18n="JP_YAKUNAME_4"></span></label>
+<label><input type="radio" name="score-jp-setting-12" value="0" checked /><span class="fan" data-i18n="JP_YAKUNAME_44"></span></label>
+<label><input type="radio" name="score-jp-setting-12" value="18,2" /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_17"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-4" value="0" checked />2 <span data-i18n="JP_FAN_unit"></span> 25 <span data-i18n="JP_FU_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-4" value="8,1" />1 <span data-i18n="JP_FAN_unit"></span> 50 <span data-i18n="JP_FU_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-4" value="8,2" />0 <span data-i18n="JP_FAN_unit"></span> 100 <span data-i18n="JP_FU_unit"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_29"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-20" value="47,2" /><span class="fan" data-i18n="JP_YAKUNAME_11"></span> ×2</label>
+<label><input type="radio" name="score-jp-setting-20" value="47,1" />2 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
+<label><input type="radio" name="score-jp-setting-20" value="0" checked />3 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
+<label><input type="radio" name="score-jp-setting-20" value="47,3" />4 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_50"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-13" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-13" value="19" />2 <span data-i18n="JP_FAN_unit"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_51"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-14" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-14" value="20" /><span data-i18n="yakuman"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_48"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-11" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-11" value="17,2" />1 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-11" value="17" />2 <span data-i18n="JP_FAN_unit"></span> (1 if Open)</label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_52"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-15" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,1" />2 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-15" value="21,2" />2 <span data-i18n="JP_FAN_unit"></span> (1 if Open)</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,3" />3 <span data-i18n="JP_FAN_unit"></span> (2 if Open)</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,4" />2 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
+<label><input type="radio" name="score-jp-setting-15" value="21,5" />3 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_53"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-16" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,3" />4 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-16" value="22,4" />5 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-16" value="22,5" />6 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-16" value="22,6" />6 <span data-i18n="JP_FAN_unit"></span> (5 if Open)</label>
+<label><input type="radio" name="score-jp-setting-16" value="22,1" /><span data-i18n="yakuman"></span></label>
+<label><input type="radio" name="score-jp-setting-16" value="22,2" /><span data-i18n="yakuman"></span> Concealed</label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_67"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-17" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,1" />1 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-17" value="40,2" />2 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-17" value="40,3" />2 <span data-i18n="JP_FAN_unit"></span> (1 if Open)</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,4" />2 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
+<label><input type="radio" name="score-jp-setting-17" value="40,5" />5 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-17" value="40,6" /><span data-i18n="yakuman"></span></label>
+<label><input type="radio" name="score-jp-setting-17" value="40,7" /><span data-i18n="yakuman"></span> Concealed</label>
+<label><input type="checkbox" name="score-jp-setting" value="41" /><span class="fan" data-i18n="JP_YAKUNAME_17"></span> Disallowed</label>
+<label><input type="checkbox" name="score-jp-setting" value="42" /><span class="fan" data-i18n="JP_YAKUNAME_18"></span> Needed</label>
+<label><input type="checkbox" name="score-jp-setting" value="43" /><span class="fan" data-i18n="JP_FUNAME_12"></span> Needed</label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_54"></span> Series</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="26" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_54"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="27" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_55"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="28" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_56"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="29" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_57"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="30" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_58"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="31" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_59"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_68"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-18" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-18" value="44" />1 <span data-i18n="JP_FAN_unit"></span></label>
+</div>
+<span>Local Lucky Yaku</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')"/>1 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_60"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')"/>1 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_61"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="34" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_62"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="35" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_63"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="36" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_64"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="37" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_65"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_66"></span></label>
+</div>
+<span><span data-i18n="JP_FU_unit"></span> Jumping</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-8" value="14" checked />ON</label>
+<label><input type="radio" name="score-jp-setting-8" value="0" />OFF</label>
+</div>
+<span>Base Value</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-19" value="45,1" />Round to the nearest ten</label>
+<label><input type="radio" name="score-jp-setting-19" value="45,2" />Ceil to the nearest hundred</label>
+<label><input type="radio" name="score-jp-setting-19" value="0" checked />No modification</label>
+</div>
+<span>Scores Payment</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-9" value="15" checked />Ceil to the nearest hundred</label>
+<label><input type="radio" name="score-jp-setting-9" value="0" />No modification</label>
+</div>
+<span>Open <span class="fan" data-i18n="JP_YAKUNAME_10"></span> Shape</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="24" />Enable <span class="fan" data-i18n="JP_YAKUNAME_10"></span> Yaku</label>
+<label><input type="checkbox" name="score-jp-setting" value="25" />Allow 20 <span data-i18n="JP_FU_unit"></span></label>
+</div>
+<span>Quick Start</span>
+<div class="output-option-group">
+<button onclick="processJPSetting(0)">XJTU Rules</button>
+<button onclick="processJPSetting(1)">XJTU 7-stars</button>
+<button onclick="processJPSetting(12)">New Hōchi Rules</button>
+<button onclick="processJPSetting(4)">Saikouisen Rules</button>
+<button onclick="processJPSetting(5)">Saikouisen Classic Rules</button>
+<button onclick="processJPSetting(2)">JPML Official Rules</button>
+<button onclick="processJPSetting(3)">JPML WRC Rules</button>
+<button onclick="processJPSetting(13)">μ Rules</button>
+<button onclick="processJPSetting(6)">ClubJPM Rules</button>
+<button onclick="processJPSetting(14)">RMU Rules</button>
+<button onclick="processJPSetting(15)">Zendanshin Rules</button>
+<button onclick="processJPSetting(7)">M.League</button>
+<button onclick="processJPSetting(8)">EMA Rules</button>
+<button onclick="processJPSetting(9)">MahjongSoul</button>
+<button onclick="processJPSetting(10)">MahjongSoul Local Yaku Mode</button>
+<button onclick="processJPSetting(11)">Tenhou</button>
+</div>
+</div>
+</details>
+<div class="output-grid-div">
+<span><span data-i18n="JP_YAKUNAME_96"></span> Indicator</span>
+<div class="card-container" id="output-pic-doras" style="text-align: left"></div>
+<span><span data-i18n="JP_YAKUNAME_97"></span> Indicator</span>
+<div class="card-container" id="output-pic-uras" style="text-align: left"></div>
+</div>
+</div>
+<div class="output-context" id="output-score-jp"></div>
+<div class="output-context" id="brief-output-score-jp" style="display: none"></div>
+<div class="output-time" id="time-output-score-jp">Ready to start!</div>
+</div>
+</div>
+<div class="reference-box mobile-display-only" id="title-box"></div>
+<div class="reference-box">
+Related Rules:
+<ul style="margin-top: 0">   
+<li><a href="./rules/GB98.pdf">Chinese Mahjong Competition Rules (GB Original)</a></li>
+<li><a href="./rules/GB98-EC.pdf">Analysis of Difficult Issues in Chinese Mahjong Competition Rules (GB Analysis)</a></li>
+<li><a href="./rules/GB98-FAQ.pdf"><i>Chinese Mahjong Competition Rules (Trial)</i> Questions and Answers (Q&A Rules)</a></li>
+<li><a href="./rules/WMO-MCR.pdf">World Mahjong Organization Mahjong Competition Rules (WMO Rules)</a></li>
+<li><a href="./rules/MIL-MCR.pdf">Supplementary Rules of Mahjong International League to Chinese Official Mahjong Rules (MIL Rules)</a></li>
+<li><a href="./rules/Achieve/JMSA-MCR.html">Japan Mahjong Sports Association Rules and Overview of <span data-i18n="JP_FAN_unit"></span> (JMSA Rules)</a> <a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">the original</a></li>
+<li><a href="./rules/Shinhouchi.pdf">Heisei Edition Mahjong New Hōchi Rules (New Hōchi Rules)</a></li>
+<li><a href="./rules/Achieve/Saikouisen.html">Saikouisen Nihon Pro Mahjong Association Competition Rules (Saikouisen Rules)</a> <a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">the original</a></li>
+<li><a href="./rules/JPML-Riichi.pdf">Japan Professional Mahjong League Official Rules and WRC Rules (JPML Rules)</a></li>
+<li><a href="./rules/Mu-Riichi.pdf">Mahjong Union Official Rules (μ Rules)</a></li>
+<li><a href="./rules/Achieve/ClubJPM.html">Nihon Pro Mahjong Association Competition Rules (ClubJPM Rules)</a> <a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">the original</a></li>
+<li><a href="./rules/Achieve/RMU.html">RMU Rules</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">the original</a></li>
+<li><a href="./rules/Zendanshin.pdf">National Mahjong Rank Committee Competition Rules (Zendanshin Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/Kenko-Mahjong.pdf">Japan Kenko-Mahjong Assciation Healthy Mahjong Rules (Healthy Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/GakuJanren.html">Student Mahjong Assciation Competition Rules (Gakujanren Rules)</a> <a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">the original</a></li>
-                    <li><a href="./rules/Achieve/MLeague.html">M.League Official Match Rules (M.League)</a> <a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">the original</a></li>
+<li><a href="./rules/Achieve/MLeague.html">M.League Official Match Rules (M.League)</a> <a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">the original</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/Saikyosen.html">Mahjong Saikyosen Rules (Saikyosen)</a> <a class="small-a" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">the original</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-Riichi.html">Nihon Majan Organization Riichi Mahjong Rules</a> <a class="small-a" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">the original</a></li>
-                    <li><a href="./rules/XJTU-Riichi.pdf">Xi’an Jiaotong University Riichi Mahjong Competition Rules (XJTU Rules) and Xi’an Jiaotong University Seven Stars Cup Riichi Mahjong Open Tournament Rules (XJTU 7-stars)</a></li>
-                    <li><a href="./rules/EMA-Riichi.pdf">European Mahjong Association Riichi Rules (EMA Rules)</a></li>
+<li><a href="./rules/XJTU-Riichi.pdf">Xi’an Jiaotong University Riichi Mahjong Competition Rules (XJTU Rules) and Xi’an Jiaotong University Seven Stars Cup Riichi Mahjong Open Tournament Rules (XJTU 7-stars)</a></li>
+<li><a href="./rules/EMA-Riichi.pdf">European Mahjong Association Riichi Rules (EMA Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/WRC.pdf">World Riichi Championship Rules (WRC Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/Shingendai.pdf">New <i>Modern Weekly Rules</i> Established in 1975 (New Modern Rules)</a></li>
 <!--No Summary-->   <li><a href="./rules/Achieve/NihonMajan-22.html">Nihon Majan Organization Arushiaru Mahjong Rules</a> <a class="small-a" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">the original</a></li>
 <!--No Summary-->   <li><a href="./rules/101.pdf">Japanese Mahjong League of 101: 101 Competition Rules (101 Rules)</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="section title-button-container">
-            <div class="output-time">v4.7.14</div>
-            <div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
-        </div>
+</ul>
+</div>
+</div>
+<div class="section title-button-container">
+<div class="output-time">v4.8.0</div>
+<div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
+</div>
         <script src="mahjong.js"></script>
         <script src="mahjong-document.js"></script>
         <script src="mahjong-worker-lang.js"></script>

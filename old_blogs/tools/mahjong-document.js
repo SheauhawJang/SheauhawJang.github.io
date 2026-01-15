@@ -62,7 +62,7 @@ function updateScoreVisiable(id, visiable = 'none') {
     } else {
         document.getElementById('score-global').style.display = visiable;
         if (vid.some(e => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
-        else switchScoreTab(vid[0][0], true);
+        else console.log(scoretab_usr), switchScoreTab(vid[0][0], true);
     }
 }
 function processInput() {
@@ -273,11 +273,23 @@ function randomInput() {
     drawInputCards();
     processInput();
 }
+function sakiSpecialInput() {
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    switch (`${mm}-${dd}`) {
+        case "12-15": return "東東南南西西北白白発発中中北";
+        case "10-27": return "4445p0p[1111p,1][2222p][3333p]";
+    }
+    return null;
+}
 function loadInput() {
     const t = sessionStorage.getItem("inputText");
     const e = document.getElementById("inputText");
+    const s = sakiSpecialInput();
     //e.addEventListener("change", () => sessionStorage.setItem("inputText", e.value));
     if (t !== null) e.value = t;
+    else if (s !== null) e.value = s;
     else randomInputText();
 
     drawInputCards();
@@ -901,7 +913,7 @@ function loadJPStorage() {
 function loadStorage() {
     updateCardSkin(localStorage.getItem("cardskin"));
     switchStepTab(Number(localStorage.getItem("steptab")));
-    scoretab_usr = localStorage.getItem("scoretab_usr") ?? -1;
+    scoretab_usr = Number(localStorage.getItem("scoretab_usr") ?? -1);
     loadGBStorage();
     loadJPStorage();
 }
@@ -1037,7 +1049,6 @@ let steptab = -1;
 function switchStepTab(i) {
     const subboxes = ['steps-std', 'steps-gb', 'steps-jp', 'steps-tw'];
     if (!(i >= 0 && i < subboxes.length)) return;
-    console.log(i);
     const viewer = document.getElementById('steps-global-viewer');
     if (!viewer) return;
     if (steptab >= 0 && steptab < subboxes.length) {

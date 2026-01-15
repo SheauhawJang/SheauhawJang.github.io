@@ -580,6 +580,43 @@ input[type="checkbox"] {
     display: none;
 }
 
+.output-box .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin: -20px -15px 12px -15px;
+    padding-left: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.output-box .tab {
+    padding: 6px 14px;
+    margin-right: 6px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    color: #555;
+    font-size: 14px;
+}
+
+.output-box .tab:not(.active) {
+    background: #f3f3f3;
+}
+
+.output-box .tab.active {
+    background: #fff;
+    color: #333;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.output-box .tab:focus {
+    outline: none;
+}
+
 @media screen and (max-width: 512px) {
     body {
         padding: 6px;
@@ -672,5 +709,10 @@ input[type="checkbox"] {
     }
     .cmp-word-short {
         display: inline;
+    }
+    
+    .output-box .tabs {
+        margin: -15px 0 12px -9px;
+        padding-left: 6px;
     }
 }

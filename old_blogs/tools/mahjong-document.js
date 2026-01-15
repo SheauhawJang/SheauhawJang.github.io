@@ -919,6 +919,7 @@ function loadJPStorage() {
 }
 function loadStorage() {
     updateCardSkin(localStorage.getItem("cardskin"));
+    switchStepTab(0);
     loadGBStorage();
     loadJPStorage();
 }
@@ -1049,4 +1050,19 @@ function SwitchOption(es, id) {
 function debugopen(id) {
     const e = document.getElementById(id);
     if (e) e.style.display = '';
+}
+let steptab = -1;
+function switchStepTab(i) {
+    const subboxes = ['steps-std', 'steps-gb', 'steps-jp', 'steps-tw'];
+    if (i < 0 || i >= subboxes.length) return;
+    const viewer = document.getElementById('steps-global-viewer');
+    if (!viewer) return;
+    if (steptab >= 0 && steptab < subboxes.length) {
+        const oldbox = document.getElementById(subboxes[steptab]);
+        while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
+    }
+    const newbox = document.getElementById(subboxes[i]);
+    while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
+    steptab = i;
+    document.querySelectorAll('.tab[data-steptabid]').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.steptabid) === i));
 }

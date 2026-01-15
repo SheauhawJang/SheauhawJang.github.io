@@ -195,7 +195,16 @@
                 <div class="card-container" id="output-pic"></div>
                 <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
             </div>
-            <div class="output-box">
+            <div class="output-box" id="steps-global">
+                <div class="tabs">
+                    <button class="tab" data-steptabid="0", onclick="switchStepTab(0)"><span data-i18n="normal"></span>牌理</button>
+                    <button class="tab" data-steptabid="1", onclick="switchStepTab(1)">国标麻将标准型牌理</button>
+                    <button class="tab" data-steptabid="2", onclick="switchStepTab(2)">立直麻将标准型牌理</button>
+                    <button class="tab" data-steptabid="3", onclick="switchStepTab(3)">港式台湾麻将牌理</button>
+                </div>
+                <div id="steps-global-viewer"></div>
+            </div>
+            <div class="output-box" id="steps-std" style="display: none;">
                 <div class="title-button-container">
                     <div class="output-title"><div><span data-i18n="normal"></span>牌理</div></div>
                     <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">折叠 ▲</button>
@@ -204,7 +213,7 @@
                 <div class="output-context" id="brief-output-std" style="display: none"></div>
                 <div class="output-time" id="time-output-std"></div>
             </div>
-            <div class="output-box">
+            <div class="output-box" id="steps-gb" style="display: none;">
                 <div class="title-button-container">
                     <div class="output-title">国标麻将标准型牌理</div>
                     <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">折叠 ▲</button>
@@ -220,7 +229,7 @@
                 <div class="output-context" id="brief-output-gb" style="display: none"></div>
                 <div class="output-time" id="time-output-gb"></div>
             </div>
-            <div class="output-box">
+            <div class="output-box" id="steps-jp" style="display: none;">
                 <div class="title-button-container">
                     <div class="output-title">立直麻将标准型牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
                     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">折叠 ▲</button>
@@ -242,7 +251,7 @@
                     <div class="output-time" id="time-output-jp3p"></div>
                 </div>
             </div>
-            <div class="output-box">
+            <div class="output-box" id="steps-tw" style="display: none;">
                 <div class="title-button-container">
                     <div class="output-title">港式台湾麻将牌理</div>
                     <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">折叠 ▲</button>
@@ -655,7 +664,7 @@
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
-            <div class="output-box" id="score-qingque">
+            <!--<div class="output-box" id="score-qingque">
                 <div class="title-button-container">
                     <div class="output-title">青雀算分器</div>
                     <button class="toggle-button" id="toggle-output-score-qingque" onclick="toggleOutput(6)">折叠 ▲</button>
@@ -686,7 +695,7 @@
                 <div class="output-context" id="output-score-qingque"></div>
                 <div class="output-context" id="brief-output-score-qingque" style="display: none"></div>
                 <div class="output-time" id="time-output-score-qingque">Ready to start!</div>
-            </div>
+            </div>-->
             <div class="reference-box mobile-display-only" id="title-box"></div>
             <div class="reference-box">
                 相关规则：
@@ -719,7 +728,7 @@
             </div>
         </div>
         <div class="section title-button-container">
-            <div class="output-time">v4.7.14 Ex</div>
+            <div class="output-time">v4.8.0</div>
             <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
         </div>
         <script src="mahjong.js"></script>

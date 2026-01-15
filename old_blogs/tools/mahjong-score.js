@@ -1282,7 +1282,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     for (let i = 0; tsuiso && i < 7; ++i)
         if (ot[i] < sizeUT && NoHonorArray[ot[i]]) tsuiso = false;
         else if (ot[i] >= 43 && ot[i] <= 46) tsuiso = false;
-    if (tsuiso) JPUpdateFan(gans, setting, setting[1] && setting[10] ? 40 : 39), console.log(gans);
+    if (tsuiso) JPUpdateFan(gans, setting, setting[1] && setting[10] ? 40 : 39);
     let [sp, sped] = [tsuiso ? null : isShiftPairs(ot), false];
     if (sp) {
         const sarr = [[[28, 56], [31, 59]], [[26, 54], [29, 57]], [[27, 55], [30, 58]]];

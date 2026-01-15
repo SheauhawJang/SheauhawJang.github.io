@@ -42,6 +42,29 @@ function opencheck(openids) {
     }
     return true;
 }
+const document_scores_ids = ["score-gb", "score-jp"];
+function updateScoreVisiable(id, visiable = 'none') {
+    const e = document.getElementById(document_scores_ids[id]);
+    if (!e) return;
+    e.style.display = visiable;
+    const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
+    if (!tab) return;
+    tab.style.display = visiable;
+    let vid = [];
+    for (let i = 0; i < document_scores_ids.length; ++i) {
+        const se = document.getElementById(document_scores_ids[i]);
+        if (se && se.style.display !== 'none') vid.push([i, se]);
+    }
+    vid.sort((a, b) => a[1] === b[1] ? 0 : (a[1].compareDocumentPosition(b[1]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+    if (visiable === 'none') {
+        if (vid.length === 0) document.getElementById('score-global').style.display = 'none', switchScoreTab(-1, true);
+        else switchScoreTab(vid[0][0], true);
+    } else {
+        document.getElementById('score-global').style.display = visiable;
+        if (vid.some(e => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
+        else switchScoreTab(vid[0][0], true);
+    }
+}
 function processInput() {
     if (worker) {
         worker.terminate();
@@ -52,11 +75,9 @@ function processInput() {
         sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
     }
-    const document_scores_ids = ["score-gb", "score-jp", "score-qingque"];
-    const workers_scores = [gb_worker, jp_worker, qingque_worker];
-    for (let i = 0; i < document_scores_ids.length; ++i) {
-        const e = document.getElementById(document_scores_ids[i]);
-        if (e) e.style.display = "none";
+    const workers_scores = [gb_worker, jp_worker];
+    for (let i = 0; i < workers_scores.length; ++i) {
+        updateScoreVisiable(i);
         if (workers_scores[i]) workers_scores[i].terminate();
     }
     const input = document.getElementById("inputText").value;
@@ -101,7 +122,7 @@ function processInput() {
                     document.getElementById("output-score-jp").textContent = "";
                     document.getElementById("brief-output-score-jp").textContent = "";
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
-                    document.getElementById("score-jp").style.display = "block";
+                    updateScoreVisiable(1, 'block');
                     jp_worker = null;
                     jp_worker_info = { aids, tiles, substeps: newstepjp };
                 }
@@ -111,28 +132,9 @@ function processInput() {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
-                    document.getElementById("score-gb").style.display = "block";
+                    updateScoreVisiable(0, 'block');
                     gb_worker = null;
                     gb_worker_info = { aids, tiles, substeps: worker_substeps[task] };
-                }
-                if (Math.min(worker_substeps[1][0], worker_substeps[2][1]) === -1 && opencheck(aids[1])) {
-                    let show_qingque = Boolean(document.getElementById("score-qingque"));
-                    if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
-                    for (let i = 0; show_qingque && i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
-                    let stiles = tiles.slice();
-                    for (let i = 0; show_qingque && i < aids[1].length; ++i)
-                        for (let j = 0; j < aids[1][i].length; ++j)
-                            if (aids[1][i][j].id >= sizeUT) show_qingque = false;
-                            else ++stiles[aids[1][i][j].id];
-                    for (let i = 0; show_qingque && i < sizeUT; ++i) if (stiles[i] > 4) show_qingque = false;
-                    if (show_qingque) {
-                        document.getElementById("output-score-qingque").textContent = "";
-                        document.getElementById("brief-output-score-qingque").textContent = "";
-                        document.getElementById("time-output-score-qingque").textContent = "Ready to start!";
-                        document.getElementById("score-qingque").style.display = "block";
-                        qingque_worker = null;
-                        qingque_worker_info = { aids, tiles, substeps: [worker_substeps[1][0], worker_substeps[2][1]] };
-                    }
                 }
                 break;
         }
@@ -612,6 +614,7 @@ let gb_worker_info;
 const GB_RADIO_MAX = 7;
 const GB_SETTING_SIZE = 45;
 function processGBScore() {
+    updateScoreTabUser(0);
     if (gb_worker) {
         gb_worker.terminate();
         gb_worker = null;
@@ -658,6 +661,7 @@ let jp_worker_info;
 const JP_RADIO_MAX = 20;
 const JP_SETTING_SIZE = 48;
 function processJPScore() {
+    updateScoreTabUser(1);
     if (jp_worker) {
         jp_worker.terminate();
         jp_worker = null;
@@ -695,32 +699,6 @@ function processJPScore() {
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     jp_worker.postMessage({ task: "jp-score", ...jp_worker_info, gw, mw, wt, info, setting, lang });
-}
-let qingque_worker = null;
-let qingque_worker_info;
-function processQingqueScore() {
-    if (qingque_worker) {
-        qingque_worker.terminate();
-        qingque_worker = null;
-    }
-    document.getElementById("output-score-qingque").textContent = "";
-    document.getElementById("brief-output-score-qingque").textContent = "";
-    document.getElementById("time-output-score-qingque").textContent = "Calculating......";
-    const mw = Number(document.querySelector('input[name="score-qingque-local-wind"]:checked').value);
-    const wt = Number(document.querySelector('input[name="score-qingque-wintype"]:checked').value);
-    let wi = document.querySelectorAll('input[name="score-qingque-wininfo"]:checked');
-    wi = Array.from(wi).map((x) => Number(x.value));
-    let info = [mw, wt === 1, wi.includes(2), wi.includes(3), wi.includes(4)];
-    qingque_worker = new Worker("mahjong-worker.js");
-    qingque_worker.onmessage = function (e) {
-        qingque_worker.terminate();
-        qingque_worker = null;
-        document.getElementById("output-score-qingque").innerHTML = e.data.result;
-        document.getElementById("brief-output-score-qingque").innerHTML = e.data.result;
-        document.getElementById("time-output-score-qingque").textContent = `Used ${e.data.time} ms`;
-    };
-    const { aids, substeps } = qingque_worker_info;
-    qingque_worker.postMessage({ task: "qingque-score", aids, substeps, info });
 }
 function getFixedImage(div) {
     return Array.from(div.querySelectorAll("img")).find((img) => getComputedStyle(img).position !== "absolute");
@@ -873,6 +851,7 @@ function loadCheckbox(key, st = localStorage) {
         st.setItem(key, JSON.stringify(cvstorage));
     }, 20);
     cbs.forEach((cb) => cb.addEventListener("change", cf));
+    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) cbs.forEach((cb) => cb.addEventListener("change", () => updateScoreTabUser(i)));
 }
 function loadRadio(key, st = localStorage) {
     const rds = document.querySelectorAll(`input[name="${key}"]`);
@@ -885,6 +864,7 @@ function loadRadio(key, st = localStorage) {
         else st.removeItem(key);
     });
     rds.forEach((r) => r.addEventListener("change", rf));
+    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) rds.forEach((r) => r.addEventListener("change", () => updateScoreTabUser(i)));
 }
 function loadInputbox(key, st = localStorage) {
     const e = document.getElementById(key);
@@ -892,6 +872,7 @@ function loadInputbox(key, st = localStorage) {
     if (s !== null) e.value = s;
 
     e.addEventListener("change", () => st.setItem(key, e.value));
+    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) e.addEventListener("change", () => updateScoreTabUser(i));
 }
 function loadGBStorage() {
     loadCheckbox("score-gb-setting");
@@ -919,7 +900,8 @@ function loadJPStorage() {
 }
 function loadStorage() {
     updateCardSkin(localStorage.getItem("cardskin"));
-    switchStepTab(0);
+    switchStepTab(Number(localStorage.getItem("steptab")));
+    scoretab_usr = localStorage.getItem("scoretab_usr") ?? -1;
     loadGBStorage();
     loadJPStorage();
 }
@@ -1007,7 +989,7 @@ function processJPSetting(id) {
     }
 }
 function toggleOutput(i) {
-    const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp", "output-score-qingque", "output-jp3p"];
+    const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp", "output-empty", "output-jp3p"];
     const d = document.getElementById(ids[i]);
     const b = document.getElementById("toggle-" + ids[i]);
     const s = document.getElementById("brief-" + ids[i]);
@@ -1054,7 +1036,8 @@ function debugopen(id) {
 let steptab = -1;
 function switchStepTab(i) {
     const subboxes = ['steps-std', 'steps-gb', 'steps-jp', 'steps-tw'];
-    if (i < 0 || i >= subboxes.length) return;
+    if (!(i >= 0 && i < subboxes.length)) return;
+    console.log(i);
     const viewer = document.getElementById('steps-global-viewer');
     if (!viewer) return;
     if (steptab >= 0 && steptab < subboxes.length) {
@@ -1065,4 +1048,27 @@ function switchStepTab(i) {
     while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
     steptab = i;
     document.querySelectorAll('.tab[data-steptabid]').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.steptabid) === i));
+    localStorage.setItem("steptab", i);
+}
+let scoretab = -1;
+let scoretab_usr = -1;
+function updateScoreTabUser(i) {
+    scoretab_usr = i;
+    localStorage.setItem("scoretab_usr", i);
+}
+function switchScoreTab(i, auto = false) {
+    const subboxes = document_scores_ids;
+    const viewer = document.getElementById('score-global-viewer');
+    if (!viewer) return;
+    if (scoretab >= 0 && scoretab < subboxes.length) {
+        const oldbox = document.getElementById(subboxes[scoretab]);
+        while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
+    }
+    if (i >= 0 && i < subboxes.length) {
+        const newbox = document.getElementById(subboxes[i]);
+        while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
+    }
+    scoretab = i;
+    document.querySelectorAll('.tab[data-scoretabid]').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.scoretabid) === i));
+    if (!auto) updateScoreTabUser(i);
 }

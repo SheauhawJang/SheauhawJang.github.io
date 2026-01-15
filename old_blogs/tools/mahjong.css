@@ -433,7 +433,7 @@ html {
 
 .output-grid-div {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: max-content 1fr;
     gap: 0px 10px;
     align-items: top;
 }

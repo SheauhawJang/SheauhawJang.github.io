@@ -195,7 +195,7 @@
                 <div class="card-container" id="output-pic"></div>
                 <div class="card-container" id="output-pic-bonus" style="text-align: right"></div>
             </div>
-            <div class="output-box" id="steps-global">
+            <div class="output-box">
                 <div class="tabs">
                     <button class="tab" data-steptabid="0", onclick="switchStepTab(0)"><span data-i18n="normal"></span>牌理</button>
                     <button class="tab" data-steptabid="1", onclick="switchStepTab(1)">国标麻将标准型牌理</button>
@@ -266,6 +266,14 @@
                 <div class="output-context" id="brief-output-tw" style="display: none"></div>
                 <div class="output-time" id="time-output-tw"></div>
             </div>
+            <div class="output-box" id="score-global">
+                <div class="tabs">
+                    <button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">国标麻将<span data-i18n="GB_FAN_unit"></span>数计算器</button>
+                    <button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">立直麻将点数计算器</button>
+                </div>
+                <div id="score-global-viewer"></div>
+            </div>
+            <div style="display: none;">
             <div class="output-box" id="score-gb">
                 <div class="title-button-container">
                     <div class="output-title"><div>国标麻将<span data-i18n="GB_FAN_unit"></span>数计算器</div></div>
@@ -663,6 +671,7 @@
                 <div class="output-context" id="output-score-jp"></div>
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
+            </div>
             </div>
             <div class="reference-box mobile-display-only" id="title-box"></div>
             <div class="reference-box">

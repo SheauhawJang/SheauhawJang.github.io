@@ -146,7 +146,7 @@ function normalStep() {
         const ots = WinOutput(tiles, full_tcnt, dvd.dvd, MAX_OUTPUT_LENGTH);
         output += loc.windvd + ": \n";
         output += ots.map((a) => `<div class="card-container">${getWinningLine(a)}</div>`).join("");
-        if (ots.length < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - ots.length} ${loc.windvd_else_tail}`;
+        if (BigInt(ots.length) < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - BigInt(ots.length)} ${loc.windvd_else_tail}`;
     }
     const r = printWaiting(step, (s, d, g) => NormalWaiting(tiles, s, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt), () => Step(tiles, tcnt, full_tcnt), SeqCheck);
     output += r.output;
@@ -200,7 +200,7 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     postMessage({ output });
     if (stepJP === -1 && full_tcnt > 0) {
         let odvd = [];
-        let cnt = 0;
+        let cnt = 0n;
         if (substep[1] === -1) {
             dvds[1] ??= PairOutput(tiles);
             ++cnt;
@@ -213,7 +213,7 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         }
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
-            if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+            if (BigInt(MAX_OUTPUT_LENGTH - odvd.length) < dvds[0].cnt) {
                 ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
@@ -272,7 +272,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     postMessage({ output });
     if (step3p === -1 && full_tcnt > 0) {
         let odvd = [];
-        let cnt = 0;
+        let cnt = 0n;
         if (substep[1] === -1) {
             dvds[1] ??= PairOutput(tiles);
             ++cnt;
@@ -285,7 +285,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
         }
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
-            if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+            if (BigInt(MAX_OUTPUT_LENGTH - odvd.length) < dvds[0].cnt) {
                 ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
@@ -328,7 +328,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         }
     }
     if (full_tcnt >= 9) {
-        if (rsubstep[4] === Infinity) rsubstep[4] = KnitDragonStep(tiles, tcnt);
+        if (rsubstep[4] === Infinity) rsubstep[4] = KnitDragonStep(tiles, full_tcnt);
         if (mask && mask[4]) {
             substep[4] = rsubstep[4];
             updateTable(`${loc.zuhelongxing}${loc.colon}`, `${getWaitingType(rsubstep[4])}`);
@@ -351,7 +351,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
     if (stepGB === -1 && full_tcnt > 0) {
         postMessage({ output });
         let odvd = [];
-        let cnt = 0;
+        let cnt = 0n;
         if (substep[1] === -1) {
             dvds[1] ??= PairOutput(tiles);
             ++cnt;
@@ -364,7 +364,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         }
         if (substep[3] === -1) {
             dvds[3] ??= Bukao16Output(tiles);
-            cnt += dvds[3].length;
+            cnt += BigInt(dvds[3].length);
             odvd.push(...dvds[3].map((a) => `<div class="waiting-brief">${loc.quanbukaoxing}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
         }
         if (substep[4] === -1) {
@@ -377,7 +377,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         }
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
-            if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+            if (BigInt(MAX_OUTPUT_LENGTH - odvd.length) < dvds[0].cnt) {
                 ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
@@ -388,7 +388,7 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
         }
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
-        if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
+        if (BigInt(odvd.length) < cnt) output += `${loc.windvd_else_head} ${cnt - BigInt(odvd.length)} ${loc.windvd_else_tail}`;
     }
     const r = printWaiting(stepGB, (s, d, g, f) => GBWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(GBStep(), mask)), SeqCheck);
     output += r.output;
@@ -436,15 +436,15 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
     if (stepTW === -1 && full_tcnt > 0) {
         postMessage({ output });
         let odvd = [];
-        let cnt = 0;
+        let cnt = 0n;
         if (substep[1] === -1) {
             dvds[1] ??= NiconicoOutput(tiles);
-            cnt += dvds[1].length;
+            cnt += BigInt(dvds[1].length);
             odvd = dvds[1].map((a) => `<div class="waiting-brief">${loc.niconico}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`);
         }
         if (substep[2] === -1) {
             dvds[2] ??= OrphanMeldOutput(tiles);
-            cnt += dvds[2].length;
+            cnt += BigInt(dvds[2].length);
             odvd.push(...dvds[2].map((a) => `<div class="waiting-brief">${loc.orphan13}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`));
         }
         if (substep[3] === -1) {
@@ -454,7 +454,7 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
         }
         if (substep[0] === -1) {
             dvds[0] ??= windvd(tiles, full_tcnt);
-            if (MAX_OUTPUT_LENGTH - odvd.length < dvds[0].cnt) {
+            if (BigInt(MAX_OUTPUT_LENGTH - odvd.length) < dvds[0].cnt) {
                 ++cnt;
                 odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
             } else {
@@ -465,7 +465,7 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
         }
         output += loc.windvd + ": \n";
         output += `<div class="win-grid">${odvd.join("")}</div>`;
-        if (odvd.length < cnt) output += `${loc.windvd_else_head} ${cnt - odvd.length} ${loc.windvd_else_tail}`;
+        if (BigInt(odvd.length) < cnt) output += `${loc.windvd_else_head} ${cnt - BigInt(odvd.length)} ${loc.windvd_else_tail}`;
     }
     const r = printWaiting(stepTW, (s, d, g, f) => TWWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(TWStep(), mask)), SeqCheck);
     output += r.output;

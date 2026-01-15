@@ -909,11 +909,11 @@ function fullSeqCheck(i, a, b, c, p) {
 }
 function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT)
-        if (em === nm && ep === np) return 1;
-        else return 0;
+        if (em === nm && ep === np) return 1n;
+        else return 0n;
     const dpi = indexDvd(ldDvd, em, ep, i, ui, uj, aj, bj, cj);
     if (dvd[dpi] !== null) return dvd[dpi].cnt;
-    dvd[dpi] = { cnt: 0, nxt: [] };
+    dvd[dpi] = { cnt: 0n, nxt: [] };
     let [ra, rb, rc] = [tiles[JokerA[i]] - aj, tiles[JokerB[i]] - bj, tiles[JokerC] - cj];
     const nxti = i + 1;
     let ei = tiles[i];
@@ -1082,7 +1082,7 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
         .fill(null)
         .map(() => []);
     let save = new Set();
-    let cnt = 0;
+    let cnt = 0n;
     const reuse = dvds !== undefined;
     dvds ??= Array(6).fill(null);
     for (let i = 0; i < 6; ++i) {

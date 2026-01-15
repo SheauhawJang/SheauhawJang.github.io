@@ -742,7 +742,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
                 infoupdate(13);
                 if (setting[34] && canBeFixWin(9)) searchList.push(() => fixWinTileSearch(9, 13, 62, 1, 5));
             } else {
-                iJPUpdateFan(infoans, 14);
+                infoupdate(14);
                 if (setting[35] && canBeFixWin(17)) searchList.push(() => fixWinTileSearch(17, 14, 63, 1, 5));
             }
         if (info.includes(15) && !tsumo) {

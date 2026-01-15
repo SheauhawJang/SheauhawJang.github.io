@@ -121,7 +121,7 @@ function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
         for (const { cnt, bcnt, gcnt, id, step } of kang_cnts) {
             const verb = loc.kang;
             if (gcnt !== undefined) kang_result += `<div>${verb} ${cardImage(id)} ${getWaitingType(step)} ${loc.wait} ${cnt} ${loc.counts}</div><div class="devided-waiting-td"><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].gans.map(cardImage).join("")}</div></div><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${kang_save[id].ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></div>`;
-            else kang_result += `<div>${verb} ${cardImage(id)} <span style="white-space: nowrap;">${getWaitingType(step)}</span> <span style="white-space: nowrap;">${loc.wait} ${cnt} ${loc.counts}</span></div><div>${kang_save[id].ans.map(cardImage).join("")}</div>`;
+            else kang_result += `<div>${verb} ${cardImage(id)}${loc.auto_division}<span style="white-space: nowrap;">${getWaitingType(step)}</span> <span style="white-space: nowrap;">${loc.wait} ${cnt} ${loc.counts}</span></div><div>${kang_save[id].ans.map(cardImage).join("")}</div>`;
         }
         let output = makeGridDiv(result);
         if (nxt_result !== "") output += `${loc.tuixiang}${loc.brace_left}<span style="white-space: nowrap;">${getWaitingType(step + 1)}</span>${loc.brace_right}${makeGridDiv(nxt_result)}`;

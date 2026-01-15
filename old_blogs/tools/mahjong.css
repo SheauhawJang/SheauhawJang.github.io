@@ -433,7 +433,7 @@ html {
 
 .output-grid-div {
     display: grid;
-    grid-template-columns: auto minmax(112px, 1fr);
+    grid-template-columns: auto 1fr;
     gap: 0px 10px;
     align-items: top;
 }
@@ -574,7 +574,7 @@ input[type="checkbox"] {
 }
 
 .cmp-word-long {
-    display: inline-block;
+    display: inline;
 }
 .cmp-word-short {
     display: none;
@@ -671,6 +671,6 @@ input[type="checkbox"] {
         display: none;
     }
     .cmp-word-short {
-        display: inline-block;
+        display: inline;
     }
 }

@@ -249,5 +249,6 @@ const loc_all = {
     kiri_mangan: { cn: "切上满贯", hk: "切上滿貫", tw: "切上滿貫", ja: "切り上げ満貫", en: "Rounded-Up Mangan" },
     wrong_win: { cn: "错和", hk: "錯和", tw: "錯胡", ja: "錯和", en: "False Win" },
     _fanname_format_left: { cn: "", hk: "", tw: "", ja: "", en: "<span class='fan'>" },
-    _fanname_format_right: { cn: "", hk: "", tw: "", ja: "", en: "</span>" }
+    _fanname_format_right: { cn: "", hk: "", tw: "", ja: "", en: "</span>" },
+    auto_division: { cn: " ", hk: " ", tw: " ", ja: " ", en: "<span class='cmp-word-long'> </span><span class='cmp-word-short'><br></span>" }
 };

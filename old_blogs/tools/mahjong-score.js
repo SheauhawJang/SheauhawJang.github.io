@@ -1282,14 +1282,14 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     for (let i = 0; tsuiso && i < 7; ++i)
         if (ot[i] < sizeUT && NoHonorArray[ot[i]]) tsuiso = false;
         else if (ot[i] >= 43 && ot[i] <= 46) tsuiso = false;
-    if (tsuiso) JPUpdateFan(gans, setting[1] && setting[10] ? 40 : 39);
+    if (tsuiso) JPUpdateFan(gans, setting, setting[1] && setting[10] ? 40 : 39), console.log(gans);
     let [sp, sped] = [tsuiso ? null : isShiftPairs(ot), false];
     if (sp) {
         const sarr = [[[28, 56], [31, 59]], [[26, 54], [29, 57]], [[27, 55], [30, 58]]];
         const c = sp.color;
         const [l, r] = c === -1 ? [0, 3] : [c, c + 1];
-        for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][0][0]] && sp.large) JPUpdateFan(gans, sarr[i][0][1]), sped = true;
-        for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][1][0]]) JPUpdateFan(gans, sarr[i][1][1]), sped = true;
+        for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][0][0]] && sp.large) JPUpdateFan(gans, setting, sarr[i][0][1]), sped = true;
+        for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][1][0]]) JPUpdateFan(gans, setting, sarr[i][1][1]), sped = true;
     }
     const { c5ot, c5cnt } = PairFiveColorArray(ot);
     let c5check = !setting[41] && !setting[42] && !setting[43] && c5cnt.every(Boolean);

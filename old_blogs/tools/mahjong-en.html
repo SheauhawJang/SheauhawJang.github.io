@@ -44,24 +44,24 @@
 <div class="input-note" id="inputNote" style="display: none">
 The input field supports the following formats, which can be mixed:
 <ol style="margin-top: 0">
-<li>Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Characters=m</b>, <b>Bamboo=s</b>, <b>Circles=p</b>. Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same color suffix can only keep the suffix of the rightmost tile.</li>
+<li>Tenhou Format: Suits are represented by number + color (lowercase), where: <b>Character=m</b>, <b>Bamboo=s</b>, <b>Circle=p</b>. Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>1z2z3z4z5z6z7z</b> in order. Adjacent tiles with the same color suffix can only keep the suffix of the rightmost tile.</li>
 <li>Chinese Official Mahjong Helper Format: Suits are the same as "Tenhou Format". Honors, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North<span data-i18n="slash"></span>White Dragon<span data-i18n="slash"></span>Green Dragon<span data-i18n="slash"></span>Red Dragon</b>, are represented by <b>ESWNPFC</b> in order.</li>
 <li>English Mahjong Printing Format: Suits are the same as "Tenhou Format". Winds, <b>East<span data-i18n="slash"></span>South<span data-i18n="slash"></span>West<span data-i18n="slash"></span>North</b>, are represented by <b>ESWN</b> in order. Dragons, <b>White=Wh</b>, <b>Green=G</b>, <b>Red=R</b>.</li>
-<li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Characters=w</b>,<b>Circles=b</b>.</li>
+<li>Hanyu Pinyin Format: Same as Tenhou Format. Except <b>Character=w</b>,<b>Circle=b</b>.</li>
 <li>Notation Format: Character tiles are represented by Chinese numbers <b>一二三四五六七八九</b>. Circle tiles are represented by circled numbers <b>①②③④⑤⑥⑦⑧⑨</b>. Bamboo tiles are represented by full-width numbers <b>１２３４５６７８９</b>. Honor tiles are represented by corresponding Chinese characters.</li>
-<li>Unicode Format: Use Unicode U+1F000 to U+1F02B characters to represent the corresponding cards.</li>
+<li>Unicode Format: Use Unicode U+1F000 to U+1F02B character to represent the corresponding cards.</li>
 </ol>
 <p>About Bonus: <b>Spring<span data-i18n="slash"></span>Summer<span data-i18n="slash"></span>Autumn<span data-i18n="slash"></span>Winter<span data-i18n="slash"></span>Plum<span data-i18n="slash"></span>Orchid<span data-i18n="slash"></span>Chrysanthemum<span data-i18n="slash"></span>Bamboo</b> are represented by <b>1h2h3h4h5h6h7h8h</b> or <b>1f2f3f4f5f6f7f8f</b> in order. Some mahjong rules consider bonus as joker. This calculator does not have this function. Please convert them into joker if necessary.<br /></p>
 About Joker:
 <ul style="margin-top: 0">
 <li>Non-directional Joker <img src="./cards/a1j.gif" style="vertical-align: middle" />: Can be considered as any suit or honor tile. Represented by <b>1j/J</b>.</li>
 <li>Characters Joker <img src="./cards/a2j.gif" style="vertical-align: middle" />: Can be considered as any character tile. Represented by <b>2j/im/iw</b>.</li>
-<li>Circles Joker <img src="./cards/a3j.gif" style="vertical-align: middle" />: Can be considered as any circle tile. Represented by <b>3j/ip/ib</b>.</li>
+<li>Circle Joker <img src="./cards/a3j.gif" style="vertical-align: middle" />: Can be considered as any circle tile. Represented by <b>3j/ip/ib</b>.</li>
 <li>Bamboo Joker <img src="./cards/a4j.gif" style="vertical-align: middle" />: Can be considered as any bamboo tile. Represented by <b>4j/is</b>.</li>
 <li>Suits Joker <img src="./cards/a5j.gif" style="vertical-align: middle" />: Can be considered as any suit tile. Represented by <b>5j</b>.</li>
-<li>Winds Joker <img src="./cards/a6j.gif" style="vertical-align: middle" />: Can be considered as any wind tile. Represented by <b>6j</b>.</li>
-<li>Dragons Joker <img src="./cards/a7j.gif" style="vertical-align: middle" />: Can be considered as any dragon tile. Represented by <b>7j</b>.</li>
-<li>Honors Joker <img src="./cards/a8j.gif" style="vertical-align: middle" />: Can be considered as any honor tile. Represented by <b>8j/iz</b>.</li>
+<li>Wind Joker <img src="./cards/a6j.gif" style="vertical-align: middle" />: Can be considered as any wind tile. Represented by <b>6j</b>.</li>
+<li>Dragon Joker <img src="./cards/a7j.gif" style="vertical-align: middle" />: Can be considered as any dragon tile. Represented by <b>7j</b>.</li>
+<li>Honor Joker <img src="./cards/a8j.gif" style="vertical-align: middle" />: Can be considered as any honor tile. Represented by <b>8j/iz</b>.</li>
 <li>Bonus Joker <img src="./cards/a9j.gif" style="vertical-align: middle" />: Can be considered as any bonus tile. Represented by <b>9j/H/X/9h/9f/ih/if</b>.</li>
 </ul>
 About Lain Down Melds:
@@ -455,6 +455,7 @@ About Lain Down Melds:
 <div class="output-option-group">
 <label><input type="checkbox" name="score-jp-wininfo" value="1"><span data-i18n="JP_YAKUNAME_1"></span></label>
 <label><input type="checkbox" name="score-jp-wininfo" value="16"><span data-i18n="JP_YAKUNAME_16"></span></label>
+<label id="jp-open-riichi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="71" onchange="SwitchOption(this, 'jp-open-riichi-yakuman')"/><span data-i18n="JP_YAKUNAME_71"></span></label>
 <label><input type="checkbox" name="score-jp-wininfo" value="3"><span data-i18n="JP_YAKUNAME_3"></span></label>
 </div>
 <span>Winning Status</span>
@@ -465,6 +466,7 @@ About Lain Down Melds:
 <label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
 <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
+<label id="jp-open-riichi-yakuman" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span> Payment of <span data-i18n="JP_YAKUNAME_71"></span></label>
 </div>
 <button onclick="processJPScore()" class="score-button">Calculate</button>
 </div>
@@ -493,7 +495,7 @@ About Lain Down Melds:
 <label><input type="radio" name="score-jp-setting-0" value="4" checked />ON</label>
 <label><input type="radio" name="score-jp-setting-0" value="0" />OFF</label>
 </div>
-<span>Self-drawn <span class="fan" data-i18n="JP_YAKUNAME_10"></span></span>
+<span><span data-i18n="JP_FUNAME_11"></span> <span class="fan" data-i18n="JP_YAKUNAME_10"></span></span>
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-2" value="6" checked /><span class="fan" data-i18n="JP_YAKUNAME_10"></span> Yaku</label>
 <label><input type="radio" name="score-jp-setting-2" value="0" /><span class="fan"><span data-i18n="JP_FUNAME_11"></span> <span data-i18n="JP_FU_unit"></span></span></label>
@@ -506,9 +508,24 @@ About Lain Down Melds:
 <span><span data-i18n="JP_FAN_unit"></span> Limit</span>
 <div class="output-option-group">
 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" /> <span data-i18n="JP_FAN_unit"></span> Limit</label>
-<label><input type="checkbox" name="score-jp-setting-7" value="11" /><span data-i18n="yakuman"></span> Limit</label>
-<label><input type="checkbox" name="score-jp-setting-7" value="12" /><span class="fan"><span data-i18n="JP_YAKUNAME_96_EX"></span></span> Included</label>
-<label title="Used in Mahjong Han Limit Mode."><input type="checkbox" name="score-jp-setting-7" value="13" checked/><span class="fan" data-i18n="JP_YAKUNAME_3"></span> Included</label>
+<label><input type="checkbox" name="score-jp-setting" value="11" /><span data-i18n="yakuman"></span> Limit</label>
+<label><input type="checkbox" name="score-jp-setting" value="58" /><span class="fan" data-i18n="JP_YAKUNAME_17"></span> Limit</label>
+<label><input type="checkbox" name="score-jp-setting" value="12" /><span class="fan"><span data-i18n="JP_YAKUNAME_96_EX"></span></span> Included</label>
+<label title="Used in Mahjong Han Limit Mode."><input type="checkbox" name="score-jp-setting" value="13" checked/><span class="fan" data-i18n="JP_YAKUNAME_3"></span> Included</label>
+</div>
+<span><label><input type="checkbox" name="score-jp-setting" value="49" />3-Player Mahjong</label></span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="52" /><span class="fan" data-i18n="JP_YAKUNAME_69"></span> Yaku</label>
+<label><input type="checkbox" name="score-jp-setting" value="53" /><span data-i18n="JP_YAKUNAME_100"></span></label>
+<label><input type="radio" name="score-jp-setting-22" value="0" checked /><span data-i18n="JP_FUNAME_11"></span> Loss</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 1" />North Half-Split</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 3" />North Dealer-Cover</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 2" />1:1 of Total</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 6" />2:1 of Total</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 7" />3:1 of Total</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 4" /><span data-i18n="JP_FUNAME_11"></span> and Discard Loss</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 8" />2:1 of Total (MJ3)</label>
+<label><input type="checkbox" name="score-jp-setting" value="51" />1000 <span data-i18n="JP_FUNAME_11"></span> Bonus</label>
 </div>
 <span title='&lt;span class=&quot;fan&quot;&gt;Blessing of Man&lt;/span&gt; will be counted when both &lt;i&gt;Claim&lt;/i&gt; and &lt;i&gt;First Turn&lt;/i&gt; are selected. Since the definition of &lt;span class=&quot;fan&quot;&gt;Blessing of Man&lt;/span&gt; varies, whether it qualifies as &lt;i&gt;First Turn&lt;/i&gt; should be determined by the user according to the rules being applied.'><span class="fan" data-i18n="JP_YAKUNAME_30"></span></span>
 <div class="output-option-group">
@@ -544,6 +561,12 @@ About Lain Down Melds:
 <label><input type="radio" name="score-jp-setting-20" value="0" checked />3 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
 <label><input type="radio" name="score-jp-setting-20" value="47,3" />4 <span data-i18n="JP_FAN_unit"></span> Concealed</label>
 </div>
+<span>Concealed <span class="fan">Flush</span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-21" value="0" checked />1 <span data-i18n="JP_FAN_unit"></span> Bonus</label>
+<label><input type="radio" name="score-jp-setting-21" value="48,2" />1 <span data-i18n="JP_FAN_unit"></span> Bonus Except <span class="fan" data-i18n="JP_YAKUNAME_17"></span></label>
+<label><input type="radio" name="score-jp-setting-21" value="48,1" />No Bonus</label>
+</div>
 <span><span class="fan" data-i18n="JP_YAKUNAME_50"></span></span>
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-13" value="0" checked />OFF</label>
@@ -553,6 +576,15 @@ About Lain Down Melds:
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-14" value="0" checked />OFF</label>
 <label><input type="radio" name="score-jp-setting-14" value="20" /><span data-i18n="yakuman"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_70"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-23" value="0" checked />OFF</label>
+<label><input type="radio" name="score-jp-setting-23" value="54,1" />2 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-23" value="54,2" />3 <span data-i18n="JP_FAN_unit"></span></label>
+<label title="显示为客风三刻。"><input type="checkbox" name="score-jp-setting" value="55" /><span class="fan" data-i18n="JP_YAKUNAME_6"></span> Disallowed</label>
+<label><input type="checkbox" name="score-jp-setting" value="56" /><span class="fan" data-i18n="JP_YAKUNAME_5"></span> Disallowed</label>
+<label><input type="checkbox" name="score-jp-setting" value="57" />Dealer Only</label>
 </div>
 <span><span class="fan" data-i18n="JP_YAKUNAME_48"></span></span>
 <div class="output-option-group">
@@ -616,6 +648,12 @@ About Lain Down Melds:
 <label><input type="checkbox" name="score-jp-setting" value="36" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_64"></span></label>
 <label><input type="checkbox" name="score-jp-setting" value="37" />5 <span data-i18n="JP_FAN_unit"></span>: <span class="fan" data-i18n="JP_YAKUNAME_65"></span></label>
 <label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="yakuman"></span>: <span class="fan" data-i18n="JP_YAKUNAME_66"></span></label>
+</div>
+<span><span class="fan" data-i18n="JP_YAKUNAME_71"></span></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, 'jp-open-riichi', [true], true)"/>OFF</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span> (3 if <span class="fan" data-i18n="JP_YAKUNAME_16"></span>)</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span> (4 if <span class="fan" data-i18n="JP_YAKUNAME_16"></span>)</label>
 </div>
 <span><span data-i18n="JP_FU_unit"></span> Jumping</span>
 <div class="output-option-group">
@@ -703,7 +741,7 @@ Related Rules:
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.0</div>
+<div class="output-time">v4.8.1</div>
 <div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
 </div>
         <script src="mahjong.js"></script>

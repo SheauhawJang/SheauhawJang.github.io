@@ -303,6 +303,7 @@
 <div class="output-option-group">
 <label><input type="checkbox" name="score-jp-wininfo" value="1" />立直</label>
 <label><input type="checkbox" name="score-jp-wininfo" value="16" />ダブル立直</label>
+<label id="jp-open-riichi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="71" onchange="SwitchOption(this, 'jp-open-riichi-yakuman')"/>オープン立直</label>
 <label><input type="checkbox" name="score-jp-wininfo" value="3" />一発</label>
 </div>
 <span>和了状態</span>
@@ -313,6 +314,7 @@
 <label><input type="checkbox" name="score-jp-wininfo" value="15" />槍槓</label>
 <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返し</label>
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振り</label>
+<label id="jp-open-riichi-yakuman" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" />オープン立直役満払い</label>
 </div>
 <button onclick="processJPScore()" class="score-button">計算</button>
 </div>
@@ -355,8 +357,23 @@
 <div class="output-option-group">
 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" />飜縛り</label>
 <label><input type="checkbox" name="score-jp-setting-7" value="11" />役満縛り</label>
+<label><input type="checkbox" name="score-jp-setting-7" value="58" />七対子縛り</label>
 <label><input type="checkbox" name="score-jp-setting-7" value="12" />表ドラを含める</label>
 <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting-7" value="13" checked />一発を含める</label>
+</div>
+<span><label><input type="checkbox" name="score-jp-setting" value="49" />三人麻雀</label></span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="52" />役牌北</label>
+<label><input type="checkbox" name="score-jp-setting" value="53" />ドラ北</label>
+<label><input type="radio" name="score-jp-setting-22" value="0" checked />ツモ損</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 1" />北家折半</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 3" />北家親払い</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 2" />折半払い</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 6" />幺二比例払い</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 7" />幺三払い</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 4" />ツモ損・ロン損</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 8" />幺二比例(MJ3)</label>
+<label><input type="checkbox" name="score-jp-setting" value="51" />千点加符</label>
 </div>
 <span title="只今「ロン」と「第一巡目」の両方が選択されている場合に人和として計算します。人和の定義には揺れがあるため、「第一巡目」に該当するかは採用ルールに応じて利用者ご自身で判断してください。">人和</span>
 <div class="output-option-group">
@@ -392,6 +409,12 @@
 <label><input type="radio" name="score-jp-setting-20" value="0" checked />3 飜・門前のみ</label>
 <label><input type="radio" name="score-jp-setting-20" value="47,3" />4 飜・門前のみ</label>
 </div>
+<span>立て清混</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-21" value="0" checked />一飜増し</label>
+<label><input type="radio" name="score-jp-setting-21" value="48,2" />一飜増し・七対子除外</label>
+<label><input type="radio" name="score-jp-setting-21" value="48,1" />増しなし</label>
+</div>
 <span>三連刻</span>
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-13" value="0" checked />なし</label>
@@ -401,6 +424,15 @@
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-14" value="0" checked />なし</label>
 <label><input type="radio" name="score-jp-setting-14" value="20" />役満</label>
+</div>
+<span>三風刻</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-23" value="0" checked />なし</label>
+<label><input type="radio" name="score-jp-setting-23" value="54,1" />2 飜</label>
+<label><input type="radio" name="score-jp-setting-23" value="54,2" />3 飜</label>
+<label title="客風三刻と呼びます。"><input type="checkbox" name="score-jp-setting" value="55" />自風刻不可</label>
+<label><input type="checkbox" name="score-jp-setting" value="56" />場風刻不可</label>
+<label><input type="checkbox" name="score-jp-setting" value="57" />親限定</label>
 </div>
 <span>三色通貫</span>
 <div class="output-option-group">
@@ -465,6 +497,12 @@
 <label><input type="checkbox" name="score-jp-setting" value="36" />五筒開花 5 飜</label>
 <label><input type="checkbox" name="score-jp-setting" value="37" />二索槍槓 5 飜</label>
 <label><input type="checkbox" name="score-jp-setting" value="38" />石の上にも三年・役満</label>
+</div>
+<span>オープン立直</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, 'jp-open-riichi', [true], true)"/>なし</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 飜・ダブル立直 3 飜</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 飜・ダブル立直 4 飜</label>
 </div>
 <span>符跳ね</span>
 <div class="output-option-group">
@@ -704,7 +742,7 @@
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.0</div>
+<div class="output-time">v4.8.1</div>
 <div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
 </div>
         <script src="mahjong.js"></script>

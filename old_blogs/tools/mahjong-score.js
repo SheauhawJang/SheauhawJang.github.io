@@ -1008,7 +1008,7 @@ function ansCopy(x) {
 }
 function getDoras(vaildora, doras, uras) {
     let [d, u] = [0, 0];
-    for (let i = 0; i < sizeUT; ++i) (d += vaildora[i] * doras[i]), (u += vaildora[i] * uras[i]);
+    for (let i = 0; i < sizeAT; ++i) if (vaildora[i]) (d += vaildora[i] * doras[i]), (u += vaildora[i] * uras[i]);
     for (let i = 42; i < 50; ++i) {
         if (doras[i] === 0 && uras[i] == 0) continue;
         const [l, r] = JokerRange[i];
@@ -1018,7 +1018,9 @@ function getDoras(vaildora, doras, uras) {
     }
     return [d, u];
 }
+const JP3PArray = guse3p.map(x => x === Infinity ? 0 : 1);
 function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
+    if (setting[49] && !isMask(flattenMelds(melds), JP3PArray)) return eans_jp;
     let ans = ansCopy(infoans);
     const mq = melds.length >= 5 && aids[1].length === ck;
     const update = (id, n) => JPUpdateFan(ans, setting, id, n, mq);
@@ -1141,7 +1143,6 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
     } else {
         let s = 0;
         for (let i = 0; i < 25; ++i) s += seq[i] >> 1;
-        console.log(s);
         update(29, s >> 1), update(11, s & 1);
     }
     if (melds.length >= 5 && !must_hunyise && isSameColorWithHonor(melds)) update(28, 1);
@@ -1181,11 +1182,22 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
             }
         update(50, shift3);
     }
+    if (setting[54]) {
+        let winds = 0;
+        for (let i = 27; i <= 30; ++i) {
+            if (setting[55] && i === wind6) continue;
+            if (setting[56] && i === wind5) continue;
+            if (setting[57] && wind6 !== 27) continue;
+            winds += tri[i];
+        }
+        update(70, Math.floor(winds / 3));
+    }
     update(5, tri[wind5]);
     update(6, tri[wind6]);
     update(7, tri[31]);
     update(8, tri[32]);
     update(9, tri[33]);
+    if (setting[49] && setting[52]) update(69, tri[30]);
     if (melds.length >= 5 && (mq || setting[4]) && isMask(marr, NoOrphanArray)) update(4);
     if (mq && tsumo) update(2);
     if (setting[44] && aids[0].length === 2 && aids[1].length >= 4 && ck === 0) update(68);
@@ -1201,17 +1213,18 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
 function PairSelect(cot, ad, au, mask) {
     let [d, u] = [0, 0];
     let backup = Array(7).fill([0, 0, 0]);
-    for (let i = 0; i < 7; ++i) if (cot[i] < sizeUT) (d += ad[cot[i]]), (u += au[cot[i]]), (backup[i] = [cot[i], ad[cot[i]], au[cot[i]]]), (ad[cot[i]] = au[cot[i]] = 0);
+    for (let i = 0; i < 7; ++i) if (cot[i] < sizeUT) (d += ad[cot[i]]), (u += au[cot[i]]), (backup[i] = [cot[i], ad[cot[i]], au[cot[i]]]), (ad[cot[i]] = au[cot[i]] = -Infinity);
     for (let i = 0; i < 7; ++i)
         if (cot[i] >= sizeUT) {
-            let [sj, sdu] = [-1, 0];
+            let [sj, sdu] = [-1, -Infinity];
             const [jl, jr] = JokerRange[cot[i]];
             for (let j = jl; j < jr; ++j) if (!mask || mask[j]) if (ad[j] + au[j] > sdu) (sj = j), (sdu = ad[j] + au[j]);
-            if (sj > 0) (d += ad[sj]), (u += au[sj]), (backup[i] = [sj, ad[sj], au[sj]]), (ad[sj] = au[sj] = 0);
+            if (sj > 0) (d += ad[sj]), (u += au[sj]), (backup[i] = [sj, ad[sj], au[sj]]), (ad[sj] = au[sj] = -Infinity);
+            else [d, u] = [-Infinity, -Infinity];
         }
     for (let i = 0; i < 7; ++i) {
         const [j, d, u] = backup[i];
-        (ad[j] += d), (au[j] += u);
+        [ad[j], au[j]] = [d, u];
     }
     (d *= 2), (u *= 2);
     return [d, u];
@@ -1274,6 +1287,7 @@ const SameColorWithHonorsArray = [0, 1, 2].map(j => ColorArray.map((x, i) => (x 
 const SameColorNoOrphanArray = [0, 1, 2].map(j => ColorArray.map((x, i) => (x === j && !OrphanArray[i] ? 1 : 0)));
 const SameColorAllOrphansArray = [0, 1, 2].map(j => SameColorWithHonorsArray[j].map((x, i) => x && OrphanArray[i]));
 function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
+    if (setting[49] && PairStep(getTiles(tids), true, guse3p) !== -1) return eans_jp;
     const ot = PairOutput(getTiles(tids)).map((x) => x[0]);
     let gans = ansCopy(infoans);
     let [valfus, realfus, fus] = [25, 25, [10]];
@@ -1285,7 +1299,8 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (tsuiso) JPUpdateFan(gans, setting, setting[1] && setting[10] ? 40 : 39);
     let [sp, sped] = [tsuiso ? null : isShiftPairs(ot), false];
     if (sp) {
-        const sarr = [[[28, 56], [31, 59]], [[26, 54], [29, 57]], [[27, 55], [30, 58]]];
+        let sarr = [[[28, 56], [31, 59]], [[26, 54], [29, 57]], [[27, 55], [30, 58]]];
+        if (setting[49]) sarr[0][0][0] = sarr[0][1][0] = -1;
         const c = sp.color;
         const [l, r] = c === -1 ? [0, 3] : [c, c + 1];
         for (let i = l; i < r && !sped; ++i) if (setting[sarr[i][0][0]] && sp.large) JPUpdateFan(gans, setting, sarr[i][0][1]), sped = true;
@@ -1296,6 +1311,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (!tsuiso && !sped && c5check && JPScoreArray0[67] < 0) JPUpdateFan(gans, setting, 67);
     if (gans.yakuman > 0) return getJPAnsUnion(setting, gans, fus, valfus, realfus);
     JPScoreArray0[17] = [2, 1, 0][setting[8]];
+    if (setting[48] === 2) --JPScoreArray0[31], --JPScoreArray0[28];
     JPUpdateFan(gans, setting, 17);
     if (tsumo) JPUpdateFan(gans, setting, 2);
     const mv = gans.valfan;
@@ -1305,11 +1321,11 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
         else if (ot[i] >= 47) tan19 = false;
     const sc = PairSameColor(ot);
     const scwh = PairSameColorWithHonor(ot);
-    const c19 = PairHun19Array(ot);
-    const hun19 = c19 && c19[0] <= 2 && c19[1] <= 2 && c19[2] <= 2 && c19[0] + c19[1] + c19[2] + c19[3] <= 6;
-    const hunhun = c19 && c19[0] + c19[1] + c19[2] + c19[3] <= 2;
+    const arr19 = PairHun19Array(ot);
+    const hun19 = arr19 && arr19[0] <= 2 && arr19[1] <= 2 && arr19[2] <= 2 && arr19[0] + arr19[1] + arr19[2] + arr19[3] <= 6;
+    const hunhun = arr19 && arr19[0] + arr19[1] + arr19[2] + arr19[3] <= 2;
     c5check &&= JPScoreArray0[67] > 0;
-    let [gv, gd, gu, gf, gyk] = [0, [], 0, 0, false];
+    let [gv, gd, gu, gf, gyk] = [0, 0, 0, [], false];
     let selected = Array(7).fill(0);
     const doraf = [
         { id: 43, range: [0, 9], joker: [0, 9], fid: (i) => i },
@@ -1324,13 +1340,15 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     function dorakernel(depth = 0) {
         if (depth === 8) {
             let [nd, nu] = [0, 0];
-            for (let i = 0; i < sizeUT; ++i) (nd += nuki[i] * doras[i]), (nu += nuki[i] * uras[i]);
+            for (let i = 0; i < sizeUT; ++i) if (nuki[i]) (nd += nuki[i] * doras[i]), (nu += nuki[i] * uras[i]);
             const fv = setting[12] ? (v, d) => v + d : (v) => v;
             let limit = setting[0];
             if (setting[11])
                 if (!setting[3]) limit = Infinity;
                 else limit = Math.max(limit, 13);
             function update(af, ad, au) {
+                console.log(af, ad, au, [gv, gd, gu, gf]);
+                if (ad + au === -Infinity) return;
                 const av = af.map(x => JPScoreArray0[x]).reduce((a, b) => a + b, 0);
                 (ad += nd), (au += nu);
                 if (gyk && mv + fv(av, ad, au) >= limit && av + ad + au > gv) [gv, gd, gu, gf] = [av + ad + au, ad, au, af];
@@ -1381,6 +1399,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     }
     dorakernel();
     gans.valfan += gv, gans.fan.push(...gf);
+    if (setting[48] === 2) ++JPScoreArray0[31], ++JPScoreArray0[28];
     return getJPAnsUnion(setting, gans, fus, valfus, realfus, gd, gu);
 }
 function getJPAnsUnion(setting, ans, fus, valfus, realfus, dora = 0, ura = 0) {
@@ -1398,7 +1417,7 @@ function getJPAns(setting, fan, valfan, dora, ura, fus, valfus, realfus, yakuman
     if (setting[7] && pt >= 1920) return { val: 2000, ...ans, print: "kiri_mangan" };
     return { val: pt, ...ans };
 }
-const PrintSeq = [1, 16, 60, 61, 68, 3, 15, 65, 12, 64, 13, 62, 14, 63, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 4, 24, 21, 48, 19, 20, 50, 23, 18, 22, 26, 25, 67, 27, 28, 31, 32, 33, 30, 66, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97];
-const JPScoreArray0 = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5, 6, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 2, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1];
-const JPScoreArray1 = [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 0, 5, 5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1];
+const PrintSeq = [1, 16, 71, 60, 61, 68, 3, 15, 65, 12, 64, 13, 62, 14, 63, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 69, 4, 24, 21, 48, 19, 20, 50, 70, 23, 18, 22, 26, 25, 67, 27, 28, 31, 32, 33, 30, 66, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97, 100];
+const JPScoreArray0 = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5, 6, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 2, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1, 1, 0, 2];
+const JPScoreArray1 = [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 0, 5, 5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1, 1, 0, 2];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

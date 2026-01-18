@@ -691,7 +691,7 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki = 0, north = 0) {
     let fanopt = [];
     for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc._fanname_format_left}${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
     let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${loc._fanname_format_left}${JPGetFuName(i)}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
-    return `<div style="display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
+    return `<div style="display: flex; gap: 0 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
 }
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;

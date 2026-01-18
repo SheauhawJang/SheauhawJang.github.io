@@ -456,6 +456,7 @@
 <div class="output-option-group">
 <label><input type="checkbox" name="score-jp-wininfo" value="1"><span data-i18n="JP_YAKUNAME_1"></span></label>
 <label><input type="checkbox" name="score-jp-wininfo" value="16"><span data-i18n="JP_YAKUNAME_16"></span></label>
+<label id="jp-open-riichi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="71" onchange="SwitchOption(this, 'jp-open-riichi-yakuman')"/><span data-i18n="JP_YAKUNAME_71"></span></label>
 <label><input type="checkbox" name="score-jp-wininfo" value="3"><span data-i18n="JP_YAKUNAME_3"></span></label>
 </div>
 <span>和牌状态</span>
@@ -466,6 +467,7 @@
 <label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
 <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
+<label id="jp-open-riichi-yakuman" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span><span data-i18n="JP_YAKUNAME_71"></span></label>
 </div>
 <button onclick="processJPScore()" class="score-button">计算</button>
 </div>
@@ -508,8 +510,23 @@
 <div class="output-option-group">
 <label><input type="number" id="score-jp-setting-fan" value="1" min="0" /><span data-i18n="JP_FAN_unit"></span>缚</label>
 <label><input type="checkbox" name="score-jp-setting" value="11" /><span data-i18n="yakuman"></span>缚</label>
+<label><input type="checkbox" name="score-jp-setting" value="58" /><span data-i18n="JP_YAKUNAME_17"></span>缚</label>
 <label><input type="checkbox" name="score-jp-setting" value="12" />包含<span data-i18n="JP_YAKUNAME_96_EX"></span></label>
 <label title="雀魂番缚模式采用。"><input type="checkbox" name="score-jp-setting" value="13" checked />包含<span data-i18n="JP_YAKUNAME_3"></span></label>
+</div>
+<span><label><input type="checkbox" name="score-jp-setting" value="49" />三人麻将</label></span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-jp-setting" value="52" />役牌北</label>
+<label><input type="checkbox" name="score-jp-setting" value="53" /><span data-i18n="JP_YAKUNAME_96"></span>北</label>
+<label><input type="radio" name="score-jp-setting-22" value="0" checked />自摸损</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 1" />北家折半</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 3" />北家庄付</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 2" />折半支付</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 6" />幺二比例支付</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 7" />幺三支付</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 4" />自摸荣和损</label>
+<label><input type="radio" name="score-jp-setting-22" value="50, 8" />幺二比例(MJ3)</label>
+<label><input type="checkbox" name="score-jp-setting" value="51" />千点加符</label>
 </div>
 <span title="「荣和」和「第一巡目」同时选择时算作人和。由于人和的定义有差异，是否符合「第一巡目」请自行根据规则判断。" data-i18n="JP_YAKUNAME_30"></span>
 <div class="output-option-group">
@@ -545,6 +562,12 @@
 <label><input type="radio" name="score-jp-setting-20" value="0" checked />3 <span data-i18n="JP_FAN_unit"></span>门前</label>
 <label><input type="radio" name="score-jp-setting-20" value="47,3" />4 <span data-i18n="JP_FAN_unit"></span>门前</label>
 </div>
+<span>门前一色</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-21" value="0" checked />1 <span data-i18n="JP_FAN_unit"></span>增益</label>
+<label><input type="radio" name="score-jp-setting-21" value="48,2" /><span data-i18n="JP_YAKUNAME_17"></span>外 1 <span data-i18n="JP_FAN_unit"></span>增益</label>
+<label><input type="radio" name="score-jp-setting-21" value="48,1" />无增益</label>
+</div>
 <span data-i18n="JP_YAKUNAME_50"></span>
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-13" value="0" checked />关闭</label>
@@ -554,6 +577,15 @@
 <div class="output-option-group">
 <label><input type="radio" name="score-jp-setting-14" value="0" checked />关闭</label>
 <label><input type="radio" name="score-jp-setting-14" value="20" /><span data-i18n="yakuman"></span></label>
+</div>
+<span data-i18n="JP_YAKUNAME_70"></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-23" value="0" checked />关闭</label>
+<label><input type="radio" name="score-jp-setting-23" value="54,1" />2 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-23" value="54,2" />3 <span data-i18n="JP_FAN_unit"></span></label>
+<label title="显示为客风三刻。"><input type="checkbox" name="score-jp-setting" value="55" />自风刻禁止</label>
+<label><input type="checkbox" name="score-jp-setting" value="56" />场风刻禁止</label>
+<label><input type="checkbox" name="score-jp-setting" value="57" />仅限庄家</label>
 </div>
 <span data-i18n="JP_YAKUNAME_48"></span>
 <div class="output-option-group">
@@ -592,8 +624,8 @@
 <label><input type="radio" name="score-jp-setting-17" value="40,6" /><span data-i18n="yakuman"></span></label>
 <label><input type="radio" name="score-jp-setting-17" value="40,7" /><span data-i18n="yakuman"></span>门前</label>
 <label><input type="checkbox" name="score-jp-setting" value="41" /><span data-i18n="JP_YAKUNAME_17"></span>禁止</label>
-<label><input type="checkbox" name="score-jp-setting" value="42" />必须<span data-i18n="JP_YAKUNAME_18"></span></label>
-<label><input type="checkbox" name="score-jp-setting" value="43" />必须自风牌雀头</label>
+<label><input type="checkbox" name="score-jp-setting" value="42" />仅限<span data-i18n="JP_YAKUNAME_18"></span></label>
+<label><input type="checkbox" name="score-jp-setting" value="43" />仅限自风牌雀头</label>
 </div>
 <span><span data-i18n="JP_YAKUNAME_54"></span>系列</span>
 <div class="output-option-group">
@@ -618,6 +650,12 @@
 <label><input type="checkbox" name="score-jp-setting" value="36" /><span data-i18n="JP_YAKUNAME_64"></span> 5 <span data-i18n="JP_FAN_unit"></span></label>
 <label><input type="checkbox" name="score-jp-setting" value="37" /><span data-i18n="JP_YAKUNAME_65"></span> 5 <span data-i18n="JP_FAN_unit"></span></label>
 <label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="JP_YAKUNAME_66"></span><span data-i18n="yakuman"></span></label>
+</div>
+<span data-i18n="JP_YAKUNAME_71"></span>
+<div class="output-option-group">
+<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, 'jp-open-riichi', [true], true)"/>关闭</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span>/<span data-i18n="JP_YAKUNAME_16"></span> 3 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span>/<span data-i18n="JP_YAKUNAME_16"></span> 4 <span data-i18n="JP_FAN_unit"></span></label>
 </div>
 <span>跳<span data-i18n="JP_FU_unit"></span></span>
 <div class="output-option-group">
@@ -705,7 +743,7 @@
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.0</div>
+<div class="output-time">v4.8.1</div>
 <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
 </div>
         <script src="mahjong.js"></script>

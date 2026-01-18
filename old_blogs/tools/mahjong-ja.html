@@ -314,7 +314,7 @@
 <label><input type="checkbox" name="score-jp-wininfo" value="15" />槍槓</label>
 <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返し</label>
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振り</label>
-<label id="jp-open-riichi-yakuman" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" />オープン立直役満払い</label>
+<label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" />オープン立直役満払い</span></label>
 </div>
 <button onclick="processJPScore()" class="score-button">計算</button>
 </div>
@@ -500,9 +500,9 @@
 </div>
 <span>オープン立直</span>
 <div class="output-option-group">
-<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, 'jp-open-riichi', [true], true)"/>なし</label>
-<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 飜・ダブル立直 3 飜</label>
-<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 飜・ダブル立直 4 飜</label>
+<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true], true)"/>なし</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])"/>2 飜・ダブル立直 3 飜</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])"/>2 飜・ダブル立直 4 飜</label>
 </div>
 <span>符跳ね</span>
 <div class="output-option-group">

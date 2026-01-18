@@ -315,7 +315,7 @@
 <label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
 <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
-<label id="jp-open-riichi-yakuman" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span><span data-i18n="JP_YAKUNAME_71"></span></label>
+<label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span><span data-i18n="JP_YAKUNAME_71"></span></span></label>
 </div>
 <button onclick="processJPScore()" class="score-button">計算</button>
 </div>
@@ -501,9 +501,9 @@
 </div>
 <span data-i18n="JP_YAKUNAME_71"></span>
 <div class="output-option-group">
-<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, 'jp-open-riichi', [true], true)"/>關閉</label>
-<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span>/<span data-i18n="JP_YAKUNAME_16"></span> 3 <span data-i18n="JP_FAN_unit"></span></label>
-<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span>/<span data-i18n="JP_YAKUNAME_16"></span> 4 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true], true)"/>關閉</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])"/>2 <span data-i18n="JP_FAN_unit"></span>/<span data-i18n="JP_YAKUNAME_16"></span> 3 <span data-i18n="JP_FAN_unit"></span></label>
+<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])"/>2 <span data-i18n="JP_FAN_unit"></span>/<span data-i18n="JP_YAKUNAME_16"></span> 4 <span data-i18n="JP_FAN_unit"></span></label>
 </div>
 <span>跳<span data-i18n="JP_FU_unit"></span></span>
 <div class="output-option-group">

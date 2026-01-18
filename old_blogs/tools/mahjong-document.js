@@ -1038,9 +1038,12 @@ function ptsToggle(el) {
 }
 function SwitchOption(es, id, rge = [true, false], reverse = false) {
     if (!rge.includes(es.checked)) return;
-    const et = document.getElementById(id);
-    if (et === null) return;
-    et.style.display = es.checked !== reverse ? '' : 'none';
+    if (!Array.isArray(id)) id = [id];
+    id.forEach(id => {
+        const et = document.getElementById(id);
+        if (et === null) return;
+        et.style.display = es.checked !== reverse ? '' : 'none';
+    });
 }
 function debugopen(id) {
     const e = document.getElementById(id);

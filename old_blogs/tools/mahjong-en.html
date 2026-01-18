@@ -466,7 +466,7 @@ About Lain Down Melds:
 <label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
 <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
-<label id="jp-open-riichi-yakuman" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span> Payment of <span data-i18n="JP_YAKUNAME_71"></span></label>
+<label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span> Payment of <span data-i18n="JP_YAKUNAME_71"></span></span></label>
 </div>
 <button onclick="processJPScore()" class="score-button">Calculate</button>
 </div>
@@ -651,9 +651,9 @@ About Lain Down Melds:
 </div>
 <span><span class="fan" data-i18n="JP_YAKUNAME_71"></span></span>
 <div class="output-option-group">
-<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, 'jp-open-riichi', [true], true)"/>OFF</label>
-<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span> (3 if <span class="fan" data-i18n="JP_YAKUNAME_16"></span>)</label>
-<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, 'jp-open-riichi', [true])"/>2 <span data-i18n="JP_FAN_unit"></span> (4 if <span class="fan" data-i18n="JP_YAKUNAME_16"></span>)</label>
+<label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true], true)"/>OFF</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])"/>2 <span data-i18n="JP_FAN_unit"></span> (3 if <span class="fan" data-i18n="JP_YAKUNAME_16"></span>)</label>
+<label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])"/>2 <span data-i18n="JP_FAN_unit"></span> (4 if <span class="fan" data-i18n="JP_YAKUNAME_16"></span>)</label>
 </div>
 <span><span data-i18n="JP_FU_unit"></span> Jumping</span>
 <div class="output-option-group">

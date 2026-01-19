@@ -596,10 +596,9 @@ function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
             }
         }
         for (let i = 0; i < 3; ++i) dfs(i);
-        output += loc.change_tiles;
         let changeout = "";
         [...change.entries()].sort((a, b) => a[0] - b[0]).forEach(([key, list]) => (changeout += `<div>${getWaitingType(key)}${loc.colon}</div><div class="devided-waiting-td">${list.map((x) => `<div class="devided-waiting-brief">${loc.change_verb} ${x.map(cardImage).join("")}</div>`).join("")}</div>`));
-        output += makeGridDiv(changeout);
+        if (changeout !== "") output += loc.change_tiles + makeGridDiv(changeout);
     }
     return { output, substep: rsubstep, dvds };
 }

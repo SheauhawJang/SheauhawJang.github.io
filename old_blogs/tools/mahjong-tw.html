@@ -266,7 +266,7 @@
 <div class="output-context" id="brief-output-gb" style="display: none"></div>
 <div class="output-time" id="time-output-gb"></div>
 </div>
-<div class="output-box" id="score-global">
+<div class="output-box" id="score-global" style="display: none;">
 <div class="tabs">
 <button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">立直麻將分數計算器</button>
 <button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">國標麻將<span data-i18n="GB_FAN_unit"></span>數計算器</button>
@@ -317,7 +317,7 @@
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
 <label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="yakuman"></span><span data-i18n="JP_YAKUNAME_71"></span></span></label>
 </div>
-<button onclick="processJPScore()" class="score-button">計算</button>
+<button id="score-jp-button" onclick="processJPScore()" class="score-button">計算</button>
 </div>
 <details>
 <summary>規則設定</summary>

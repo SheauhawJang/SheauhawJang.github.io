@@ -80,7 +80,8 @@ const updateScoreVisiableUI = debounce(function (visiable) {
 }, ui_debounce_delay);
 function updateScoreVisiable(id, visiable = "none") {
     const b = document.getElementById(`${document_scores_ids[id]}-button`);
-    b.disabled = visiable === "none";
+    if (b) b.disabled = visiable === "none";
+    else console.log(`${document_scores_ids[id]}-button`);
     const e = document.getElementById(document_scores_ids[id]);
     if (!e) return;
     e.style.display = visiable;
@@ -1208,6 +1209,7 @@ function switchStepTab(i) {
         while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
     }
     const newbox = document.getElementById(subboxes[i]);
+    if (!newbox) return;
     while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
     steptab = i;
     document.querySelectorAll(".tab[data-steptabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.steptabid) === i));

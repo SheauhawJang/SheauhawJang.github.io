@@ -17,7 +17,7 @@ function random(l, r) {
     let off = Math.floor(Math.random() * len);
     return l + off;
 }
-const ui_debounce_delay = 100;
+const ui_debounce_delay = 1000;
 let updateTaskOutput = Array(TASK_NUM)
     .fill(null)
     .map((_, i) =>
@@ -934,7 +934,6 @@ function updateCardSkin(skin) {
 function debounce(f, delay = 20) {
     let timer = null;
     let rf = function(...args) {
-        console.log(delay);
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
             f.apply(this, args);
@@ -942,7 +941,6 @@ function debounce(f, delay = 20) {
         }, delay);
     };
     rf.immediate = function(...args) {
-        console.log("immediate");
         if (timer) clearTimeout(timer);
         timer = null;
         f.apply(this, args);

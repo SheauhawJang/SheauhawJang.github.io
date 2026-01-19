@@ -17,7 +17,7 @@ function random(l, r) {
     let off = Math.floor(Math.random() * len);
     return l + off;
 }
-const ui_debounce_delay = 1000;
+const ui_debounce_delay = 100;
 let updateTaskOutput = Array(TASK_NUM)
     .fill(null)
     .map((_, i) =>
@@ -72,7 +72,7 @@ function updateScoreVisiable(id, visiable = "none") {
     } else {
         document.getElementById("score-global").style.display = visiable;
         if (vid.some((e) => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
-        else (console.log(scoretab_usr), switchScoreTab(vid[0][0], true));
+        else switchScoreTab(vid[0][0], true);
     }
 }
 function processInput() {
@@ -129,8 +129,8 @@ function processInput() {
                 const newstepjp = worker_substeps[task].slice();
                 if (worker_substeps[0] === -1) newstepjp[0] = -1;
                 if (Math.min(...newstepjp) <= -1 + full_tcnt - tcnt && opencheck(aids[1])) {
-                    document.getElementById("output-score-jp").textContent = "";
-                    document.getElementById("brief-output-score-jp").textContent = "";
+                    updateJPOutput("");
+                    updateJPBrief("");
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     updateScoreVisiable(1, "block");
                     jp_worker = null;
@@ -139,8 +139,8 @@ function processInput() {
                 break;
             case 2:
                 if (Math.min(...worker_substeps[task]) <= -1 + full_tcnt - tcnt && opencheck(aids[1])) {
-                    document.getElementById("output-score-gb").textContent = "";
-                    document.getElementById("brief-output-score-gb").textContent = "";
+                    updateGBOutput("");
+                    updateGBBrief("");
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     updateScoreVisiable(0, "block");
                     gb_worker = null;
@@ -933,14 +933,16 @@ function updateCardSkin(skin) {
 }
 function debounce(f, delay = 20) {
     let timer = null;
-    let rf = function (...args) {
+    let rf = function(...args) {
+        console.log(delay);
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
             f.apply(this, args);
             timer = null;
         }, delay);
     };
-    rf.immediate = function (...args) {
+    rf.immediate = function(...args) {
+        console.log("immediate");
         if (timer) clearTimeout(timer);
         timer = null;
         f.apply(this, args);

@@ -17,7 +17,7 @@ function random(l, r) {
     let off = Math.floor(Math.random() * len);
     return l + off;
 }
-const ui_debounce_delay = 300;
+const ui_debounce_delay = 150;
 let updateTaskOutput = Array(TASK_NUM)
     .fill(null)
     .map((_, i) =>
@@ -90,9 +90,7 @@ function updateScoreVisiable(id, visiable = "none") {
         updateScoreVisiableBar[id](visiable);
     }
     const usrse = document.getElementById(document_scores_ids[scoretab_usr]);
-    if (document.getElementById("score-global").style.display === 'none' && visiable !== 'none') {
-        updateScoreVisiableUI.immediate(visiable);
-    } else if (visiable !== 'none' && usrse && usrse.style.display !== 'none') {
+    if (usrse && usrse.style.display !== 'none' && visiable !== 'none') {
         updateScoreVisiableUI.immediate(visiable);
     } else {
         updateScoreVisiableUI(visiable);

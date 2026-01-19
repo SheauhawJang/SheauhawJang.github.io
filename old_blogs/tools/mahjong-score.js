@@ -60,9 +60,7 @@ function cartesianProduct(g, arrays, prefix = Array(arrays.length).fill(null), i
     }
 }
 function MeldsPermutation(aids, tiles = getTiles(aids[0]), full_tcnt = aids[0].length, ota = Array(sizeUT).fill(0)) {
-    let submeld = Array(aids[1].length)
-        .fill(null)
-        .map(() => []);
+    let submeld = ArrayMap(aids[1].length, () => []);
     let [ek, ck] = [0, 0];
     let nsubots = 1;
     for (let i = 0; i < aids[1].length; ++i) {

@@ -42,6 +42,8 @@ const loc_all = {
     available: { cn: "可", hk: "得", tw: "可", ja: "可", en: "Available" },
     unavailable: { cn: "不可", hk: "唔得", tw: "不可", ja: "不可", en: "Unavailable" },
     waiting: { cn: "等待", tw: "等緊", tw: "等待", ja: "待ち", en: "Potential" },
+    change_tiles: { cn: "换三张牌理", hk: "換三張牌理", tw: "換三張牌理", jp: "三枚交換牌理", en: "Theory of Three-Tile Exchange" },
+    change_verb: { cn: "换", hk: "換", tw: "換", jp: "交換", en: "Pick" },
     brace_left: { cn: "（", hk: "（", tw: "（", ja: "（", en: " (" },
     brace_right: { cn: "）", hk: "）", tw: "）", ja: "）", en: ") " },
     slash: { cn: "／", hk: "／", tw: "／", ja: "／", en: " / " },

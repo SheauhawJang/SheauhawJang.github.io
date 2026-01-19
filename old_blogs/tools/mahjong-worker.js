@@ -565,20 +565,42 @@ function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
         output += loc.windvd + `${loc.colon}\n`;
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
+    const flatten = () => SCStep().map((x) => Math.min(...x));
     const r = printWaiting(
         stepsc,
         (s, d, g) => SCWaiting(tiles, s, substep, full_tcnt, subcnt, d, g),
         () => SCPrecheck(tiles, stepsc, substep, full_tcnt, subcnt),
         () => {
-            const ans = maskMultiply(
-                SCStep().map((x) => Math.min(...x)),
-                mask,
-            );
+            const ans = maskMultiply(flatten(), mask);
             return { step: Math.min(...ans), discheck: ans.map((x) => x !== Infinity) };
         },
         () => false,
     );
     output += r.output;
+    postMessage({ output });
+    if (full_tcnt === 14 && subcnt === 0) {
+        let change = new Map();
+        let best_step = Infinity;
+        function dfs(color, seleted = [], number = 0) {
+            if (number === 9) {
+                if (seleted.length !== 3) return;
+                const step = Math.min(...maskMultiply(flatten(), mask));
+                if (!change.has(step)) change.set(step, []);
+                change.get(step).push(seleted.slice());
+            }
+            const id = ColorFirstArray[color] + number;
+            for (let i = Math.min(3 - seleted.length, tiles[id]); i >= 0; --i) {
+                ((tiles[id] -= i), seleted.push(...Array(i).fill(id)));
+                dfs(color, seleted, number + 1);
+                ((tiles[id] += i), (seleted.length -= i));
+            }
+        }
+        for (let i = 0; i < 3; ++i) dfs(i);
+        output += loc.change_tiles;
+        let changeout = "";
+        [...change.entries()].sort((a, b) => a[0] - b[0]).forEach(([key, list]) => (changeout += `<div>${getWaitingType(key)}${loc.colon}</div><div class="devided-waiting-td">${list.map((x) => `<div class="devided-waiting-brief">${loc.change_verb} ${x.map(cardImage).join("")}</div>`).join("")}</div>`));
+        output += makeGridDiv(changeout);
+    }
     return { output, substep: rsubstep, dvds };
 }
 function GBFanDiv(fan) {

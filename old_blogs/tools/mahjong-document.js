@@ -18,18 +18,14 @@ function random(l, r) {
     return l + off;
 }
 const ui_debounce_delay = 500;
-let updateTaskOutput = Array(TASK_NUM)
-    .fill(null)
-    .map((_, i) =>
-        debounce((text) => {
-            sf(() => (document.getElementById(document_element_ids[i]).innerHTML = text));
-            if (useHelper()) addWorkerCardHelper();
-            updateCardSkin();
-        }, ui_debounce_delay),
-    );
-let updateTaskBrief = Array(TASK_NUM)
-    .fill(null)
-    .map((_, i) => debounce((text) => sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = text)), ui_debounce_delay));
+let updateTaskOutput = ArrayMap(TASK_NUM, (_, i) =>
+    debounce((text) => {
+        sf(() => (document.getElementById(document_element_ids[i]).innerHTML = text));
+        if (useHelper()) addWorkerCardHelper();
+        updateCardSkin();
+    }, ui_debounce_delay),
+);
+let updateTaskBrief = ArrayMap(TASK_NUM, (_, i) => debounce((text) => sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = text)), ui_debounce_delay));
 function putWorkerResult(e, task) {
     // partial result
     if ("brief" in e.data) updateTaskBrief[task].immediate(e.data.brief);
@@ -53,15 +49,13 @@ function opencheck(openids) {
     return true;
 }
 const document_scores_ids = ["score-gb", "score-jp"];
-const updateScoreVisiableBar = Array(document_scores_ids.length)
-    .fill(null)
-    .map((_, id) =>
-        debounce((visiable) => {
-            const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
-            if (!tab) return;
-            tab.style.display = visiable;
-        }, ui_debounce_delay),
-    );
+const updateScoreVisiableBar = ArrayMap(document_scores_ids.length, (_, id) =>
+    debounce((visiable) => {
+        const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
+        if (!tab) return;
+        tab.style.display = visiable;
+    }, ui_debounce_delay),
+);
 const updateScoreVisiableUI = debounce(function (visiable) {
     let vid = [];
     for (let i = 0; i < document_scores_ids.length; ++i) {
@@ -85,13 +79,13 @@ function updateScoreVisiable(id, visiable = "none") {
     const e = document.getElementById(document_scores_ids[id]);
     if (!e) return;
     e.style.display = visiable;
-    if (document.querySelector(`.tab[data-scoretabid="${id}"]`).style.display === 'none' && visiable !== 'none') {
+    if (document.querySelector(`.tab[data-scoretabid="${id}"]`).style.display === "none" && visiable !== "none") {
         updateScoreVisiableBar[id].immediate(visiable);
     } else {
         updateScoreVisiableBar[id](visiable);
     }
     const usrse = document.getElementById(document_scores_ids[scoretab_usr]);
-    if (usrse && usrse.style.display !== 'none' && visiable !== 'none') {
+    if (usrse && usrse.style.display !== "none" && visiable !== "none") {
         updateScoreVisiableUI.immediate(visiable);
     } else {
         updateScoreVisiableUI(visiable);
@@ -255,43 +249,25 @@ function shuffle(array) {
     }
     return array;
 }
-function randomInputText() {
-    let mount = new Array(136);
+function randomInputText(n = parseInt(document.getElementById("randomCardCount").value), m = 136) {
+    let mount = new Array(m);
     for (let i = 0; i < mount.length; ++i) mount[i] = Math.floor(i / 4);
     shuffle(mount);
-    const n = Math.min(parseInt(document.getElementById("randomCardCount").value), mount.length);
+    n = Math.min(n, mount.length);
     let hand = [];
     for (let i = 0; i < n; ++i) hand.push(mount[i]);
     hand.sort((a, b) => a - b);
     updateInput(joinHand(hand));
 }
-function getMeld(
-    seqs = Array(21)
-        .fill(0)
-        .map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)),
-    tris = Array(sizeUT)
-        .fill(0)
-        .map((_, i) => i),
-) {
+function getMeld(seqs = default_seqs, tris = default_tris) {
     const seqrate = 64;
     const seq = seqs.length * seqrate;
     const tri = tris.length;
     const r = random(seq + tri);
     if (r >= seq) return Array(3).fill(tris[r - seq]);
-    else
-        return Array(3)
-            .fill(seqs[Math.floor(r / seqrate)])
-            .map((x, i) => x + i);
+    else return ArrayMap(3, (_, i) => seqs[Math.floor(r / seqrate)] + i);
 }
-function randomWinning(
-    local,
-    seqs = Array(21)
-        .fill(0)
-        .map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)),
-    tris = Array(sizeUT)
-        .fill(0)
-        .map((_, i) => i),
-) {
+function randomWinning(local, seqs = default_seqs, tris = default_tris) {
     const n = local ?? parseInt(document.getElementById("randomWinningCardCount").value);
     const [melds, head] = [Math.floor(n / 3), n % 3 ? 1 : 0];
     let tiles = Array(sizeUT).fill(0);
@@ -324,7 +300,8 @@ function submithand(hand, listen) {
     drawInputCards();
     processInput();
 }
-function randomWinningPairs(listen = false, disjoint = false, guse = guseall) {
+function randomWinningPairs(disjoint = false, guse = guseall) {
+    const listen = aids[0].length % 3 === 1;
     let arr = [];
     for (let i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) arr.push(i);
     shuffle(arr);
@@ -333,18 +310,15 @@ function randomWinningPairs(listen = false, disjoint = false, guse = guseall) {
     else for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(arr[random(arr.length)]));
     submithand(hand, listen);
 }
-function randomWinningOrphan(listen = false) {
+function randomWinningOrphan() {
+    const listen = aids[0].length % 3 === 1;
     let hand = Orphan13Array.slice();
     hand.push(hand[random(13)]);
     submithand(hand, listen);
 }
-function randomWinningBukao(listen = false) {
-    let hand = [
-        ...KnitDragonSave[random(6)],
-        ...Array(7)
-            .fill(0)
-            .map((_, i) => i + 27),
-    ];
+function randomWinningBukao() {
+    const listen = aids[0].length % 3 === 1;
+    let hand = [...KnitDragonSave[random(6)], ...ArrayMap(7, (_, i) => i + 27)];
     shuffle(hand);
     hand = [...hand.slice(0, 13).sort((a, b) => a - b), hand[13]];
     if (listen) hand.pop();
@@ -352,36 +326,48 @@ function randomWinningBukao(listen = false) {
     drawInputCards();
     processInput();
 }
-function randomWinningKDragon(n) {
+function randomWinningKDragon() {
+    const n = Math.max(aids[0].length + aids[1].length * 3, 9);
     let tiles = randomWinning(n - 9);
     KnitDragonSave[random(6)].forEach((x) => ++tiles[x]);
     let hand = [];
-    for (let i = 0; i < sizeUT; ++i) hand.push(...Array(tiles[i]).fill(i));
+    tiles.forEach((x, i) => hand.push(...Array(x).fill(i)));
     submithand(hand, n % 3 === 1);
 }
-function randomWinningNiconico(listen = false) {
+function randomWinningNiconico() {
+    const listen = aids[0].length % 3 === 1;
     let hand = [];
     for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(random(sizeUT)));
     hand.push(...Array(3).fill(random(sizeUT)));
     submithand(hand, listen);
 }
-function randomWinningOrphanMeld(listen = false) {
+function randomWinningOrphanMeld() {
+    const listen = aids[0].length % 3 === 1;
     let hand = Orphan13Array.slice();
     hand.push(hand[random(13)], ...getMeld());
     submithand(hand, listen);
 }
-function randomWinningBuda(listen = false) {
+function randomWinningBuda() {
+    const listen = aids[0].length % 3 === 1;
     let buda = [];
     for (let a = 0; a < 3; ++a) for (let b = a + 3; b < 6; ++b) for (let c = b + 3; c < 9; ++c) buda.push([a, b, c]);
-    let hand = Array(7)
-        .fill(0)
-        .map((_, i) => i + 27);
+    let hand = ArrayMap(7, (_, i) => i + 27);
     for (let i = 0; i < 3; ++i) hand.push(...buda[random(buda.length)].map((x) => x + ColorFirstArray[i]));
     hand.push(hand[random(hand.length)]);
     submithand(hand, listen);
 }
-function randomInput() {
-    randomInputText();
+function randomWinningSC(i) {
+    if (Math.random() < 0.1) return randomWinningPairs(false, guseque[i]);
+    const seqs = default_seqs.toSpliced(i * 7, 7);
+    const tris = ArrayMap(27, (_, i) => i).toSpliced(i * 9, 9);
+    const n = aids[0].length + aids[1].length * 3;
+    const tiles = randomWinning(n, seqs, tris);
+    let hand = [];
+    tiles.forEach((x, i) => hand.push(...Array(x).fill(i)));
+    submithand(hand, n % 3 === 1);
+}
+function randomInput(n = parseInt(document.getElementById("randomCardCount").value), m = 136) {
+    randomInputText(n, m);
     drawInputCards();
     processInput();
 }

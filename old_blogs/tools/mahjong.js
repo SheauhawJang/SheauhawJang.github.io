@@ -22,6 +22,9 @@ function pmod(a, b) {
     const ans = a % b;
     return ans * b < 0 ? ans + b : ans;
 }
+function ArrayMap(len, f) {
+    return Array(len).fill(null).map(f);
+}
 function id(name) {
     const dictid = NAME_TO_ID[name];
     if (dictid >= 0 && dictid < sizeAT) return { id: dictid };
@@ -122,7 +125,7 @@ function splitKernel(s) {
             for (let j = tids.length - 1; j >= 0; --j) ids.push(tids[j]);
             continue;
         }
-        if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") ids.push(id("Wh")), (i = i + 1);
+        if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") (ids.push(id("Wh")), (i = i + 1));
         else ids.push(id(s[i]));
     }
     let valid_ids = [];
@@ -212,7 +215,9 @@ function indexStep(em, ep, i, ui, uj, aj, bj, cj) {
 }
 const guseall = Array(sizeAT).fill(0);
 const guse3p = guseall.map((_, i) => (i > 0 && i < 8 ? Infinity : 0));
-const guseque = Array(3).fill(null).map((_, i) => guseall.map((_, j) => (j < 27 && ColorArray[j] !== i ? 0 : Infinity)));
+const guseque = ArrayMap(3, (_, i) => guseall.map((_, j) => (j < 27 && ColorArray[j] !== i ? 0 : Infinity)));
+const default_seqs = ArrayMap(21, (_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7));
+const default_tris = ArrayMap(sizeUT, (_, i) => i);
 function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     const dpi = indexStep(em, ep, i, ui, uj, aj, bj, cj);
@@ -226,9 +231,9 @@ function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 
     let nxti;
     for (nxti = i + 1; nxti < sizeUT; ++nxti) if (guse[nxti] !== Infinity) break;
     let ei = tiles[i];
-    if (JokerA[i] !== JokerA[nxti]) (ei += ra), (lmti += ra), (ra = aj = 0);
-    if (JokerB[i] !== JokerB[nxti]) (ei += rb), (lmti += rb), (rb = bj = 0);
-    if (nxti >= sizeUT) (ei += rc), (lmti += rc), (rc = cj = 0);
+    if (JokerA[i] !== JokerA[nxti]) ((ei += ra), (lmti += ra), (ra = aj = 0));
+    if (JokerB[i] !== JokerB[nxti]) ((ei += rb), (lmti += rb), (rb = bj = 0));
+    if (nxti >= sizeUT) ((ei += rc), (lmti += rc), (rc = cj = 0));
     const [ri, rj] = [Math.max(ei - ui, 0), Math.max(tiles[i + 1] - uj, 0)];
     const lmtj = lmti + ra + rb + rc;
     if (ui > lmtj) return (step[dpi] = INF);
@@ -305,7 +310,7 @@ function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = g
     for (let i = 0; i < sizeUT; ++i) {
         tiles[i] = Math.min(tiles[i], glmt);
         const km = Math.min(Math.floor(Math.max(tiles[i] - 8, 0) / 3), nm - em);
-        (nm -= km), (tiles[i] -= km * 3);
+        ((nm -= km), (tiles[i] -= km * 3));
     }
     if (glmt !== Infinity) {
         if (!useStepMemory(nm, np, tiles, glmt, sup, guse)) prepareStep(nm, np, tiles);
@@ -323,7 +328,7 @@ function check(tiles, target) {
     let meld = 0;
     tiles = tiles.slice();
     for (let i = 0; i < sizeUT; ++i) {
-        if (tiles[i] >= 3) (meld += Math.floor(tiles[i] / 3)), (tiles[i] %= 3);
+        if (tiles[i] >= 3) ((meld += Math.floor(tiles[i] / 3)), (tiles[i] %= 3));
         if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
             const cnt = Math.min(tiles[i], tiles[i + 1], tiles[i + 2]);
             meld += cnt;
@@ -411,56 +416,56 @@ function PairStep(tiles, disjoint = false, guse = guseall) {
         for (; i < sizeUT; i = nxti) {
             for (nxti = i + 1; nxti < sizeUT; ++nxti) if (guse[nxti] !== Infinity) break;
             let ei = tiles[i];
-            if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = 0);
-            if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = 0);
+            if (JokerA[i] !== JokerA[nxti]) ((ei += ra), (ra = 0));
+            if (JokerB[i] !== JokerB[nxti]) ((ei += rb), (rb = 0));
             ans += Math.floor(ei / 2);
             if (ei % 2)
-                if (ra) --ra, ++ans;
-                else if (rb) --rb, ++ans;
+                if (ra) (--ra, ++ans);
+                else if (rb) (--rb, ++ans);
                 else ++sig;
             if (JokerA[i] !== JokerA[nxti]) ra = tiles[JokerA[nxti]];
             if (JokerB[i] !== JokerB[nxti]) rb = tiles[JokerB[nxti]];
         }
-        if (ans > 7) (sig += (ans - 7) * 2), (ans = 7);
+        if (ans > 7) ((sig += (ans - 7) * 2), (ans = 7));
         return 13 - ans * 2 - Math.min(sig, 7 - ans) - tiles[JokerC];
     } else {
         let t = tiles.slice();
         for (let i = 0; i < sizeUT; ++i) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 1) continue;
-            if (t[JokerA[i]]) --t[JokerA[i]], ++t[i];
-            else if (t[JokerB[i]]) --t[JokerB[i]], ++t[i];
-            else if (t[JokerC]) --t[JokerC], ++t[i];
+            if (t[JokerA[i]]) (--t[JokerA[i]], ++t[i]);
+            else if (t[JokerB[i]]) (--t[JokerB[i]], ++t[i]);
+            else if (t[JokerC]) (--t[JokerC], ++t[i]);
         }
         for (let i = 0; i < sizeUT; ++i) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 0) continue;
             const cnt = Math.min(t[JokerA[i]], 2);
-            (t[i] = cnt), (t[JokerA[i]] -= cnt);
+            ((t[i] = cnt), (t[JokerA[i]] -= cnt));
             if (t[i] !== 1) continue;
-            if (t[JokerB[i]]) --t[JokerB[i]], ++t[i];
-            else if (t[JokerC]) --t[JokerC], ++t[i];
+            if (t[JokerB[i]]) (--t[JokerB[i]], ++t[i]);
+            else if (t[JokerC]) (--t[JokerC], ++t[i]);
         }
         for (let i = 0; i < sizeUT; ++i) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 0) continue;
             const cnt = Math.min(t[JokerB[i]], 2);
-            (t[i] = cnt), (t[JokerB[i]] -= cnt);
+            ((t[i] = cnt), (t[JokerB[i]] -= cnt));
             if (t[i] !== 1) continue;
-            if (t[JokerC]) --t[JokerC], ++t[i];
+            if (t[JokerC]) (--t[JokerC], ++t[i]);
         }
         for (let i = 0; i < sizeUT; ++i) {
             if (guse[i] === Infinity) continue;
             if (t[i] !== 0) continue;
             const cnt = Math.min(t[JokerC], 2);
-            (t[i] = cnt), (t[JokerC] -= cnt);
+            ((t[i] = cnt), (t[JokerC] -= cnt));
         }
         let [ans, sig] = [0, 0];
         for (let i = 0; i < sizeUT; ++i)
             if (guse[i] === Infinity) continue;
             else if (t[i] >= 2) ++ans;
             else if (t[i] === 1) ++sig;
-        if (ans > 7) (sig += ans - 7), (ans = 7);
+        if (ans > 7) ((sig += ans - 7), (ans = 7));
         return 13 - ans * 2 - Math.min(sig, 7 - ans);
     }
 }
@@ -590,11 +595,11 @@ function NiconicoStep(tiles) {
         let t = tiles.slice();
         let miss = 3;
         const cnt0 = Math.min(t[i], miss);
-        (t[i] -= cnt0), (miss -= cnt0);
+        ((t[i] -= cnt0), (miss -= cnt0));
         const cnt1 = Math.min(t[JokerA[i]], miss);
-        (t[JokerA[i]] -= cnt1), (miss -= cnt1);
+        ((t[JokerA[i]] -= cnt1), (miss -= cnt1));
         const cnt2 = Math.min(t[JokerB[i]], miss);
-        (t[JokerB[i]] -= cnt2), (miss -= cnt2);
+        ((t[JokerB[i]] -= cnt2), (miss -= cnt2));
         ans = Math.min(ans, PairStep(t, false) + miss);
     }
     return ans;
@@ -638,12 +643,12 @@ function Buda16Step(tiles) {
         for (let i = 0; i < 3; ++i) {
             const m = i === pi ? pmiss[i] : miss[i];
             const ua = Math.min(ra, m);
-            (ans += m - ua), (ra -= ua);
+            ((ans += m - ua), (ra -= ua));
         }
         for (let i = 3; i < 5; ++i) {
             const m = i === pi ? pmiss[i] : miss[i];
             const ub = Math.min(rb, m);
-            (ans += m - ub), (rb -= ub);
+            ((ans += m - ub), (rb -= ub));
         }
         step = Math.min(ans - 1, step);
     }
@@ -699,12 +704,8 @@ function NormalPrecheck(tiles, step, tcnt) {
     return { dischecks, getchecks };
 }
 function JPPrecheck(tiles, step, substep, tcnt) {
-    const dischecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(3).fill(false));
-    const getchecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(3).fill(false));
+    const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
+    const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     if (step >= substep[0]) {
         initDischecks(tiles, (i) => (dischecks[i][0] = StepCheck(tiles, step + 1, tcnt - 1, tcnt, 4)));
         initGetchecks(tiles, (i) => (getchecks[i][0] = StepCheck(tiles, step, tcnt + 1, tcnt, 4)));
@@ -720,12 +721,8 @@ function JPPrecheck(tiles, step, substep, tcnt) {
     return { dischecks, getchecks };
 }
 function JP3pPrecheck(tiles, step, substep, tcnt) {
-    const dischecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(3).fill(false));
-    const getchecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(3).fill(false));
+    const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
+    const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     if (step >= substep[0]) {
         initDischecks(tiles, (i) => (dischecks[i][0] = searchDp(tiles, 0, 0, tcnt, step + 1, 4, guse3p) <= step));
         initGetchecks(tiles, (i) => (getchecks[i][0] = searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step));
@@ -741,13 +738,9 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
     return { dischecks, getchecks };
 }
 function SCPrecheck(tiles, step, substep, tcnt, subcnt) {
-    const dischecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(3).fill(false));
-    const getchecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(3).fill(false));
-    const f = (i, s) => [searchDp(tiles, 0, 0, tcnt, s, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity]
+    const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
+    const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
+    const f = (i, s) => [searchDp(tiles, 0, 0, tcnt, s, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity];
     for (let j = 0; j < 3; ++j) {
         if (step >= substep[j]) {
             initDischecks(tiles, (i) => (dischecks[i][j] = Math.min(...f(j, step + 1)) <= step));
@@ -757,12 +750,8 @@ function SCPrecheck(tiles, step, substep, tcnt, subcnt) {
     return { dischecks, getchecks };
 }
 function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
-    const dischecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(5).fill(false));
-    const getchecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(5).fill(false));
+    const dischecks = ArrayMap(sizeAT, () => Array(5).fill(false));
+    const getchecks = ArrayMap(sizeAT, () => Array(5).fill(false));
     if (step >= substep[0]) {
         for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck ? savecheck.dischecks[i] : StepCheck(tiles, step + 1, tcnt - 1, tcnt);
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck ? savecheck.getchecks[i] : StepCheck(tiles, step, tcnt + 1, tcnt);
@@ -786,12 +775,8 @@ function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     return { dischecks, getchecks };
 }
 function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
-    const dischecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(4).fill(false));
-    const getchecks = Array(sizeAT)
-        .fill(null)
-        .map(() => Array(4).fill(false));
+    const dischecks = ArrayMap(sizeAT, () => Array(4).fill(false));
+    const getchecks = ArrayMap(sizeAT, () => Array(4).fill(false));
     if (step >= substep[0]) {
         for (let i = 0; i < sizeAT; ++i) dischecks[i][0] = savecheck ? savecheck.dischecks[i] : StepCheck(tiles, step + 1, tcnt - 1, tcnt);
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck ? savecheck.getchecks[i] : StepCheck(tiles, step, tcnt + 1, tcnt);
@@ -853,7 +838,7 @@ function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
 }
 function SCWaiting(tiles, step, substep, tcnt, subcnt, discheck, getchecks) {
     discheck ??= [step >= substep[0], step >= substep[1], step >= substep[2]];
-    const f = (tiles, i) => [searchDp(tiles, 0, 0, tcnt, Infinity, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity]
+    const f = (tiles, i) => [searchDp(tiles, 0, 0, tcnt, Infinity, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity];
     function waiting(tiles, step, _, g) {
         for (let i = 0; i < 3; ++i) if (discheck[i] && (!g || g[i]) && Math.min(...f(tiles, i)) < step) return true;
     }
@@ -906,7 +891,7 @@ function prepareDvd(nm, np, tiles) {
         ldDvd[ldi + 3] = ldDvd[ldi + 2] * (tiles[JokerA[i]] + 1);
         let mui = 0,
             muj = 0;
-        if (SeqCheck(i - 1)) (mui = tiles[i]), (muj = tiles[i + 1]);
+        if (SeqCheck(i - 1)) ((mui = tiles[i]), (muj = tiles[i + 1]));
         if (SeqCheck(i - 2)) mui = tiles[i];
         ldDvd[ldi + 4] = ldDvd[ldi + 3] * (muj + 1);
         ldDvd[ldi + 5] = ldDvd[ldi + 4] * (mui + 1);
@@ -940,9 +925,9 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
     let [ra, rb, rc] = [tiles[JokerA[i]] - aj, tiles[JokerB[i]] - bj, tiles[JokerC] - cj];
     const nxti = i + 1;
     let ei = tiles[i];
-    if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = aj = 0);
-    if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = bj = 0);
-    if (nxti >= sizeUT) (ei += rc), (rc = cj = 0);
+    if (JokerA[i] !== JokerA[nxti]) ((ei += ra), (ra = aj = 0));
+    if (JokerB[i] !== JokerB[nxti]) ((ei += rb), (rb = bj = 0));
+    if (nxti >= sizeUT) ((ei += rc), (rc = cj = 0));
     const [ri, rj] = [Math.max(ei - ui, 0), Math.max(tiles[i + 1] - uj, 0)];
     const rsum = ra + rb + rc;
     const mp = Math.min(np - ep, Math.ceil(ri / 2));
@@ -960,9 +945,9 @@ function kernelDvd(tiles, nm, np, dvd, ldDvd, em = 0, ep = 0, i = 0, ui = 0, uj 
                 rk = Math.min(rk, 3);
                 function step() {
                     let step;
-                    if (rk === 3) (step = 3), --k, (rk = 3);
-                    else if (rk === 2) (step = 2), --k, (rk = 3);
-                    else (step = 4), (k -= 2), (rk = 3);
+                    if (rk === 3) ((step = 3), --k, (rk = 3));
+                    else if (rk === 2) ((step = 2), --k, (rk = 3));
+                    else ((step = 4), (k -= 2), (rk = 3));
                     return step;
                 }
                 for (let sff = 0; k >= 0; sff += step()) {
@@ -1038,9 +1023,9 @@ function PairOutput(tiles) {
     for (let i = 0; i < sizeUT; ++i) {
         const nxti = i + 1;
         let ei = tiles[i];
-        if (JokerA[i] !== JokerA[nxti]) (ei += ra), (ra = 0);
-        if (JokerB[i] !== JokerB[nxti]) (ei += rb), (rb = 0);
-        if (nxti >= sizeUT) (ei += rc), (rc = 0);
+        if (JokerA[i] !== JokerA[nxti]) ((ei += ra), (ra = 0));
+        if (JokerB[i] !== JokerB[nxti]) ((ei += rb), (rb = 0));
+        if (nxti >= sizeUT) ((ei += rc), (rc = 0));
         const pcnt = Math.ceil(ei / 2);
         for (let j = 0; j < pcnt; ++j) ot.push([i, i]);
         if (pcnt * 2 > ei)
@@ -1101,9 +1086,7 @@ function Bukao16Output(tiles) {
     return ots;
 }
 function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
-    let ots = Array(6)
-        .fill(null)
-        .map(() => []);
+    let ots = ArrayMap(6, () => []);
     let save = new Set();
     let cnt = 0n;
     const reuse = dvds !== undefined;
@@ -1146,7 +1129,7 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
         if (i > 1 && selectsum >= opt_size) break;
         for (let j = 0; j < 6; ++j) {
             if (i > 1 && selectsum >= opt_size) break;
-            if (ots[j].length >= i) ++select[j], ++selectsum;
+            if (ots[j].length >= i) (++select[j], ++selectsum);
         }
     }
     let ans = [];
@@ -1202,18 +1185,18 @@ function OrphanMeldOutput(tiles) {
 function Buda16Output(tiles) {
     let ot = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1], [-1]];
     tiles = tiles.slice();
-    for (let i = 0; i < 27; ++i) if (tiles[i]) (ot[Math.floor(i / 9)][Math.floor((i % 9) / 3)] = i), --tiles[i];
-    for (let i = 27; i <= 30; ++i) if (tiles[i]) (ot[3][i - 27] = i), --tiles[i];
-    for (let i = 31; i <= 33; ++i) if (tiles[i]) (ot[4][i - 31] = i), --tiles[i];
+    for (let i = 0; i < 27; ++i) if (tiles[i]) ((ot[Math.floor(i / 9)][Math.floor((i % 9) / 3)] = i), --tiles[i]);
+    for (let i = 27; i <= 30; ++i) if (tiles[i]) ((ot[3][i - 27] = i), --tiles[i]);
+    for (let i = 31; i <= 33; ++i) if (tiles[i]) ((ot[4][i - 31] = i), --tiles[i]);
     for (let i = 0; i < 5; ++i)
         for (let j = 0; j < ot[i].length; ++j)
             if (tiles[CJokerA[i]] === 0) break;
-            else if (ot[i][j] === -1) (ot[i][j] = CJokerA[i]), --tiles[CJokerA[i]];
+            else if (ot[i][j] === -1) ((ot[i][j] = CJokerA[i]), --tiles[CJokerA[i]]);
     for (let i = 0; i < 5; ++i)
         for (let j = 0; j < ot[i].length; ++j)
             if (ot[i][j] === -1) {
                 let rid = tiles[CJokerB[i]] ? CJokerB[i] : JokerC;
-                (ot[i][j] = rid), --tiles[rid];
+                ((ot[i][j] = rid), --tiles[rid]);
             }
     for (let j = 0; j < sizeAT; ++j) if (tiles[j]) ot[5][0] = j;
     return ot;

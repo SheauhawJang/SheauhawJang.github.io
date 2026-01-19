@@ -12,7 +12,7 @@ function sf(f) {
     } catch {}
 }
 function random(l, r) {
-    if (r === undefined) r = l, l = 0;
+    if (r === undefined) ((r = l), (l = 0));
     let len = r - l;
     let off = Math.floor(Math.random() * len);
     return l + off;
@@ -53,13 +53,16 @@ function opencheck(openids) {
     return true;
 }
 const document_scores_ids = ["score-gb", "score-jp"];
-function updateScoreVisiable(id, visiable = "none") {
-    const e = document.getElementById(document_scores_ids[id]);
-    if (!e) return;
-    e.style.display = visiable;
-    const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
-    if (!tab) return;
-    tab.style.display = visiable;
+const updateScoreVisiableBar = Array(document_scores_ids.length)
+    .fill(null)
+    .map((_, id) =>
+        debounce((visiable) => {
+            const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
+            if (!tab) return;
+            tab.style.display = visiable;
+        }, ui_debounce_delay),
+    );
+const updateScoreVisiableUI = debounce(function (visiable) {
     let vid = [];
     for (let i = 0; i < document_scores_ids.length; ++i) {
         const se = document.getElementById(document_scores_ids[i]);
@@ -73,6 +76,26 @@ function updateScoreVisiable(id, visiable = "none") {
         document.getElementById("score-global").style.display = visiable;
         if (vid.some((e) => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
         else switchScoreTab(vid[0][0], true);
+    }
+}, ui_debounce_delay);
+function updateScoreVisiable(id, visiable = "none") {
+    const b = document.getElementById(`${document_scores_ids[id]}-button`);
+    b.disabled = visiable === "none";
+    const e = document.getElementById(document_scores_ids[id]);
+    if (!e) return;
+    e.style.display = visiable;
+    if (document.querySelector(`.tab[data-scoretabid="${id}"]`).style.display === 'none' && visiable !== 'none') {
+        updateScoreVisiableBar[id].immediate(visiable);
+    } else {
+        updateScoreVisiableBar[id](visiable);
+    }
+    const usrse = document.getElementById(document_scores_ids[scoretab_usr]);
+    if (document.getElementById("score-global").style.display === 'none' && visiable !== 'none') {
+        updateScoreVisiableUI.immediate(visiable);
+    } else if (visiable !== 'none' && usrse && usrse.style.display !== 'none') {
+        updateScoreVisiableUI.immediate(visiable);
+    } else {
+        updateScoreVisiableUI(visiable);
     }
 }
 function processInput() {
@@ -245,19 +268,37 @@ function randomInputText() {
     hand.sort((a, b) => a - b);
     updateInput(joinHand(hand));
 }
-function getMeld(seqs = Array(21).fill(0).map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)), tris = Array(sizeUT).fill(0).map((_, i) => i)) {
+function getMeld(
+    seqs = Array(21)
+        .fill(0)
+        .map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)),
+    tris = Array(sizeUT)
+        .fill(0)
+        .map((_, i) => i),
+) {
     const seqrate = 64;
     const seq = seqs.length * seqrate;
     const tri = tris.length;
     const r = random(seq + tri);
     if (r >= seq) return Array(3).fill(tris[r - seq]);
-    else return Array(3).fill(seqs[Math.floor(r / seqrate)]).map((x, i) => x + i);
+    else
+        return Array(3)
+            .fill(seqs[Math.floor(r / seqrate)])
+            .map((x, i) => x + i);
 }
-function randomWinning(local, seqs = Array(21).fill(0).map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)), tris = Array(sizeUT).fill(0).map((_, i) => i)) {
+function randomWinning(
+    local,
+    seqs = Array(21)
+        .fill(0)
+        .map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)),
+    tris = Array(sizeUT)
+        .fill(0)
+        .map((_, i) => i),
+) {
     const n = local ?? parseInt(document.getElementById("randomWinningCardCount").value);
     const [melds, head] = [Math.floor(n / 3), n % 3 ? 1 : 0];
     let tiles = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds; ++i) getMeld(seqs, tris).forEach(x => ++tiles[x]);
+    for (let i = 0; i < melds; ++i) getMeld(seqs, tris).forEach((x) => ++tiles[x]);
     for (let i = 0; i < head; ++i) tiles[tris[random(tris.length)]] += 2;
     if (local !== undefined) return tiles;
     let jokercount = 0;
@@ -270,7 +311,7 @@ function randomWinning(local, seqs = Array(21).fill(0).map((_, i) => ColorFirstA
     else if (hand.length > 0) {
         const j = random(hand.length);
         const id = hand[j];
-        hand.splice(j, 1), hand.push(id);
+        (hand.splice(j, 1), hand.push(id));
     }
     updateInput("J".repeat(jokercount) + joinHand(hand));
     drawInputCards();
@@ -301,7 +342,12 @@ function randomWinningOrphan(listen = false) {
     submithand(hand, listen);
 }
 function randomWinningBukao(listen = false) {
-    let hand = [...KnitDragonSave[random(6)], ...Array(7).fill(0).map((_, i) => i + 27)];
+    let hand = [
+        ...KnitDragonSave[random(6)],
+        ...Array(7)
+            .fill(0)
+            .map((_, i) => i + 27),
+    ];
     shuffle(hand);
     hand = [...hand.slice(0, 13).sort((a, b) => a - b), hand[13]];
     if (listen) hand.pop();
@@ -330,8 +376,10 @@ function randomWinningOrphanMeld(listen = false) {
 function randomWinningBuda(listen = false) {
     let buda = [];
     for (let a = 0; a < 3; ++a) for (let b = a + 3; b < 6; ++b) for (let c = b + 3; c < 9; ++c) buda.push([a, b, c]);
-    let hand = Array(7).fill(0).map((_, i) => i + 27);
-    for (let i = 0; i < 3; ++i) hand.push(...buda[random(buda.length)].map(x => x + ColorFirstArray[i]));
+    let hand = Array(7)
+        .fill(0)
+        .map((_, i) => i + 27);
+    for (let i = 0; i < 3; ++i) hand.push(...buda[random(buda.length)].map((x) => x + ColorFirstArray[i]));
     hand.push(hand[random(hand.length)]);
     submithand(hand, listen);
 }
@@ -706,8 +754,8 @@ let gb_worker = null;
 let gb_worker_info;
 const GB_RADIO_MAX = 7;
 const GB_SETTING_SIZE = 45;
-const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay);
-const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay);
+const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay * 3);
+const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay * 3);
 function processGBScore() {
     updateScoreTabUser(0);
     if (gb_worker) {
@@ -931,12 +979,12 @@ function updateCardSkin(skin) {
         while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
     });
 }
-function debounce(f, delay = 20, maxdelay = 1000) {
+function debounce(f, delay = 20, maxdelay = Infinity) {
     let timer = null;
     let lasts = null;
-    let rf = function(...args) {
+    let rf = function (...args) {
         let rdelay = delay;
-        if (timer) clearTimeout(timer), rdelay = Math.min(rdelay, lasts + maxdelay - Date.now());
+        if (timer) (clearTimeout(timer), (rdelay = Math.min(rdelay, lasts + maxdelay - Date.now())));
         else lasts = Date.now();
         timer = setTimeout(() => {
             f.apply(this, args);
@@ -944,11 +992,11 @@ function debounce(f, delay = 20, maxdelay = 1000) {
             lasts = null;
         }, rdelay);
     };
-    rf.immediate = function(...args) {
+    rf.immediate = function (...args) {
         if (timer) clearTimeout(timer);
         timer = null;
         f.apply(this, args);
-    }
+    };
     return rf;
 }
 function loadCheckbox(key, st = localStorage) {

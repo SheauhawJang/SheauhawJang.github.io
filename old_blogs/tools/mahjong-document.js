@@ -17,7 +17,7 @@ function random(l, r) {
     let off = Math.floor(Math.random() * len);
     return l + off;
 }
-const ui_debounce_delay = 1000;
+const ui_debounce_delay = 500;
 let updateTaskOutput = Array(TASK_NUM)
     .fill(null)
     .map((_, i) =>

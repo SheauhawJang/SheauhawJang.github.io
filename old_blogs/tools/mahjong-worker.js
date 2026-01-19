@@ -6,6 +6,7 @@ importScripts("mahjong-worker-lang.js");
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
+const makeTableLineLRs = (l, rs) => `<tr><td style="padding-left: 0px;">${l}</td>${rs.map((r) => `<td>${r}</td>`).join("")}</tr>`;
 const makeGridDiv = (i) => `<div class="output-grid-div">${i}</div>`;
 let aids = undefined;
 let tiles, subtiles;
@@ -16,9 +17,9 @@ function cardImage(id) {
 function cardImageDivide(id) {
     return `<div class="card-div"><img src="./cards/${cardName(id)}.gif" class="no-helper"></div>`;
 }
-const maskMultiply = (result, mask) => result.map((x, i) => mask[i] ? x : Infinity);
+const maskMultiply = (result, mask) => result.map((x, i) => (mask[i] ? x : Infinity));
 const divideSpace = `<div class="card-div card-padding"></div>`;
-function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
+function printWaiting(step, getWaiting, getSubchecks, fstep, seqCheck) {
     if (full_tcnt !== tcnt) {
         let result = "";
         const save = getWaiting(step, undefined, undefined, (s) => s);
@@ -34,26 +35,24 @@ function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
             result += `<div>${loc.wait} ${cnt} ${loc.counts}</div><div>${ans.map(cardImage).join("")}</div>`;
         }
         let output = makeGridDiv(result);
-        if (1) {
-            let opentip = [[], []];
-            function updateopen(i, j, verb) {
-                --tiles[i], --tiles[j], subtiles[i] += 3, full_tcnt -= 3, tcnt -= 2, ++subcnt;
-                const openstep = fk();
-                if (openstep < step && openstep >= 0) opentip[0].push({hand: [i, j], verb});
-                else if (openstep === step) opentip[1].push({hand: [i, j], verb})
-                ++tiles[i], ++tiles[j], subtiles[i] -= 3, full_tcnt += 3, tcnt += 2, --subcnt;
-            }
-            for (let i = 0; i < sizeUT; ++i) if (tiles[i] >= 2) updateopen(i, i, loc.pong);
-            for (let i = 0; i < sizeUT; ++i) {
-                if ((sq(i) || sq(i - 1)) && tiles[i] >= 1 && tiles[i + 1] >= 1) updateopen(i, i + 1, loc.chi);
-                if (sq(i) && tiles[i] >= 1 && tiles[i + 2] >= 1) updateopen(i, i + 2, loc.chi);
-            }
-            let openout = "";
-            const optmap = (x) => `<div class="devided-waiting-brief">${x.verb} ${x.hand.map(cardImage).join('')}</div>`;
-            if (opentip[0].length > 0) openout += `<div>${loc.goodopen}</div><div class="devided-waiting-td">${opentip[0].map(optmap).join("")}</div>`;
-            //if (opentip[1].length > 0) openout += `<div>${loc.badopen}</div><div class="devided-waiting-td">${opentip[1].map(optmap).join("")}</div>`;
-            if (openout !== "") output += makeGridDiv(openout);
+        let opentip = [[], []];
+        function updateopen(i, j, verb) {
+            (--tiles[i], --tiles[j], (subtiles[i] += 3), (full_tcnt -= 3), (tcnt -= 2), ++subcnt, aids[1].push([{ id: i }, { id: j }, { id: JokerC }]));
+            const openstep = fstep().step;
+            if (openstep < step && openstep >= 0) opentip[0].push({ hand: [i, j], verb });
+            else if (openstep === step) opentip[1].push({ hand: [i, j], verb });
+            (++tiles[i], ++tiles[j], (subtiles[i] -= 3), (full_tcnt += 3), (tcnt += 2), --subcnt, aids[1].pop());
         }
+        for (let i = 0; i < sizeUT; ++i) if (tiles[i] >= 2) updateopen(i, i, loc.pong);
+        for (let i = 0; i < sizeUT; ++i) {
+            if ((seqCheck(i) || seqCheck(i - 1)) && tiles[i] >= 1 && tiles[i + 1] >= 1) updateopen(i, i + 1, loc.chi);
+            if (seqCheck(i) && tiles[i] >= 1 && tiles[i + 2] >= 1) updateopen(i, i + 2, loc.chi);
+        }
+        let openout = "";
+        const optmap = (x) => `<div class="devided-waiting-brief">${x.verb} ${x.hand.map(cardImage).join("")}</div>`;
+        if (opentip[0].length > 0) openout += `<div>${loc.goodopen}</div><div class="devided-waiting-td">${opentip[0].map(optmap).join("")}</div>`;
+        //if (opentip[1].length > 0) openout += `<div>${loc.badopen}</div><div class="devided-waiting-td">${opentip[1].map(optmap).join("")}</div>`;
+        if (openout !== "") output += makeGridDiv(openout);
         return { output, ans: { waiting: save } };
     } else {
         let [result, nxt_result, kang_result] = ["", "", ""];
@@ -63,7 +62,7 @@ function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
         const { dischecks, getchecks } = subchecks;
         for (let i = 0; i < sizeAT; ++i) {
             if (!tiles[i]) continue;
-            --tiles[i], ++subtiles[i];
+            (--tiles[i], ++subtiles[i]);
             save[i] = getWaiting(step, dischecks[i], getchecks, (s) => s?.[i]);
             const { ans, gans, checked } = save[i];
             if (checked) {
@@ -81,19 +80,19 @@ function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
                     if (ans.length + gans.length > 0) nxt_cnts.push({ cnt: cnt + gcnt, bcnt: cnt, gcnt, id: i });
                 } else if (ans.length > 0) nxt_cnts.push({ cnt, id: i });
             }
-            ++tiles[i], --subtiles[i];
+            (++tiles[i], --subtiles[i]);
             if (i < sizeUT && tiles[i] >= 4) {
-                tiles[i] -= 4, subtiles[i] += 4, full_tcnt -= 3, tcnt -= 4, ++subcnt;
-                const stepk = fk();
-                kang_save[i] = getWaiting(stepk, undefined, undefined, () => undefined);
-                const pushf = stepk === step ? ((u, id) => cnts.push({...u, id: id + sizeAT})) : ((u, id) => kang_cnts.push({...u, id, step: stepk}));
+                (((tiles[i] -= 4), (subtiles[i] += 4), (full_tcnt -= 3), (tcnt -= 4), ++subcnt), aids[1].push(Array(4).fill({ id: i })));
+                const { step: stepk, discheck } = fstep();
+                kang_save[i] = getWaiting(stepk, discheck, undefined, () => undefined);
+                const pushf = stepk === step ? (u, id) => cnts.push({ ...u, id: id + sizeAT }) : (u, id) => kang_cnts.push({ ...u, id, step: stepk });
                 const { ans, gans } = kang_save[i];
                 const cnt = CountWaitingCards(tiles, subtiles, ans);
                 if (gans !== undefined) {
                     const gcnt = CountWaitingCards(tiles, subtiles, gans);
                     pushf({ cnt: cnt + gcnt, bcnt: cnt, gcnt }, i);
                 } else pushf({ cnt }, i);
-                tiles[i] += 4, subtiles[i] -= 4, full_tcnt += 3, tcnt += 4, --subcnt;
+                (((tiles[i] += 4), (subtiles[i] -= 4), (full_tcnt += 3), (tcnt += 4), --subcnt), aids[1].pop());
             }
         }
         const cmp = (a, b) => {
@@ -101,13 +100,13 @@ function printWaiting(step, getWaiting, getSubchecks, fk, sq) {
             if (b.cnt !== a.cnt) return b.cnt - a.cnt;
             if ("gcnt" in a && "gcnt" in b) return b.gcnt - a.gcnt;
             return 0;
-        }
+        };
         cnts.sort(cmp);
         nxt_cnts.sort(cmp);
         kang_cnts.sort(cmp);
         for (const { cnt, bcnt, gcnt, id } of cnts) {
             const rid = id >= sizeAT ? id - sizeAT : id;
-            const verb = rid !== id ? loc.kang : (isFlower(rid) ? loc.bu : loc.da);
+            const verb = rid !== id ? loc.kang : isFlower(rid) ? loc.bu : loc.da;
             const rsave = rid !== id ? kang_save[rid] : save[rid];
             if (gcnt !== undefined) result += `<div>${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</div><div class="devided-waiting-td"><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.goodshape} ${gcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.gans.map(cardImage).join("")}</div></div><div class="devided-waiting-container"><div class="devided-waiting-brief">${loc.badshape} ${bcnt} ${loc.counts}</div><div class="devided-waiting-cards">${rsave.ans.map(cardImage).join("")}</div></div><div class="devided-waiting-brief">${loc.goodshaperate} ${((gcnt / cnt) * 100).toFixed(2)}%</div></div>`;
             else result += `<div>${verb} ${cardImage(rid)} ${loc.wait} ${cnt} ${loc.counts}</div><div>${rsave.ans.map(cardImage).join("")}</div>`;
@@ -144,11 +143,17 @@ function normalStep() {
     if (step === -1 && full_tcnt > 0) {
         dvd = windvd(tiles, full_tcnt);
         const ots = WinOutput(tiles, full_tcnt, dvd.dvd, MAX_OUTPUT_LENGTH);
-        output += loc.windvd + ": \n";
+        output += loc.windvd + `${loc.colon}\n`;
         output += ots.map((a) => `<div class="card-container">${getWinningLine(a)}</div>`).join("");
         if (BigInt(ots.length) < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - BigInt(ots.length)} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(step, (s, d, g) => NormalWaiting(tiles, s, full_tcnt, d, g), () => NormalPrecheck(tiles, step, full_tcnt), () => Step(tiles, tcnt, full_tcnt), SeqCheck);
+    const r = printWaiting(
+        step,
+        (s, d, g) => NormalWaiting(tiles, s, full_tcnt, d, g),
+        () => NormalPrecheck(tiles, step, full_tcnt),
+        () => ({ step: Step(tiles, tcnt, full_tcnt), discheck: 1 }),
+        SeqCheck,
+    );
     output += r.output;
     return { output, step, save: r.ans, dvd };
 }
@@ -159,7 +164,7 @@ function updateTableGeneral(table, info) {
 }
 function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
-    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
+    const updateTable = (l, r) => (table = updateTableGeneral(table, makeTableLineLR(l, r)));
     let substep = Array(3).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt, 4);
     if (mask && mask[0]) {
@@ -177,7 +182,7 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
             substep[2] = rsubstep[2];
             updateTable(`${loc.kokushi}${loc.colon}`, `${getWaitingType(substep[2])}`);
         }
-    } 
+    }
     if (!mask) return rsubstep;
     const stepJP = Math.min(...substep);
     if (stepJP === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
@@ -222,16 +227,25 @@ function JPStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
                 odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
             }
         }
-        output += loc.windvd + ": \n";
+        output += loc.windvd + `${loc.colon}\n`;
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
-    const r = printWaiting(stepJP, (s, d, g) => JPWaiting(tiles, s, substep, full_tcnt, d, g), () => JPPrecheck(tiles, stepJP, substep, full_tcnt), () => Math.min(...maskMultiply(JPStep(), mask)), SeqCheck);
+    const r = printWaiting(
+        stepJP,
+        (s, d, g) => JPWaiting(tiles, s, substep, full_tcnt, d, g),
+        () => JPPrecheck(tiles, stepJP, substep, full_tcnt),
+        () => {
+            const ans = maskMultiply(JPStep(), mask);
+            return { step: Math.min(...ans), discheck: ans.map((x) => x !== Infinity) };
+        },
+        SeqCheck,
+    );
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
-    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
+    const updateTable = (l, r) => (table = updateTableGeneral(table, makeTableLineLR(l, r)));
     let substep = Array(3).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guse3p);
     if (mask && mask[0]) {
@@ -294,16 +308,25 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
                 odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
             }
         }
-        output += loc.windvd + ": \n";
+        output += loc.windvd + `${loc.colon}\n`;
         output += `<div class="win-grid">${odvd.join("")}</div>`;
     }
-    const r = printWaiting(step3p, (s, d, g) => JP3pWaiting(tiles, s, substep, full_tcnt, d, g), () => JP3pPrecheck(tiles, step3p, substep, full_tcnt), () => Math.min(...maskMultiply(JP3pStep(), mask)), () => false);
+    const r = printWaiting(
+        step3p,
+        (s, d, g) => JP3pWaiting(tiles, s, substep, full_tcnt, d, g),
+        () => JP3pPrecheck(tiles, step3p, substep, full_tcnt),
+        () => {
+            const ans = maskMultiply(JP3pStep(), mask);
+            return { step: Math.min(...ans), discheck: ans.map((x) => x !== Infinity) };
+        },
+        () => false,
+    );
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5)) {
     let table = "";
-    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
+    const updateTable = (l, r) => (table = updateTableGeneral(table, makeTableLineLR(l, r)));
     let substep = Array(5).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt);
     if (mask && mask[0]) {
@@ -386,17 +409,26 @@ function GBStep(mask, save, rsubstep = Array(5).fill(Infinity), dvds = Array(5))
                 odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
             }
         }
-        output += loc.windvd + ": \n";
+        output += loc.windvd + `${loc.colon}\n`;
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (BigInt(odvd.length) < cnt) output += `${loc.windvd_else_head} ${cnt - BigInt(odvd.length)} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(stepGB, (s, d, g, f) => GBWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(GBStep(), mask)), SeqCheck);
+    const r = printWaiting(
+        stepGB,
+        (s, d, g, f) => GBWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g),
+        () => GBPrecheck(tiles, stepGB, substep, full_tcnt, save.subchecks),
+        () => {
+            const ans = maskMultiply(GBStep(), mask);
+            return { step: Math.min(...ans), discheck: ans.map((x) => x !== Infinity) };
+        },
+        SeqCheck,
+    );
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
 function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4)) {
     let table = "";
-    const updateTable = (l, r) => table = updateTableGeneral(table, makeTableLineLR(l, r));
+    const updateTable = (l, r) => (table = updateTableGeneral(table, makeTableLineLR(l, r)));
     let substep = Array(4).fill(Infinity);
     if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt);
     if (mask && mask[0]) {
@@ -463,11 +495,89 @@ function TWStep(mask, save, rsubstep = Array(4).fill(Infinity), dvds = Array(4))
                 odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
             }
         }
-        output += loc.windvd + ": \n";
+        output += loc.windvd + `${loc.colon}\n`;
         output += `<div class="win-grid">${odvd.join("")}</div>`;
         if (BigInt(odvd.length) < cnt) output += `${loc.windvd_else_head} ${cnt - BigInt(odvd.length)} ${loc.windvd_else_tail}`;
     }
-    const r = printWaiting(stepTW, (s, d, g, f) => TWWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g), () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks), () => Math.min(...maskMultiply(TWStep(), mask)), SeqCheck);
+    const r = printWaiting(
+        stepTW,
+        (s, d, g, f) => TWWaiting(tiles, s, substep, full_tcnt, f(save.waiting), d, g),
+        () => TWPrecheck(tiles, stepTW, substep, full_tcnt, save.subchecks),
+        () => {
+            const ans = maskMultiply(TWStep(), mask);
+            return { step: Math.min(...ans), discheck: ans.map((x) => x !== Infinity) };
+        },
+        SeqCheck,
+    );
+    output += r.output;
+    return { output, substep: rsubstep, dvds };
+}
+function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
+    let table = "";
+    const updateTable = (l, r) => (table = updateTableGeneral(table, makeTableLineLR(l, r)));
+    let substep = Array(3).fill(Infinity);
+    const locarr = [loc.quewan, loc.quetong, loc.quetiao];
+    let sublimit = Array(3).fill(true);
+    for (let i = 0; i < aids[1].length; ++i) {
+        for (let j = 0; j < aids[1][i].length; ++j) {
+            let [id, c] = [aids[1][i][j].id, -1];
+            if (id < 27) c = ColorArray[id];
+            else if (id >= 43 && id <= 45) c = id - 43;
+            if (c >= 0 && c < 3) sublimit[c] = false;
+        }
+    }
+    for (let i = 0; i < 3; ++i) {
+        if (rsubstep[i] === Infinity) rsubstep[i] = sublimit[i] ? [searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guseque[i]), full_tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity] : [Infinity, Infinity];
+        if (mask && mask[i] && sublimit[i]) {
+            substep[i] = Math.min(...rsubstep[i]);
+            updateTable(`${locarr[i]}${loc.colon}`, `${getWaitingType(substep[i])}`);
+        }
+    }
+    if (!mask) return rsubstep;
+    const stepsc = Math.min(...substep);
+    if (stepsc === Infinity) return { output: "", brief: "", substep: rsubstep, dvds };
+    let output = getWaitingType(stepsc);
+    let stepTypeSC = [];
+    for (let i = 0; i < 3; ++i) if (substep[i] === stepsc) stepTypeSC.push(locarr[i]);
+    output += `${loc.brace_left}${stepTypeSC.join(loc.slash)}${loc.brace_right}\n`;
+    let brief = output;
+    output += makeTable(table);
+    postMessage({ output, brief });
+    if (stepsc === -1 && full_tcnt > 0) {
+        let odvd = [];
+        let cnt = 0n;
+        if (Math.min(...rsubstep.map((x) => x[1])) === -1) {
+            dvds[1] ??= PairOutput(tiles);
+            ++cnt;
+            odvd.push(`<div class="waiting-brief">${loc.pair7}${loc.colon}</div><div class="card-container">${getWinningLine(dvds[1])}</div>`);
+        }
+        if (Math.min(...rsubstep.map((x) => x[0])) === -1) {
+            dvds[0] ??= windvd(tiles, full_tcnt);
+            if (BigInt(MAX_OUTPUT_LENGTH - odvd.length) < dvds[0].cnt) {
+                ++cnt;
+                odvd = [`<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${dvds[0].cnt} ${loc.windvd_else_tail}</div>`, ...odvd];
+            } else {
+                cnt += dvds[0].cnt;
+                const ots = WinOutput(tiles, full_tcnt, dvds[0].dvd, MAX_OUTPUT_LENGTH - odvd.length);
+                odvd = [...ots.map((a) => `<div class="waiting-brief">${loc.normal}${loc.colon}</div><div class="card-container">${getWinningLine(a)}</div>`), ...odvd];
+            }
+        }
+        output += loc.windvd + `${loc.colon}\n`;
+        output += `<div class="win-grid">${odvd.join("")}</div>`;
+    }
+    const r = printWaiting(
+        stepsc,
+        (s, d, g) => SCWaiting(tiles, s, substep, full_tcnt, subcnt, d, g),
+        () => SCPrecheck(tiles, stepsc, substep, full_tcnt, subcnt),
+        () => {
+            const ans = maskMultiply(
+                SCStep().map((x) => Math.min(...x)),
+                mask,
+            );
+            return { step: Math.min(...ans), discheck: ans.map((x) => x !== Infinity) };
+        },
+        () => false,
+    );
     output += r.output;
     return { output, substep: rsubstep, dvds };
 }
@@ -476,7 +586,7 @@ function GBFanDiv(fan) {
     for (let i = 0; i < fan.length; ++i)
         if (fan[i] > 0) ++fans[fan[i]];
         else --fans[-fan[i]];
-    (fans[60] += fans[83]), (fans[61] += fans[83]);
+    ((fans[60] += fans[83]), (fans[61] += fans[83]));
     let fanopt = [];
     for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc._fanname_format_left}${loc[`GB_FANNAME_${i}`]}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
     return makeTable(fanopt.join(""));
@@ -495,12 +605,12 @@ function debugPermutation(p, title = "Permutation") {
 }
 function GBScore(substeps, gw, mw, wt, info, setting) {
     let [infov, infof] = [0, []];
-    if (info.includes(46) && wt) (infov += 8), infof.push((wt = 46));
+    if (info.includes(46) && wt) ((infov += 8), infof.push((wt = 46)));
     if (info.includes(44))
-        if (!wt) (infov += 8), infof.push(45);
-        else if (setting[32] || wt !== 46) (infov += 8), infof.push(44), (wt = wt !== 46 ? 44 : 46);
-    if (info.includes(47) && !wt) (infov += 8), infof.push(47);
-    else if (info.includes(58)) (infov += 4), infof.push(58);
+        if (!wt) ((infov += 8), infof.push(45));
+        else if (setting[32] || wt !== 46) ((infov += 8), infof.push(44), (wt = wt !== 46 ? 44 : 46));
+    if (info.includes(47) && !wt) ((infov += 8), infof.push(47));
+    else if (info.includes(58)) ((infov += 4), infof.push(58));
     const wint = aids[0].at(-1)?.id;
     let listen_cnt = 0;
     if (wint === undefined) listen_cnt = 999;
@@ -510,7 +620,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             tiles,
             0,
             substeps.map((i) => Math.max(0, i)),
-            aids[0].length
+            aids[0].length,
         ).ans.length;
         ++tiles[wint];
     }
@@ -518,7 +628,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     let gans = { val: 0, fan: [] };
     let [cm, m] = [0, 0];
     let p = Array(7).fill(null);
-    if (substeps[0] === -1) p[6] = MeldsPermutation(aids, tiles), debugPermutation(p[6]);
+    if (substeps[0] === -1) ((p[6] = MeldsPermutation(aids, tiles)), debugPermutation(p[6]));
     if (substeps[1] === -1) ++m;
     if (substeps[2] === -1) ++m;
     if (substeps[4] === -1)
@@ -567,8 +677,8 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         if (wint !== undefined && !wt && !wintf && !bilisten && !inMelds(others, ota, otb, wint)) --cp;
         if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
         let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, setting);
-        if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) ++ans.val, ans.fan.push(wintf);
-        (ans.val += infov), ans.fan.push(...infof);
+        if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) (++ans.val, ans.fan.push(wintf));
+        ((ans.val += infov), ans.fan.push(...infof));
         if (ans.val > gans.val) gans = ans;
         ++cm;
         if (!(cm & 1048575)) postDebugInfo();
@@ -576,10 +686,10 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     const st = new Date();
     if (substeps[1] === -1) {
         let pans = GB7Pairs(aids[0], setting);
-        (pans.val += infov), pans.fan.push(...infof);
+        ((pans.val += infov), pans.fan.push(...infof));
         if (wt === 80)
-            if (setting[41]) (pans.val += 4), pans.fan.push(56);
-            else ++pans.val, pans.fan.push(80);
+            if (setting[41]) ((pans.val += 4), pans.fan.push(56));
+            else (++pans.val, pans.fan.push(80));
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -587,8 +697,8 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (substeps[2] === -1) {
         let pans = { val: 88 + infov, fan: [7, ...infof] };
         if (wt === 80)
-            if (setting[42]) (pans.val += 4), pans.fan.push(56);
-            else ++pans.val, pans.fan.push(80);
+            if (setting[42]) ((pans.val += 4), pans.fan.push(56));
+            else (++pans.val, pans.fan.push(80));
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -625,10 +735,10 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
                     break;
                 }
             }
-        (pans.val += infov), pans.fan.push(...infof);
+        ((pans.val += infov), pans.fan.push(...infof));
         if (wt === 80)
-            if (setting[43]) (pans.val += 4), pans.fan.push(56);
-            else ++pans.val, pans.fan.push(80);
+            if (setting[43]) ((pans.val += 4), pans.fan.push(56));
+            else (++pans.val, pans.fan.push(80));
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -638,10 +748,10 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         const { err, itots, itsubots, ek, ck } = p[6];
         let addk = false;
         for (let i = 0; i < aids[1].length; ++i) if (getUnifiedType(aids[1][i]) > 4) addk = true;
-        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) (must_single_listen = true), (infov += 6), infof.push(52);
+        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) ((must_single_listen = true), (infov += 6), infof.push(52));
         if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
         itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
-        if (gans.val === 0 && nmp >= 5) (gans.val = 8), (gans.fan = [43]);
+        if (gans.val === 0 && nmp >= 5) ((gans.val = 8), (gans.fan = [43]));
         postDebugInfo();
     }
     if (substeps[4] === -1)
@@ -652,10 +762,10 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
             postDebugInfo();
         }
-    seqsave.clear(), trisave.clear();
+    (seqsave.clear(), trisave.clear());
     filter_cnt = 0;
     let basept = (setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val) + aids[2].length;
-    (gans.val += aids[2].length), gans.fan.push(...Array(aids[2].length).fill(81));
+    ((gans.val += aids[2].length), gans.fan.push(...Array(aids[2].length).fill(81)));
     let fanreview = `${gans.val} ${loc.GB_FAN_unit}`;
     if (gans.val > basept) fanreview = `${loc.GB_max_fan}${loc.brace_left}${fanreview}${loc.brace_right}`;
     if (setting[39] && wt) basept = Math.ceil(basept / 3);
@@ -695,14 +805,14 @@ function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki = 0, north = 0) {
 }
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let gans = eans_jp;
-    if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i]), JPScoreArray1[i] = Math.max(-1, JPScoreArray0[i]);
-    if (setting[17]) JPScoreArray0[48] = [0, 2, 1][setting[17]], JPScoreArray1[48] = 1;
-    if (setting[21]) JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]], JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]];
-    if (setting[22]) JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]], JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]];
+    if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) ((JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i])), (JPScoreArray1[i] = Math.max(-1, JPScoreArray0[i])));
+    if (setting[17]) ((JPScoreArray0[48] = [0, 2, 1][setting[17]]), (JPScoreArray1[48] = 1));
+    if (setting[21]) ((JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]]), (JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]]));
+    if (setting[22]) ((JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]]), (JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]]));
     if (setting[23]) loc.JP_YAKUNAME_53 = loc.JP_YAKUNAME_53_EX;
-    if (setting[40]) JPScoreArray0[67] = [0, 1, 2, 2, 2, 5, -1, -1][setting[40]], JPScoreArray1[67] = [0, 1, 2, 1, 0, 5, -1, 0][setting[40]];
+    if (setting[40]) ((JPScoreArray0[67] = [0, 1, 2, 2, 2, 5, -1, -1][setting[40]]), (JPScoreArray1[67] = [0, 1, 2, 1, 0, 5, -1, 0][setting[40]]));
     JPScoreArray0[29] = [3, 2, { id: 11, n: 2 }, 4][setting[47]];
-    if (setting[48] === 1) --JPScoreArray0[31], --JPScoreArray0[28];
+    if (setting[48] === 1) (--JPScoreArray0[31], --JPScoreArray0[28]);
     if (setting[54]) JPScoreArray0[70] = JPScoreArray1[70] = [0, 2, 3][setting[54]];
     if (setting[55]) loc.JP_YAKUNAME_70 = loc.JP_YAKUNAME_70_EX;
     let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
@@ -733,17 +843,17 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             else infoupdate(30);
         }
     if (setting[38] && info.includes(16) && info.includes(13)) infoupdate(66);
-    if (setting[59] && info.includes(-71) && !tsumo) JPScoreArray0[71] = JPScoreArray1[71] = -1, infoupdate(71);
+    if (setting[59] && info.includes(-71) && !tsumo) ((JPScoreArray0[71] = JPScoreArray1[71] = -1), infoupdate(71));
     function canBeFixWin(t) {
         if (aids[0].length === 0) return false;
         const s = aids[0].at(-1).id;
         return [t, JokerA[t], JokerB[t], JokerC].includes(s);
     }
     if (!infoans.yakuman) {
-        if (info.includes(16)) infoupdate(16), (riichi = true), JPScoreArray0[71] = JPScoreArray1[71] = setting[59];
-        if (setting[59] && info.includes(71)) infoupdate(71), (riichi = true);
-        if (!riichi && info.includes(1)) infoupdate(1), (riichi = true);
-        if (riichi && info.includes(3)) infoupdate(3), (infoans.delete += setting[13] ? 0 : 1);
+        if (info.includes(16)) (infoupdate(16), (riichi = true), (JPScoreArray0[71] = JPScoreArray1[71] = setting[59]));
+        if (setting[59] && info.includes(71)) (infoupdate(71), (riichi = true));
+        if (!riichi && info.includes(1)) (infoupdate(1), (riichi = true));
+        if (riichi && info.includes(3)) (infoupdate(3), (infoans.delete += setting[13] ? 0 : 1));
         if (info.includes(12) && tsumo) {
             infoupdate(12);
             if (setting[36] && canBeFixWin(13)) searchList.push(() => fixWinTileSearch(13, 12, 64, 1, 5));
@@ -771,12 +881,12 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     doras = doras.map((_, i) => doras[getDoraPointer(i)]);
     uras = uras.map((_, i) => uras[getDoraPointer(i)]);
     let [df, uf] = [doras[50], uras[50]];
-    for (let i = 34; i < 42; ++i) df += doras[i], uf += uras[i];
+    for (let i = 34; i < 42; ++i) ((df += doras[i]), (uf += uras[i]));
     for (let i = 34; i < 42; ++i) [doras[i], uras[i]] = [df, uf];
     [doras[50], uras[50]] = [df, uf];
     if (setting[49]) {
         [doras[8], uras[8]] = [doras[1], uras[1]];
-        for (let i = 1; i < 8; ++i) [doras[i], uras[i]] = [-Infinity, -Infinity], nukis[i] = 0;
+        for (let i = 1; i < 8; ++i) (([doras[i], uras[i]] = [-Infinity, -Infinity]), (nukis[i] = 0));
     }
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
@@ -827,7 +937,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             for (let i = 0; i < Orphan13Array.length; ++i) ++vaildora[Orphan13Array[i]];
             const head = OrphanOutput(tiles).at(-1)[0];
             for (let i = 0; i < Orphan13Array.length; ++i) {
-                if (!isJokerEqual(head, Orphan13Array[i])) continue; 
+                if (!isJokerEqual(head, Orphan13Array[i])) continue;
                 ++vaildora[Orphan13Array[i]];
                 let [d, u] = getDoras(vaildora, doras, uras);
                 if (d + u > gd + gu) [gd, gu] = [d, u];
@@ -849,7 +959,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             let { listen_type, bilisten, valfus, fus } = JPGetFusMain([...ots, ...subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
             let realfus = 0;
             ({ valfus, fus, realfus } = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, ots.length + subots.length >= 5 && subots.length === ck));
-            if (realfus > grf) (gf = fus), (gvf = valfus), (grf = realfus);
+            if (realfus > grf) ((gf = fus), (gvf = valfus), (grf = realfus));
         }
         if (substeps[0] === -1) {
             const { err, itots, itsubots, ck, ek } = p;
@@ -858,33 +968,33 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         if (substeps[1] === -1) {
             const SevenPairsFusArray = [25, 50, 100];
             const sf = (JPFuArray[10] = SevenPairsFusArray[setting[8]]);
-            if (sf >= gvf) (gvf = grf = sf), (gf = [10]);
+            if (sf >= gvf) ((gvf = grf = sf), (gf = [10]));
         }
         const ans = getJPAns(setting, [fan], valfan, 0, 0, gf, gvf, grf);
         if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
         else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
     }
     function fixWinTileSearch(t, sf, tf, svf, tvf) {
-        let i = infoans.fan.findIndex(e => e === sf);
-        if (i === undefined) infoans.push(tf), infoans.valfan += tvf;
-        else infoans.fan[i] = tf, infoans.valfan += tvf - svf;
+        let i = infoans.fan.findIndex((e) => e === sf);
+        if (i === undefined) (infoans.push(tf), (infoans.valfan += tvf));
+        else ((infoans.fan[i] = tf), (infoans.valfan += tvf - svf));
         const s = aids[0].at(-1).id;
-        --tiles[s], ++tiles[t];
+        (--tiles[s], ++tiles[t]);
         aids[0].at(-1).id = t;
         normalSearch(JPStep(), MeldsPermutation(aids));
         aids[0].at(-1).id = s;
-        ++tiles[s], --tiles[t];
-        if (i === undefined) infoans.pop(), infoans.valfan -= tvf;
-        else infoans.fan[i] = sf, infoans.valfan += svf - tvf;
+        (++tiles[s], --tiles[t]);
+        if (i === undefined) (infoans.pop(), (infoans.valfan -= tvf));
+        else ((infoans.fan[i] = sf), (infoans.valfan += svf - tvf));
     }
     searchList.forEach((f) => f());
     if (gans.yakuman) aka = north = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
     if (setting[49]) {
         let sdebug = Array(5).fill("");
-        for (let i = 1; i < 5; ++i) for (let j = 20; j <= 110; j += 10) if ((j << i + 2) < 2000) sdebug[i - 1] += `${JPScoreCal(j << i + 2, setting[45], setting[15], 1, mw === 27, [setting[50], setting[51]])[1]}\t`;
-        sdebug[4] = [2000, 3000, 4000, 6000, 8000].map(x => `${JPScoreCal(x, setting[45], setting[15], 1, mw === 27, [setting[50], setting[51]])[1]}`).join('\t');
-        console.log(sdebug.join('\n').replace(/<[^>]*>/g, ''));
+        for (let i = 1; i < 5; ++i) for (let j = 20; j <= 110; j += 10) if (j << (i + 2) < 2000) sdebug[i - 1] += `${JPScoreCal(j << (i + 2), setting[45], setting[15], 1, mw === 27, [setting[50], setting[51]])[1]}\t`;
+        sdebug[4] = [2000, 3000, 4000, 6000, 8000].map((x) => `${JPScoreCal(x, setting[45], setting[15], 1, mw === 27, [setting[50], setting[51]])[1]}`).join("\t");
+        console.log(sdebug.join("\n").replace(/<[^>]*>/g, ""));
     }
     let [score, exinfo] = JPScoreCal(gans.val, setting[45], setting[15], tsumo, mw === 27, setting[49] ? [setting[50], setting[51]] : undefined);
     if (tsumo) exinfo = loc.brace_left + exinfo + loc.brace_right;
@@ -900,7 +1010,7 @@ function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     else if (sbase === 2) base = Math.ceil(base / 100) * 100;
     const fpt = spt ? (x) => Math.ceil(x / 100) * 100 : (x) => Math.round(x);
     let [score, exinfo] = [0, ""];
-    function tsumopt(oya, ko, numko, f = x => x) {
+    function tsumopt(oya, ko, numko, f = (x) => x) {
         if (oya === undefined) return [f(ko) * numko, `${f(ko)}∀`];
         if (oya === ko) return [f(ko) * (numko + 1), `${f(ko)}∀`];
         return [f(oya) + f(ko) * numko, `${f(ko)}${loc.slash}${f(oya)}`];
@@ -908,45 +1018,45 @@ function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     if (s3p === undefined)
         if (tsumo) [score, exinfo] = oya ? tsumopt(undefined, base * 2, 3, fpt) : tsumopt(base * 2, base, 2, fpt);
         else score = oya ? fpt(base * 6) : fpt(base * 4);
-    else 
-        if (tsumo) {
-            let pt3 = [];
-            switch (s3p[0]) {
-                case 0: case 4:
-                    pt3 = oya ? [undefined, base * 2, 2, fpt] : [base * 2, base, 1, fpt];
-                    break;
-                case 1:
-                    pt3 = oya ? [undefined, fpt(base * 2) + fpt(base), 2] : [fpt(base * 2) + fpt(base / 2), fpt(base) + fpt(base / 2), 1];
-                    break;
-                case 3:
-                    pt3 = oya ? [undefined, fpt(base * 2) + fpt(base), 2] : [fpt(base * 2) + fpt(base), fpt(base), 1];
-                    break;
-                case 2:
-                    pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 2, base * 2, 1, fpt];
-                    break;
-                case 5:
-                    pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 2.5, base * 1.5, 1, fpt];
-                    break;
-                case 6:
-                    pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 8/3, base * 4/3, 1, fpt];
-                    break;
-                case 8:
-                    pt3 = oya ? [undefined, base * 3, 2, fpt] : [fpt(base * 4) * 2/3, fpt(base * 4) * 1/3, 1, fpt];
-                    break;
-                case 7:
-                    pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 3, base * 1, 1, fpt];
-                    break;
-            }
-            if (s3p[1]) pt3[0] = pt3[0] !== undefined ? pt3[0] + 1000 : undefined, pt3[1] += 1000;
-            [score, exinfo] = tsumopt(...pt3);
-        } else score = oya ? (s3p[0] === 4 ? fpt(base * 4) : fpt(base * 6)) : (s3p[0] === 4 ? fpt(base * 3) : fpt(base * 4));
+    else if (tsumo) {
+        let pt3 = [];
+        switch (s3p[0]) {
+            case 0:
+            case 4:
+                pt3 = oya ? [undefined, base * 2, 2, fpt] : [base * 2, base, 1, fpt];
+                break;
+            case 1:
+                pt3 = oya ? [undefined, fpt(base * 2) + fpt(base), 2] : [fpt(base * 2) + fpt(base / 2), fpt(base) + fpt(base / 2), 1];
+                break;
+            case 3:
+                pt3 = oya ? [undefined, fpt(base * 2) + fpt(base), 2] : [fpt(base * 2) + fpt(base), fpt(base), 1];
+                break;
+            case 2:
+                pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 2, base * 2, 1, fpt];
+                break;
+            case 5:
+                pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 2.5, base * 1.5, 1, fpt];
+                break;
+            case 6:
+                pt3 = oya ? [undefined, base * 3, 2, fpt] : [(base * 8) / 3, (base * 4) / 3, 1, fpt];
+                break;
+            case 8:
+                pt3 = oya ? [undefined, base * 3, 2, fpt] : [(fpt(base * 4) * 2) / 3, (fpt(base * 4) * 1) / 3, 1, fpt];
+                break;
+            case 7:
+                pt3 = oya ? [undefined, base * 3, 2, fpt] : [base * 3, base * 1, 1, fpt];
+                break;
+        }
+        if (s3p[1]) ((pt3[0] = pt3[0] !== undefined ? pt3[0] + 1000 : undefined), (pt3[1] += 1000));
+        [score, exinfo] = tsumopt(...pt3);
+    } else score = oya ? (s3p[0] === 4 ? fpt(base * 4) : fpt(base * 6)) : s3p[0] === 4 ? fpt(base * 3) : fpt(base * 4);
     return [score, exinfo];
 }
 function ListenScore(f, sf) {
     report = false;
     let output = "";
     for (let i = 0; i < sizeUT; ++i) {
-        aids[0].push({ id: i }), ++tiles[i], ++tcnt;
+        (aids[0].push({ id: i }), ++tiles[i], ++tcnt);
         const substeps = sf(false);
         const step = Math.min(...substeps);
         if (step === -1) {
@@ -954,7 +1064,7 @@ function ListenScore(f, sf) {
             output += `<details ontoggle="ptsToggle(this)"><summary><span class="pts-brief">${cardImage(i)}${loc.colon}${ans.brief}</span><span class="pts-output" style="display: none;">${cardImage(i)}${loc.colon}${ans.output}</span></summary></details>`;
             postMessage({ output, debug: "Calculating......" });
         }
-        aids[0].pop(), --tiles[i], --tcnt;
+        (aids[0].pop(), --tiles[i], --tcnt);
     }
     report = true;
     return output;
@@ -963,7 +1073,7 @@ self.onmessage = function (e) {
     const st = new Date();
     if (e.data.lang) {
         setLoc(e.data.lang);
-        for (const [key, val] of Object.entries(loc)) if (key[0] !== '_') loc[key] = `<span data-i18n="${key}">${val}</span>`;
+        for (const [key, val] of Object.entries(loc)) if (key[0] !== "_") loc[key] = `<span data-i18n="${key}">${val}</span>`;
     }
     let task = e.data.task;
     let result;
@@ -996,6 +1106,11 @@ self.onmessage = function (e) {
         case 4: {
             let { mask, steps, dvds } = e.data;
             result = JP3pStep(mask, steps, dvds);
+            break;
+        }
+        case 5: {
+            let { mask, steps, dvds } = e.data;
+            result = SCStep(mask, steps, dvds);
             break;
         }
         case "gb-score": {

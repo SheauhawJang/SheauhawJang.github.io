@@ -1,11 +1,11 @@
 let aids, tiles, subtiles;
 let worker = null;
-const TASK_NUM = 5;
+const TASK_NUM = 6;
 let save_normal = undefined;
 let worker_dvds = Array(TASK_NUM).fill(null);
 let worker_substeps = Array(TASK_NUM).fill(null);
 let lastmask = Array(TASK_NUM).fill(null);
-const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw", "output-jp3p"];
+const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw", "output-jp3p", "output-sc"];
 function sf(f) {
     try {
         f();
@@ -181,21 +181,19 @@ function processInput() {
                 break;
             case 2:
                 sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
-                mask = Array(5).fill(true);
-                document.querySelectorAll('input[name="step-gb-types"]').forEach((i) => ((i.disabled = true), (mask[Number(i.value)] = i.checked)));
                 worker.postMessage({ mask, task, save: save_normal, steps: [worker_substeps[0], Infinity, worker_substeps[1][2], Infinity, Infinity], dvds: [worker_dvds[0], worker_dvds[1][1], worker_dvds[1][2], undefined, undefined] });
                 break;
             case 3:
                 sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
-                mask = Array(4).fill(true);
-                document.querySelectorAll('input[name="step-tw-types"]').forEach((i) => ((i.disabled = true), (mask[Number(i.value)] = i.checked)));
                 worker.postMessage({ mask, task, steps: [worker_substeps[0], Infinity, Infinity, Infinity], save: save_normal, dvds: [worker_dvds[0], undefined, undefined] });
                 break;
             case 4:
                 sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
-                mask = Array(3).fill(true);
-                document.querySelectorAll('input[name="step-jp-types"]').forEach((i) => ((i.disabled = true), (mask[Number(i.value)] = i.checked)));
                 worker.postMessage({ mask, task, steps: [Infinity, Infinity, worker_substeps[1][2]], dvds: [worker_dvds[0], worker_dvds[1][1], worker_dvds[1][2]] });
+                break;
+            case 5:
+                sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
+                worker.postMessage({ mask, task, steps: [Infinity, Infinity, Infinity], dvds: [worker_dvds[0], worker_dvds[2][1]] });
                 break;
             default:
                 worker.terminate();
@@ -208,8 +206,8 @@ function processInput() {
 }
 let reworkers = Array(TASK_NUM).fill(null);
 function getStepMask(task, lock) {
-    const size = [undefined, 3, 5, 4, 3];
-    const name = [undefined, "jp", "gb", "tw", "jp"];
+    const size = [undefined, 3, 5, 4, 3, 3];
+    const name = [undefined, "jp", "gb", "tw", "jp", "sc"];
     if (size[task] === undefined) return [];
     let mask = Array(size[task]).fill(true);
     let boxes = document.querySelectorAll(`input[name="step-${name[task]}-types"]`);
@@ -1201,7 +1199,7 @@ function debugopen(id) {
 }
 let steptab = -1;
 function switchStepTab(i) {
-    const subboxes = ["steps-std", "steps-gb", "steps-jp", "steps-tw"];
+    const subboxes = ["steps-std", "steps-gb", "steps-jp", "steps-tw", "steps-sc"];
     if (!(i >= 0 && i < subboxes.length)) return;
     const viewer = document.getElementById("steps-global-viewer");
     if (!viewer) return;

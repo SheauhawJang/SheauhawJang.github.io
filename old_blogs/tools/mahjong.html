@@ -49,14 +49,14 @@
 <li>国标小助手格式：序数牌同「天凤格式」，字牌之<b>东南西北白发中</b>依次使用大写字母<b>ESWNPFC</b>表示。</li>
 <li>英文麻将印刷格式：序数牌同「天凤格式」，字牌之<b>东南西北</b>依次使用大写字母<b>ESWN</b>表示，<strong>白=Wh</strong>，<strong>发=G</strong>，<strong>中=R</strong>。</li>
 <li>汉语拼音格式：同天凤格式。惟<b>万=w</b>，<b>饼/筒=b</b>。</li>
-<li>采谱记号格式：万字使用汉数字<b>一二三四五六七八九</b>表示，筒子/饼子使用带圈数字<b>①②③④⑤⑥⑦⑧⑨</b>表示，索子/条子使用全角数字<b>１２３４５６７８９</b>表示，字牌使用对应汉字表示。</li>
+<li>采谱记号格式：万子使用汉数字<b>一二三四五六七八九</b>表示，筒子/饼子使用带圈数字<b>①②③④⑤⑥⑦⑧⑨</b>表示，索子/条子使用全角数字<b>１２３４５６７８９</b>表示，字牌使用对应汉字表示。</li>
 <li>Unicode格式：使用Unicode U+1F000 至 U+1F02B 的字符表示对应的牌。</li>
 </ol>
 <p>关于花牌：<b>春夏秋冬梅兰菊竹</b>依次使用<b>1h2h3h4h5h6h7h8h</b>或<b>1f2f3f4f5f6f7f8f</b>表示。部分地方麻将把花牌视作百搭牌，本计算器的花牌无此功能，如有需要请转化为专门的百搭牌。<br /></p>
 关于百搭牌：
 <ul style="margin-top: 0">
 <li>不定向百搭牌<img src="./cards/a1j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌或字牌。使用<b>1j/J</b>表示。（部分地方麻将可能称为万能牌、癞子或者混儿）</li>
-<li>万字百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以视作任何一张万字。使用<b>2j/im/iw</b>表示。</li>
+<li>万子百搭牌 <img src="./cards/a2j.gif" style="vertical-align: middle" />：可以视作任何一张万子。使用<b>2j/im/iw</b>表示。</li>
 <li>饼子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以视作任何一张筒子/饼子。使用<b>3j/ip/ib</b>表示。</li>
 <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以视作任何一张索子/条子。使用<b>4j/is</b>表示。</li>
 <li>数牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：可以视作任何一张序数牌。使用<b>5j</b>表示。</li>
@@ -201,6 +201,7 @@
 <button class="tab" data-steptabid="1", onclick="switchStepTab(1)">国标麻将标准型牌理</button>
 <button class="tab" data-steptabid="2", onclick="switchStepTab(2)">立直麻将标准型牌理</button>
 <button class="tab" data-steptabid="3", onclick="switchStepTab(3)">港式台湾麻将牌理</button>
+<button class="tab" data-steptabid="4", onclick="switchStepTab(4)">四川麻将牌理</button>
 </div>
 <div id="steps-global-viewer"></div>
 </div>
@@ -266,23 +267,21 @@
 <div class="output-context" id="brief-output-tw" style="display: none"></div>
 <div class="output-time" id="time-output-tw"></div>
 </div>
-<!--
 <div class="output-box" id="steps-sc" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">四川麻将牌理</div>
 <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">折叠 ▲</button>
 </div>
 <div class="output-option-group">
-<label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
-<label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label>
-<label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label>
-<label><input type="checkbox" name="step-sc-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label>
+<label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label>
+<label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label>
+<label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label>
+<!--<label><input type="checkbox" name="step-sc-types" value="3" onchange="restartInput(5)" checked /><span data-i18n="pair7"></span></label>-->
 </div>
 <div class="output-context" id="output-sc"></div>
 <div class="output-context" id="brief-output-sc" style="display: none"></div>
 <div class="output-time" id="time-output-sc"></div>
 </div>
--->
 <div class="output-box" id="score-global">
 <div class="tabs">
 <button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">国标麻将<span data-i18n="GB_FAN_unit"></span>数计算器</button>
@@ -760,7 +759,7 @@
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.2</div>
+<div class="output-time">v4.8.3 Beta</div>
 <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
 </div>
         <script src="mahjong.js"></script>

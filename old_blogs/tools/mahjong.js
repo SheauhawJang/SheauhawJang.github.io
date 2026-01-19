@@ -212,6 +212,7 @@ function indexStep(em, ep, i, ui, uj, aj, bj, cj) {
 }
 const guseall = Array(sizeAT).fill(0);
 const guse3p = guseall.map((_, i) => (i > 0 && i < 8 ? Infinity : 0));
+const guseque = Array(3).fill(null).map((_, i) => guseall.map((_, j) => (j < 27 && ColorArray[j] !== i ? 0 : Infinity)));
 function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
     if (i >= sizeUT) return (nm - em) * 3 + (np - ep) * 2 - 1;
     const dpi = indexStep(em, ep, i, ui, uj, aj, bj, cj);
@@ -739,6 +740,22 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
     }
     return { dischecks, getchecks };
 }
+function SCPrecheck(tiles, step, substep, tcnt, subcnt) {
+    const dischecks = Array(sizeAT)
+        .fill(null)
+        .map(() => Array(3).fill(false));
+    const getchecks = Array(sizeAT)
+        .fill(null)
+        .map(() => Array(3).fill(false));
+    const f = (i, s) => [searchDp(tiles, 0, 0, tcnt, s, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity]
+    for (let j = 0; j < 3; ++j) {
+        if (step >= substep[j]) {
+            initDischecks(tiles, (i) => (dischecks[i][j] = Math.min(...f(j, step + 1)) <= step));
+            initGetchecks(tiles, (i) => (getchecks[i][j] = Math.min(...f(j, step)) < step));
+        }
+    }
+    return { dischecks, getchecks };
+}
 function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     const dischecks = Array(sizeAT)
         .fill(null)
@@ -830,6 +847,15 @@ function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, true, guse3p) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
         else if (discheck[0] && (!g || g[0]) && searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step) return true;
+    }
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
+    return { ans, gans, checked: discheck.some(Boolean) };
+}
+function SCWaiting(tiles, step, substep, tcnt, subcnt, discheck, getchecks) {
+    discheck ??= [step >= substep[0], step >= substep[1], step >= substep[2]];
+    const f = (tiles, i) => [searchDp(tiles, 0, 0, tcnt, Infinity, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity]
+    function waiting(tiles, step, _, g) {
+        for (let i = 0; i < 3; ++i) if (discheck[i] && (!g || g[i]) && Math.min(...f(tiles, i)) < step) return true;
     }
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };

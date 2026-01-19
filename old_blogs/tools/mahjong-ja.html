@@ -220,8 +220,8 @@
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般形</label>
-<label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七対形</label>
-<label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />国士無双形</label>
+<span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七対形</label><span class="text-link-btn" onclick="randomWinningPairs(aids[0].length % 3 === 1, true)">(例)</span></span>
+<span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />国士無双形</label><span class="text-link-btn" onclick="randomWinningOrphan(aids[0].length % 3 === 1)">(例)</span></span>
 </div>
 <div id="output-group-jp">
 <div class="output-context" id="output-jp"></div>
@@ -241,10 +241,10 @@
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般形</label>
-<label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七対形</label>
-<label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么形</label>
-<label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠形</label>
-<label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合竜形</label>
+<span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七対形</label><span class="text-link-btn" onclick="randomWinningPairs(aids[0].length % 3 === 1)">(例)</span></span>
+<span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么形</label><span class="text-link-btn" onclick="randomWinningOrphan(aids[0].length % 3 === 1)">(例)</span></span>
+<span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠形</label><span class="text-link-btn" onclick="randomWinningBukao(aids[0].length % 3 === 1)">(例)</span></span>
+<span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合竜形</label><span class="text-link-btn" onclick="randomWinningKDragon(Math.max(aids[0].length + aids[1].length * 3, 9))">(例)</span></span>
 </div>
 <div class="output-context" id="output-gb"></div>
 <div class="output-context" id="brief-output-gb" style="display: none"></div>
@@ -257,9 +257,9 @@
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般形</label>
-<label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />ニコニコ形</label>
-<label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么形</label>
-<label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不塔形</label>
+<span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />ニコニコ形</label><span class="text-link-btn" onclick="randomWinningNiconico(aids[0].length % 3 === 1)">(例)</span></span>
+<span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么形</label><span class="text-link-btn" onclick="randomWinningOrphanMeld(aids[0].length % 3 === 1)">(例)</span></span>
+<span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不塔形</label><span class="text-link-btn" onclick="randomWinningBuda(aids[0].length % 3 === 1)">(例)</span></span>
 </div>
 <div class="output-context" id="output-tw"></div>
 <div class="output-time" id="time-output-tw"></div>
@@ -742,7 +742,7 @@
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.1</div>
+<div class="output-time">v4.8.2</div>
 <div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
 </div>
         <script src="mahjong.js"></script>

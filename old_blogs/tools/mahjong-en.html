@@ -219,10 +219,10 @@ About Lain Down Melds:
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
-<label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label>
-<label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label>
-<label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label>
-<label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label>
+<span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(aids[0].length % 3 === 1)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan(aids[0].length % 3 === 1)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label><span class="text-link-btn" onclick="randomWinningBukao(aids[0].length % 3 === 1)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label><span class="text-link-btn" onclick="randomWinningKDragon(Math.max(aids[0].length + aids[1].length * 3, 9))">(e.g.)</span></span>
 </div>
 <div class="output-context" id="output-gb"></div>
 <div class="output-context" id="brief-output-gb" style="display: none"></div>
@@ -236,8 +236,8 @@ About Lain Down Melds:
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
-<label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label>
-<label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="orphan13"></span></label>
+<span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(aids[0].length % 3 === 1, true)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan(aids[0].length % 3 === 1)">(e.g.)</span></span>
 </div>
 <div id="output-group-jp">
 <div class="output-context" id="output-jp"></div>
@@ -257,9 +257,9 @@ About Lain Down Melds:
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
-<label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label>
-<label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label>
-<label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label>
+<span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label><span class="text-link-btn" onclick="randomWinningNiconico(aids[0].length % 3 === 1)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphanMeld(aids[0].length % 3 === 1)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label><span class="text-link-btn" onclick="randomWinningBuda(aids[0].length % 3 === 1)">(e.g.)</span></span>
 </div>
 <div class="output-context" id="output-tw"></div>
 <div class="output-context" id="brief-output-tw" style="display: none"></div>
@@ -741,7 +741,7 @@ Related Rules:
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.1</div>
+<div class="output-time">v4.8.2</div>
 <div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
 </div>
         <script src="mahjong.js"></script>

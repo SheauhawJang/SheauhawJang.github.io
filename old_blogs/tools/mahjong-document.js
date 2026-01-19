@@ -931,14 +931,18 @@ function updateCardSkin(skin) {
         while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
     });
 }
-function debounce(f, delay = 20) {
+function debounce(f, delay = 20, maxdelay = 1000) {
     let timer = null;
+    let lasts = null;
     let rf = function(...args) {
-        if (timer) clearTimeout(timer);
+        let rdelay = delay;
+        if (timer) clearTimeout(timer), rdelay = Math.min(rdelay, lasts + maxdelay - Date.now());
+        else lasts = Date.now();
         timer = setTimeout(() => {
             f.apply(this, args);
             timer = null;
-        }, delay);
+            lasts = null;
+        }, rdelay);
     };
     rf.immediate = function(...args) {
         if (timer) clearTimeout(timer);

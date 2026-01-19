@@ -316,7 +316,7 @@
 <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振り</label>
 <label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" />オープン立直役満払い</span></label>
 </div>
-<button onclick="processJPScore()" class="score-button">計算</button>
+<button id="score-jp-button" onclick="processJPScore()" class="score-button">計算</button>
 </div>
 <details>
 <summary>ルール設定</summary>
@@ -590,7 +590,7 @@
 <label><input type="checkbox" name="score-gb-wininfo" value="47" />搶槓和</label>
 <label><input type="checkbox" name="score-gb-wininfo" value="58" />和絕張</label>
 </div>
-<button onclick="processGBScore()" class="score-button">計算</button>
+<button id="score-gb-button" onclick="processGBScore()" class="score-button">計算</button>
 </div>
 <details>
 <summary>ルール設定</summary>

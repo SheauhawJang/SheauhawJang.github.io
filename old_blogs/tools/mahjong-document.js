@@ -17,6 +17,7 @@ function random(l, r) {
     let off = Math.floor(Math.random() * len);
     return l + off;
 }
+const ui_debounce_delay = 1000;
 let updateTaskOutput = Array(TASK_NUM)
     .fill(null)
     .map((_, i) =>
@@ -24,21 +25,21 @@ let updateTaskOutput = Array(TASK_NUM)
             sf(() => (document.getElementById(document_element_ids[i]).innerHTML = text));
             if (useHelper()) addWorkerCardHelper();
             updateCardSkin();
-        }, 100),
+        }, ui_debounce_delay),
     );
 let updateTaskBrief = Array(TASK_NUM)
     .fill(null)
-    .map((_, i) => debounce((text) => sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = text)), 100));
+    .map((_, i) => debounce((text) => sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = text)), ui_debounce_delay));
 function putWorkerResult(e, task) {
     // partial result
-    if ("brief" in e.data) updateTaskBrief[task](e.data.brief);
+    if ("brief" in e.data) updateTaskBrief[task].immediate(e.data.brief);
     if ("output" in e.data) {
         updateTaskOutput[task](e.data.output);
         return true; // all known results has been put
     }
     // full result
     const { result, time } = e.data;
-    updateTaskOutput[task](result.output);
+    updateTaskOutput[task].immediate(result.output);
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
     return false; // remain results need to be put
 }
@@ -705,8 +706,8 @@ let gb_worker = null;
 let gb_worker_info;
 const GB_RADIO_MAX = 7;
 const GB_SETTING_SIZE = 45;
-const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), 100);
-const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), 100);
+const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay);
+const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay);
 function processGBScore() {
     updateScoreTabUser(0);
     if (gb_worker) {
@@ -744,8 +745,8 @@ function processGBScore() {
         }
         gb_worker.terminate();
         gb_worker = null;
-        updateGBOutput(e.data.result.output);
-        updateGBBrief(e.data.result.brief);
+        updateGBOutput.immediate(e.data.result.output);
+        updateGBBrief.immediate(e.data.result.brief);
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     };
     gb_worker.postMessage({ task: "gb-score", ...gb_worker_info, gw, mw, wt, info, lang, setting });
@@ -754,8 +755,8 @@ let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 24;
 const JP_SETTING_SIZE = 128;
-const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), 100);
-const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), 100);
+const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay);
+const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay);
 function processJPScore() {
     updateScoreTabUser(1);
     if (jp_worker) {
@@ -790,8 +791,8 @@ function processJPScore() {
         }
         jp_worker.terminate();
         jp_worker = null;
-        updateJPOutput(e.data.result.output);
-        updateJPBrief(e.data.result.brief);
+        updateJPOutput.immediate(e.data.result.output);
+        updateJPBrief.immediate(e.data.result.brief);
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     jp_worker.postMessage({ task: "jp-score", ...jp_worker_info, gw, mw, wt, info, setting, lang });
@@ -932,13 +933,19 @@ function updateCardSkin(skin) {
 }
 function debounce(f, delay = 20) {
     let timer = null;
-    return function (...args) {
+    let rf = function (...args) {
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
             f.apply(this, args);
             timer = null;
         }, delay);
     };
+    rf.immediate = function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = null;
+        f.apply(this, args);
+    }
+    return rf;
 }
 function loadCheckbox(key, st = localStorage) {
     const cbs = document.querySelectorAll(`input[name="${key}"]`);
@@ -955,7 +962,7 @@ function loadCheckbox(key, st = localStorage) {
             .filter((cb) => cb.checked)
             .map((cb) => cb.value);
         st.setItem(key, JSON.stringify(cvstorage));
-    }, 20);
+    });
     cbs.forEach((cb) => cb.addEventListener("change", cf));
     for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) cbs.forEach((cb) => cb.addEventListener("change", () => updateScoreTabUser(i)));
 }

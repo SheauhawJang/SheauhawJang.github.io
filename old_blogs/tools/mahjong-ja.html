@@ -206,7 +206,7 @@
 <div class="output-box" id="steps-std" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">一般形牌理</div>
-<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">収納 ▲</button>
 </div>
 <div class="output-context" id="output-std"></div>
 <div class="output-context" id="brief-output-std" style="display: none"></div>
@@ -215,7 +215,7 @@
 <div class="output-box" id="steps-jp" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">立直麻雀標準形牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
-<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">収納 ▲</button>
 <button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
 </div>
 <div class="output-option-group">
@@ -237,7 +237,7 @@
 <div class="output-box" id="steps-gb" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">中国国標麻雀標準形牌理</div>
-<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">収納 ▲</button>
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般形</label>
@@ -253,7 +253,7 @@
 <div class="output-box" id="steps-tw" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">香港式台湾麻雀牌理</div>
-<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">収納 ▲</button>
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般形</label>
@@ -276,7 +276,7 @@
 <div class="output-box" id="score-jp">
 <div class="title-button-container">
 <div class="output-title">立直麻雀点数計算</div>
-<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput('output-score-jp')">収納 ▲</button>
 </div>
 <div id="options-output-score-jp">
 <div class="output-grid-div">
@@ -560,7 +560,7 @@
 <div class="output-box" id="score-gb">
 <div class="title-button-container">
 <div class="output-title">中国国標麻雀点数計算</div>
-<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">収納 ▲</button>
+<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput('output-score-gb')">収納 ▲</button>
 </div>
 <div id="options-output-score-gb">
 <div class="output-grid-div">

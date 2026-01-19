@@ -207,7 +207,7 @@
 <div class="output-box" id="steps-std" style="display: none;">
 <div class="title-button-container">
 <div class="output-title"><div><span data-i18n="normal"></span>牌理</div></div>
-<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">摺疊 ▲</button>
+<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">摺疊 ▲</button>
 </div>
 <div class="output-context" id="output-std"></div>
 <div class="output-context" id="brief-output-std" style="display: none"></div>
@@ -216,7 +216,7 @@
 <div class="output-box" id="steps-tw" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">港式台灣麻將牌理</div>
-<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">摺疊 ▲</button>
+<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">摺疊 ▲</button>
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
@@ -231,7 +231,7 @@
 <div class="output-box" id="steps-jp" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">立直麻將標準型牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
-<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">摺疊 ▲</button>
+<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">摺疊 ▲</button>
 <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">摺疊 ▲</button>
 </div>
 <div class="output-option-group">
@@ -253,7 +253,7 @@
 <div class="output-box" id="steps-gb" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">國標麻將標準型牌理</div>
-<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">摺疊 ▲</button>
+<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">摺疊 ▲</button>
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
@@ -277,7 +277,7 @@
 <div class="output-box" id="score-jp">
 <div class="title-button-container">
 <div class="output-title">立直麻將分數計算器</div>
-<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">摺疊 ▲</button>
+<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput('output-score-jp')">摺疊 ▲</button>
 </div>
 <div id="options-output-score-jp">
 <div class="output-grid-div">
@@ -561,7 +561,7 @@
 <div class="output-box" id="score-gb">
 <div class="title-button-container">
 <div class="output-title"><div>國標麻將<span data-i18n="GB_FAN_unit"></span>數計算器</div></div>
-<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">摺疊 ▲</button>
+<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput('output-score-gb')">摺疊 ▲</button>
 </div>
 <div id="options-output-score-gb">
 <div class="output-grid-div">

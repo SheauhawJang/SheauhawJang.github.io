@@ -206,7 +206,7 @@ About Lain Down Melds:
 <div class="output-box" id="steps-std" style="display: none;">
 <div class="title-button-container">
 <div class="output-title"><div><span data-i18n="normal"></span> Theory</div></div>
-<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput(0)">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">Fold ▲</button>
 </div>
 <div class="output-context" id="output-std"></div>
 <div class="output-context" id="brief-output-std" style="display: none"></div>
@@ -215,7 +215,7 @@ About Lain Down Melds:
 <div class="output-box" id="steps-gb" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">Chinese Official Mahjong (MCR) Standard Type Theory</div>
-<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput(1)">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">Fold ▲</button>
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
@@ -231,7 +231,7 @@ About Lain Down Melds:
 <div class="output-box" id="steps-jp" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">Japanese Riichi Mahjong (RCR) Standard Type Theory<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '4P', '3P', switchJP34)"><span class="label-text">4P</span><span class="thumb"></span></button></div>
-<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput(2); toggleOutput(7);">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">Fold ▲</button>
 <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">Fold ▲</button>
 </div>
 <div class="output-option-group">
@@ -253,7 +253,7 @@ About Lain Down Melds:
 <div class="output-box" id="steps-tw" style="display: none;">
 <div class="title-button-container">
 <div class="output-title">Hong Kong Style Taiwanese Mahjong Theory</div>
-<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput(3)">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">Fold ▲</button>
 </div>
 <div class="output-option-group">
 <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
@@ -267,8 +267,8 @@ About Lain Down Melds:
 </div>
 <div class="output-box" id="score-global">
 <div class="tabs">
-<button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">CN Off. (MCR) <span data-i18n="GB_FAN_unit"></span> Calc.</button>
-<button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">JP Riichi (RCR) Scores Calc.</button>
+<button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">MCR <span data-i18n="GB_FAN_unit"></span> Calc.</button>
+<button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">RCR Scores Calc.</button>
 </div>
 <div id="score-global-viewer"></div>
 </div>
@@ -276,7 +276,7 @@ About Lain Down Melds:
 <div class="output-box" id="score-gb">
 <div class="title-button-container">
 <div class="output-title"><div>Chinese Official Mahjong (MCR) <span data-i18n="GB_FAN_unit"></span> Calculator</div></div>
-<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput(4)">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput('output-score-gb')">Fold ▲</button>
 </div>
 <div id="options-output-score-gb">
 <div class="output-grid-div">
@@ -428,7 +428,7 @@ About Lain Down Melds:
 <div class="output-box" id="score-jp">
 <div class="title-button-container">
 <div class="output-title">Japanese Riichi Mahjong (RCR) Scores Calculator</div>
-<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput(5)">Fold ▲</button>
+<button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput('output-score-jp')">Fold ▲</button>
 </div>
 <div id="options-output-score-jp">
 <div class="output-grid-div">

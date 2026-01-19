@@ -494,15 +494,12 @@ function OrphanStep(tiles) {
 let KnitDragonSave = Array.from({ length: 6 }, () => Array(9).fill(0));
 // prettier-ignore
 const Permutation3 = [ [0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0] ];
-function KnitDragonCreate() {
-    for (let i = 0; i < 6; ++i)
-        for (let j = 0; j < 9; ++j) {
-            const [di, dj] = [Math.floor(j / 3), j % 3];
-            const id = di * 9 + Permutation3[i][di] + dj * 3;
-            KnitDragonSave[i][j] = id;
-        }
-}
-KnitDragonCreate();
+for (let i = 0; i < 6; ++i)
+    for (let j = 0; j < 9; ++j) {
+        const [di, dj] = [Math.floor(j / 3), j % 3];
+        const id = di * 9 + Permutation3[i][di] + dj * 3;
+        KnitDragonSave[i][j] = id;
+    }
 // Special Check for Bukao
 function Bukao16Count(tiles) {
     let ans = 0;

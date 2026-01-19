@@ -619,6 +619,18 @@ input[type="checkbox"] {
     outline: none;
 }
 
+.text-link-btn {
+    color: #0000EE;
+    font-size: 0.5em;
+    cursor: pointer;
+    text-decoration: underline;
+    user-select: none;
+    vertical-align: sub;
+}
+.text-link-btn:hover {
+    color: #551A8B;
+}
+
 @media screen and (max-width: 512px) {
     body {
         padding: 6px;

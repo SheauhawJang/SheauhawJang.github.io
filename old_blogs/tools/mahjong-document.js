@@ -11,25 +11,34 @@ function sf(f) {
         f();
     } catch {}
 }
-let updateInnerHTML = Array(TASK_NUM)
+function random(l, r) {
+    if (r === undefined) r = l, l = 0;
+    let len = r - l;
+    let off = Math.floor(Math.random() * len);
+    return l + off;
+}
+let updateTaskOutput = Array(TASK_NUM)
     .fill(null)
     .map((_, i) =>
         debounce((text) => {
             sf(() => (document.getElementById(document_element_ids[i]).innerHTML = text));
             if (useHelper()) addWorkerCardHelper();
             updateCardSkin();
-        }, 100)
+        }, 100),
     );
+let updateTaskBrief = Array(TASK_NUM)
+    .fill(null)
+    .map((_, i) => debounce((text) => sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = text)), 100));
 function putWorkerResult(e, task) {
     // partial result
-    if ("brief" in e.data) sf(() => (document.getElementById("brief-" + document_element_ids[task]).innerHTML = e.data.brief));
+    if ("brief" in e.data) updateTaskBrief[task](e.data.brief);
     if ("output" in e.data) {
-        updateInnerHTML[task](e.data.output);
+        updateTaskOutput[task](e.data.output);
         return true; // all known results has been put
     }
     // full result
     const { result, time } = e.data;
-    updateInnerHTML[task](result.output);
+    updateTaskOutput[task](result.output);
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
     return false; // remain results need to be put
 }
@@ -43,7 +52,7 @@ function opencheck(openids) {
     return true;
 }
 const document_scores_ids = ["score-gb", "score-jp"];
-function updateScoreVisiable(id, visiable = 'none') {
+function updateScoreVisiable(id, visiable = "none") {
     const e = document.getElementById(document_scores_ids[id]);
     if (!e) return;
     e.style.display = visiable;
@@ -53,16 +62,16 @@ function updateScoreVisiable(id, visiable = 'none') {
     let vid = [];
     for (let i = 0; i < document_scores_ids.length; ++i) {
         const se = document.getElementById(document_scores_ids[i]);
-        if (se && se.style.display !== 'none') vid.push([i, se]);
+        if (se && se.style.display !== "none") vid.push([i, se]);
     }
-    vid.sort((a, b) => a[1] === b[1] ? 0 : (a[1].compareDocumentPosition(b[1]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
-    if (visiable === 'none') {
-        if (vid.length === 0) document.getElementById('score-global').style.display = 'none', switchScoreTab(-1, true);
+    vid.sort((a, b) => (a[1] === b[1] ? 0 : a[1].compareDocumentPosition(b[1]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+    if (visiable === "none") {
+        if (vid.length === 0) ((document.getElementById("score-global").style.display = "none"), switchScoreTab(-1, true));
         else switchScoreTab(vid[0][0], true);
     } else {
-        document.getElementById('score-global').style.display = visiable;
-        if (vid.some(e => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
-        else console.log(scoretab_usr), switchScoreTab(vid[0][0], true);
+        document.getElementById("score-global").style.display = visiable;
+        if (vid.some((e) => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
+        else (console.log(scoretab_usr), switchScoreTab(vid[0][0], true));
     }
 }
 function processInput() {
@@ -71,8 +80,8 @@ function processInput() {
         worker = null;
     }
     for (let i = 0; i < document_element_ids.length; ++i) {
-        updateInnerHTML[i]("");
-        sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
+        updateTaskOutput[i]("");
+        updateTaskBrief[i]("");
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
     }
     const workers_scores = [gb_worker, jp_worker];
@@ -118,11 +127,11 @@ function processInput() {
             case 1:
                 const newstepjp = worker_substeps[task].slice();
                 if (worker_substeps[0] === -1) newstepjp[0] = -1;
-                if ((Math.min(...newstepjp) <= -1 + full_tcnt - tcnt) && opencheck(aids[1])) {
+                if (Math.min(...newstepjp) <= -1 + full_tcnt - tcnt && opencheck(aids[1])) {
                     document.getElementById("output-score-jp").textContent = "";
                     document.getElementById("brief-output-score-jp").textContent = "";
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
-                    updateScoreVisiable(1, 'block');
+                    updateScoreVisiable(1, "block");
                     jp_worker = null;
                     jp_worker_info = { aids, tiles, substeps: newstepjp };
                 }
@@ -132,7 +141,7 @@ function processInput() {
                     document.getElementById("output-score-gb").textContent = "";
                     document.getElementById("brief-output-score-gb").textContent = "";
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
-                    updateScoreVisiable(0, 'block');
+                    updateScoreVisiable(0, "block");
                     gb_worker = null;
                     gb_worker_info = { aids, tiles, substeps: worker_substeps[task] };
                 }
@@ -199,8 +208,8 @@ function restartInput(i) {
         reworkers[i].terminate();
         reworkers[i] = null;
     }
-    updateInnerHTML[i]("");
-    sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = ""));
+    updateTaskOutput[i]("");
+    updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
     reworkers[i] = new Worker("mahjong-worker.js");
     reworkers[i].onmessage = function (e) {
@@ -220,8 +229,8 @@ function updateInput(s) {
 }
 function shuffle(array) {
     for (let i = 0; i < array.length; ++i) {
-        const j = Math.floor(Math.random() * (array.length - i));
-        [array[i], array[i + j]] = [array[i + j], array[i]];
+        const j = random(i, array.length);
+        [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
 }
@@ -235,38 +244,95 @@ function randomInputText() {
     hand.sort((a, b) => a - b);
     updateInput(joinHand(hand));
 }
-function randomWinning() {
-    const n = parseInt(document.getElementById("randomWinningCardCount").value);
-    const melds = Math.floor(n / 3), head = n % 3 ? 1 : 0;
+function getMeld(seqs = Array(21).fill(0).map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)), tris = Array(sizeUT).fill(0).map((_, i) => i)) {
+    const seqrate = 64;
+    const seq = seqs.length * seqrate;
+    const tri = tris.length;
+    const r = random(seq + tri);
+    if (r >= seq) return Array(3).fill(tris[r - seq]);
+    else return Array(3).fill(seqs[Math.floor(r / seqrate)]).map((x, i) => x + i);
+}
+function randomWinning(local, seqs = Array(21).fill(0).map((_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7)), tris = Array(sizeUT).fill(0).map((_, i) => i)) {
+    const n = local ?? parseInt(document.getElementById("randomWinningCardCount").value);
+    const [melds, head] = [Math.floor(n / 3), n % 3 ? 1 : 0];
     let tiles = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds; ++i) {
-        const seq = 21 * 64;
-        const tri = sizeUT;
-        const r = Math.floor(Math.random() * (seq + tri));
-        if (r >= seq) tiles[r - seq] += 3;
-        else {
-            const rr = Math.floor(r / 64);
-            const j = ColorFirstArray[Math.floor(rr / 7)] + rr % 7;
-            ++tiles[j], ++tiles[j + 1], ++tiles[j + 2];
-        }
-    }
-    for (let i = 0; i < head; ++i) tiles[Math.floor(Math.random() * sizeUT)] += 2;
+    for (let i = 0; i < melds; ++i) getMeld(seqs, tris).forEach(x => ++tiles[x]);
+    for (let i = 0; i < head; ++i) tiles[tris[random(tris.length)]] += 2;
+    if (local !== undefined) return tiles;
     let jokercount = 0;
-    for (let i = 0; i < sizeUT; ++i) if (tiles[i] > 4) jokercount += tiles[i] - 4, tiles[i] = 4;
+    for (let i = 0; i < sizeUT; ++i) if (tiles[i] > 4) ((jokercount += tiles[i] - 4), (tiles[i] = 4));
     let hand = [];
     for (let i = 0; i < sizeUT; ++i) hand.push(...Array(tiles[i]).fill(i));
     if (n % 3 === 1)
         if (jokercount) --jokercount;
-        else hand.splice(Math.floor(Math.random() * hand.length), 1);
+        else hand.splice(random(hand.length), 1);
     else if (hand.length > 0) {
-        const j = Math.floor(Math.random() * hand.length);
+        const j = random(hand.length);
         const id = hand[j];
-        hand.splice(j, 1);
-        hand.push(id);
+        hand.splice(j, 1), hand.push(id);
     }
-    updateInput('J'.repeat(jokercount) + joinHand(hand));
+    updateInput("J".repeat(jokercount) + joinHand(hand));
     drawInputCards();
     processInput();
+}
+function submithand(hand, listen) {
+    hand.sort((a, b) => a - b);
+    const j = random(hand.length);
+    const id = hand[j];
+    hand.splice(j, 1);
+    if (!listen) hand.push(id);
+    updateInput(joinHand(hand));
+    drawInputCards();
+    processInput();
+}
+function randomWinningPairs(listen = false, disjoint = false, guse = guseall) {
+    let arr = [];
+    for (let i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) arr.push(i);
+    shuffle(arr);
+    let hand = [];
+    if (disjoint) for (let i = 0; i < 7; ++i) hand.push(arr[i], arr[i]);
+    else for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(arr[random(arr.length)]));
+    submithand(hand, listen);
+}
+function randomWinningOrphan(listen = false) {
+    let hand = Orphan13Array.slice();
+    hand.push(hand[random(13)]);
+    submithand(hand, listen);
+}
+function randomWinningBukao(listen = false) {
+    let hand = [...KnitDragonSave[random(6)], ...Array(7).fill(0).map((_, i) => i + 27)];
+    shuffle(hand);
+    hand = [...hand.slice(0, 13).sort((a, b) => a - b), hand[13]];
+    if (listen) hand.pop();
+    updateInput(joinHand(hand));
+    drawInputCards();
+    processInput();
+}
+function randomWinningKDragon(n) {
+    let tiles = randomWinning(n - 9);
+    KnitDragonSave[random(6)].forEach((x) => ++tiles[x]);
+    let hand = [];
+    for (let i = 0; i < sizeUT; ++i) hand.push(...Array(tiles[i]).fill(i));
+    submithand(hand, n % 3 === 1);
+}
+function randomWinningNiconico(listen = false) {
+    let hand = [];
+    for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(random(sizeUT)));
+    hand.push(...Array(3).fill(random(sizeUT)));
+    submithand(hand, listen);
+}
+function randomWinningOrphanMeld(listen = false) {
+    let hand = Orphan13Array.slice();
+    hand.push(hand[random(13)], ...getMeld());
+    submithand(hand, listen);
+}
+function randomWinningBuda(listen = false) {
+    let buda = [];
+    for (let a = 0; a < 3; ++a) for (let b = a + 3; b < 6; ++b) for (let c = b + 3; c < 9; ++c) buda.push([a, b, c]);
+    let hand = Array(7).fill(0).map((_, i) => i + 27);
+    for (let i = 0; i < 3; ++i) hand.push(...buda[random(buda.length)].map(x => x + ColorFirstArray[i]));
+    hand.push(hand[random(hand.length)]);
+    submithand(hand, listen);
 }
 function randomInput() {
     randomInputText();
@@ -275,11 +341,13 @@ function randomInput() {
 }
 function sakiSpecialInput() {
     const now = new Date();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
     switch (`${mm}-${dd}`) {
-        case "12-15": return "東東南南西西北白白発発中中北";
-        case "10-27": return "4445p0p[1111p,1][2222p][3333p]";
+        case "12-15":
+            return "東東南南西西北白白発発中中北";
+        case "10-27":
+            return "4445p0p[1111p,1][2222p][3333p]";
     }
     return null;
 }
@@ -332,8 +400,8 @@ function hasQQCard(id) {
     return true;
 }
 function getOverlay(path, t) {
-    if (t === 'r') return `<img src="${path}" class="card-img-overlay-r">`;
-    if (t === 'k') return `<img src="${path}" class="card-img-overlay-rr-0"><img src="${path}" class="card-img-overlay-rr-1">`;
+    if (t === "r") return `<img src="${path}" class="card-img-overlay-r">`;
+    if (t === "k") return `<img src="${path}" class="card-img-overlay-rr-0"><img src="${path}" class="card-img-overlay-rr-1">`;
     return `<img src="${path}" class="card-img-overlay">`;
 }
 function getCardImage(id, t = "", onclick = "") {
@@ -343,14 +411,26 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`, t);
     if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
-    if (cardskin === "jp") 
+    if (cardskin === "jp")
         switch (id.id) {
-            case 42: name = "ij"; break;
-            case 43: name = "im", overlay = getOverlay(`./cards/im.png`, t); break;
-            case 44: name = "ip", overlay = getOverlay(`./cards/ip.png`, t); break;
-            case 45: name = "is", overlay = getOverlay(`./cards/is.png`, t); break;
-            case 47: name = "8z", overlay = getOverlay(`./cards/8z.png`, t); break;
-            case 48: name = "9z", overlay = getOverlay(`./cards/9z.png`, t); break;
+            case 42:
+                name = "ij";
+                break;
+            case 43:
+                ((name = "im"), (overlay = getOverlay(`./cards/im.png`, t)));
+                break;
+            case 44:
+                ((name = "ip"), (overlay = getOverlay(`./cards/ip.png`, t)));
+                break;
+            case 45:
+                ((name = "is"), (overlay = getOverlay(`./cards/is.png`, t)));
+                break;
+            case 47:
+                ((name = "8z"), (overlay = getOverlay(`./cards/8z.png`, t)));
+                break;
+            case 48:
+                ((name = "9z"), (overlay = getOverlay(`./cards/9z.png`, t)));
+                break;
         }
     if (overlay) return `${overlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     return `<img src="./cards/${t}${name}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
@@ -388,7 +468,7 @@ function discard(i) {
     if (mount.length === 0) return;
     tids.splice(i, 1);
     tids.sort((a, b) => a.id - b.id);
-    tids.push({ id: mount[Math.floor(Math.random() * mount.length)] });
+    tids.push({ id: mount[random(mount.length)] });
     remakeInput(aids);
     drawInputCards();
     processInput();
@@ -397,7 +477,7 @@ function tilesImage(tids, bonus) {
     let output = "";
     let width = 5;
     let max_card = 35;
-    if (window.matchMedia("screen and (max-width: 512px)").matches) (width = 7), (max_card = 20);
+    if (window.matchMedia("screen and (max-width: 512px)").matches) ((width = 7), (max_card = 20));
     if (tids.length >= max_card) width = 100 / max_card;
     else if (tids.length >= 100 / width) width = 100 / tids.length;
     if (bonus === 1) width *= 0.5;
@@ -476,7 +556,7 @@ function drawInputCards() {
         unit = "px";
     }
     const tids = ipids[0];
-    for (let i = 0; i < tids.length; ++i) (output += inputCardImage(tids, i, -1, width, unit)), (rheight = sheight);
+    for (let i = 0; i < tids.length; ++i) ((output += inputCardImage(tids, i, -1, width, unit)), (rheight = sheight));
     const sids = ipids[1];
     for (let i = 0; i < sids.length; ++i) {
         output += inputCardImageEmpty(width, unit);
@@ -524,7 +604,7 @@ function drawInputCards() {
         tids
             .slice(-3)
             .map((a) => a.id)
-            .sort((a, b) => a - b)
+            .sort((a, b) => a - b),
     );
     const noflower = document.getElementsByClassName("enabled-no-flower");
     for (let i = 0; i < noflower.length; ++i) noflower[i].disabled = tids.length === 0 || isFlower(tids.at(-1).id);
@@ -625,14 +705,16 @@ let gb_worker = null;
 let gb_worker_info;
 const GB_RADIO_MAX = 7;
 const GB_SETTING_SIZE = 45;
+const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), 100);
+const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), 100);
 function processGBScore() {
     updateScoreTabUser(0);
     if (gb_worker) {
         gb_worker.terminate();
         gb_worker = null;
     }
-    document.getElementById("output-score-gb").textContent = "";
-    document.getElementById("brief-output-score-gb").textContent = "";
+    updateGBOutput("");
+    updateGBBrief("");
     document.getElementById("time-output-score-gb").textContent = "Calculating......";
     const gw = Number(document.querySelector('input[name="score-gb-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-gb-local-wind"]:checked').value);
@@ -657,13 +739,13 @@ function processGBScore() {
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
-            document.getElementById("output-score-gb").innerHTML = e.data.output;
+            updateGBOutput(e.data.output);
             return;
         }
         gb_worker.terminate();
         gb_worker = null;
-        document.getElementById("output-score-gb").innerHTML = e.data.result.output;
-        document.getElementById("brief-output-score-gb").innerHTML = e.data.result.brief;
+        updateGBOutput(e.data.result.output);
+        updateGBBrief(e.data.result.brief);
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     };
     gb_worker.postMessage({ task: "gb-score", ...gb_worker_info, gw, mw, wt, info, lang, setting });
@@ -672,14 +754,16 @@ let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 24;
 const JP_SETTING_SIZE = 128;
+const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), 100);
+const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), 100);
 function processJPScore() {
     updateScoreTabUser(1);
     if (jp_worker) {
         jp_worker.terminate();
         jp_worker = null;
     }
-    document.getElementById("output-score-jp").textContent = "";
-    document.getElementById("brief-output-score-jp").textContent = "";
+    updateJPOutput("");
+    updateJPBrief("");
     document.getElementById("time-output-score-jp").textContent = "Calculating......";
     const gw = Number(document.querySelector('input[name="score-jp-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-jp-local-wind"]:checked').value);
@@ -701,13 +785,13 @@ function processJPScore() {
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
-            document.getElementById("output-score-jp").innerHTML = e.data.output;
+            updateJPOutput(e.data.output);
             return;
         }
         jp_worker.terminate();
         jp_worker = null;
-        document.getElementById("output-score-jp").innerHTML = e.data.result.output;
-        document.getElementById("brief-output-score-jp").innerHTML = e.data.result.brief;
+        updateJPOutput(e.data.result.output);
+        updateJPBrief(e.data.result.brief);
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     jp_worker.postMessage({ task: "jp-score", ...jp_worker_info, gw, mw, wt, info, setting, lang });
@@ -797,15 +881,25 @@ function addReferenceMark() {
 }
 function replacei18n() {
     setLoc(lang);
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
         let text = loc[key];
         if (!text) return;
-        switch (el.getAttribute('data-i18n-case')) {
-            case "lower": text = text.toLowerCase(); break;
-            case "upper": text = text.toUpperCase(); break;
-            case "capitalize": text = text.charAt(0).toUpperCase() + text.slice(1); break;
-            case "title": text = text.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        switch (el.getAttribute("data-i18n-case")) {
+            case "lower":
+                text = text.toLowerCase();
+                break;
+            case "upper":
+                text = text.toUpperCase();
+                break;
+            case "capitalize":
+                text = text.charAt(0).toUpperCase() + text.slice(1);
+                break;
+            case "title":
+                text = text
+                    .split(" ")
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join(" ");
         }
         el.innerHTML = text;
     });
@@ -853,7 +947,7 @@ function loadCheckbox(key, st = localStorage) {
     if (cvstorage !== null)
         try {
             cvs = new Set(JSON.parse(cvstorage));
-            cbs.forEach((cb) => (cb.checked = cvs.has(cb.value), cb.dispatchEvent(new Event("change"))));
+            cbs.forEach((cb) => ((cb.checked = cvs.has(cb.value)), cb.dispatchEvent(new Event("change"))));
         } catch {}
 
     const cf = debounce(() => {
@@ -868,7 +962,7 @@ function loadCheckbox(key, st = localStorage) {
 function loadRadio(key, st = localStorage) {
     const rds = document.querySelectorAll(`input[name="${key}"]`);
     const sv = st.getItem(key);
-    if (sv) rds.forEach((r) => (r.checked = r.value === sv, r.dispatchEvent(new Event("change"))));
+    if (sv) rds.forEach((r) => ((r.checked = r.value === sv), r.dispatchEvent(new Event("change"))));
 
     const rf = debounce(() => {
         const s = Array.from(rds).find((r) => r.checked);
@@ -948,8 +1042,8 @@ function processGBSetting(id) {
     const mpp = new Set(positive.map(String)),
         mpn = new Set(negative.map(String));
     cbs.forEach((cb) => {
-        if (mpp.has(cb.value)) cb.checked = true, cb.dispatchEvent(new Event("change"));
-        else if (mpn.has(cb.value)) cb.checked = false, cb.dispatchEvent(new Event("change"));
+        if (mpp.has(cb.value)) ((cb.checked = true), cb.dispatchEvent(new Event("change")));
+        else if (mpn.has(cb.value)) ((cb.checked = false), cb.dispatchEvent(new Event("change")));
     });
     for (let i = 0; i <= GB_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
@@ -990,8 +1084,8 @@ function processJPSetting(id) {
     const mpp = new Set(positive.map(String)),
         mpn = new Set(negative.map(String));
     cbs.forEach((cb) => {
-        if (mpp.has(cb.value)) cb.checked = true, cb.dispatchEvent(new Event("change"));
-        else if (mpn.has(cb.value)) cb.checked = false, cb.dispatchEvent(new Event("change"));
+        if (mpp.has(cb.value)) ((cb.checked = true), cb.dispatchEvent(new Event("change")));
+        else if (mpn.has(cb.value)) ((cb.checked = false), cb.dispatchEvent(new Event("change")));
     });
     for (let i = 0; i <= JP_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
@@ -1000,12 +1094,11 @@ function processJPSetting(id) {
         if (rds.length) rds[0].dispatchEvent(new Event("change"));
     }
 }
-function toggleOutput(i) {
-    const ids = ["output-std", "output-gb", "output-jp", "output-tw", "output-score-gb", "output-score-jp", "output-empty", "output-jp3p"];
-    const d = document.getElementById(ids[i]);
-    const b = document.getElementById("toggle-" + ids[i]);
-    const s = document.getElementById("brief-" + ids[i]);
-    const o = document.getElementById("options-" + ids[i]);
+function toggleOutput(id) {
+    const d = document.getElementById(id);
+    const b = document.getElementById("toggle-" + id);
+    const s = document.getElementById("brief-" + id);
+    const o = document.getElementById("options-" + id);
     const v = d.style.display !== "none";
     d.style.display = v ? "none" : "block";
     s.style.display = v ? "block" : "none";
@@ -1031,29 +1124,29 @@ function switchJP34(newState) {
     e3.style.display = newState ? "none" : "block";
 }
 function ptsToggle(el) {
-    const collapsed = el.querySelector('.pts-brief');
-    const expanded = el.querySelector('.pts-output');
-    collapsed.style.display = el.open ? 'none' : '';
-    expanded.style.display = el.open ? '' : 'none';
+    const collapsed = el.querySelector(".pts-brief");
+    const expanded = el.querySelector(".pts-output");
+    collapsed.style.display = el.open ? "none" : "";
+    expanded.style.display = el.open ? "" : "none";
 }
 function SwitchOption(es, id, rge = [true, false], reverse = false) {
     if (!rge.includes(es.checked)) return;
     if (!Array.isArray(id)) id = [id];
-    id.forEach(id => {
+    id.forEach((id) => {
         const et = document.getElementById(id);
         if (et === null) return;
-        et.style.display = es.checked !== reverse ? '' : 'none';
+        et.style.display = es.checked !== reverse ? "" : "none";
     });
 }
 function debugopen(id) {
     const e = document.getElementById(id);
-    if (e) e.style.display = '';
+    if (e) e.style.display = "";
 }
 let steptab = -1;
 function switchStepTab(i) {
-    const subboxes = ['steps-std', 'steps-gb', 'steps-jp', 'steps-tw'];
+    const subboxes = ["steps-std", "steps-gb", "steps-jp", "steps-tw"];
     if (!(i >= 0 && i < subboxes.length)) return;
-    const viewer = document.getElementById('steps-global-viewer');
+    const viewer = document.getElementById("steps-global-viewer");
     if (!viewer) return;
     if (steptab >= 0 && steptab < subboxes.length) {
         const oldbox = document.getElementById(subboxes[steptab]);
@@ -1062,7 +1155,7 @@ function switchStepTab(i) {
     const newbox = document.getElementById(subboxes[i]);
     while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
     steptab = i;
-    document.querySelectorAll('.tab[data-steptabid]').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.steptabid) === i));
+    document.querySelectorAll(".tab[data-steptabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.steptabid) === i));
     localStorage.setItem("steptab", i);
 }
 let scoretab = -1;
@@ -1073,7 +1166,7 @@ function updateScoreTabUser(i) {
 }
 function switchScoreTab(i, auto = false) {
     const subboxes = document_scores_ids;
-    const viewer = document.getElementById('score-global-viewer');
+    const viewer = document.getElementById("score-global-viewer");
     if (!viewer) return;
     if (scoretab >= 0 && scoretab < subboxes.length) {
         const oldbox = document.getElementById(subboxes[scoretab]);
@@ -1084,6 +1177,6 @@ function switchScoreTab(i, auto = false) {
         while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
     }
     scoretab = i;
-    document.querySelectorAll('.tab[data-scoretabid]').forEach(tab => tab.classList.toggle('active', Number(tab.dataset.scoretabid) === i));
+    document.querySelectorAll(".tab[data-scoretabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.scoretabid) === i));
     if (!auto) updateScoreTabUser(i);
 }

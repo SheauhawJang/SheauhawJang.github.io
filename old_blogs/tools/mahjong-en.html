@@ -199,6 +199,7 @@ About Lain Down Melds:
 <button class="tab" data-steptabid="0", onclick="switchStepTab(0)"><span data-i18n="normal"></span></button>
 <button class="tab" data-steptabid="1", onclick="switchStepTab(1)">CN Off. (MCR) Std-T</button>
 <button class="tab" data-steptabid="2", onclick="switchStepTab(2)">JP Riichi (RCR) Std-T</button>
+<button class="tab" data-steptabid="4", onclick="switchStepTab(4)">Sichuan</button>
 <button class="tab" data-steptabid="3", onclick="switchStepTab(3)">HK Style TW Maj.</button>
 </div>
 <div id="steps-global-viewer"></div>
@@ -264,6 +265,21 @@ About Lain Down Melds:
 <div class="output-context" id="output-tw"></div>
 <div class="output-context" id="brief-output-tw" style="display: none"></div>
 <div class="output-time" id="time-output-tw"></div>
+</div>
+<div class="output-box" id="steps-sc" style="display: none;">
+<div class="title-button-container">
+<div class="output-title"><div>Sichuan Mahjong <span style="align-items: baseline;"><sub>(Bloodshed Skirmish)</sub></span> Theory</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">Random</button></div>
+<button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">Fold ▲</button>
+</div>
+<div class="output-option-group">
+<span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(e.g.)</span></span>
+<span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(e.g.)</span></span>
+<!--<label><input type="checkbox" name="step-sc-types" value="3" onchange="restartInput(5)" checked /><span data-i18n="pair7"></span></label>-->
+</div>
+<div class="output-context" id="output-sc"></div>
+<div class="output-context" id="brief-output-sc" style="display: none"></div>
+<div class="output-time" id="time-output-sc"></div>
 </div>
 <div class="output-box" id="score-global" style="display: none;">
 <div class="tabs">

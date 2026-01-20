@@ -48,7 +48,7 @@ function opencheck(openids) {
     }
     return true;
 }
-const document_scores_ids = ["score-gb", "score-jp"];
+const document_scores_ids = ["score-gb", "score-jp", "score-qingque"];
 const updateScoreVisiableBar = ArrayMap(document_scores_ids.length, (_, id) =>
     debounce((visiable) => {
         const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
@@ -73,13 +73,14 @@ const updateScoreVisiableUI = debounce(function (visiable) {
     }
 }, ui_debounce_delay);
 function updateScoreVisiable(id, visiable = "none") {
-    const b = document.getElementById(`${document_scores_ids[id]}-button`);
-    if (b) b.disabled = visiable === "none";
-    else console.log(`${document_scores_ids[id]}-button`);
     const e = document.getElementById(document_scores_ids[id]);
     if (!e) return;
     e.style.display = visiable;
-    if (document.querySelector(`.tab[data-scoretabid="${id}"]`).style.display === "none" && visiable !== "none") {
+    const b = document.getElementById(`${document_scores_ids[id]}-button`);
+    if (b) b.disabled = visiable === "none";
+    else console.log(`${document_scores_ids[id]}-button`);
+    const utab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
+    if (utab && utab.style.display === "none" && visiable !== "none") {
         updateScoreVisiableBar[id].immediate(visiable);
     } else {
         updateScoreVisiableBar[id](visiable);
@@ -101,7 +102,7 @@ function processInput() {
         updateTaskBrief[i]("");
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
     }
-    const workers_scores = [gb_worker, jp_worker];
+    const workers_scores = [gb_worker, jp_worker, null];
     for (let i = 0; i < workers_scores.length; ++i) {
         updateScoreVisiable(i);
         if (workers_scores[i]) workers_scores[i].terminate();
@@ -150,7 +151,7 @@ function processInput() {
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     updateScoreVisiable(1, "block");
                     jp_worker = null;
-                    jp_worker_info = { aids, tiles, substeps: newstepjp };
+                    jp_worker_info = newstepjp;
                 }
                 break;
             case 2:
@@ -160,7 +161,24 @@ function processInput() {
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     updateScoreVisiable(0, "block");
                     gb_worker = null;
-                    gb_worker_info = { aids, tiles, substeps: worker_substeps[task] };
+                    gb_worker_info = worker_substeps[task];
+                }
+                if (Math.min(worker_substeps[1][0], worker_substeps[2][1]) === -1 && opencheck(aids[1])) {
+                    let show_qingque = Boolean(document.getElementById("score-qingque"));
+                    if (aids[0].length + aids[1].length * 3 !== 14) show_qingque = false;
+                    for (let i = 0; show_qingque && i < aids[0].length; ++i) if (aids[0][i].id >= sizeUT) show_qingque = false;
+                    let stiles = tiles.slice();
+                    for (let i = 0; show_qingque && i < aids[1].length; ++i)
+                        for (let j = 0; j < aids[1][i].length; ++j)
+                            if (aids[1][i][j].id >= sizeUT) show_qingque = false;
+                            else ++stiles[aids[1][i][j].id];
+                    for (let i = 0; show_qingque && i < sizeUT; ++i) if (stiles[i] > 4) show_qingque = false;
+                    if (show_qingque) {
+                        document.getElementById("output-score-qingque").textContent = "";
+                        document.getElementById("brief-output-score-qingque").textContent = "";
+                        document.getElementById("time-output-score-qingque").textContent = "Ready to start!";
+                        updateScoreVisiable(2, "block");
+                    }
                 }
                 break;
         }
@@ -780,7 +798,7 @@ function processGBScore() {
         updateGBBrief.immediate(e.data.result.brief);
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     };
-    gb_worker.postMessage({ task: "gb-score", ...gb_worker_info, gw, mw, wt, info, lang, setting });
+    gb_worker.postMessage({ task: "gb-score", aids, tiles, substeps: gb_worker_info, gw, mw, wt, info, lang, setting });
 }
 let jp_worker = null;
 let jp_worker_info;
@@ -826,7 +844,7 @@ function processJPScore() {
         updateJPBrief.immediate(e.data.result.brief);
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
-    jp_worker.postMessage({ task: "jp-score", ...jp_worker_info, gw, mw, wt, info, setting, lang });
+    jp_worker.postMessage({ task: "jp-score", aids, tiles, substeps: jp_worker_info, gw, mw, wt, info, setting, lang });
 }
 function getFixedImage(div) {
     return Array.from(div.querySelectorAll("img")).find((img) => getComputedStyle(img).position !== "absolute");
@@ -1192,11 +1210,10 @@ function switchStepTab(i) {
     if (!viewer) return;
     if (steptab >= 0 && steptab < subboxes.length) {
         const oldbox = document.getElementById(subboxes[steptab]);
-        while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
+        if (oldbox) while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
     }
     const newbox = document.getElementById(subboxes[i]);
-    if (!newbox) return;
-    while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
+    if (newbox) while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
     steptab = i;
     document.querySelectorAll(".tab[data-steptabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.steptabid) === i));
     localStorage.setItem("steptab", i);
@@ -1213,13 +1230,68 @@ function switchScoreTab(i, auto = false) {
     if (!viewer) return;
     if (scoretab >= 0 && scoretab < subboxes.length) {
         const oldbox = document.getElementById(subboxes[scoretab]);
-        while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
+        if (oldbox) while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
     }
     if (i >= 0 && i < subboxes.length) {
         const newbox = document.getElementById(subboxes[i]);
-        while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
+        if (newbox) while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
     }
     scoretab = i;
     document.querySelectorAll(".tab[data-scoretabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.scoretabid) === i));
     if (!auto) updateScoreTabUser(i);
+}
+let qingqueController = null;
+async function getResultFromQingque(myInput) {
+    const targetUrl = "https://mmcr.online/api/calc";
+    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+    if (qingqueController) {
+        qingqueController.abort();
+        console.log("Previous request aborted.");
+    }
+    qingqueController = new AbortController();
+    const { signal } = qingqueController;
+    try {
+        console.log("Sending Request......");
+        const response = await fetch(proxyUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ expression: myInput }),
+            signal: signal
+        });
+        if (!response.ok) throw new Error("Proxy request failed");
+        const buffer = await response.arrayBuffer();
+        const decoder = new TextDecoder("utf-8");
+        const resultText = decoder.decode(buffer);
+        return resultText;
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            console.log("Request discarded. Result ignored.");
+            return null; 
+        }
+        console.error("Error: ", error);
+    } finally {
+        if (qingqueController?.signal === signal) {
+            qingqueController = null;
+        }
+    }
+}
+async function convertQingque() {
+    document.getElementById("output-score-qingque").textContent = "";
+    document.getElementById("brief-output-score-qingque").textContent = "";
+    const a = [...ArrayMap(27, (_, i) => cardName(i)), ..."ESWNCFP"];
+    const f = (x) => a[x.id];
+    let s = "";
+    s += aids[0].map(f).join("");
+    s += aids[1]
+        .map((x) => {
+            const k = x.map(f).join("");
+            return x.length === 4 && x.type % 4 === 0 ? `[${k}]` : `(${k})`;
+        })
+        .join("");
+    s += [document.querySelector('input[name="score-qingque-local-wind"]:checked').value, document.querySelector('input[name="score-qingque-wintype"]:checked').value, ...Array.from(document.querySelectorAll('input[name="score-qingque-wininfo"]:checked')).map((x) => x.value)].join("");
+    document.getElementById("time-output-score-qingque").textContent = "Sending Request...";
+    const now = new Date();
+    const ans = await getResultFromQingque(s);
+    if (ans) document.getElementById("output-score-qingque").textContent = ans;
+    document.getElementById("time-output-score-qingque").textContent = `Used ${new Date() - now} ms`;
 }

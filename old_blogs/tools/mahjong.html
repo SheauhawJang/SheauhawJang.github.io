@@ -286,6 +286,7 @@
 <div class="tabs">
 <button class="tab" data-scoretabid="0", onclick="switchScoreTab(0)">国标麻将<span data-i18n="GB_FAN_unit"></span>数计算器</button>
 <button class="tab" data-scoretabid="1", onclick="switchScoreTab(1)">立直麻将点数计算器</button>
+<button class="tab" data-scoretabid="2", onclick="switchScoreTab(2)">青雀计算器代理查询</button>
 </div>
 <div id="score-global-viewer"></div>
 </div>
@@ -725,6 +726,38 @@
 <div class="output-context" id="output-score-jp"></div>
 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
+</div>
+<div class="output-box" id="score-qingque">
+<div class="title-button-container">
+<div class="output-title">青雀计算器代理查询</div>
+<button class="toggle-button" id="toggle-output-score-qingque" onclick="toggleOutput('output-score-qingque')">折叠 ▲</button>
+</div>
+<div id="options-output-score-qingque">
+<div class="output-options">
+<span>门风</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-qingque-local-wind" value="!" checked />东</label>
+<label><input type="radio" name="score-qingque-local-wind" value="@" />南</label>
+<label><input type="radio" name="score-qingque-local-wind" value="#" />西</label>
+<label><input type="radio" name="score-qingque-local-wind" value="$" />北</label>
+</div>
+<span>和牌方式</span>
+<div class="output-option-group">
+<label><input type="radio" name="score-qingque-wintype" value="" checked />点和</label>
+<label><input type="radio" name="score-qingque-wintype" value="%" />自摸</label>
+</div>
+<span>和牌状态</span>
+<div class="output-option-group">
+<label><input type="checkbox" name="score-qingque-wininfo" value="^" />开杠相关</label>
+<label><input type="checkbox" name="score-qingque-wininfo" value="&" />最后一张</label>
+<label><input type="checkbox" name="score-qingque-wininfo" value="*" />天地和</label>
+</div>
+<button id="score-qingque-button" onclick="convertQingque()" class="score-button">代理查询</button>
+</div>
+</div>
+<div class="output-context" id="output-score-qingque"></div>
+<div class="output-context" id="brief-output-score-qingque" style="display: none"></div>
+<div class="output-time" id="time-output-score-qingque">Ready to start!</div>
 </div>
 </div>
 <div class="reference-box mobile-display-only" id="title-box"></div>

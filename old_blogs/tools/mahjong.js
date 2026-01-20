@@ -408,11 +408,8 @@ function PairStep(tiles, disjoint = false, guse = guseall) {
         let [ans, sig] = [0, 0];
         let ra, rb;
         let i, nxti;
-        for (i = 0; i < sizeUT; ++i)
-            if (guse[i] !== Infinity) {
-                [ra, rb] = [tiles[JokerA[i]], tiles[JokerB[i]]];
-                break;
-            }
+        for (i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) break;
+        if (i < sizeUT) [ra, rb] = [tiles[JokerA[i]], tiles[JokerB[i]]];
         for (; i < sizeUT; i = nxti) {
             for (nxti = i + 1; nxti < sizeUT; ++nxti) if (guse[nxti] !== Infinity) break;
             let ei = tiles[i];

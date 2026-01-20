@@ -403,28 +403,33 @@ function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt 
     return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt) < maxstep;
 }
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
-function PairStep(tiles, disjoint = false, guse = guseall) {
+function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity) {
     if (!disjoint) {
         let [ans, sig] = [0, 0];
         let ra, rb;
+        let rc = tiles[JokerC];
         let i, nxti;
         for (i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) break;
         if (i < sizeUT) [ra, rb] = [tiles[JokerA[i]], tiles[JokerB[i]]];
         for (; i < sizeUT; i = nxti) {
             for (nxti = i + 1; nxti < sizeUT; ++nxti) if (guse[nxti] !== Infinity) break;
-            let ei = tiles[i];
+            let ei = Math.min(tiles[i], glimit - guse[i]);
+            const sei = ei;
             if (JokerA[i] !== JokerA[nxti]) ((ei += ra), (ra = 0));
             if (JokerB[i] !== JokerB[nxti]) ((ei += rb), (rb = 0));
             ans += Math.floor(ei / 2);
             if (ei % 2)
                 if (ra) (--ra, ++ans);
                 else if (rb) (--rb, ++ans);
+                else if (tiles[i] >= glimit - guse[i] && sei === ei)
+                    if (rc) (--rc, ++ans);
+                    else;
                 else ++sig;
             if (JokerA[i] !== JokerA[nxti]) ra = tiles[JokerA[nxti]];
             if (JokerB[i] !== JokerB[nxti]) rb = tiles[JokerB[nxti]];
         }
         if (ans > 7) ((sig += (ans - 7) * 2), (ans = 7));
-        return 13 - ans * 2 - Math.min(sig, 7 - ans) - tiles[JokerC];
+        return 13 - ans * 2 - Math.min(sig, 7 - ans) - rc;
     } else {
         let t = tiles.slice();
         for (let i = 0; i < sizeUT; ++i) {
@@ -737,7 +742,7 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
 function SCPrecheck(tiles, step, substep, tcnt, subcnt) {
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
-    const f = (i, s) => [searchDp(tiles, 0, 0, tcnt, s, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity];
+    const f = (i, s) => [searchDp(tiles, 0, 0, tcnt, s, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i], 4) : Infinity];
     for (let j = 0; j < 3; ++j) {
         if (step >= substep[j]) {
             initDischecks(tiles, (i) => (dischecks[i][j] = Math.min(...f(j, step + 1)) <= step));
@@ -835,7 +840,7 @@ function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
 }
 function SCWaiting(tiles, step, substep, tcnt, subcnt, discheck, getchecks) {
     discheck ??= [step >= substep[0], step >= substep[1], step >= substep[2]];
-    const f = (tiles, i) => [searchDp(tiles, 0, 0, tcnt, Infinity, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity];
+    const f = (tiles, i) => [searchDp(tiles, 0, 0, tcnt, Infinity, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i], 4) : Infinity];
     function waiting(tiles, step, _, g) {
         for (let i = 0; i < 3; ++i) if (discheck[i] && (!g || g[i]) && Math.min(...f(tiles, i)) < step) return true;
     }

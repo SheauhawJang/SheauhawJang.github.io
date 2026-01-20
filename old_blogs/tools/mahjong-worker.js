@@ -527,7 +527,7 @@ function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
         }
     }
     for (let i = 0; i < 3; ++i) {
-        if (rsubstep[i] === Infinity) rsubstep[i] = sublimit[i] ? [searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guseque[i]), full_tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i]) : Infinity] : [Infinity, Infinity];
+        if (rsubstep[i] === Infinity) rsubstep[i] = sublimit[i] ? [searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guseque[i]), full_tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i], 4) : Infinity] : [Infinity, Infinity];
         if (mask && mask[i] && sublimit[i]) {
             substep[i] = Math.min(...rsubstep[i]);
             updateTable(`${locarr[i]}${loc.colon}`, `${getWaitingType(substep[i])}`);

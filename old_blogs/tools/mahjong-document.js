@@ -293,11 +293,13 @@ function randomWinning(local, seqs = default_seqs, tris = default_tris) {
     for (let i = 0; i < melds; ++i) getMeld(seqs, tris).forEach((x) => ++tiles[x]);
     for (let i = 0; i < head; ++i) tiles[tris[random(tris.length)]] += 2;
     if (local !== undefined) return tiles;
+    submitjokerhand(tiles, n % 3 == 1);
+}
+function submitjokerhand(tiles, listen) {
     let jokercount = 0;
     for (let i = 0; i < sizeUT; ++i) if (tiles[i] > 4) ((jokercount += tiles[i] - 4), (tiles[i] = 4));
-    let hand = [];
-    for (let i = 0; i < sizeUT; ++i) hand.push(...Array(tiles[i]).fill(i));
-    if (n % 3 === 1)
+    let hand = tiles.flatMap((count, i) => Array(count).fill(i));
+    if (listen)
         if (jokercount) --jokercount;
         else hand.splice(random(hand.length), 1);
     else if (hand.length > 0) {
@@ -319,13 +321,17 @@ function submithand(hand, listen) {
     drawInputCards();
     processInput();
 }
-function randomWinningPairs(disjoint = false, guse = guseall) {
+function randomWinningPairs(disjoint = 0, guse = guseall) {
+    if (disjoint === true) disjoint = 1;
     const listen = aids[0].length % 3 === 1;
     let arr = [];
     for (let i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) arr.push(i);
-    shuffle(arr);
     let hand = [];
-    if (disjoint) for (let i = 0; i < 7; ++i) hand.push(arr[i], arr[i]);
+    if (disjoint) {
+        let plot = arr.flatMap(x => Array(disjoint).fill(x));
+        shuffle(plot);
+        for (let i = 0; i < 7; ++i) hand.push(plot[i], plot[i]);
+    }
     else for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(arr[random(arr.length)]));
     submithand(hand, listen);
 }
@@ -376,14 +382,12 @@ function randomWinningBuda() {
     submithand(hand, listen);
 }
 function randomWinningSC(i) {
-    if (Math.random() < 0.1) return randomWinningPairs(false, guseque[i]);
+    if (Math.random() < 0.1) return randomWinningPairs(2, guseque[i]);
     const seqs = default_seqs.toSpliced(i * 7, 7);
     const tris = ArrayMap(27, (_, i) => i).toSpliced(i * 9, 9);
     const n = aids[0].length + aids[1].length * 3;
     const tiles = randomWinning(n, seqs, tris);
-    let hand = [];
-    tiles.forEach((x, i) => hand.push(...Array(x).fill(i)));
-    submithand(hand, n % 3 === 1);
+    submitjokerhand(tiles, n % 3 === 1);
 }
 function randomInput(n = parseInt(document.getElementById("randomCardCount").value), m = 136) {
     randomInputText(n, m);

@@ -201,6 +201,7 @@
 <button class="tab" data-steptabid="3", onclick="switchStepTab(3)">港式台灣麻將牌理</button>
 <button class="tab" data-steptabid="2", onclick="switchStepTab(2)">立直麻將標準型牌理</button>
 <button class="tab" data-steptabid="1", onclick="switchStepTab(1)">國標麻將標準型牌理</button>
+<button class="tab" data-steptabid="4", onclick="switchStepTab(4)">四川麻將牌理</button>
 </div>
 <div id="steps-global-viewer"></div>
 </div>
@@ -265,6 +266,20 @@
 <div class="output-context" id="output-gb"></div>
 <div class="output-context" id="brief-output-gb" style="display: none"></div>
 <div class="output-time" id="time-output-gb"></div>
+</div>
+<div class="output-box" id="steps-sc" style="display: none;">
+<div class="title-button-container">
+<div class="output-title"><div>四川麻將<span style="align-items: baseline;"><sub>(赤羽之戰)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">随机配牌</button></div>
+<button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">摺疊 ▲</button>
+</div>
+<div class="output-option-group">
+<span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
+<span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
+<span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
+</div>
+<div class="output-context" id="output-sc"></div>
+<div class="output-context" id="brief-output-sc" style="display: none"></div>
+<div class="output-time" id="time-output-sc"></div>
 </div>
 <div class="output-box" id="score-global" style="display: none;">
 <div class="tabs">
@@ -743,7 +758,7 @@
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.2</div>
+<div class="output-time">v4.8.3</div>
 <div class="output-time">聯絡作者：<a href="https://x.com/akiko36000" style="color: inherit;">三倍滿自動姬</a></div>
 </div>
         <script src="mahjong.js"></script>

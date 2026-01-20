@@ -60,9 +60,10 @@ const updateScoreVisiableUI = debounce(function (visiable) {
     let vid = [];
     for (let i = 0; i < document_scores_ids.length; ++i) {
         const se = document.getElementById(document_scores_ids[i]);
-        if (se && se.style.display !== "none") vid.push([i, se]);
+        const te = document.querySelector(`.tab[data-scoretabid="${i}"]`);
+        if (se && se.style.display !== "none" && te) vid.push([i, se, te]);
     }
-    vid.sort((a, b) => (a[1] === b[1] ? 0 : a[1].compareDocumentPosition(b[1]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+    vid.sort((a, b) => (a[2] === b[2] ? 0 : a[2].compareDocumentPosition(b[2]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
     if (visiable === "none") {
         if (vid.length === 0) ((document.getElementById("score-global").style.display = "none"), switchScoreTab(-1, true));
         else switchScoreTab(vid[0][0], true);

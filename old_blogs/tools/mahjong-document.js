@@ -1243,8 +1243,7 @@ function switchScoreTab(i, auto = false) {
 }
 let qingqueController = null;
 async function getResultFromQingque(myInput) {
-    const targetUrl = "https://mmcr.online/api/calc";
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+    const proxyUrl = `https://mmcr.sanbaiman.workers.dev/`;
     if (qingqueController) {
         qingqueController.abort();
         console.log("Previous request aborted.");
@@ -1269,7 +1268,7 @@ async function getResultFromQingque(myInput) {
             console.log("Request discarded. Result ignored.");
             return null; 
         }
-        console.error("Error: ", error);
+        document.getElementById("time-output-score-qingque").textContent = `Error: ${error}`;
     } finally {
         if (qingqueController?.signal === signal) {
             qingqueController = null;
@@ -1293,6 +1292,8 @@ async function convertQingque() {
     document.getElementById("time-output-score-qingque").textContent = "Sending Request...";
     const now = new Date();
     const ans = await getResultFromQingque(s);
-    if (ans) document.getElementById("output-score-qingque").textContent = ans;
-    document.getElementById("time-output-score-qingque").textContent = `Used ${new Date() - now} ms`;
+    if (ans) {
+        document.getElementById("output-score-qingque").textContent = ans;
+        document.getElementById("time-output-score-qingque").textContent = `Used ${new Date() - now} ms`;
+    }
 }

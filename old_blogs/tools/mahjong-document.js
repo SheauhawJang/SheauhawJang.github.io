@@ -39,16 +39,18 @@ function putWorkerResult(e, task) {
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
     return false; // remain results need to be put
 }
-function opencheck(openids) {
+function opencheck(openids, seq = true) {
     for (let i = 0; i < openids.length; ++i) {
         let wfc = openids[i].map((x) => x.id);
         if (wfc.length > 4 || wfc.length < 3) return false;
         if (wfc.length === 3) wfc = wfc.sort((a, b) => a - b);
-        if (!isMeld(wfc) && !isQuad(wfc)) return false;
+        if (isTri(wfc) || isQuad(wfc)) continue;
+        if (seq && isSeq(wfc)) continue;
+        return false;
     }
     return true;
 }
-const document_scores_ids = ["score-gb", "score-jp", "score-qingque"];
+const document_scores_ids = ["score-gb", "score-jp", "score-qingque", "score-sc"];
 const updateScoreVisiableBar = ArrayMap(document_scores_ids.length, (_, id) =>
     debounce((visiable) => {
         const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
@@ -103,7 +105,7 @@ function processInput() {
         updateTaskBrief[i]("");
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
     }
-    const workers_scores = [gb_worker, jp_worker, null];
+    const workers_scores = [gb_worker, jp_worker, null, sc_worker];
     for (let i = 0; i < workers_scores.length; ++i) {
         updateScoreVisiable(i);
         if (workers_scores[i]) workers_scores[i].terminate();
@@ -182,6 +184,15 @@ function processInput() {
                     }
                 }
                 break;
+            case 5: 
+                if (Math.min(...worker_substeps[5].flat()) <= -1 + full_tcnt - tcnt && opencheck(aids[1], false)) {
+                    updateSCOutput("");
+                    updateSCBrief("");
+                    document.getElementById("time-output-score-sc").textContent = "Ready to start!";
+                    updateScoreVisiable(3, "block");
+                    sc_worker = null;
+                    sc_worker_info = worker_substeps[task];
+                }
         }
         getStepMask(task, false);
         do ++task;
@@ -759,9 +770,9 @@ function subtileInput(t, k) {
 let gb_worker = null;
 let gb_worker_info;
 const GB_RADIO_MAX = 7;
-const GB_SETTING_SIZE = 45;
-const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay * 3);
-const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay * 3);
+const GB_SETTING_SIZE = 46;
+const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 function processGBScore() {
     updateScoreTabUser(0);
     if (gb_worker) {
@@ -809,8 +820,8 @@ let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 24;
 const JP_SETTING_SIZE = 128;
-const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay);
-const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay);
+const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 function processJPScore() {
     updateScoreTabUser(1);
     if (jp_worker) {
@@ -850,6 +861,51 @@ function processJPScore() {
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     jp_worker.postMessage({ task: "jp-score", aids, tiles, substeps: jp_worker_info, gw, mw, wt, info, setting, lang });
+}
+let sc_worker = null;
+let sc_worker_info;
+const SC_RADIO_MAX = 7;
+const SC_SETTING_SIZE = 15;
+const updateSCOutput = debounce((text) => (document.getElementById("output-score-sc").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+const updateSCBrief = debounce((text) => (document.getElementById("brief-output-score-sc").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+function processSCScore() {
+    updateScoreTabUser(3);
+    if (sc_worker) {
+        sc_worker.terminate();
+        sc_worker = null;
+    }
+    updateSCOutput("");
+    updateSCBrief("");
+    document.getElementById("time-output-score-sc").textContent = "Calculating......";
+    const wt = Number(document.querySelector('input[name="score-sc-wintype"]:checked').value);
+    let info = document.querySelectorAll('input[name="score-sc-wininfo"]:checked');
+    info = Array.from(info).map((x) => Number(x.value));
+    let sq = Array.from(document.querySelectorAll('input[name="score-sc-setting"]:checked'));
+    for (let i = 0; i <= SC_RADIO_MAX; ++i) {
+        const ssq = Array.from(document.querySelectorAll(`input[name="score-sc-setting-${i}"]:checked`));
+        sq.push(...ssq);
+    }
+    let setting = Array(SC_SETTING_SIZE).fill(0);
+    for (let i = 0; i < sq.length; ++i) {
+        const [a, b] = sq[i].value.split(",");
+        if (Number(a) === 0 && b === undefined) continue;
+        setting[a] = Number(b ?? 1);
+    }
+    setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
+    sc_worker = new Worker("mahjong-worker.js");
+    sc_worker.onmessage = function (e) {
+        if ("debug" in e.data) {
+            document.getElementById("time-output-score-sc").textContent = e.data.debug;
+            updateSCOutput(e.data.output);
+            return;
+        }
+        sc_worker.terminate();
+        sc_worker = null;
+        updateSCOutput.immediate(e.data.result.output);
+        updateSCBrief.immediate(e.data.result.brief);
+        document.getElementById("time-output-score-sc").textContent = `Used ${e.data.time} ms`;
+    };
+    sc_worker.postMessage({ task: "sc-score", aids, tiles, substeps: sc_worker_info, wt, info, lang, setting });
 }
 function getFixedImage(div) {
     return Array.from(div.querySelectorAll("img")).find((img) => getComputedStyle(img).position !== "absolute");
@@ -1280,6 +1336,7 @@ async function getResultFromQingque(myInput) {
     }
 }
 async function convertQingque() {
+    updateScoreTabUser(2);
     document.getElementById("output-score-qingque").textContent = "";
     document.getElementById("brief-output-score-qingque").textContent = "";
     const a = [...ArrayMap(27, (_, i) => cardName(i)), ..."ESWNCFP"];

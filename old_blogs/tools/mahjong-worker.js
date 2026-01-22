@@ -527,7 +527,7 @@ function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
         }
     }
     for (let i = 0; i < 3; ++i) {
-        if (rsubstep[i] === Infinity) rsubstep[i] = sublimit[i] ? [searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guseque[i]), full_tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i], 4) : Infinity] : [Infinity, Infinity];
+        if (rsubstep[i] === Infinity) rsubstep[i] = sublimit[i] ? SCStepArray(tiles, full_tcnt, subcnt, i) : [Infinity, Infinity];
         if (mask && mask[i] && sublimit[i]) {
             substep[i] = Math.min(...rsubstep[i]);
             updateTable(`${locarr[i]}${loc.colon}`, `${getWaitingType(substep[i])}`);
@@ -580,7 +580,6 @@ function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
     postMessage({ output });
     if (full_tcnt === 14 && subcnt === 0) {
         let change = new Map();
-        let best_step = Infinity;
         function dfs(color, seleted = [], number = 0) {
             if (number === 9) {
                 if (seleted.length !== 3) return;
@@ -849,7 +848,8 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     let north = setting[49] && setting[53] ? getSpecial((x) => x.id === 30) : 0;
     console.log(aka, north);
     let nukicnt = aids[2].length;
-    const p = MeldsPermutation(aids);
+    const guse = setting[49] ? guse3p : guseall;
+    const p = MeldsPermutation(aids, undefined, undefined, undefined, guse);
     debugPermutation(p);
     let searchList = [() => normalSearch(substeps, p)];
     const infoupdate = (id) => JPUpdateFan(infoans, setting, id);
@@ -968,7 +968,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             updateAns(getJPAnsUnion(setting, kksans, [8], 20, 20, gd, gu));
         }
         if (substeps[0] === -1 && !setting[58]) {
-            const { err, itots, itsubots, ek, ck, nots, nsubots } = p;
+            const { itots, itsubots, ek, ck, nots, nsubots } = p;
             [cm, m] = [0, nots * nsubots];
             mq = ck === aids[1].length;
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
@@ -1002,7 +1002,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         const s = aids[0].at(-1).id;
         (--tiles[s], ++tiles[t]);
         aids[0].at(-1).id = t;
-        normalSearch(JPStep(), MeldsPermutation(aids));
+        normalSearch(JPStep(), MeldsPermutation(aids, undefined, undefined, undefined, guse));
         aids[0].at(-1).id = s;
         (++tiles[s], --tiles[t]);
         if (i === undefined) (infoans.pop(), (infoans.valfan -= tvf));
@@ -1024,7 +1024,8 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     const fanfuinfo = gans.yakuman ? name : gans.valfus >= 20 ? `${gans.valfan} ${loc.JP_FAN_unit} ${gans.valfus} ${loc.JP_FU_unit}${namebrace}` : "";
     const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq, gans.dora ?? 0, gans.ura ?? 0, aka, nukicnt, north);
     const opts = gans !== eans_jp ? [fanfuinfo, fanfudiv, ptchange] : [loc.wrong_win];
-    return { output: opts.join(""), brief: `${fanfuinfo}${loc.comma}${ptchange}` };
+    const brief = gans !== eans_jp ? `${fanfuinfo}${loc.comma}${ptchange}` : loc.wrong_win;
+    return { output: opts.join(""), brief };
 }
 function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     if (sbase === 1) base = Math.round(base / 10) * 10;
@@ -1073,13 +1074,65 @@ function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     } else score = oya ? (s3p[0] === 4 ? fpt(base * 4) : fpt(base * 6)) : s3p[0] === 4 ? fpt(base * 3) : fpt(base * 4);
     return [score, exinfo];
 }
-function ListenScore(f, sf) {
+function SCScore(substeps, tsumo, info, setting) {
+    console.log(substeps);
+    let gans = { val: 0, fan: Array(18).fill(0) };
+    let [cm, m] = [0, 0];
+    const st = new Date();
+    const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
+    let ps = Array(3).fill(null);
+    for (let i = 0; i < 3; ++i) {
+        if (substeps[i][0] === -1) {
+            ps[i] = MeldsPermutation(aids, undefined, undefined, undefined, guseque[i], false);
+            debugPermutation(ps[i]);
+            const { nots, nsubots } = ps[i];
+            m += nots * nsubots;
+        }
+        if (substeps[i][1] === -1) ++m;
+    }
+    function update(f) {
+        const ans = f();
+        if (ans.val > gans.val) gans = ans;
+        ++cm;
+        if (!(cm & 1048575)) postDebugInfo();
+    }
+    const sp = PairOutput(tiles).map((x) => x[0]);
+    for (let i = 0; i < 3; ++i) {
+        if (substeps[i][0] === -1) {
+            const { itots, itsubots, ek, ck } = ps[i];
+            itots((ots) => itsubots((subots) => update(() => SichuanKernel([...ots, ...subots], false, aids, info, ck, ek, setting))));
+        }
+        if (substeps[i][1] === -1) pairLeastProduct(sp, (sot) => update(() => SichuanKernel(sot.map(x => [x, x]), true, aids, info, 0, 0, setting)), guseque[i]);
+    }
+    let adj = [];
+    if (gans.fan[1]) adj.push(loc.SC_FAN_ADJ_1);
+    if (gans.fan[2]) adj.push(loc.SC_FAN_ADJ_2);
+    if (gans.fan[3]) adj.push(loc.SC_FAN_ADJ_3);
+    if (gans.fan[4]) {
+        if (gans.fan[7] === 3) adj.push(loc.SC_FAN_ADJ_8);
+        if (gans.fan[7] === 2) adj.push(loc.SC_FAN_ADJ_7);
+        if (gans.fan[7]) adj.push(loc.SC_FAN_ADJ_6);
+        adj.push(loc.SC_FAN_ADJ_4);
+    }
+    if (gans.fan[5]) {
+        if (aids[0].length <= 2) {
+            let k = 0;
+            for (let i = 0; i < aids[1].length; ++i) if (aids[1][i].length === 4) ++k;
+            if (k >= 4) adj.push(loc.SC_FAN_ADJ_9);
+            else adj.push(loc.SC_FAN_NAME_6);
+        } else adj.push(loc.SC_FAN_ADJ_5);
+    }
+    return { output: `${adj.join(loc.SC_separator)} ${gans.val} ${loc.SC_FAN_unit}, ${gans.fan.flatMap((x, i) => Array(x).fill(loc[`SC_FAN_NAME_${i}`])).join(', ')}`, brief: gans.val };
+}
+function ListenScore(f, sf, fake = true) {
+    console.log(fake);
     report = false;
     let output = "";
     for (let i = 0; i < sizeUT; ++i) {
+        if (!fake && tiles[i] >= 4) continue;
         (aids[0].push({ id: i }), ++tiles[i], ++tcnt);
         const substeps = sf(false);
-        const step = Math.min(...substeps);
+        const step = Math.min(...substeps.flat());
         if (step === -1) {
             const ans = f(substeps);
             output += `<details ontoggle="ptsToggle(this)"><summary><span class="pts-brief">${cardImage(i)}${loc.colon}${ans.brief}</span><span class="pts-output" style="display: none;">${cardImage(i)}${loc.colon}${ans.output}</span></summary></details>`;
@@ -1146,10 +1199,10 @@ self.onmessage = function (e) {
             else result = { output: ListenScore((substeps) => JPScore(substeps, gw, mw, wt, info, setting), JPStep), brief: "" };
             break;
         }
-        case "qingque-score": {
-            let { substeps, info } = e.data;
-            Qingque_Weight_creation();
-            result = Qingque_Calculate(aids, info, substeps);
+        case "sc-score": {
+            let { substeps, wt, info, setting } = e.data;
+            if (full_tcnt === tcnt) result = SCScore(substeps, wt, info, setting);
+            else result = { output: ListenScore((substeps) => SCScore(substeps, wt, info, setting), SCStep, setting[13]), brief: "" };
             break;
         }
     }

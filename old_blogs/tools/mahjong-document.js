@@ -100,10 +100,11 @@ function processInput() {
         worker.terminate();
         worker = null;
     }
-    for (let i = 0; i < document_element_ids.length; ++i) {
+    for (let i = 0; i < TASK_NUM; ++i) {
         updateTaskOutput[i]("");
         updateTaskBrief[i]("");
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
+        getStepMask(task, true);
     }
     const workers_scores = [gb_worker, jp_worker, null, sc_worker];
     for (let i = 0; i < workers_scores.length; ++i) {
@@ -185,7 +186,7 @@ function processInput() {
                 }
                 break;
             case 5: 
-                if (Math.min(...worker_substeps[5].flat()) <= -1 + full_tcnt - tcnt && opencheck(aids[1], false)) {
+                if (Math.min(...worker_substeps[5].flat()) <= -1 + full_tcnt - tcnt && opencheck(aids[1], false) && document.getElementById("score-sc")) {
                     updateSCOutput.immediate("");
                     updateSCBrief.immediate("");
                     document.getElementById("time-output-score-sc").textContent = "Ready to start!";

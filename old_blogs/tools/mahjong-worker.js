@@ -1115,12 +1115,10 @@ function SCScore(substeps, tsumo, info, setting) {
         adj.push(loc.SC_FAN_ADJ_4);
     }
     if (gans.fan[5]) {
-        if (aids[0].length <= 2) {
-            let k = 0;
-            for (let i = 0; i < aids[1].length; ++i) if (aids[1][i].length === 4) ++k;
-            if (k >= 4) adj.push(loc.SC_FAN_ADJ_9);
+        if (gans.fan[6]) 
+            if (aids[1].filter(item => item.length === 4).length >= 4) adj.push(loc.SC_FAN_ADJ_9);
             else adj.push(loc.SC_FAN_NAME_6);
-        } else adj.push(loc.SC_FAN_ADJ_5);
+        else adj.push(loc.SC_FAN_ADJ_5);
     }
     return { output: `${adj.join(loc.SC_separator)} ${gans.val} ${loc.SC_FAN_unit}, ${gans.fan.flatMap((x, i) => Array(x).fill(loc[`SC_FAN_NAME_${i}`])).join(', ')}`, brief: gans.val };
 }

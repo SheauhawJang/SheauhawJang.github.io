@@ -149,8 +149,8 @@ function processInput() {
                 const newstepjp = worker_substeps[task].slice();
                 if (worker_substeps[0] === -1) newstepjp[0] = -1;
                 if (Math.min(...newstepjp) <= -1 + full_tcnt - tcnt && opencheck(aids[1])) {
-                    updateJPOutput("");
-                    updateJPBrief("");
+                    updateJPOutput.immediate("");
+                    updateJPBrief.immediate("");
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     updateScoreVisiable(1, "block");
                     jp_worker = null;
@@ -159,8 +159,8 @@ function processInput() {
                 break;
             case 2:
                 if (Math.min(...worker_substeps[task]) <= -1 + full_tcnt - tcnt && opencheck(aids[1])) {
-                    updateGBOutput("");
-                    updateGBBrief("");
+                    updateGBOutput.immediate("");
+                    updateGBBrief.immediate("");
                     document.getElementById("time-output-score-gb").textContent = "Ready to start!";
                     updateScoreVisiable(0, "block");
                     gb_worker = null;
@@ -186,8 +186,8 @@ function processInput() {
                 break;
             case 5: 
                 if (Math.min(...worker_substeps[5].flat()) <= -1 + full_tcnt - tcnt && opencheck(aids[1], false)) {
-                    updateSCOutput("");
-                    updateSCBrief("");
+                    updateSCOutput.immediate("");
+                    updateSCBrief.immediate("");
                     document.getElementById("time-output-score-sc").textContent = "Ready to start!";
                     updateScoreVisiable(3, "block");
                     sc_worker = null;

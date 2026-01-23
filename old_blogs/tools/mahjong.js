@@ -698,12 +698,33 @@ function initGetchecks(tiles, f) {
         --tiles[i];
     }
 }
+function makeAns(step, tiles, f, ff) {
+    let ans = [],
+        gans = [];
+    for (let i = 0; i < sizeUT; ++i) {
+        ++tiles[i];
+        const iw = ff(i);
+        if (iw)
+            if (step === 1 && tiles[i] <= 4)
+                if (checkGoodWaiting(tiles, f, i)) gans.push(i);
+                else ans.push(i);
+            else ans.push(i);
+        --tiles[i];
+    }
+    return { ans, gans: step === 1 ? gans : undefined };
+}
 function NormalPrecheck(tiles, step, tcnt) {
     const dischecks = Array(sizeAT);
     const getchecks = Array(sizeUT);
     initDischecks(tiles, (i) => (dischecks[i] = StepCheck(tiles, step + 1, tcnt - 1, tcnt)));
     initGetchecks(tiles, (i) => (getchecks[i] = StepCheck(tiles, step, tcnt + 1, tcnt)));
     return { dischecks, getchecks };
+}
+function NormalWaiting(tiles, step, tcnt, discheck, getchecks) {
+    if (discheck === false) return { ans: [], checked: false };
+    const waiting = (t, i, d, g) => g !== false && StepCheck(t, i, tcnt - d, tcnt);
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
+    return { ans, gans, checked: discheck };
 }
 function JPPrecheck(tiles, step, substep, tcnt) {
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
@@ -722,6 +743,16 @@ function JPPrecheck(tiles, step, substep, tcnt) {
     }
     return { dischecks, getchecks };
 }
+function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
+    discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2]];
+    function waiting(tiles, step, d, g) {
+        if (discheck[1] && (!g || g[1]) && PairStep(tiles, true) < step) return true;
+        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
+        else if (discheck[0] && (!g || g[0]) && StepCheck(tiles, step, tcnt - d, tcnt, 4)) return true;
+    }
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
+    return { ans, gans, checked: discheck.some(Boolean) };
+}
 function JP3pPrecheck(tiles, step, substep, tcnt) {
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
@@ -739,17 +770,37 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
     }
     return { dischecks, getchecks };
 }
+function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
+    discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2]];
+    function waiting(tiles, step, _, g) {
+        if (discheck[1] && (!g || g[1]) && PairStep(tiles, true, guse3p) < step) return true;
+        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
+        else if (discheck[0] && (!g || g[0]) && searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step) return true;
+    }
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
+    return { ans, gans, checked: discheck.some(Boolean) };
+}
+function SCStepArray(tiles, tcnt, subcnt, voided, sup = Infinity, glimit = Infinity) {
+    return [searchDp(tiles, 0, 0, tcnt, sup, glimit, guseque[voided]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[voided], glimit) : Infinity];
+}
 function SCPrecheck(tiles, step, substep, tcnt, subcnt) {
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
-    const f = (i, s) => [searchDp(tiles, 0, 0, tcnt, s, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i], 4) : Infinity];
     for (let j = 0; j < 3; ++j) {
         if (step >= substep[j]) {
-            initDischecks(tiles, (i) => (dischecks[i][j] = Math.min(...f(j, step + 1)) <= step));
-            initGetchecks(tiles, (i) => (getchecks[i][j] = Math.min(...f(j, step)) < step));
+            initDischecks(tiles, (i) => (dischecks[i][j] = Math.min(...SCStepArray(tiles, tcnt, subcnt, j, step + 1)) <= step));
+            initGetchecks(tiles, (i) => (getchecks[i][j] = Math.min(...SCStepArray(tiles, tcnt, subcnt, j, step)) < step));
         }
     }
     return { dischecks, getchecks };
+}
+function SCWaiting(tiles, step, substep, tcnt, subcnt, discheck, getchecks) {
+    discheck ??= [step >= substep[0], step >= substep[1], step >= substep[2]];
+    function waiting(tiles, step, _, g) {
+        for (let i = 0; i < 3; ++i) if (discheck[i] && (!g || g[i]) && Math.min(...SCStepArray(tiles, tcnt, subcnt, i)) < step) return true;
+    }
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
+    return { ans, gans, checked: discheck.some(Boolean) };
 }
 function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     const dischecks = ArrayMap(sizeAT, () => Array(5).fill(false));
@@ -776,6 +827,24 @@ function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
     }
     return { dischecks, getchecks };
 }
+function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
+    discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2], tcnt === 14 && step >= substep[3], tcnt >= 9 && step >= substep[4]];
+    function waiting(tiles, step, d, g, s) {
+        if (discheck[1] && (!g || g[1]) && PairStep(tiles, false) < step) return true;
+        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
+        else if (discheck[3] && (!g || g[3]) && tcnt - 1 - Bukao16Count(tiles) < step) return true;
+        else if (discheck[0] && (!g || g[0]) && (s ?? StepCheck(tiles, step, tcnt - d, tcnt))) return true;
+        else if (discheck[4] && (!g || g[4]) && KnitDragonStepCheck(tiles, step, tcnt)) return true;
+    }
+    let saveWaiting = undefined;
+    if (step >= substep[0] && saveans) {
+        saveWaiting = Array(sizeUT).fill(false);
+        for (const x of saveans.ans) saveWaiting[x] = true;
+        if (saveans.gans) for (const x of saveans.gans) saveWaiting[x] = true;
+    }
+    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i], saveWaiting?.[i]));
+    return { ans, gans, checked: discheck.some(Boolean) };
+}
 function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
     const dischecks = ArrayMap(sizeAT, () => Array(4).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(4).fill(false));
@@ -796,74 +865,6 @@ function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
         initGetchecks(tiles, (i) => (getchecks[i][3] = Buda16Step(tiles) < step));
     }
     return { dischecks, getchecks };
-}
-function makeAns(step, tiles, f, ff) {
-    let ans = [],
-        gans = [];
-    for (let i = 0; i < sizeUT; ++i) {
-        ++tiles[i];
-        const iw = ff(i);
-        if (iw)
-            if (step === 1 && tiles[i] <= 4)
-                if (checkGoodWaiting(tiles, f, i)) gans.push(i);
-                else ans.push(i);
-            else ans.push(i);
-        --tiles[i];
-    }
-    return { ans, gans: step === 1 ? gans : undefined };
-}
-function NormalWaiting(tiles, step, tcnt, discheck, getchecks) {
-    if (discheck === false) return { ans: [], checked: false };
-    const waiting = (t, i, d, g) => g !== false && StepCheck(t, i, tcnt - d, tcnt);
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
-    return { ans, gans, checked: discheck };
-}
-function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
-    discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2]];
-    function waiting(tiles, step, d, g) {
-        if (discheck[1] && (!g || g[1]) && PairStep(tiles, true) < step) return true;
-        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
-        else if (discheck[0] && (!g || g[0]) && StepCheck(tiles, step, tcnt - d, tcnt, 4)) return true;
-    }
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
-    return { ans, gans, checked: discheck.some(Boolean) };
-}
-function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
-    discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2]];
-    function waiting(tiles, step, _, g) {
-        if (discheck[1] && (!g || g[1]) && PairStep(tiles, true, guse3p) < step) return true;
-        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
-        else if (discheck[0] && (!g || g[0]) && searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step) return true;
-    }
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
-    return { ans, gans, checked: discheck.some(Boolean) };
-}
-function SCWaiting(tiles, step, substep, tcnt, subcnt, discheck, getchecks) {
-    discheck ??= [step >= substep[0], step >= substep[1], step >= substep[2]];
-    const f = (tiles, i) => [searchDp(tiles, 0, 0, tcnt, Infinity, 4, guseque[i]), tcnt === 14 && subcnt === 0 ? PairStep(tiles, false, guseque[i], 4) : Infinity];
-    function waiting(tiles, step, _, g) {
-        for (let i = 0; i < 3; ++i) if (discheck[i] && (!g || g[i]) && Math.min(...f(tiles, i)) < step) return true;
-    }
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
-    return { ans, gans, checked: discheck.some(Boolean) };
-}
-function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
-    discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2], tcnt === 14 && step >= substep[3], tcnt >= 9 && step >= substep[4]];
-    function waiting(tiles, step, d, g, s) {
-        if (discheck[1] && (!g || g[1]) && PairStep(tiles, false) < step) return true;
-        else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
-        else if (discheck[3] && (!g || g[3]) && tcnt - 1 - Bukao16Count(tiles) < step) return true;
-        else if (discheck[0] && (!g || g[0]) && (s ?? StepCheck(tiles, step, tcnt - d, tcnt))) return true;
-        else if (discheck[4] && (!g || g[4]) && KnitDragonStepCheck(tiles, step, tcnt)) return true;
-    }
-    let saveWaiting = undefined;
-    if (step >= substep[0] && saveans) {
-        saveWaiting = Array(sizeUT).fill(false);
-        for (const x of saveans.ans) saveWaiting[x] = true;
-        if (saveans.gans) for (const x of saveans.gans) saveWaiting[x] = true;
-    }
-    const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i], saveWaiting?.[i]));
-    return { ans, gans, checked: discheck.some(Boolean) };
 }
 function TWWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
     discheck ??= [step >= substep[0], tcnt === 17 && step >= substep[1], tcnt === 17 && step >= substep[2], tcnt === 17 && step >= substep[3]];

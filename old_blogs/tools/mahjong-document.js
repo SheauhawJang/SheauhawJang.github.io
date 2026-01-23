@@ -104,7 +104,7 @@ function processInput() {
         updateTaskOutput[i]("");
         updateTaskBrief[i]("");
         sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
-        getStepMask(task, true);
+        getStepMask(i, true);
     }
     const workers_scores = [gb_worker, jp_worker, null, sc_worker];
     for (let i = 0; i < workers_scores.length; ++i) {

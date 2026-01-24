@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202601232014");
-importScripts("mahjong-score.js?v=202601250349");
-importScripts("mahjong-worker-lang.js?v=202601250349");
+importScripts("mahjong.js?v=202601250358");
+importScripts("mahjong-score.js?v=202601250358");
+importScripts("mahjong-worker-lang.js?v=202601250358");
 //console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -1077,7 +1077,7 @@ function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     return [score, exinfo];
 }
 function SCScore(substeps, tsumo, info, setting) {
-    info = tsumo ? info.filter(x => ![9, 10].includes(x)) : info.filter(x => x !== 8);
+    info = tsumo ? info.filter((x) => ![9, 10].includes(x)) : info.filter((x) => x !== 8);
     let gans = SichuanZeroAns();
     let [cm, m] = [0, 0];
     const st = new Date();
@@ -1115,10 +1115,9 @@ function SCScore(substeps, tsumo, info, setting) {
     else if (gans.fan[4]) {
         //if (gans.fan[7] === 3) adj.push(loc.SC_FAN_ADJ_8);
         //if (gans.fan[7] === 2) adj.push(loc.SC_FAN_ADJ_7);
-        if (gans.fan[7]) adj.push(loc.SC_FAN_ADJ_6), updateMainFan(7);
-        adj.push(loc.SC_FAN_ADJ_4), updateMainFan(4);
-    }
-    else if (gans.fan[5])
+        if (gans.fan[7]) (adj.push(loc.SC_FAN_ADJ_6), updateMainFan(7));
+        (adj.push(loc.SC_FAN_ADJ_4), updateMainFan(4));
+    } else if (gans.fan[5])
         if (gans.fan[6])
             if (aids[1].filter((item) => item.length === 4).length >= 4) (adj.push(loc.SC_FAN_ADJ_9), updateMainFan(5, 6, 7, 7, 7, 7));
             else (adj.push(loc.SC_FAN_NAME_6), updateMainFan(5, 6));
@@ -1136,18 +1135,18 @@ function SCScore(substeps, tsumo, info, setting) {
     for (let i = 0; i < gans.fan.length; ++i) if (gans.fan[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_${i}`]), ...fan_times_union(SCScoreArray[i] * gans.fan[i])));
     if (tsumo && setting[11]) (fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_16`]), ...fan_times_union(1))), ++gans.val);
     let opthead = "";
-    let v = gans.val;
+    let v = 1 << gans.val;
     if (gans.val > 0) {
         opthead = `${gans.val} ${loc.SC_FAN_unit}`;
-        const maxfan = setting[12] && gans.val > setting[0] && setting[0] >= 0;
-        if (maxfan) opthead += `${loc.brace_left}${loc.SC_max_fan}${loc.brace_right}`, v = setting[0];
-        v = 1 << v;
-        if (maxfan && setting[16] && setting[15] > 0) v += (gans.val - setting[0]) * setting[15];
+        if (setting[12] && gans.val > setting[0] && setting[0] >= 0) {
+            ((opthead += `${loc.brace_left}${loc.SC_max_fan}${loc.brace_right}`), (v = 1 << setting[0]));
+            if (setting[16] && setting[15] > 0) v += (gans.val - setting[0]) * setting[15];
+        }
     }
     if (!setting[11] && tsumo) ++v;
     let optable = makeTable(fanopt.join(""));
     let optend = tsumo > 1 ? `+${v * tsumo}${loc.brace_left}${v}∀${loc.brace_right}` : `+${v}`;
-    return { output: [opthead, optable, optend].join(''), brief: [mfn, opthead, optend].filter(x => x !== '').join(loc.comma) };
+    return { output: [opthead, optable, optend].join(""), brief: [mfn, opthead, optend].filter((x) => x !== "").join(loc.comma) };
 }
 function ListenScore(f, sf, fake = true) {
     console.log(fake);

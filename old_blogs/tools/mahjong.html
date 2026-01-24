@@ -428,7 +428,7 @@
 <div class="output-option-group">
 <label><input type="number" id="score-gb-setting-fan" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>起和</label>
 <label><input type="number" id="score-gb-setting-blind" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>底分</label>
-<label title="JMSA规则采用 88 番封顶。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span>封顶</label>
+<label title="JMSA规则采用 88 番封顶。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_max_fan"></span></label>
 <label><input type="checkbox" name="score-gb-setting" value="39" />自摸分三</label>
 </div>
 <span>快速设置</span>
@@ -777,6 +777,8 @@
 </div>
 <span>和牌状态</span>
 <div class="output-option-group">
+<label id="sc_heaven" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="12" /><span data-i18n="SC_FAN_NAME_12"></span></label>
+<label id="sc_earth" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="13" /><span data-i18n="SC_FAN_NAME_13"></span></label>
 <label><input type="checkbox" name="score-sc-wininfo" value="8" /><span data-i18n="SC_FAN_NAME_8"></span></label>
 <label><input type="checkbox" name="score-sc-wininfo" value="9" /><span data-i18n="SC_FAN_NAME_9"></span></label>
 <label><input type="checkbox" name="score-sc-wininfo" value="10" /><span data-i18n="SC_FAN_NAME_10"></span></label>
@@ -792,9 +794,10 @@
 <label><input type="radio" name="score-sc-setting-1" value="0" checked /><span data-i18n="SC_FAN_NAME_16"></span>加底</label>
 <label><input type="radio" name="score-sc-setting-1" value="11" /><span data-i18n="SC_FAN_NAME_16"></span>加倍</label>
 </div>
-<span>封顶</span>
+<span data-i18n="SC_max_fan"></span>
 <div class="output-option-group">
-<label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span>封顶</label>
+<label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span><span data-i18n="SC_max_fan"></span></label>
+<label><input type="checkbox" name="score-sc-setting" value="16" /><span data-i18n="SC_max_fan"></span>后每<span data-i18n="SC_FAN_unit"></span><input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />分</label>
 </div>
 <span data-i18n="SC_FAN_NAME_2"></span>
 <div class="output-option-group">
@@ -811,15 +814,15 @@
 </div>
 <span data-i18n="SC_FAN_NAME_12"></span>
 <div class="output-option-group">
-<label><input type="radio" name="score-sc-setting-3" value="0" checked />关闭</label>
-<label><input type="radio" name="score-sc-setting-3" value="6,3" />3 <span data-i18n="SC_FAN_unit"></span></label>
-<label><input type="radio" name="score-sc-setting-3" value="6,5" />5 <span data-i18n="SC_FAN_unit"></span></label>
+<label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />关闭</label>
+<label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />3 <span data-i18n="SC_FAN_unit"></span></label>
+<label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />5 <span data-i18n="SC_FAN_unit"></span></label>
 </div>
 <span data-i18n="SC_FAN_NAME_13"></span>
 <div class="output-option-group">
-<label><input type="radio" name="score-sc-setting-4" value="0" checked />关闭</label>
-<label><input type="radio" name="score-sc-setting-4" value="7,2" />2 <span data-i18n="SC_FAN_unit"></span></label>
-<label><input type="radio" name="score-sc-setting-4" value="7,5" />5 <span data-i18n="SC_FAN_unit"></span></label>
+<label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />关闭</label>
+<label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />2 <span data-i18n="SC_FAN_unit"></span></label>
+<label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />5 <span data-i18n="SC_FAN_unit"></span></label>
 </div>
 <span data-i18n="SC_FAN_NAME_14"></span>
 <div class="output-option-group">
@@ -840,6 +843,12 @@
 </div>
 <span>快速设置</span>
 <div class="output-option-group">
+<button onclick="processSCSetting(0)">MIL</button>
+<button onclick="processSCSetting(3)">JJ麻将血战川麻</button>
+<button onclick="processSCSetting(4)">欢乐麻将血战到底</button>
+<button onclick="processSCSetting(5)">微乐麻将血战到底</button>
+<button onclick="processSCSetting(1)">雀魂赤羽之战</button>
+<button onclick="processSCSetting(2)">雀姬川麻场</button>
 </div>
 </details>
 </div>
@@ -880,12 +889,12 @@
 </div>
 </div>
 <div class="section title-button-container">
-<div class="output-time">v4.8.4 Beta</div>
+<div class="output-time">v4.8.4</div>
 <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
 </div>
         <script src="mahjong.js?v=202601232014"></script>
-        <script src="mahjong-document.js?v=202601232014"></script>
-        <script src="mahjong-worker-lang.js?v=202601232014"></script>
+        <script src="mahjong-document.js?v=202601250349"></script>
+        <script src="mahjong-worker-lang.js?v=202601250349"></script>
         <script>
             function tilesInfo(tcnt) {
                 const meld = Math.floor(tcnt / 3);

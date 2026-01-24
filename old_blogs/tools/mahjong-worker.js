@@ -1,6 +1,6 @@
 importScripts("mahjong.js?v=202601232014");
-importScripts("mahjong-score.js?v=202601232014");
-importScripts("mahjong-worker-lang.js?v=202601232014");
+importScripts("mahjong-score.js?v=202601250349");
+importScripts("mahjong-worker-lang.js?v=202601250349");
 //console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -8,6 +8,8 @@ const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px"
 const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><td>${r}</td></tr>`;
 const makeTableLineLRs = (l, rs) => `<tr><td style="padding-left: 0px;">${l}</td>${rs.map((r) => `<td>${r}</td>`).join("")}</tr>`;
 const makeGridDiv = (i) => `<div class="output-grid-div">${i}</div>`;
+const makeTableFanLineLR = (l, r, n, s = "") => `<tr style="${s}"><td class="waiting-brief">${l}</td><td style="text-align: right; padding-left: 10px">${r}</td>${n !== undefined ? `<td>${n}</td>` : ""}</tr>`;
+const makeFanName = (x) => `${loc._fanname_format_left}${x}${loc._fanname_format_right}`;
 let aids = undefined;
 let tiles, subtiles;
 let tcnt, full_tcnt, subcnt;
@@ -601,16 +603,6 @@ function SCStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(2)) {
     }
     return { output, substep: rsubstep, dvds };
 }
-function GBFanDiv(fan) {
-    let fans = new Array(84).fill(0);
-    for (let i = 0; i < fan.length; ++i)
-        if (fan[i] > 0) ++fans[fan[i]];
-        else --fans[-fan[i]];
-    ((fans[60] += fans[83]), (fans[61] += fans[83]));
-    let fanopt = [];
-    for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(`<tr><td class="waiting-brief">${loc._fanname_format_left}${loc[`GB_FANNAME_${i}`]}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}</td><td>${Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""}</td></tr>`);
-    return makeTable(fanopt.join(""));
-}
 let report = true;
 function postDebugInfoGlobal(st, m, cm, output) {
     if (!report) return;
@@ -624,6 +616,16 @@ function debugPermutation(p, title = "Permutation") {
     console.log(title, p.nots, p.nsubots, p.nots * p.nsubots);
 }
 function GBScore(substeps, gw, mw, wt, info, setting) {
+    function GBFanDiv(fan) {
+        let fans = new Array(84).fill(0);
+        for (let i = 0; i < fan.length; ++i)
+            if (fan[i] > 0) ++fans[fan[i]];
+            else --fans[-fan[i]];
+        ((fans[60] += fans[83]), (fans[61] += fans[83]));
+        let fanopt = [];
+        for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
+        return makeTable(fanopt.join(""));
+    }
     let [infov, infof] = [0, []];
     if (info.includes(46) && wt) ((infov += 8), infof.push((wt = 46)));
     if (info.includes(44))
@@ -794,36 +796,36 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
-function JPPrintName(yakuman, printname) {
-    if (yakuman > 12) return `${yakuman} ${loc.times_n}${loc.yakuman}`;
-    if (yakuman >= 2) return `${loc[`times_${yakuman}`]}${loc.yakuman}`;
-    if (yakuman === 1) return `${loc.yakuman}`;
-    if (printname) return `${loc[printname]}`;
-    return "";
-}
-function JPGetFanCount(mq, i) {
-    const JPScoreArray = mq ? JPScoreArray0 : JPScoreArray1;
-    if (i >= JPScoreArray.length) return `${1} ${loc.JP_FAN_unit}`;
-    const s = JPScoreArray[i];
-    if (s === -1) return `${loc.yakuman}`;
-    if (s <= -2) return `${loc[`times_${-s}`]}${loc.yakuman}`;
-    return `${s} ${loc.JP_FAN_unit}`;
-}
-function JPGetFuName(i) {
-    if (i >= 8) return loc[`JP_FUNAME_${i}`];
-    let opts = [i & 1 ? loc.JP_FUNAME_0_1 : loc.JP_FUNAME_0_0, i & 2 ? loc.JP_FUNAME_1_1 : loc.JP_FUNAME_1_0, i & 4 ? loc.JP_FUNAME_2_1 : loc.JP_FUNAME_2_0];
-    return opts.join("");
-}
-function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki = 0, north = 0) {
-    let fans = new Array(96).fill(0);
-    for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
-    fans.push(d, u, aka, nuki, north);
-    let fanopt = [];
-    for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(`<tr><td class="waiting-brief">${loc._fanname_format_left}${loc[`JP_YAKUNAME_${PrintSeq[i]}`]}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPGetFanCount(mq, PrintSeq[i])}</td><td>${fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""}</td></tr>`);
-    let fusopt = fus.map((i) => `<tr><td class="waiting-brief">${loc._fanname_format_left}${JPGetFuName(i)}${loc._fanname_format_right}</td><td style="text-align: right; padding-left: 10px">${JPFuArray[i]} ${loc.JP_FU_unit}</td></tr>`);
-    return `<div style="display: flex; gap: 0 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
-}
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
+    function JPPrintName(yakuman, printname) {
+        if (yakuman > 12) return `${yakuman} ${loc.times_n}${loc.yakuman}`;
+        if (yakuman >= 2) return `${loc[`times_${yakuman}`]}${loc.yakuman}`;
+        if (yakuman === 1) return `${loc.yakuman}`;
+        if (printname) return `${loc[printname]}`;
+        return "";
+    }
+    function JPGetFanCount(mq, i) {
+        const JPScoreArray = mq ? JPScoreArray0 : JPScoreArray1;
+        if (i >= JPScoreArray.length) return `${1} ${loc.JP_FAN_unit}`;
+        const s = JPScoreArray[i];
+        if (s === -1) return `${loc.yakuman}`;
+        if (s <= -2) return `${loc[`times_${-s}`]}${loc.yakuman}`;
+        return `${s} ${loc.JP_FAN_unit}`;
+    }
+    function JPGetFuName(i) {
+        if (i >= 8) return loc[`JP_FUNAME_${i}`];
+        let opts = [i & 1 ? loc.JP_FUNAME_0_1 : loc.JP_FUNAME_0_0, i & 2 ? loc.JP_FUNAME_1_1 : loc.JP_FUNAME_1_0, i & 4 ? loc.JP_FUNAME_2_1 : loc.JP_FUNAME_2_0];
+        return opts.join("");
+    }
+    function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki = 0, north = 0) {
+        let fans = new Array(96).fill(0);
+        for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
+        fans.push(d, u, aka, nuki, north);
+        let fanopt = [];
+        for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`JP_YAKUNAME_${PrintSeq[i]}`]), JPGetFanCount(mq, PrintSeq[i]), fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""));
+        let fusopt = fus.map((i) => makeTableFanLineLR(makeFanName(JPGetFuName(i)), `${JPFuArray[i]} ${loc.JP_FU_unit}`));
+        return `<div style="display: flex; gap: 0 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
+    }
     let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) ((JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i])), (JPScoreArray1[i] = Math.max(-1, JPScoreArray0[i])));
     if (setting[17]) ((JPScoreArray0[48] = [0, 2, 1][setting[17]]), (JPScoreArray1[48] = 1));
@@ -1075,8 +1077,8 @@ function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     return [score, exinfo];
 }
 function SCScore(substeps, tsumo, info, setting) {
-    console.log(substeps);
-    let gans = { val: 0, fan: Array(18).fill(0) };
+    info = tsumo ? info.filter(x => ![9, 10].includes(x)) : info.filter(x => x !== 8);
+    let gans = SichuanZeroAns();
     let [cm, m] = [0, 0];
     const st = new Date();
     const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, ``);
@@ -1097,30 +1099,55 @@ function SCScore(substeps, tsumo, info, setting) {
         if (!(cm & 1048575)) postDebugInfo();
     }
     const sp = PairOutput(tiles).map((x) => x[0]);
+    const rsp = (x) => [x, x];
     for (let i = 0; i < 3; ++i) {
         if (substeps[i][0] === -1) {
             const { itots, itsubots, ek, ck } = ps[i];
             itots((ots) => itsubots((subots) => update(() => SichuanKernel([...ots, ...subots], false, aids, info, ck, ek, setting))));
         }
-        if (substeps[i][1] === -1) pairLeastProduct(sp, (sot) => update(() => SichuanKernel(sot.map(x => [x, x]), true, aids, info, 0, 0, setting)), guseque[i]);
+        if (substeps[i][1] === -1) pairLeastProduct(sp, (sot) => update(() => SichuanKernel(sot.map(rsp), true, aids, info, 0, 0, setting)), guseque[i]);
     }
-    let adj = [];
-    if (gans.fan[1]) adj.push(loc.SC_FAN_ADJ_1);
-    if (gans.fan[2]) adj.push(loc.SC_FAN_ADJ_2);
-    if (gans.fan[3]) adj.push(loc.SC_FAN_ADJ_3);
-    if (gans.fan[4]) {
-        if (gans.fan[7] === 3) adj.push(loc.SC_FAN_ADJ_8);
-        if (gans.fan[7] === 2) adj.push(loc.SC_FAN_ADJ_7);
-        if (gans.fan[7]) adj.push(loc.SC_FAN_ADJ_6);
-        adj.push(loc.SC_FAN_ADJ_4);
+    let [adj, mfs] = [[], {}];
+    const updateMainFan = (...args) => args.forEach((x) => ((mfs[x] = (mfs[x] ?? 0) + 1), --gans.fan[x]));
+    if (gans.fan[2]) (adj.push(loc.SC_FAN_ADJ_2), updateMainFan(2));
+    else if (gans.fan[1]) (adj.push(loc.SC_FAN_ADJ_1), updateMainFan(1));
+    if (gans.fan[3]) (adj.push(loc.SC_FAN_ADJ_3), updateMainFan(3));
+    else if (gans.fan[4]) {
+        //if (gans.fan[7] === 3) adj.push(loc.SC_FAN_ADJ_8);
+        //if (gans.fan[7] === 2) adj.push(loc.SC_FAN_ADJ_7);
+        if (gans.fan[7]) adj.push(loc.SC_FAN_ADJ_6), updateMainFan(7);
+        adj.push(loc.SC_FAN_ADJ_4), updateMainFan(4);
     }
-    if (gans.fan[5]) {
-        if (gans.fan[6]) 
-            if (aids[1].filter(item => item.length === 4).length >= 4) adj.push(loc.SC_FAN_ADJ_9);
-            else adj.push(loc.SC_FAN_NAME_6);
-        else adj.push(loc.SC_FAN_ADJ_5);
+    else if (gans.fan[5])
+        if (gans.fan[6])
+            if (aids[1].filter((item) => item.length === 4).length >= 4) (adj.push(loc.SC_FAN_ADJ_9), updateMainFan(5, 6, 7, 7, 7, 7));
+            else (adj.push(loc.SC_FAN_NAME_6), updateMainFan(5, 6));
+        else (adj.push(loc.SC_FAN_ADJ_5), updateMainFan(5));
+    let fanopt = [];
+    const fan_times_union = (x) => [`${x} ${loc.SC_FAN_unit}`, `(×${1 << x})`];
+    let mfn = "";
+    if (adj.length > 1) {
+        mfn = adj.join(loc.SC_separator);
+        const mfe = Object.entries(mfs);
+        const vmf = mfe.reduce((p, [x, cnt]) => (p += SCScoreArray[x] * cnt), 0);
+        fanopt.push(makeTableFanLineLR(`<b>${makeFanName(mfn)}</b>`, ...fan_times_union(vmf)));
+        mfe.sort(([a], [b]) => a - b).forEach(([i, cnt]) => fanopt.push(makeTableFanLineLR(`<span style="padding-left: 1em;">* ${makeFanName(loc[`SC_FAN_NAME_${i}`])}</span>`, ...fan_times_union(SCScoreArray[i] * cnt), "font-size: small; color: #666;")));
+    } else Object.entries(mfs).forEach(([x, n]) => (gans.fan[x] += n));
+    for (let i = 0; i < gans.fan.length; ++i) if (gans.fan[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_${i}`]), ...fan_times_union(SCScoreArray[i] * gans.fan[i])));
+    if (tsumo && setting[11]) (fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_16`]), ...fan_times_union(1))), ++gans.val);
+    let opthead = "";
+    let v = gans.val;
+    if (gans.val > 0) {
+        opthead = `${gans.val} ${loc.SC_FAN_unit}`;
+        const maxfan = setting[12] && gans.val > setting[0] && setting[0] >= 0;
+        if (maxfan) opthead += `${loc.brace_left}${loc.SC_max_fan}${loc.brace_right}`, v = setting[0];
+        v = 1 << v;
+        if (maxfan && setting[16] && setting[15] > 0) v += (gans.val - setting[0]) * setting[15];
     }
-    return { output: `${adj.join(loc.SC_separator)} ${gans.val} ${loc.SC_FAN_unit}, ${gans.fan.flatMap((x, i) => Array(x).fill(loc[`SC_FAN_NAME_${i}`])).join(', ')}`, brief: gans.val };
+    if (!setting[11] && tsumo) ++v;
+    let optable = makeTable(fanopt.join(""));
+    let optend = tsumo > 1 ? `+${v * tsumo}${loc.brace_left}${v}∀${loc.brace_right}` : `+${v}`;
+    return { output: [opthead, optable, optend].join(''), brief: [mfn, opthead, optend].filter(x => x !== '').join(loc.comma) };
 }
 function ListenScore(f, sf, fake = true) {
     console.log(fake);

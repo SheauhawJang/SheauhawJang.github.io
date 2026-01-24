@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202601232014");
+    worker = new Worker("mahjong-worker.js?v=202601250349");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -185,7 +185,7 @@ function processInput() {
                     }
                 }
                 break;
-            case 5: 
+            case 5:
                 if (Math.min(...worker_substeps[5].flat()) <= -1 + full_tcnt - tcnt && opencheck(aids[1], false) && document.getElementById("score-sc")) {
                     updateSCOutput.immediate("");
                     updateSCBrief.immediate("");
@@ -257,7 +257,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202601232014");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202601250349");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -340,11 +340,10 @@ function randomWinningPairs(disjoint = 0, guse = guseall) {
     for (let i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) arr.push(i);
     let hand = [];
     if (disjoint) {
-        let plot = arr.flatMap(x => Array(disjoint).fill(x));
+        let plot = arr.flatMap((x) => Array(disjoint).fill(x));
         shuffle(plot);
         for (let i = 0; i < 7; ++i) hand.push(plot[i], plot[i]);
-    }
-    else for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(arr[random(arr.length)]));
+    } else for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(arr[random(arr.length)]));
     submithand(hand, listen);
 }
 function randomWinningOrphan() {
@@ -802,7 +801,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202601232014");
+    gb_worker = new Worker("mahjong-worker.js?v=202601250349");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -848,7 +847,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202601232014");
+    jp_worker = new Worker("mahjong-worker.js?v=202601250349");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -893,7 +892,8 @@ function processSCScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
-    sc_worker = new Worker("mahjong-worker.js?v=202601232014");
+    setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
+    sc_worker = new Worker("mahjong-worker.js?v=202601250349");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1096,6 +1096,7 @@ function loadRadio(key, st = localStorage) {
 }
 function loadInputbox(key, st = localStorage) {
     const e = document.getElementById(key);
+    if (!e) return;
     const s = st.getItem(key);
     if (s !== null) e.value = s;
 
@@ -1126,12 +1127,23 @@ function loadJPStorage() {
     loadCheckbox("score-jp-wintype", sessionStorage);
     loadCheckbox("score-jp-wininfo", sessionStorage);
 }
+function loadSCStorage() {
+    loadCheckbox("score-sc-setting");
+    for (let i = 0; i <= SC_RADIO_MAX; ++i) loadRadio(`score-sc-setting-${i}`);
+
+    loadInputbox("score-sc-setting-maxfan");
+    loadInputbox("score-sc-setting-fan-linear");
+
+    loadCheckbox("score-sc-wintype", sessionStorage);
+    loadCheckbox("score-sc-wininfo", sessionStorage);
+}
 function loadStorage() {
     updateCardSkin(localStorage.getItem("cardskin"));
     switchStepTab(Number(localStorage.getItem("steptab")));
     scoretab_usr = Number(localStorage.getItem("scoretab_usr") ?? -1);
     loadGBStorage();
     loadJPStorage();
+    loadSCStorage();
 }
 function processGBSetting(id) {
     let positive = [],
@@ -1212,8 +1224,47 @@ function processJPSetting(id) {
     for (let i = 0; i <= JP_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
         const rds = document.querySelectorAll(`input[name="score-jp-setting-${i}"]`);
-        rds.forEach((r) => (r.checked = r.value == radio[i]));
-        if (rds.length) rds[0].dispatchEvent(new Event("change"));
+        rds.forEach((r) => ((r.checked = r.value == radio[i]), r.dispatchEvent(new Event("change"))));
+    }
+}
+function processSCSetting(id) {
+    // prettier-ignore
+    const rules = [
+        [[12], [1, 2, 3, 5, 16, 16], [undefined, 0, 0, 0, 0, 0, 0, 0], 3], // MIL
+        [[1, 12], [2, 3, 5, 16, 16], [undefined, 0, 2, 5, 5, 0, 0, 0], 5], // Mahjong Soul
+        [[1], [2, 3, 5, 12, 16, 16], [undefined, 11, 2, 5, 5, 0, 0, 0]], // Mahjong Pricess
+        [[12, 16], [1, 2, 3, 5], [undefined, 11, 0, 0, 0, 0, 0, 13], 3, 4], // JJ
+        [[12, 1, 2], [3, 5, 10, 16], [undefined, 11, 2, 5, 5, 0, 1, 13], 8], // QQ
+        [[1, 2, 3, 10, 14], [5, 12, 16], [undefined, 11, 3, 3, 2, 1, 1, 13]], // Wele
+    ];
+    const second = (s, t) => {
+        if (s == t) return true;
+        const arr = s.split(",");
+        if (arr[0] == 0) return t == 0;
+        return t == (arr[1] ?? 1);
+    };
+    const positive = rules[id][0],
+        negative = rules[id][1],
+        radio = rules[id][2];
+    if (rules[id][3]) {
+        document.getElementById("score-sc-setting-maxfan").value = rules[id][3];
+        document.getElementById("score-sc-setting-maxfan").dispatchEvent(new Event("change"));
+    }
+    if (rules[id][4]) {
+        document.getElementById("score-sc-setting-fan-linear").value = rules[id][4];
+        document.getElementById("score-sc-setting-fan-linear").dispatchEvent(new Event("change"));
+    }
+    const cbs = document.querySelectorAll(`input[name="score-sc-setting"]`);
+    const mpp = new Set(positive.map(String)),
+        mpn = new Set(negative.map(String));
+    cbs.forEach((cb) => {
+        if (mpp.has(cb.value)) ((cb.checked = true), cb.dispatchEvent(new Event("change")));
+        else if (mpn.has(cb.value)) ((cb.checked = false), cb.dispatchEvent(new Event("change")));
+    });
+    for (let i = 0; i <= SC_RADIO_MAX; ++i) {
+        if (radio[i] == undefined) continue;
+        const rds = document.querySelectorAll(`input[name="score-sc-setting-${i}"]`);
+        rds.forEach((r) => ((r.checked = second(r.value, radio[i])), r.dispatchEvent(new Event("change"))));
     }
 }
 function toggleOutput(id) {
@@ -1317,7 +1368,7 @@ async function getResultFromQingque(myInput) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ expression: myInput }),
-            signal: signal
+            signal: signal,
         });
         if (!response.ok) throw new Error("Proxy request failed");
         const buffer = await response.arrayBuffer();
@@ -1325,9 +1376,9 @@ async function getResultFromQingque(myInput) {
         const resultText = decoder.decode(buffer);
         return resultText;
     } catch (error) {
-        if (error.name === 'AbortError') {
+        if (error.name === "AbortError") {
             console.log("Request discarded. Result ignored.");
-            return null; 
+            return null;
         }
         document.getElementById("time-output-score-qingque").textContent = `Error: ${error}`;
     } finally {

@@ -881,8 +881,8 @@ function GB7Pairs(tids, setting) {
         let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_duan1, must_wuzi, must_quemen] = Array(7).fill(false);
         const melds = finalot.map((x) => [x]);
         let hog = 0;
-        if (setting[1] && isMask(finalot, GreenArray)) ((v += 88), f.push(3), (must_hunyise ||= !setting[22])), --hog;
-        if (setting[2] && isMask(finalot, TerminalArray)) ((v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true)), --hog;
+        if (setting[1] && isMask(finalot, GreenArray)) (((v += 88), f.push(3), (must_hunyise ||= !setting[22])), --hog);
+        if (setting[2] && isMask(finalot, TerminalArray)) (((v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true)), --hog);
         if (setting[3] && isMask(finalot, HonorArray)) ((v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true));
         if (setting[4] && !must_hun19 && isMask(finalot, OrphanArray)) ((v += 32), f.push(18), (must_hun19 = true));
         if (must_hun19) must_quandai = true;
@@ -894,7 +894,7 @@ function GB7Pairs(tids, setting) {
         if (setting[6] && isMask(finalot, MidArray)) ((v += 24), f.push(26), (must_duan1 = true));
         if (setting[6] && isMask(finalot, LowArray)) ((v += 24), f.push(27), (must_wuzi = true));
         else if (setting[7] && isMask(finalot, L5Array)) ((v += 12), f.push(37), (must_wuzi = true));
-        if (setting[8] && isContains5(melds)) ((v += 16), f.push(31), (must_duan1 = true)), hog -= 2;
+        if (setting[8] && isContains5(melds)) (((v += 16), f.push(31), (must_duan1 = true)), (hog -= 2));
         if (setting[9] && isMask(finalot, SymmeArray)) ((v += 8), f.push(40), (must_quemen ||= !setting[18]));
         if (setting[10] && !must_hunyise && isSameColorWithHonor(melds)) ((v += 6), f.push(49), (must_hunyise = true));
         if (must_hunyise) must_quemen = true;
@@ -1457,10 +1457,13 @@ const JPScoreArray0 = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 
 const JPScoreArray1 = [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 0, 5, 5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1, 1, 0, 2];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 const GeneralArray = [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0];
+function SichuanZeroAns() {
+    return { val: 0, fan: Array(18).fill(0) };
+}
 function SichuanKernel(melds, sp, aids, infoans, ck, ek, setting) {
     const n = countLack(melds);
-    const ans = { val: 0, fan: Array(18).fill(0) };
-    const update = (a, b, n = 1) => ((ans.val += a * n), (ans.fan[b] += n));
+    const ans = SichuanZeroAns();
+    const update = (a, b, n = 1) => (a > 0 ? ((ans.val += a * n), (ans.fan[b] += n), (SCScoreArray[b] = a)) : undefined);
     if (n === 2) update(2, 1);
     const marr = flattenMelds(melds);
     let g = false;
@@ -1482,3 +1485,4 @@ function SichuanKernel(melds, sp, aids, infoans, ck, ek, setting) {
     if (isMask(marr, NoOrphanArray) && setting[9] && !(g && !setting[10])) update(1, 15);
     return ans;
 }
+const SCScoreArray = [];

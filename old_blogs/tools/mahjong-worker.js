@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202601250358");
-importScripts("mahjong-score.js?v=202601250358");
-importScripts("mahjong-worker-lang.js?v=202601250358");
+importScripts("mahjong.js?v=202601260311");
+importScripts("mahjong-score.js?v=202601260311");
+importScripts("mahjong-worker-lang.js?v=202601260311");
 //console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -1136,7 +1136,7 @@ function SCScore(substeps, tsumo, info, setting) {
     if (tsumo && setting[11]) (fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_16`]), ...fan_times_union(1))), ++gans.val);
     let opthead = "";
     let v = 1 << gans.val;
-    if (gans.val > 0) {
+    if (gans.val >= 0) {
         opthead = `${gans.val} ${loc.SC_FAN_unit}`;
         if (setting[12] && gans.val > setting[0] && setting[0] >= 0) {
             ((opthead += `${loc.brace_left}${loc.SC_max_fan}${loc.brace_right}`), (v = 1 << setting[0]));

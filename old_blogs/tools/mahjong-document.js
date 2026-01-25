@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202601250358");
+    worker = new Worker("mahjong-worker.js?v=202601260311");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -257,7 +257,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202601250358");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202601260311");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -801,7 +801,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202601250358");
+    gb_worker = new Worker("mahjong-worker.js?v=202601260311");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -847,7 +847,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202601250358");
+    jp_worker = new Worker("mahjong-worker.js?v=202601260311");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -893,7 +893,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202601250358");
+    sc_worker = new Worker("mahjong-worker.js?v=202601260311");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1157,8 +1157,8 @@ function processGBSetting(id) {
             break;
         case 1:
             positive = [19, 41, 42, 43, 5, 10, 1, 6, 7, 9, 11, 32, 13, 14, 15, 16, 44, 17, 20, 21, 22, 28, 29];
-            negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 35, 18, 38, 15];
-            radio = [undefined, 23, "24,1", undefined, 0, undefined, "30,1", 0];
+            negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 35, 18, 38, 15, 45];
+            radio = [undefined, 23, "24,1", 25, 0, undefined, "30,1", 0];
             break;
         case 2:
             positive = [5, 10, 1, 6, 7, 9, 3, 2, 4, 32, 38];

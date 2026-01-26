@@ -263,7 +263,7 @@ const loc_all = {
     auto_division: { cn: " ", hk: " ", tw: " ", ja: " ", en: "<span class='cmp-word-long'> </span><span class='cmp-word-short'><br></span>" },
     SC_FAN_NAME_1: { cn: "清一色", hk: "清一色", tw: "清一色", ja: "清一色", en: "Full Flush" }, 
     SC_FAN_NAME_2: { cn: "将将和", hk: "將將糊", tw: "將將和", ja: "将々和", en: "All Generals" }, 
-    SC_FAN_NAME_3: { cn: "带幺九", hk: "帶幺九", tw: "帶么九", ja: "帶么九", en: "Outside Hand" }, 
+    SC_FAN_NAME_3: { cn: "带幺九", hk: "帶幺九", tw: "帶么九", ja: "帯么九", en: "Outside Hand" }, 
     SC_FAN_NAME_4: { cn: "七对", hk: "七對子", tw: "七對子", ja: "七対子", en: "Seven Pairs" }, 
     SC_FAN_NAME_5: { cn: "大对子", hk: "對對糊", tw: "碰碰胡", ja: "対々和", en: "All Pungs" }, 
     SC_FAN_NAME_6: { cn: "金钩钓", hk: "金鉤釣", tw: "金鉤釣", ja: "金勾釣", en: "Golden Single Wait" }, 

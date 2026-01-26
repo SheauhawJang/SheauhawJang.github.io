@@ -739,19 +739,19 @@
             </div>
             <div class="output-box" id="score-sc">
                 <div class="title-button-container">
-                    <div class="output-title">四川麻將倍數計算機</div>
-                    <button class="toggle-button" id="toggle-output-score-sc" onclick="toggleOutput('output-score-sc')">摺疊 ▲</button>
+                    <div class="output-title">Sichuan Mahjong Calculator</div>
+                    <button class="toggle-button" id="toggle-output-score-sc" onclick="toggleOutput('output-score-sc')">Fold ▲</button>
                 </div>
                 <div id="options-output-score-sc">
                     <div class="output-grid-div">
-                        <span>和牌方式</span>
+                        <span>Winning Way</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-sc-wintype" value="0" checked />點和</label>
-                            <label><input type="radio" name="score-sc-wintype" value="1" />自摸一家</label>
-                            <label><input type="radio" name="score-sc-wintype" value="2" />自摸兩家</label>
-                            <label><input type="radio" name="score-sc-wintype" value="3" />自摸三家</label>
+                            <label><input type="radio" name="score-sc-wintype" value="0" checked />Claim</label>
+                            <label><input type="radio" name="score-sc-wintype" value="1" />Draw Against 1</label>
+                            <label><input type="radio" name="score-sc-wintype" value="2" />Draw Against 2</label>
+                            <label><input type="radio" name="score-sc-wintype" value="3" />Draw Against 3</label>
                         </div>
-                        <span>和牌狀態</span>
+                        <span>Winning Status</span>
                         <div class="output-option-group">
                             <label id="sc_heaven" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="12" /><span data-i18n="SC_FAN_NAME_12"></span></label>
                             <label id="sc_earth" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="13" /><span data-i18n="SC_FAN_NAME_13"></span></label>
@@ -760,74 +760,74 @@
                             <label><input type="checkbox" name="score-sc-wininfo" value="10" /><span data-i18n="SC_FAN_NAME_10"></span></label>
                             <label><input type="checkbox" name="score-sc-wininfo" value="11" /><span data-i18n="SC_FAN_NAME_11"></span></label>
                         </div>
-                        <button id="score-sc-button" onclick="processSCScore()" class="score-button">計算</button>
+                        <button id="score-sc-button" onclick="processSCScore()" class="score-button">Calculate</button>
                     </div>
                     <details>
-                        <summary>規則設定</summary>
+                        <summary>Rules Settings</summary>
                         <div class="output-options">
-                            <span data-i18n="SC_FAN_NAME_16"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_16"></span></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-1" value="0" checked /><span data-i18n="SC_FAN_NAME_16"></span>加底</label>
-                                <label><input type="radio" name="score-sc-setting-1" value="11" /><span data-i18n="SC_FAN_NAME_16"></span>加倍</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="0" checked /><span class="fan" data-i18n="SC_FAN_NAME_16"></span> with Base Point</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="11" /><span class="fan" data-i18n="SC_FAN_NAME_16"></span> with Double</label>
                             </div>
                             <span data-i18n="SC_max_fan"></span>
                             <div class="output-option-group">
-                                <label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span><span data-i18n="SC_max_fan"></span></label>
-                                <label><input type="checkbox" name="score-sc-setting" value="16" /><span data-i18n="SC_max_fan"></span>後每<span data-i18n="SC_FAN_unit"></span><input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />分</label>
+                                <label><input type="checkbox" name="score-sc-setting" value="12" checked /></span><span data-i18n="SC_max_fan"></span> <input type="number" id="score-sc-setting-maxfan" value="3" min="0" /> <span data-i18n="SC_FAN_unit"></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="16" /><input type="number" id="score-sc-setting-fan-linear" value="4" min="0" /> Points pre <span data-i18n="SC_FAN_unit"></span> after <span data-i18n="SC_max_fan"></span></label>
                             </div>
-                            <span data-i18n="SC_FAN_NAME_2"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_2"></span></span>
                             <div class="output-option-group">
-                                <label><input type="checkbox" name="score-sc-setting" value="1" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_5"></span></label>
-                                <label><input type="checkbox" name="score-sc-setting" value="2" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
-                                <label><input type="checkbox" name="score-sc-setting" value="3" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_NAME_6"></span></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="1" /><span class="fan" data-i18n="SC_FAN_ADJ_2"></span> <span class="fan" data-i18n="SC_FAN_ADJ_5"></span></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="2" /><span class="fan" data-i18n="SC_FAN_ADJ_2"></span> <span class="fan" data-i18n="SC_FAN_ADJ_4"></span></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="3" /><span class="fan" data-i18n="SC_FAN_ADJ_2"></span> <span class="fan" data-i18n="SC_FAN_NAME_6"></span></label>
                             </div>
-                            <span data-i18n="SC_FAN_NAME_3"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_3"></span></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-2" value="0" checked />關閉</label>
+                                <label><input type="radio" name="score-sc-setting-2" value="0" checked />OFF</label>
                                 <label><input type="radio" name="score-sc-setting-2" value="4,2" />2 <span data-i18n="SC_FAN_unit"></span></label>
                                 <label><input type="radio" name="score-sc-setting-2" value="4,3" />3 <span data-i18n="SC_FAN_unit"></span></label>
-                                <label><input type="checkbox" name="score-sc-setting" value="5" /><span data-i18n="SC_FAN_ADJ_3"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="5" /><span class="fan" data-i18n="SC_FAN_ADJ_3"></span> <span class="fan" data-i18n="SC_FAN_ADJ_4"></span></label>
                             </div>
-                            <span data-i18n="SC_FAN_NAME_12"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_12"></span></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />關閉</label>
+                                <label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />OFF</label>
                                 <label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />3 <span data-i18n="SC_FAN_unit"></span></label>
                                 <label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />5 <span data-i18n="SC_FAN_unit"></span></label>
                             </div>
-                            <span data-i18n="SC_FAN_NAME_13"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_13"></span></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />關閉</label>
+                                <label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />OFF</label>
                                 <label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />2 <span data-i18n="SC_FAN_unit"></span></label>
                                 <label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />5 <span data-i18n="SC_FAN_unit"></span></label>
                             </div>
-                            <span data-i18n="SC_FAN_NAME_14"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_14"></span></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-5" value="0" checked />關閉</label>
+                                <label><input type="radio" name="score-sc-setting-5" value="0" checked />OFF</label>
                                 <label><input type="radio" name="score-sc-setting-5" value="8" />1 <span data-i18n="SC_FAN_unit"></span></label>
-                                <label><input type="checkbox" name="score-sc-setting" value="14" />複合<span data-i18n="SC_FAN_NAME_4"></span></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="14" />Combine with <span class="fan" data-i18n="SC_FAN_NAME_4"></span></label>
                             </div>
-                            <span data-i18n="SC_FAN_NAME_15"></span>
+                            <span><span class="fan" data-i18n="SC_FAN_NAME_15"></span></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-6" value="0" checked />關閉</label>
+                                <label><input type="radio" name="score-sc-setting-6" value="0" checked />OFF</label>
                                 <label><input type="radio" name="score-sc-setting-6" value="9" />1 <span data-i18n="SC_FAN_unit"></span></label>
-                                <label><input type="checkbox" name="score-sc-setting" value="10" />複合<span data-i18n="SC_FAN_NAME_2"></span></label>
+                                <label><input type="checkbox" name="score-sc-setting" value="10" />Combine with <span class="fan" data-i18n="SC_FAN_NAME_2"></span></label>
                             </div>
-                            <span>死聽</span>
+                            <span>Death Ready</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-7" value="13" />死聽算聽牌</label>
-                                <label><input type="radio" name="score-sc-setting-7" value="0" checked />死聽不算聽</label>
+                                <label><input type="radio" name="score-sc-setting-7" value="13" />Death Ready as Ready</label>
+                                <label><input type="radio" name="score-sc-setting-7" value="0" checked />Death Ready as Unready</label>
                             </div>
-                            <span>快捷設定</span>
+                            <span>Quick Start</span>
                             <div class="output-option-group">
-                                <button onclick="processSCSetting(0)">國際麻將聯盟</button>
-                                <button onclick="processSCSetting(1)">雀魂赤羽之戰</button>
-                                <button onclick="processSCSetting(2)">雀姬川麻場</button>
-                                <button onclick="processSCSetting(3)">JJ麻將血戰川麻</button>
-                                <button onclick="processSCSetting(4)">歡樂麻將血戰到底</button>
-                                <button onclick="processSCSetting(5)">微樂麻將血戰到底</button>
+                                <button onclick="processSCSetting(0)">MIL</button>
+                                <button onclick="processSCSetting(1)">MahjongSoul Bloodshed Skirmish</button>
+                                <button onclick="processSCSetting(2)">Mahjong Hime Sichuan Mode</button>
+                                <button onclick="processSCSetting(3)">JJ Mahjong Bloody SC</button>
+                                <button onclick="processSCSetting(4)">Tencent Mahjong Bloody</button>
+                                <button onclick="processSCSetting(5)">Weile Mahjong Bloody</button>
                             </div>
                             <div></div>
-                            <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
+                            <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
                         </div>
                     </details>
                 </div>

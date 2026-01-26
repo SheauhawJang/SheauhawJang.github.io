@@ -279,7 +279,7 @@ const loc_all = {
     SC_FAN_NAME_16: { cn: "自摸", hk: "自摸", tw: "自摸", ja: "自摸", en: "Self Drawn" }, 
     SC_FAN_ADJ_1: { cn: "清", hk: "清", tw: "清", ja: "清", en: "Pure" }, 
     SC_FAN_ADJ_2: { cn: "将", hk: "將", tw: "將", ja: "将", en: "General" }, 
-    SC_FAN_ADJ_3: { cn: "幺九", hk: "幺九", tw: "么九", ja: "么九", en: "Outside Hand" }, 
+    SC_FAN_ADJ_3: { cn: "幺九", hk: "幺九", tw: "么九", ja: "么九", en: "Outside" }, 
     SC_FAN_ADJ_4: { cn: "七对", hk: "七對", tw: "七對", ja: "七対", en: "Seven Pairs" }, 
     SC_FAN_ADJ_5: { cn: "对", hk: "對", tw: "碰", ja: "対", en: "Pungs" }, 
     SC_FAN_ADJ_6: { cn: "龙", hk: "龍", tw: "龍", ja: "竜", en: "Dragon" }, 

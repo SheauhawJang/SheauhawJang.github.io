@@ -14,7 +14,6 @@ function kernelRealDvd(tiles, nm, np, dvd, ldDvd, guse, em = 0, ep = 0, i = 0, u
     let nxti;
     for (nxti = i + 1; nxti < sizeUT; ++nxti) if (guse[nxti] !== Infinity) break;
     if (guse[i] === Infinity) {
-        console.log(i);
         // only when i === 0, which means all usage should be 0
         const ans = kernelRealDvd(tiles, nm, np, dvd, ldDvd, guse, em, ep, nxti, 0, 0, 0, 0, 0);
         if (ans) dvd[dpi] = { cnt: ans, nxt: [{ p: 0, s: 0, k: 0, nxti, dpi: indexDvd(ldDvd, em, ep, nxti, 0, 0, 0, 0, 0) }] };
@@ -1144,7 +1143,6 @@ function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles
                 for (let j3 = 0; j3 <= max3; ++j3) {
                     const [u3, s3] = [j3 * 3, j3 >> 1];
                     let [s, p, pot, free, sb] = [0, 0, u4 + u3, seq[i] - u4 - u3, s4 * 4 + s3 * 3];
-                    console.log(s, p, pot, free, sb);
                     ((s += sb), (pot -= sb * 2));
                     if (j4 % 2 && j3 % 2) ((s += 3), (pot -= 6));
                     const sfp = Math.min(pot, free);
@@ -1382,7 +1380,6 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
                 if (!setting[3]) limit = Infinity;
                 else limit = Math.max(limit, 13);
             function update(af, ad, au) {
-                console.log(af, ad, au, [gv, gd, gu, gf]);
                 if (ad + au === -Infinity) return;
                 const av = af.map((x) => JPScoreArray0[x]).reduce((a, b) => a + b, 0);
                 ((ad += nd), (au += nu));
@@ -1452,7 +1449,7 @@ function getJPAns(setting, fan, valfan, dora, ura, fus, valfus, realfus, yakuman
     if (setting[7] && pt >= 1920) return { val: 2000, ...ans, print: "kiri_mangan" };
     return { val: pt, ...ans };
 }
-const PrintSeq = [1, 16, 71, 60, 61, 68, 3, 15, 65, 12, 64, 13, 62, 14, 63, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 69, 4, 24, 21, 48, 19, 20, 50, 70, 23, 18, 22, 26, 25, 67, 27, 28, 31, 32, 33, 30, 66, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 99, 97, 100];
+const PrintSeq = [1, 16, 71, 60, 61, 68, 3, 15, 65, 12, 64, 13, 62, 14, 63, 2, 10, 11, 29, 52, 17, 7, 8, 9, 6, 5, 69, 4, 24, 21, 48, 19, 20, 50, 70, 23, 18, 22, 26, 25, 67, 27, 28, 31, 32, 33, 30, 66, 53, 38, 51, 34, 39, 44, 45, 36, 42, 43, 46, 54, 55, 56, 57, 58, 59, 35, 40, 49, 37, 41, 47, 96, 98, 100, 99, 97];
 const JPScoreArray0 = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5, 6, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 2, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1, 1, 0, 2];
 const JPScoreArray1 = [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 0, 5, 5, -1, -1, -1, -2, -1, -2, -1, -1, -2, -2, -1, -1, -1, -1, -1, -2, 1, -2, 2, -1, 0, 0, -1, -1, -1, -1, -1, -1, 1, 1, 5, 5, 5, 5, -1, 0, 1, 1, 0, 2];
 const JPFuArray = [2, 4, 4, 8, 8, 16, 16, 32, 20, 30, 25, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];

@@ -739,6 +739,13 @@
                 </div>
                 <div class="output-context" id="output-score-jp"></div>
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
+                <div>
+                    <select name="jp-voice-char" id="jp-voice-char">
+                        <option value="Ichihime">一姬</option>
+                        <option value="NikaidouMiki" style="display: none;">二阶堂美树</option>
+                    </select>
+                    <button id="voice-button-jp" onclick="playResultAudio(JPResult, document.getElementById('jp-voice-char').value)" disabled>役种播报</button>
+                </div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
             <div class="output-box" id="score-qingque">

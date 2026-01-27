@@ -153,6 +153,7 @@ function processInput() {
                     updateJPOutput.immediate("");
                     updateJPBrief.immediate("");
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
+                    sf(() => document.getElementById("voice-button-jp").disabled = true);
                     updateScoreVisiable(1, "block");
                     jp_worker = null;
                     jp_worker_info = newstepjp;
@@ -822,6 +823,7 @@ const JP_RADIO_MAX = 24;
 const JP_SETTING_SIZE = 128;
 const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+let JPResult = [];
 function processJPScore() {
     updateScoreTabUser(1);
     if (jp_worker) {
@@ -831,6 +833,7 @@ function processJPScore() {
     updateJPOutput("");
     updateJPBrief("");
     document.getElementById("time-output-score-jp").textContent = "Calculating......";
+    sf(() => document.getElementById("voice-button-jp").disabled = true);
     const gw = Number(document.querySelector('input[name="score-jp-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-jp-local-wind"]:checked').value);
     const wt = Number(document.querySelector('input[name="score-jp-wintype"]:checked').value);
@@ -858,6 +861,8 @@ function processJPScore() {
         jp_worker = null;
         updateJPOutput.immediate(e.data.result.output);
         updateJPBrief.immediate(e.data.result.brief);
+        JPResult = e.data.result.audio;
+        if (JPResult) sf(() => document.getElementById("voice-button-jp").disabled = false);
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     jp_worker.postMessage({ task: "jp-score", aids, tiles, substeps: jp_worker_info, gw, mw, wt, info, setting, lang });
@@ -1408,5 +1413,50 @@ async function convertQingque() {
     if (ans) {
         document.getElementById("output-score-qingque").textContent = ans;
         document.getElementById("time-output-score-qingque").textContent = `Used ${new Date() - now} ms`;
+    }
+}
+let currentAudioController = null;
+async function playResultAudio(playList, character = "Ichihime") {
+    console.log(playList, character);
+    if (currentAudioController) {
+        currentAudioController.abort();
+    }
+    const controller = new AbortController();
+    currentAudioController = controller;
+    const { signal } = controller;
+    for (const fileName of playList) {
+        if (signal.aborted) break;
+        if (typeof fileName === 'number') {
+            await new Promise(resolve => {
+                let timer;
+                const finish = () => {
+                    clearTimeout(timer);
+                    signal.removeEventListener('abort', finish);
+                    resolve();
+                }
+                signal.addEventListener('abort', finish);
+                timer = setTimeout(finish, fileName);
+            });
+            continue;
+        }
+        await new Promise((resolve) => {
+            const audio = new Audio(`voices/${character}/${fileName}`);
+            const abortHandler = () => {
+                audio.pause();
+                audio.src = "";
+                resolve();
+            };
+            const finish = () => {
+                signal.removeEventListener('abort', abortHandler);
+                resolve();
+            }
+            signal.addEventListener('abort', abortHandler);
+            audio.onended = finish;
+            audio.onerror = finish;
+            audio.play().catch(finish);
+        });
+    }
+    if (currentAudioController === controller) {
+        currentAudioController = null;
     }
 }

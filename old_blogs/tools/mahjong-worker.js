@@ -1,7 +1,7 @@
 importScripts("mahjong.js?v=202601260311");
 importScripts("mahjong-score.js?v=202601260311");
 importScripts("mahjong-worker-lang.js?v=202601260311");
-//console.log(PrintSeq.map(i=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
+//console.log(PrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
@@ -818,16 +818,22 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         return opts.join("");
     }
     function JPFanFuDiv(fan, fus, mq, d, u, aka, nuki = 0, north = 0) {
-        let fans = new Array(96).fill(0);
-        for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
+        let fans = JPFanArray(fan);
         fans.push(d, u, aka, nuki, north);
         let fanopt = [];
         for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`JP_YAKUNAME_${PrintSeq[i]}`]), JPGetFanCount(mq, PrintSeq[i]), fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""));
         let fusopt = fus.map((i) => makeTableFanLineLR(makeFanName(JPGetFuName(i)), `${JPFuArray[i]} ${loc.JP_FU_unit}`));
-        return `<div style="display: flex; gap: 0 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
+        let result = `<div style="display: flex; gap: 0 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
+        result.arr = fans;
+        return result;
+    }
+    function JPFanArray(fan) {
+        let fans = new Array(96).fill(0);
+        for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
+        return fans;
     }
     let gans = eans_jp;
-    if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) ((JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i])), (JPScoreArray1[i] = Math.max(-1, JPScoreArray0[i])));
+    if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) ((JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i])), (JPScoreArray1[i] = Math.max(-1, JPScoreArray1[i])));
     if (setting[17]) ((JPScoreArray0[48] = [0, 2, 1][setting[17]]), (JPScoreArray1[48] = 1));
     if (setting[21]) ((JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]]), (JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]]));
     if (setting[22]) ((JPScoreArray0[53] = [0, -1, -1, 4, 5, 6, 6][setting[22]]), (JPScoreArray1[53] = [0, -1, 0, 4, 5, 6, 5][setting[22]]));
@@ -848,7 +854,6 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     }
     let aka = getSpecial((x) => x.sp);
     let north = setting[49] && setting[53] ? getSpecial((x) => x.id === 30) : 0;
-    console.log(aka, north);
     let nukicnt = aids[2].length;
     const guse = setting[49] ? guse3p : guseall;
     const p = MeldsPermutation(aids, undefined, undefined, undefined, guse);
@@ -1027,7 +1032,39 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     const fanfudiv = JPFanFuDiv(gans.fan, gans.fus, mq, gans.dora ?? 0, gans.ura ?? 0, aka, nukicnt, north);
     const opts = gans !== eans_jp ? [fanfuinfo, fanfudiv, ptchange] : [loc.wrong_win];
     const brief = gans !== eans_jp ? `${fanfuinfo}${loc.comma}${ptchange}` : loc.wrong_win;
-    return { output: opts.join(""), brief };
+    let audio = [];
+    const vf = JPFanArray(gans.fan);
+    for (let i = 0; i < PrintSeq.length; ++i)
+        if (vf[PrintSeq[i]])
+            switch (PrintSeq[i]) {
+                case 6:
+                    audio.push(`JP_W${mw}.mp3`);
+                    break;
+                case 5:
+                    if (gw === mw) audio.push(`JP_WD${gw}.mp3`);
+                    else audio.push(`JP_W${gw}.mp3`);
+                    break;
+                case 70:
+                    if (setting[55]) audio.push(`JP_70_EX.mp3`);
+                    else audio.push(`JP_70.mp3`);
+                    break;
+                case 71:
+                    if (JPScoreArray0[71] < 0) audio.push(`JP_71_EX.mp3`);
+                    else audio.push(`JP_71.mp3`);
+                    break;
+                default:
+                    audio.push(`JP_${PrintSeq[i]}.mp3`);
+            }
+    [gans.dora ?? 0, aka, north, nukicnt, gans.ura ?? 0].forEach((d) => {
+        if (d <= 0) return;
+        if (d >= 13) audio.push(`JP_DI.mp3`);
+        else audio.push(`JP_D${d}.mp3`);
+    });
+    audio.push(300);
+    if (gans.yakuman > 6) audio.push(`JP_Y1.mp3`);
+    else if (gans.yakuman > 0) audio.push(`JP_Y${gans.yakuman}.mp3`);
+    else if (gans.print) audio.push(`JP_${gans.print}.mp3`);
+    return { output: opts.join(""), brief, audio };
 }
 function JPScoreCal(base, sbase, spt, tsumo, oya, s3p = undefined) {
     if (sbase === 1) base = Math.round(base / 10) * 10;
@@ -1149,7 +1186,6 @@ function SCScore(substeps, tsumo, info, setting) {
     return { output: [opthead, optable, optend].join(""), brief: [mfn, opthead, optend].filter((x) => x !== "").join(loc.comma) };
 }
 function ListenScore(f, sf, fake = true) {
-    console.log(fake);
     report = false;
     let output = "";
     for (let i = 0; i < sizeUT; ++i) {

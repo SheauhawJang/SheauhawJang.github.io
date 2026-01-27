@@ -138,6 +138,7 @@ const loc_all = {
     observer: { cn: "未和牌方", hk: "其餘者", tw: "無關者", ja: "傍観者", en: "Observer" },
     GB_max_fan: { cn: "封顶", hk: "例牌", tw: "封頂", ja: "満貫", en: "Maximum" },
     comma: { cn: "，", hk: "，", tw: "，", ja: "，", en: ", " },
+    JP_YAKUNAME_0: { cn: "流局满贯", hk: "流局滿貫", tw: "流局滿貫", ja: "流し満貫", en: "Nagashi Mangan" },
     JP_YAKUNAME_1: { cn: "立直", hk: "立直", tw: "立直", ja: "立直", en: "Riichi" },
     JP_YAKUNAME_2: { cn: "门前清自摸和", hk: "門前清自摸和", tw: "門前清自摸胡", ja: "門前清自摸和", en: "Fully Concealed Hand" },
     JP_YAKUNAME_3: { cn: "一发", hk: "一發", tw: "一發", ja: "一発", en: "Ippatsu" },

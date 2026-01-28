@@ -517,7 +517,7 @@ function outputCardImageEmpty(width) {
 function joinHand(ids) {
     let handname = [];
     for (let i = 0; i < ids.length; ++i) {
-        handname.push(cardName(ids[i]));
+        handname.push(typeof ids[i] === "string" ? ids[i] : cardName(ids[i]));
         if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
     }
     return handname.join("");
@@ -1368,7 +1368,7 @@ async function getResultFromQingque(myInput) {
     qingqueController = new AbortController();
     const { signal } = qingqueController;
     try {
-        console.log("Sending Request......");
+        console.log("Sending Request......", myInput);
         const response = await fetch(proxyUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -1399,10 +1399,10 @@ async function convertQingque() {
     const a = [...ArrayMap(27, (_, i) => cardName(i)), ..."ESWNCFP"];
     const f = (x) => a[x.id];
     let s = "";
-    s += aids[0].map(f).join("");
+    s += joinHand(aids[0].map(f));
     s += aids[1]
         .map((x) => {
-            const k = x.map(f).join("");
+            const k = joinHand(x.map(f));
             return x.length === 4 && x.type % 4 === 0 ? `[${k}]` : `(${k})`;
         })
         .join("");

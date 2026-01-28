@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202601281544");
-importScripts("mahjong-score.js?v=202601281544");
-importScripts("mahjong-worker-lang.js?v=202601281544");
+importScripts("mahjong.js?v=202601290647");
+importScripts("mahjong-score.js?v=202601290647");
+importScripts("mahjong-worker-lang.js?v=202601290647");
 //console.log(PrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -871,7 +871,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
             else infoupdate(30);
         }
     if (setting[38] && info.includes(16) && info.includes(13)) infoupdate(66);
-    if (setting[59] && info.includes(-71) && !tsumo) ((JPScoreArray0[71] = JPScoreArray1[71] = -1), infoupdate(71));
+    if (setting[59] && info.includes(71) && info.includes(-71) && !tsumo) ((JPScoreArray0[71] = JPScoreArray1[71] = -1), infoupdate(71));
     function canBeFixWin(t) {
         if (aids[0].length === 0) return false;
         const s = aids[0].at(-1).id;

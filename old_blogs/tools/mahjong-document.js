@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202601281544");
+    worker = new Worker("mahjong-worker.js?v=202601290647");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -154,6 +154,7 @@ function processInput() {
                     updateJPBrief.immediate("");
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
                     sf(() => document.getElementById("voice-button-jp").disabled = true);
+                    if (currentAudioController) currentAudioController.abort(), currentAudioController = null;
                     updateScoreVisiable(1, "block");
                     jp_worker = null;
                     jp_worker_info = newstepjp;
@@ -258,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202601281544");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202601290647");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -802,7 +803,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202601281544");
+    gb_worker = new Worker("mahjong-worker.js?v=202601290647");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -834,6 +835,7 @@ function processJPScore() {
     updateJPBrief("");
     document.getElementById("time-output-score-jp").textContent = "Calculating......";
     sf(() => document.getElementById("voice-button-jp").disabled = true);
+    if (currentAudioController) currentAudioController.abort(), currentAudioController = null;
     const gw = Number(document.querySelector('input[name="score-jp-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-jp-local-wind"]:checked').value);
     const wt = Number(document.querySelector('input[name="score-jp-wintype"]:checked').value);
@@ -850,7 +852,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202601281544");
+    jp_worker = new Worker("mahjong-worker.js?v=202601290647");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -898,7 +900,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202601281544");
+    sc_worker = new Worker("mahjong-worker.js?v=202601290647");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1126,6 +1128,7 @@ function loadJPStorage() {
     for (let i = 0; i <= JP_RADIO_MAX; ++i) loadRadio(`score-jp-setting-${i}`);
 
     loadInputbox("score-jp-setting-fan");
+    loadInputbox("score-jp-voice-char");
 
     loadRadio("score-jp-global-wind", sessionStorage);
     loadRadio("score-jp-local-wind", sessionStorage);
@@ -1418,29 +1421,33 @@ async function convertQingque() {
 let currentAudioController = null;
 async function playResultAudio(playList, character = "Ichihime") {
     console.log(playList, character);
-    if (currentAudioController) {
-        currentAudioController.abort();
-    }
+    if (currentAudioController) currentAudioController.abort(), currentAudioController = null;
     const controller = new AbortController();
     currentAudioController = controller;
     const { signal } = controller;
-    for (const fileName of playList) {
+    const audioPool = playList.map(item => {
+        if (typeof item === 'number') return item;
+        const audio = new Audio(`voices/${character}/${item}`);
+        audio.preload = "auto";
+        return audio;
+    });
+    for (const item of audioPool) {
         if (signal.aborted) break;
-        if (typeof fileName === 'number') {
+        if (typeof item === 'number') {
             await new Promise(resolve => {
-                let timer;
+                let timer = null;
                 const finish = () => {
                     clearTimeout(timer);
                     signal.removeEventListener('abort', finish);
                     resolve();
                 }
                 signal.addEventListener('abort', finish);
-                timer = setTimeout(finish, fileName);
+                timer = setTimeout(finish, item);
             });
             continue;
         }
         await new Promise((resolve) => {
-            const audio = new Audio(`voices/${character}/${fileName}`);
+            const audio = item;
             const abortHandler = () => {
                 audio.pause();
                 audio.src = "";

@@ -192,7 +192,6 @@ const loc_all = {
     JP_YAKUNAME_51: { cn: "四连刻", hk: "四連刻", tw: "四連刻", ja: "四連刻", en: "Four Shifted Pungs" },
     JP_YAKUNAME_52: { cn: "一色三同顺", hk: "一色三同順", tw: "一色三同順", ja: "一色三順", en: "Pure Triple Chow" },
     JP_YAKUNAME_53: { cn: "一色四同顺", hk: "一色四同順", tw: "一色四同順", ja: "一色四順", en: "Pure Quadruple Chow" },
-    JP_YAKUNAME_53_EX: { cn: "四连太宝", hk: "四連太寶", tw: "四連太寶", ja: "四連太宝", en: "$JP_YAKUNAME_53" },
     JP_YAKUNAME_54: { cn: "大车轮", hk: "大車輪", tw: "大車輪", ja: "大車輪", en: "Big Wheels" },
     JP_YAKUNAME_55: { cn: "大竹林", hk: "大竹林", tw: "大竹林", ja: "大竹林", en: "Big Bamboo Forest" },
     JP_YAKUNAME_56: { cn: "大数邻", hk: "大數鄰", tw: "大數鄰", ja: "大數隣", en: "Big Numerous Neighbours" },

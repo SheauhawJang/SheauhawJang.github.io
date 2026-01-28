@@ -740,12 +740,14 @@
                 <div class="output-context" id="output-score-jp"></div>
                 <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
                 <div>
-                    <select name="jp-voice-char" id="jp-voice-char">
+                    <select id="score-jp-voice-char">
                         <option value="Ichihime">一姬</option>
                         <option value="NikaidouMiki">二阶堂美树</option>
                         <option value="FujidaKana">藤田佳奈</option>
+                        <option value="MikamiChiori">三上千织</option>
+                        <option value="AiharaMai">相原舞</option>
                     </select>
-                    <button id="voice-button-jp" onclick="playResultAudio(JPResult, document.getElementById('jp-voice-char').value)" disabled>役种播报</button>
+                    <button id="voice-button-jp" onclick="playResultAudio(JPResult, document.getElementById('score-jp-voice-char').value)" disabled>役种播报</button>
                 </div>
                 <div class="output-time" id="time-output-score-jp">Ready to start!</div>
             </div>
@@ -925,9 +927,9 @@
         <div class="output-time">v4.8.5 Beta</div>
         <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
     </div>
-    <script src="mahjong.js?v=202601281544"></script>
-    <script src="mahjong-document.js?v=202601281544"></script>
-    <script src="mahjong-worker-lang.js?v=202601281544"></script>
+    <script src="mahjong.js?v=202601290647"></script>
+    <script src="mahjong-document.js?v=202601290647"></script>
+    <script src="mahjong-worker-lang.js?v=202601290647"></script>
     <script>
         function tilesInfo(tcnt) {
             const meld = Math.floor(tcnt / 3);

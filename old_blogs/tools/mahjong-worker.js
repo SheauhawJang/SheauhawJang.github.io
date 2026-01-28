@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202601260311");
-importScripts("mahjong-score.js?v=202601260311");
-importScripts("mahjong-worker-lang.js?v=202601260311");
+importScripts("mahjong.js?v=202601281544");
+importScripts("mahjong-score.js?v=202601281544");
+importScripts("mahjong-worker-lang.js?v=202601281544");
 //console.log(PrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -1162,7 +1162,7 @@ function SCScore(substeps, tsumo, info, setting) {
     let fanopt = [];
     const fan_times_union = (x) => [`${x} ${loc.SC_FAN_unit}`, `(×${1 << x})`];
     let mfn = "";
-    if (adj.length > 1) {
+    if (adj.length > 1 || adj.includes(loc.SC_FAN_ADJ_9)) {
         mfn = adj.join(loc.SC_separator);
         const mfe = Object.entries(mfs);
         const vmf = mfe.reduce((p, [x, cnt]) => (p += SCScoreArray[x] * cnt), 0);

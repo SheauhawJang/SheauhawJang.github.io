@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202601290647");
-importScripts("mahjong-score.js?v=202601290647");
-importScripts("mahjong-worker-lang.js?v=202601290647");
+importScripts("mahjong.js?v=202602081903");
+importScripts("mahjong-score.js?v=202602081903");
+importScripts("mahjong-worker-lang.js?v=202602081903");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;

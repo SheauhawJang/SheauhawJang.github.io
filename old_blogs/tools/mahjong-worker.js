@@ -1,7 +1,7 @@
 importScripts("mahjong.js?v=202601290647");
 importScripts("mahjong-score.js?v=202601290647");
 importScripts("mahjong-worker-lang.js?v=202601290647");
-//console.log(PrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
+//console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
 const makeTable = (i) => `<table style="border-collapse: collapse; padding: 0px">${i}</table>`;
@@ -616,14 +616,22 @@ function debugPermutation(p, title = "Permutation") {
     console.log(title, p.nots, p.nsubots, p.nots * p.nsubots);
 }
 function GBScore(substeps, gw, mw, wt, info, setting) {
-    function GBFanDiv(fan) {
+    function GBFanArray(fan) {
         let fans = new Array(84).fill(0);
         for (let i = 0; i < fan.length; ++i)
             if (fan[i] > 0) ++fans[fan[i]];
             else --fans[-fan[i]];
         ((fans[60] += fans[83]), (fans[61] += fans[83]));
+        return fans;
+    }
+    function GBFanDiv(fan) {
+        const fans = GBFanArray(fan);
         let fanopt = [];
-        for (let i = 1; i <= 82; ++i) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${GBScoreArray[i]} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
+        const GBPrintSeq = ArraySeq(0, GBScoreArray.length)
+            .filter((x) => GBScoreArray[x] !== undefined)
+            .sort((a, b) => GBScoreArray[b] - GBScoreArray[a]);
+        console.log(GBPrintSeq);
+        for (const i of GBPrintSeq) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${Math.min(GBScoreArray[i], 1)} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
         return makeTable(fanopt.join(""));
     }
     let [infov, infof] = [0, []];
@@ -794,6 +802,17 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     let ptchange = wt ? `${loc.winner} +${(basept + setting[37]) * 3}${loc.comma}${loc.other_player} -${basept + setting[37]}` : `${loc.winner} +${basept + setting[37] * 3}${loc.comma}${loc.loser} -${basept + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
     if (gans.val < setting[0] + aids[2].length) ptchange = loc.wrong_win;
     outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];
+    /*
+    let audio = [];
+    const vf = GBFanArray(gans.fan);
+    for (let i = 1; i <= 82; ++i) if (fans[i] > 0) {
+        let name = i;
+        switch (i) {
+            case 59:
+
+        }
+    } 
+    */
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 function JPScore(substeps, gw, mw, tsumo, info, setting) {
@@ -821,7 +840,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         let fans = JPFanArray(fan);
         fans.push(d, u, aka, nuki, north);
         let fanopt = [];
-        for (let i = 0; i < PrintSeq.length; ++i) if (fans[PrintSeq[i]]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`JP_YAKUNAME_${PrintSeq[i]}`]), JPGetFanCount(mq, PrintSeq[i]), fans[PrintSeq[i]] > 1 ? `×${fans[PrintSeq[i]]}` : ""));
+        for (let i = 0; i < JPPrintSeq.length; ++i) if (fans[JPPrintSeq[i]]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`JP_YAKUNAME_${JPPrintSeq[i]}`]), JPGetFanCount(mq, JPPrintSeq[i]), fans[JPPrintSeq[i]] > 1 ? `×${fans[JPPrintSeq[i]]}` : ""));
         let fusopt = fus.map((i) => makeTableFanLineLR(makeFanName(JPGetFuName(i)), `${JPFuArray[i]} ${loc.JP_FU_unit}`));
         let result = `<div style="display: flex; gap: 0 20px; align-items: flex-start; flex-wrap: wrap; padding: 0px;">${makeTable(fanopt.join(""))}${makeTable(fusopt.join(""))}</div>`;
         result.arr = fans;
@@ -1034,9 +1053,9 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     const brief = gans !== eans_jp ? `${fanfuinfo}${loc.comma}${ptchange}` : loc.wrong_win;
     let audio = [];
     const vf = JPFanArray(gans.fan);
-    for (let i = 0; i < PrintSeq.length; ++i)
-        if (vf[PrintSeq[i]])
-            switch (PrintSeq[i]) {
+    for (let i = 0; i < JPPrintSeq.length; ++i)
+        if (vf[JPPrintSeq[i]])
+            switch (JPPrintSeq[i]) {
                 case 6:
                     audio.push(`JP_W${mw}.mp3`);
                     break;
@@ -1053,7 +1072,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
                     else audio.push(`JP_71.mp3`);
                     break;
                 default:
-                    audio.push(`JP_${PrintSeq[i]}.mp3`);
+                    audio.push(`JP_${JPPrintSeq[i]}.mp3`);
             }
     [gans.dora ?? 0, aka, north, nukicnt, gans.ura ?? 0].forEach((d) => {
         if (d <= 0) return;

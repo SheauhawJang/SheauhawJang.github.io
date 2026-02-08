@@ -356,7 +356,7 @@ function randomWinningOrphan() {
 }
 function randomWinningBukao() {
     const listen = aids[0].length % 3 === 1;
-    let hand = [...KnitDragonSave[random(6)], ...ArrayMap(7, (_, i) => i + 27)];
+    let hand = [...KnitDragonSave[random(6)], ...ArraySeq(27, sizeUT)];
     shuffle(hand);
     hand = [...hand.slice(0, 13).sort((a, b) => a - b), hand[13]];
     if (listen) hand.pop();
@@ -389,7 +389,7 @@ function randomWinningBuda() {
     const listen = aids[0].length % 3 === 1;
     let buda = [];
     for (let a = 0; a < 3; ++a) for (let b = a + 3; b < 6; ++b) for (let c = b + 3; c < 9; ++c) buda.push([a, b, c]);
-    let hand = ArrayMap(7, (_, i) => i + 27);
+    let hand = ArraySeq(27, sizeUT);
     for (let i = 0; i < 3; ++i) hand.push(...buda[random(buda.length)].map((x) => x + ColorFirstArray[i]));
     hand.push(hand[random(hand.length)]);
     submithand(hand, listen);
@@ -397,7 +397,7 @@ function randomWinningBuda() {
 function randomWinningSC(i) {
     if (Math.random() < 0.1) return randomWinningPairs(2, guseque[i]);
     const seqs = default_seqs.toSpliced(i * 7, 7);
-    const tris = ArrayMap(27, (_, i) => i).toSpliced(i * 9, 9);
+    const tris = ArraySeq(0, 27).toSpliced(i * 9, 9);
     const n = aids[0].length + aids[1].length * 3;
     const tiles = randomWinning(n, seqs, tris);
     submitjokerhand(tiles, n % 3 === 1);
@@ -467,10 +467,10 @@ function hasQQCard(id) {
     if (id.id >= JokerC + 4) return false;
     return true;
 }
-function getOverlay(path, t) {
-    if (t === "r") return `<img src="${path}" class="card-img-overlay-r">`;
-    if (t === "k") return `<img src="${path}" class="card-img-overlay-rr-0"><img src="${path}" class="card-img-overlay-rr-1">`;
-    return `<img src="${path}" class="card-img-overlay">`;
+function getOverlay(path, t, class_suffix = undefined) {
+    if (t === "r") return `<img src="${path}" class="card-img-overlay-r ${class_suffix ? `${class_suffix}-r` : ""}">`;
+    if (t === "k") return `<img src="${path}" class="card-img-overlay-rr-0 ${class_suffix ? `${class_suffix}-rr-0` : ""}"><img src="${path}" class="card-img-overlay-rr-1 ${class_suffix ? `${class_suffix}-rr-1` : ""}">`;
+    return `<img src="${path}" class="card-img-overlay ${class_suffix ?? ""}">`;
 }
 function getCardImage(id, t = "", onclick = "") {
     let [name, overlay] = [cardName(id), null];
@@ -479,6 +479,7 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`, t);
     if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
+    if (cardskin === "nn" && hasQQCard(id) && id.id !== JokerC) overlay = getOverlay(`./nncards/${name}.png`, t, "card-img-overlay-nikki");
     if (cardskin === "jp")
         switch (id.id) {
             case 42:

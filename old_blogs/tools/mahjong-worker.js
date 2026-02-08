@@ -631,7 +631,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             .filter((x) => GBScoreArray[x] !== undefined)
             .sort((a, b) => GBScoreArray[b] - GBScoreArray[a]);
         console.log(GBPrintSeq);
-        for (const i of GBPrintSeq) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${Math.min(GBScoreArray[i], 1)} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
+        for (const i of GBPrintSeq) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${Math.max(GBScoreArray[i], 1)} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
         return makeTable(fanopt.join(""));
     }
     let [infov, infof] = [0, []];

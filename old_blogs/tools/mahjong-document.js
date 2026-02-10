@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202602110500");
+    worker = new Worker("mahjong-worker.js?v=202602110600");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -259,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202602110500");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202602110600");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -804,7 +804,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202602110500");
+    gb_worker = new Worker("mahjong-worker.js?v=202602110600");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -853,7 +853,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202602110500");
+    jp_worker = new Worker("mahjong-worker.js?v=202602110600");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -901,7 +901,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202602110500");
+    sc_worker = new Worker("mahjong-worker.js?v=202602110600");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1158,34 +1158,48 @@ function processGBSetting(id) {
     let positive = [],
         negative = [],
         radio = [];
+    let score = [8, 8, undefined];
     switch (id) {
         default:
             positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29];
-            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 15];
+            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 39];
             radio = [undefined, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, undefined];
             break;
         case 1:
             positive = [19, 41, 42, 43, 5, 10, 1, 6, 7, 9, 11, 32, 13, 14, 15, 16, 44, 17, 20, 21, 22, 28, 29];
-            negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 35, 18, 38, 15, 45];
+            negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 34, 35, 18, 38, 39, 45];
             radio = [undefined, 23, "24,1", 25, 0, undefined, "30,1", 0, 0, 0, 0, 0, undefined];
             break;
         case 2:
             positive = [5, 10, 1, 6, 7, 9, 3, 2, 4, 32, 38];
-            negative = [19, 41, 42, 43, 11, 12, "31,1", "31,2", 33, 15];
+            negative = [19, 41, 42, 43, 11, 12, "31,1", "31,2", 33, 39];
             radio = [undefined, 0, 0, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, undefined];
-            document.getElementById("score-gb-setting-maxfan").value = 88;
-            document.getElementById("score-gb-setting-maxfan").dispatchEvent(new Event("change"));
+            score[2] = 88;
             break;
         case 3:
             positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29, 45];
-            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 15, 47, 48, 49, 51, 53, 56, 57, 58];
+            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 39, 47, 48, 49, 51, 53, 56, 57, 58];
             radio = [undefined, 0, 0, 0, 0, 0, 0, 0, "46,3", "50,3", "52,4", "54,5", 0];
             break;
+        case 4:
+            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 29, 38, 49, 58];
+            negative = [19, 41, 42, 43, 8, 12, "31,1", "31,2", 33, 35, 14, 16, 44, 17, 18, 28, 47, 48, 51, 53, 56, 57];
+            radio = [undefined, 0, 0, undefined, 26, undefined, undefined, 0, "46,1", "50,1", "52,2", "54,1", 55];
+            score = [0, 0, 88];
+            break;
     }
-    document.getElementById("score-gb-setting-fan").value = 8;
-    document.getElementById("score-gb-setting-blind").value = 8;
-    document.getElementById("score-gb-setting-fan").dispatchEvent(new Event("change"));
-    document.getElementById("score-gb-setting-blind").dispatchEvent(new Event("change"));
+    if (score[0] !== undefined) {
+        document.getElementById("score-gb-setting-fan").value = score[0];
+        document.getElementById("score-gb-setting-fan").dispatchEvent(new Event("change"));
+    }
+    if (score[1] !== undefined) {
+        document.getElementById("score-gb-setting-blind").value = score[1];
+        document.getElementById("score-gb-setting-blind").dispatchEvent(new Event("change"));
+    }
+    if (score[2] !== undefined) {
+        document.getElementById("score-gb-setting-maxfan").value = score[2];
+        document.getElementById("score-gb-setting-maxfan").dispatchEvent(new Event("change"));
+    }
     const cbs = document.querySelectorAll(`input[name="score-gb-setting"]`);
     const mpp = new Set(positive.map(String)),
         mpn = new Set(negative.map(String));

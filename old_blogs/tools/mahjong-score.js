@@ -679,7 +679,7 @@ function canBeListen(tiles, ta, tb, x, wint) {
     }
     return false;
 }
-function GBKPC(ck, ek, cp, setting, fourteen_type, zimo) {
+function GBKPC(ck, ek, cp, setting, fourteen_type, info) {
     let [v, f] = [0, []];
     let [must_pengpeng, must_menqing, must_2anke] = [false, false, false];
     let [has_single_ck, has_single_ek] = [false, false];
@@ -705,24 +705,36 @@ function GBKPC(ck, ek, cp, setting, fourteen_type, zimo) {
     if (ck + cp >= 4) ((v += 64), f.push(12), (must_pengpeng = fourteen_type), (must_menqing = fourteen_type));
     else if (ck + cp === 3) ((v += 16), f.push(33));
     else if (!must_2anke && ck + cp === 2) ((v += 2), f.push(66));
-    if (has_single_ek && zimo === 46 && setting[31]) (--v, f.push(-74));
-    else if (has_single_ck && zimo === 46 && setting[31] === 2) (--v, f.push(-74));
+    if (has_single_ek && info.fan.includes(46) && setting[31]) (--v, f.push(-74));
+    else if (has_single_ck && info.fan.includes(46) && setting[31] === 2) (--v, f.push(-74));
     return { v, f, must_menqing, must_pengpeng };
 }
-function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, setting) {
+function settingBless(fan, setting) {
+    if (fan.includes(86)) return [setting[47], setting[48]];
+    if (fan.includes(87)) return [setting[51]];
+    if (fan.includes(88)) return [setting[53]];
+    if (fan.includes(89)) return [setting[56], setting[57]];
+    return [true, true];
+}
+function GBZimo(setting, zimo, ans, bless, menqing = true, must_menqing = true) {
+    if (menqing)
+        if ((setting || !must_menqing) && zimo && bless[1]) ((ans.val += 4), ans.fan.push(56), (zimo = 56));
+        else if (!must_menqing && bless[0]) ((ans.val += 2), ans.fan.push(62));
+    if (zimo === 80) (++ans.val, ans.fan.push(zimo));
+    return { val: ans.val, fan: ans.fan, zimo };
+}
+function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, tiles, setting) {
     let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_pinghe, must_duan1, must_wuzi, must_quemen] = Array(8).fill(false);
     let yaojiuke = true;
     let [can_2tong, can_3tong] = [true, true];
     let skip_bind = false;
     const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
     let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type, zimo);
+    v += info.val, f.push(...info.fan);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) ((v += 88), f.push(3), (must_hunyise ||= !setting[22]));
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, aids[0].at(-1).id)) ((v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73)));
-    if (melds.length >= 5 && aids[1].length === ck)
-        if ((setting[19] || !must_menqing) && zimo) ((v += 4), f.push(56), (zimo = 56));
-        else if (!must_menqing) ((v += 2), f.push(62));
-    if (zimo === 80) (++v, f.push(zimo));
+    ({ val: v, fan: f, zimo } = GBZimo(setting[19], zimo, { val: v, fan: f }, settingBless(info.fan, setting), melds.length >= 5 && aids[1].length === ck, must_menqing));
     if (melds.length >= 5 && isMask(marr, TerminalArray)) ((v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_2tong &&= setting[28]), (can_3tong &&= setting[29]));
     if (melds.length >= 5 && isMask(marr, HonorArray)) ((v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true));
     if (melds.length >= 5)
@@ -776,15 +788,13 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, tiles, se
     }
     return { val: v, fan: f };
 }
-function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, _, setting) {
-    let { f, v } = GBKPC(ck, ek, cp, setting);
+function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, _, setting) {
+    let { f, v } = GBKPC(ck, ek, cp, setting, false, info);
+    v += info.val, f.push(...info.fan);
     ((v += 12), f.push(35));
     let must_pinghe = false;
     let must_wuzi = false;
-    if (melds.length >= 5 && aids[1].length === ck)
-        if (zimo) ((v += 4), f.push(56));
-        else ((v += 2), f.push(62));
-    else if (zimo === 80) (++v, f.push(zimo));
+    ({ val: v, fan: f, zimo } = GBZimo(undefined, zimo, { val: v, fan: f }, settingBless(info.fan, setting), melds.length >= 5 && aids[1].length === ck, false));
     let predict_v = 6 + predictHog(melds);
     predict_v += predictBind(melds);
     if (v + predict_v <= gans) return { val: 0, fan: [] };

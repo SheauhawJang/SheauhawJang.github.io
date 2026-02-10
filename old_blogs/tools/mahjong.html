@@ -310,10 +310,11 @@
                     <div class="output-grid-div">
                         <span>圈风</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-global-wind" value="27" checked />东</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="27" />东</label>
                             <label><input type="radio" name="score-gb-global-wind" value="28" />南</label>
                             <label><input type="radio" name="score-gb-global-wind" value="29" />西</label>
                             <label><input type="radio" name="score-gb-global-wind" value="30" />北</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="0" checked />无</label>
                         </div>
                         <span>门风</span>
                         <div class="output-option-group">
@@ -329,6 +330,8 @@
                         </div>
                         <span>和牌状态</span>
                         <div class="output-option-group">
+                            <label id="gb-heaven" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="86">第一巡目</label>
+                            <label id="gb-earth" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="87">地牌和</label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="44" />最后一张</label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="46"><span data-i18n="GB_FANNAME_46"></span></label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="47"><span data-i18n="GB_FANNAME_47"></span></label>
@@ -443,29 +446,29 @@
                             </div>
                             <span data-i18n="GB_FANNAME_86"></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-8" value="46,3" />8 <span data-i18n="GB_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-gb-setting-8" value="46,2" />48 <span data-i18n="GB_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-gb-setting-8" value="46,1" />88 <span data-i18n="GB_FAN_unit"></span></label>
-                                <label><input type="radio" name="score-gb-setting-8" value="0" checked />关闭</label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>48 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 1)"/>关闭</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="47" />复合<span data-i18n="GB_FANNAME_62"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="48" />复合<span data-i18n="GB_FANNAME_56"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="49" />复合<span data-i18n="GB_FANNAME_80"></span></label>
                             </div>
                             <span>地牌和</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-9" value="50,3" />8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
-                                <label><input type="radio" name="score-gb-setting-9" value="50,2" />24 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
-                                <label><input type="radio" name="score-gb-setting-9" value="50,1" />88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
-                                <label><input type="radio" name="score-gb-setting-9" value="0" checked />无单独定义</label>
+                                <label><input type="radio" name="score-gb-setting-9" value="50,3" onchange="SwitchOption(this, 'gb-earth', [true])"/>8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
+                                <label><input type="radio" name="score-gb-setting-9" value="50,2" onchange="SwitchOption(this, 'gb-earth', [true])"/>24 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
+                                <label><input type="radio" name="score-gb-setting-9" value="50,1" onchange="SwitchOption(this, 'gb-earth', [true])"/>88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
+                                <label><input type="radio" name="score-gb-setting-9" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)"/>无单独定义</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="51" />复合<span data-i18n="GB_FANNAME_62"></span></label>
                             </div>
                             <span>一巡点和</span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-10" value="52,4" />8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
-                                <label><input type="radio" name="score-gb-setting-10" value="52,3" />16 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
-                                <label><input type="radio" name="score-gb-setting-10" value="52,2" />64 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
-                                <label><input type="radio" name="score-gb-setting-10" value="52,1" />88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
-                                <label><input type="radio" name="score-gb-setting-10" value="0" checked />关闭</label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>16 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>64 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 2)"/>关闭</label>
                                 <label><input type="checkbox" name="score-gb-setting" value="53" />复合<span data-i18n="GB_FANNAME_62"></span></label>
                             </div>
                             <span>一巡自摸</span>
@@ -475,12 +478,12 @@
                                     <label><input type="radio" name="score-gb-setting-12" value="0" checked />算作<span data-i18n="GB_FANNAME_88"></span></label>
                                 </div>
                                 <div class="output-option-group">
-                                    <label><input type="radio" name="score-gb-setting-11" value="54,5" />8 <span data-i18n="GB_FAN_unit"></span></label>
-                                    <label><input type="radio" name="score-gb-setting-11" value="54,4" />16 <span data-i18n="GB_FAN_unit"></span></label>
-                                    <label><input type="radio" name="score-gb-setting-11" value="54,3" />24 <span data-i18n="GB_FAN_unit"></span></label>
-                                    <label><input type="radio" name="score-gb-setting-11" value="54,2" />64 <span data-i18n="GB_FAN_unit"></span></label>
-                                    <label><input type="radio" name="score-gb-setting-11" value="54,1" />88 <span data-i18n="GB_FAN_unit"></span></label>
-                                    <label><input type="radio" name="score-gb-setting-11" value="0" checked />关闭</label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>16 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>24 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>64 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 3)"/>关闭</label>
                                     <label><input type="checkbox" name="score-gb-setting" value="56" />复合<span data-i18n="GB_FANNAME_62"></span></label>
                                     <label><input type="checkbox" name="score-gb-setting" value="57" />复合<span data-i18n="GB_FANNAME_56"></span></label>
                                     <label><input type="checkbox" name="score-gb-setting" value="58" />复合<span data-i18n="GB_FANNAME_80"></span></label>
@@ -491,6 +494,8 @@
                                 <button onclick="processGBSetting(0)">MIL规则</button>
                                 <button onclick="processGBSetting(1)">世麻规则</button>
                                 <button onclick="processGBSetting(2)">JMSA规则</button>
+                                <button onclick="processGBSetting(3)">雀渣</button>
+                                <!--<button onclick="processGBSetting(4)">无限暖暖</button>-->
                             </div>
                             <div></div>
                             <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
@@ -970,12 +975,12 @@
         </div>
     </div>
     <div class="section title-button-container">
-        <div class="output-time">v4.8.5 Beta</div>
+        <div class="output-time">v4.8.6 Beta</div>
         <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
     </div>
-    <script src="mahjong.js?v=202602110300"></script>
-    <script src="mahjong-document.js?v=202602110300"></script>
-    <script src="mahjong-worker-lang.js?v=202602110300"></script>
+    <script src="mahjong.js?v=202602110500"></script>
+    <script src="mahjong-document.js?v=202602110500"></script>
+    <script src="mahjong-worker-lang.js?v=202602110500"></script>
     <script>
         function tilesInfo(tcnt) {
             const meld = Math.floor(tcnt / 3);

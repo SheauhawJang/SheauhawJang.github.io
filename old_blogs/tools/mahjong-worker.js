@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202602110300");
-importScripts("mahjong-score.js?v=202602110300");
-importScripts("mahjong-worker-lang.js?v=202602110300");
+importScripts("mahjong.js?v=202602110500");
+importScripts("mahjong-score.js?v=202602110500");
+importScripts("mahjong-worker-lang.js?v=202602110500");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -617,7 +617,7 @@ function debugPermutation(p, title = "Permutation") {
 }
 function GBScore(substeps, gw, mw, wt, info, setting) {
     function GBFanArray(fan) {
-        let fans = new Array(84).fill(0);
+        let fans = new Array(100).fill(0);
         for (let i = 0; i < fan.length; ++i)
             if (fan[i] > 0) ++fans[fan[i]];
             else --fans[-fan[i]];
@@ -630,7 +630,6 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         const GBPrintSeq = ArraySeq(0, GBScoreArray.length)
             .filter((x) => GBScoreArray[x] !== undefined)
             .sort((a, b) => GBScoreArray[b] - GBScoreArray[a]);
-        console.log(GBPrintSeq);
         for (const i of GBPrintSeq) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${Math.max(GBScoreArray[i], 1)} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
         return makeTable(fanopt.join(""));
     }
@@ -638,9 +637,31 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (info.includes(46) && wt) ((infov += 8), infof.push((wt = 46)));
     if (info.includes(44))
         if (!wt) ((infov += 8), infof.push(45));
-        else if (setting[32] || wt !== 46) ((infov += 8), infof.push(44), (wt = wt !== 46 ? 44 : 46));
+        else if (setting[32] || wt !== 46) ((infov += 8), infof.push(44), (wt = 44));
     if (info.includes(47) && !wt) ((infov += 8), infof.push(47));
     else if (info.includes(58)) ((infov += 4), infof.push(58));
+    GBScoreArray[86] = [0, 88, 48, 8][setting[46]];
+    GBScoreArray[87] = [0, 88, 24, 8][setting[50]];
+    GBScoreArray[88] = [0, 88, 64, 16, 8][setting[52]];
+    GBScoreArray[89] = [0, 88, 64, 24, 16, 8][setting[54]];
+    if (setting[55]) loc.GB_FANNAME_89 = loc.GB_FANNAME_87;
+    else loc.GB_FANNAME_89 = loc.GB_FANNAME_88;
+    if (wt) {
+        if (mw === 27 && setting[46] && (info.includes(86) || (setting[50] && info.includes(87)))) {
+            ((infov += GBScoreArray[86]), infof.push(86));
+            if (!setting[49]) wt = 86;
+        } else if (setting[54] && info.includes(86)) {
+            ((infov += GBScoreArray[89]), infof.push(89));
+            if (!setting[58]) wt = 89;
+        }
+    } else {
+        if (mw !== 27 && setting[50] && info.includes(87)) {
+            ((infov += GBScoreArray[87]), infof.push(87));
+        } else if (setting[52] && info.includes(86)) {
+            ((infov += GBScoreArray[88]), infof.push(88));
+        }
+    }
+    const bless = settingBless(infof, setting);
     const wint = aids[0].at(-1)?.id;
     let listen_cnt = 0;
     if (wint === undefined) listen_cnt = 999;
@@ -706,9 +727,9 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             }
         if (wint !== undefined && !wt && !wintf && !bilisten && !inMelds(others, ota, otb, wint)) --cp;
         if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
-        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, tiles, setting);
-        if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) (++ans.val, ans.fan.push(wintf));
-        ((ans.val += infov), ans.fan.push(...infof));
+        let info = { val: infov, fan: infof.slice() };
+        if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) (++info.val, info.fan.push(wintf));
+        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, info, tiles, setting);
         if (ans.val > gans.val) gans = ans;
         ++cm;
         if (!(cm & 1048575)) postDebugInfo();
@@ -717,18 +738,14 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (substeps[1] === -1) {
         let pans = GB7Pairs(aids[0], setting);
         ((pans.val += infov), pans.fan.push(...infof));
-        if (wt === 80)
-            if (setting[41]) ((pans.val += 4), pans.fan.push(56));
-            else (++pans.val, pans.fan.push(80));
+        GBZimo(setting[41], wt, pans, bless);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
     }
     if (substeps[2] === -1) {
         let pans = { val: 88 + infov, fan: [7, ...infof] };
-        if (wt === 80)
-            if (setting[42]) ((pans.val += 4), pans.fan.push(56));
-            else (++pans.val, pans.fan.push(80));
+        GBZimo(setting[42], wt, pans, bless);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -766,9 +783,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
                 }
             }
         ((pans.val += infov), pans.fan.push(...infof));
-        if (wt === 80)
-            if (setting[43]) ((pans.val += 4), pans.fan.push(56));
-            else (++pans.val, pans.fan.push(80));
+        GBZimo(setting[43], wt, pans, bless);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
@@ -802,17 +817,6 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     let ptchange = wt ? `${loc.winner} +${(basept + setting[37]) * 3}${loc.comma}${loc.other_player} -${basept + setting[37]}` : `${loc.winner} +${basept + setting[37] * 3}${loc.comma}${loc.loser} -${basept + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
     if (gans.val < setting[0] + aids[2].length) ptchange = loc.wrong_win;
     outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];
-    /*
-    let audio = [];
-    const vf = GBFanArray(gans.fan);
-    for (let i = 1; i <= 82; ++i) if (fans[i] > 0) {
-        let name = i;
-        switch (i) {
-            case 59:
-
-        }
-    } 
-    */
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
 function JPScore(substeps, gw, mw, tsumo, info, setting) {

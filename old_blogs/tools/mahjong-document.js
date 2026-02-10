@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202602110300");
+    worker = new Worker("mahjong-worker.js?v=202602110500");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -259,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202602110300");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202602110500");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -772,8 +772,8 @@ function subtileInput(t, k) {
 // Score workers
 let gb_worker = null;
 let gb_worker_info;
-const GB_RADIO_MAX = 8;
-const GB_SETTING_SIZE = 47;
+const GB_RADIO_MAX = 12;
+const GB_SETTING_SIZE = 59;
 const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 function processGBScore() {
@@ -804,7 +804,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202602110300");
+    gb_worker = new Worker("mahjong-worker.js?v=202602110500");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -853,7 +853,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202602110300");
+    jp_worker = new Worker("mahjong-worker.js?v=202602110500");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -901,7 +901,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202602110300");
+    sc_worker = new Worker("mahjong-worker.js?v=202602110500");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1162,19 +1162,24 @@ function processGBSetting(id) {
         default:
             positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29];
             negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 15];
-            radio = [undefined, 0, 0, 0, 0, 0, 0, 0];
+            radio = [undefined, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, undefined];
             break;
         case 1:
             positive = [19, 41, 42, 43, 5, 10, 1, 6, 7, 9, 11, 32, 13, 14, 15, 16, 44, 17, 20, 21, 22, 28, 29];
             negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 35, 18, 38, 15, 45];
-            radio = [undefined, 23, "24,1", 25, 0, undefined, "30,1", 0];
+            radio = [undefined, 23, "24,1", 25, 0, undefined, "30,1", 0, 0, 0, 0, 0, undefined];
             break;
         case 2:
             positive = [5, 10, 1, 6, 7, 9, 3, 2, 4, 32, 38];
             negative = [19, 41, 42, 43, 11, 12, "31,1", "31,2", 33, 15];
-            radio = [undefined, 0, 0, undefined, undefined, undefined, 0, 0];
+            radio = [undefined, 0, 0, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, undefined];
             document.getElementById("score-gb-setting-maxfan").value = 88;
             document.getElementById("score-gb-setting-maxfan").dispatchEvent(new Event("change"));
+            break;
+        case 3:
+            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29, 45];
+            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 15, 47, 48, 49, 51, 53, 56, 57, 58];
+            radio = [undefined, 0, 0, 0, 0, 0, 0, 0, "46,3", "50,3", "52,4", "54,5", 0];
             break;
     }
     document.getElementById("score-gb-setting-fan").value = 8;
@@ -1311,13 +1316,17 @@ function ptsToggle(el) {
     collapsed.style.display = el.open ? "none" : "";
     expanded.style.display = el.open ? "" : "none";
 }
-function SwitchOption(es, id, rge = [true, false], reverse = false) {
+let optionMap = new Map();
+function SwitchOption(es, id, rge = [true, false], reverse = false, group = 0) {
     if (!rge.includes(es.checked)) return;
     if (!Array.isArray(id)) id = [id];
     id.forEach((id) => {
+        let signal = optionMap.get(id);
+        if (!signal) optionMap.set(id, signal = new Map());
+        signal.set(group, es.checked !== reverse);
         const et = document.getElementById(id);
-        if (et === null) return;
-        et.style.display = es.checked !== reverse ? "" : "none";
+        if (et !== null) et.style.display = Array.from(signal.values()).some(Boolean) ? "" : "none";
+        optionMap.set(id, signal);
     });
 }
 function debugopen(id) {

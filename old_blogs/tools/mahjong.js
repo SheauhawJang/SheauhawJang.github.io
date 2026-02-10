@@ -25,6 +25,9 @@ function pmod(a, b) {
 function ArrayMap(len, f) {
     return Array(len).fill(null).map(f);
 }
+function ArraySeq(l, r) {
+    return ArrayMap(r - l, (_, i) => l + i);
+}
 function id(name) {
     const dictid = NAME_TO_ID[name];
     if (dictid >= 0 && dictid < sizeAT) return { id: dictid };

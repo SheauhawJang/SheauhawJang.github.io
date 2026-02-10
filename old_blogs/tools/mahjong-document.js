@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202602110600");
+    worker = new Worker("mahjong-worker.js?v=202602110712");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -259,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202602110600");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202602110712");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -804,7 +804,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202602110600");
+    gb_worker = new Worker("mahjong-worker.js?v=202602110712");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -853,7 +853,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202602110600");
+    jp_worker = new Worker("mahjong-worker.js?v=202602110712");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -901,7 +901,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202602110600");
+    sc_worker = new Worker("mahjong-worker.js?v=202602110712");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;

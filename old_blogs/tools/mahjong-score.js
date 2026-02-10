@@ -680,6 +680,7 @@ function canBeListen(tiles, ta, tb, x, wint) {
     return false;
 }
 function GBKPC(ck, ek, cp, setting, fourteen_type, info) {
+    console.log(info)
     let [v, f] = [0, []];
     let [must_pengpeng, must_menqing, must_2anke] = [false, false, false];
     let [has_single_ck, has_single_ek] = [false, false];
@@ -729,7 +730,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, til
     let [can_2tong, can_3tong] = [true, true];
     let skip_bind = false;
     const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
-    let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type, zimo);
+    let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type, info);
     v += info.val, f.push(...info.fan);
     const marr = flattenMelds(melds);
     if (melds.length >= 5 && isMask(marr, GreenArray)) ((v += 88), f.push(3), (must_hunyise ||= !setting[22]));

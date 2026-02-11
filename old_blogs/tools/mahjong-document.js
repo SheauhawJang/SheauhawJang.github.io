@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202602110712");
+    worker = new Worker("mahjong-worker.js?v=202602120606");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -259,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202602110712");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202602120606");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -772,8 +772,8 @@ function subtileInput(t, k) {
 // Score workers
 let gb_worker = null;
 let gb_worker_info;
-const GB_RADIO_MAX = 12;
-const GB_SETTING_SIZE = 59;
+const GB_RADIO_MAX = 15;
+const GB_SETTING_SIZE = 74;
 const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 function processGBScore() {
@@ -787,24 +787,29 @@ function processGBScore() {
     document.getElementById("time-output-score-gb").textContent = "Calculating......";
     const gw = Number(document.querySelector('input[name="score-gb-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-gb-local-wind"]:checked').value);
-    const wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked').value);
+    let wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked').value);
     let info = document.querySelectorAll('input[name="score-gb-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
+    if (wt === -1) wt = 0, info.push(-1);
     let sq = Array.from(document.querySelectorAll('input[name="score-gb-setting"]:checked'));
+    let sqall = Array.from(document.querySelectorAll('input[name="score-gb-setting"]'))
     for (let i = 0; i <= GB_RADIO_MAX; ++i) {
-        const ssq = Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`));
-        sq.push(...ssq);
+        sq.push(...Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`)));
+        sqall.push(...Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]`)));
     }
+    sq = sq.map(x => x.value);
+    const force = ["70", "65", "66", "67", "68", "69"];
+    for (const value of force) if (!sqall.some(x => x.value === value)) sq.push(value);
     let setting = Array(GB_SETTING_SIZE).fill(0);
     for (let i = 0; i < sq.length; ++i) {
-        const [a, b] = sq[i].value.split(",");
+        const [a, b] = sq[i].split(",");
         if (Number(a) === 0 && b === undefined) continue;
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202602110712");
+    gb_worker = new Worker("mahjong-worker.js?v=202602120606");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -853,7 +858,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202602110712");
+    jp_worker = new Worker("mahjong-worker.js?v=202602120606");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -901,7 +906,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202602110712");
+    sc_worker = new Worker("mahjong-worker.js?v=202602120606");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1161,30 +1166,30 @@ function processGBSetting(id) {
     let score = [8, 8, undefined];
     switch (id) {
         default:
-            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29];
-            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 39];
-            radio = [undefined, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, undefined];
+            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29, 70, ...ArraySeq(65, 70)];
+            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 39, 59, 63, 64];
+            radio = [undefined, 0, 0, 0, 0, 0, 0, 0, 0, undefined, 0, 0, undefined, 0, 0, 0];
             break;
         case 1:
-            positive = [19, 41, 42, 43, 5, 10, 1, 6, 7, 9, 11, 32, 13, 14, 15, 16, 44, 17, 20, 21, 22, 28, 29];
-            negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 34, 35, 18, 38, 39, 45];
-            radio = [undefined, 23, "24,1", 25, 0, undefined, "30,1", 0, 0, 0, 0, 0, undefined];
+            positive = [19, 41, 42, 43, 5, 10, 1, 6, 7, 9, 11, 32, 13, 14, 15, 16, 44, 17, 20, 21, 22, 28, 29, 70, ...ArraySeq(65, 70)];
+            negative = [3, 2, 4, 40, 8, 12, "31,1", "31,2", 33, 34, 35, 18, 38, 39, 45, 59, 63, 64];
+            radio = [undefined, 23, "24,1", 25, 0, undefined, "30,1", 0, 0, undefined, 0, 0, undefined, 0, 0, 0];
             break;
         case 2:
-            positive = [5, 10, 1, 6, 7, 9, 3, 2, 4, 32, 38];
-            negative = [19, 41, 42, 43, 11, 12, "31,1", "31,2", 33, 39];
-            radio = [undefined, 0, 0, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, undefined];
+            positive = [5, 10, 1, 6, 7, 9, 3, 2, 4, 32, 38, 70, ...ArraySeq(65, 70)];
+            negative = [19, 41, 42, 43, 11, 12, "31,1", "31,2", 33, 39, 59, 63, 64];
+            radio = [undefined, 0, 0, undefined, undefined, undefined, 0, 0, 0, undefined, 0, 0, undefined, 0, 0, 0];
             score[2] = 88;
             break;
         case 3:
-            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29, 45];
-            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 39, 47, 48, 49, 51, 53, 56, 57, 58];
-            radio = [undefined, 0, 0, 0, 0, 0, 0, 0, "46,3", "50,3", "52,4", "54,5", 0];
+            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 32, 13, 14, 15, 16, 44, 17, 20, 21, 29, 45, 70, ...ArraySeq(65, 70)];
+            negative = [19, 41, 42, 43, 12, "31,1", "31,2", 33, 34, 35, 18, 22, 28, 38, 39, 47, 48, 49, 51, 53, 56, 57, 58, 59, 63, 64];
+            radio = [undefined, 0, 0, 0, 0, 0, 0, 0, "46,3", "50,3", "52,4", "54,5", 0, 0, 0, "62,1"];
             break;
         case 4:
-            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 29, 38, 49, 58];
-            negative = [19, 41, 42, 43, 8, 12, "31,1", "31,2", 33, 35, 14, 16, 44, 17, 18, 28, 47, 48, 51, 53, 56, 57];
-            radio = [undefined, 0, 0, undefined, 26, undefined, undefined, 0, "46,1", "50,1", "52,2", "54,1", 55];
+            positive = [5, 10, 1, 6, 7, 9, 11, 3, 2, 4, 29, 38, 49, 58, 59, 63, 64, 65, 66, 67];
+            negative = [19, 41, 42, 43, 8, 12, "31,1", "31,2", 33, 34, 35, 14, 16, 44, 17, 18, 28, 47, 48, 51, 53, 56, 57, 70, 68, 69, 72, 73];
+            radio = [undefined, 0, 0, undefined, 26, undefined, undefined, 0, "46,1", "50,1", "52,2", "54,1", 55, "60,1", "61,1", "62,1"];
             score = [0, 0, 88];
             break;
     }

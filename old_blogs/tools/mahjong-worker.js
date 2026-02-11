@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202602110712");
-importScripts("mahjong-score.js?v=202602110712");
-importScripts("mahjong-worker-lang.js?v=202602110712");
+importScripts("mahjong.js?v=202602120606");
+importScripts("mahjong-score.js?v=202602120606");
+importScripts("mahjong-worker-lang.js?v=202602120606");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -641,11 +641,15 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (info.includes(47) && !wt) ((infov += 8), infof.push(47));
     else if (info.includes(58)) ((infov += 4), infof.push(58));
     GBScoreArray[86] = [0, 88, 48, 8][setting[46]];
-    GBScoreArray[87] = [0, 88, 24, 8][setting[50]];
+    if (setting[62]) GBScoreArray[87] = [0, 88, 24, 8, 16, 64][setting[50]];
+    else setting[50] = 0;
     GBScoreArray[88] = [0, 88, 64, 16, 8][setting[52]];
     GBScoreArray[89] = [0, 88, 64, 24, 16, 8][setting[54]];
-    if (setting[55]) loc.GB_FANNAME_89 = loc.GB_FANNAME_87;
+    if (setting[55]) loc.GB_FANNAME_89 = loc.GB_FANNAME_8A;
     else loc.GB_FANNAME_89 = loc.GB_FANNAME_88;
+    if (setting[62] === 1) loc.GB_FANNAME_87 = loc.GB_FANNAME_8A;
+    else if (setting[62] === 2) loc.GB_FANNAME_87 = loc.GB_FANNAME_88;
+    if (info.includes(84)) ((infov += GBScoreArray[84] = setting[60]), infof.push(84));
     if (wt) {
         if (mw === 27 && setting[46] && (info.includes(86) || (setting[50] && info.includes(87)))) {
             ((infov += GBScoreArray[86]), infof.push(86));
@@ -679,10 +683,11 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     let gans = { val: 0, fan: [] };
     let [cm, m] = [0, 0];
     let p = Array(7).fill(null);
-    if (substeps[0] === -1) ((p[6] = MeldsPermutation(aids, tiles)), debugPermutation(p[6]));
-    if (substeps[1] === -1) ++m;
-    if (substeps[2] === -1) ++m;
-    if (substeps[4] === -1)
+    if (substeps[0] === -1 && setting[65]) ((p[6] = MeldsPermutation(aids, tiles)), debugPermutation(p[6]));
+    if (substeps[1] === -1 && setting[66]) ++m;
+    if (substeps[2] === -1 && setting[67]) ++m;
+    if (substeps[3] === -1 && setting[68]) ++m;
+    if (substeps[4] === -1 && setting[69])
         for (let i = 0; i < 6; ++i) {
             let tcp = tiles.slice();
             let win = true;
@@ -735,7 +740,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         if (!(cm & 1048575)) postDebugInfo();
     }
     const st = new Date();
-    if (substeps[1] === -1) {
+    if (substeps[1] === -1 && setting[66]) {
         let pans = GB7Pairs(aids[0], setting);
         ((pans.val += infov), pans.fan.push(...infof));
         GBZimo(setting[41], wt, pans, bless);
@@ -743,14 +748,14 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         ++cm;
         postDebugInfo();
     }
-    if (substeps[2] === -1) {
+    if (substeps[2] === -1 && setting[67]) {
         let pans = { val: 88 + infov, fan: [7, ...infof] };
         GBZimo(setting[42], wt, pans, bless);
         if (pans.val > gans.val) gans = pans;
         ++cm;
         postDebugInfo();
     }
-    if (substeps[3] === -1) {
+    if (substeps[3] === -1 && setting[68]) {
         let pans = { val: 12, fan: [34] };
         let tcp = tiles.slice();
         let seven_stars = true;
@@ -788,7 +793,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         ++cm;
         postDebugInfo();
     }
-    if (substeps[0] === -1) {
+    if (substeps[0] === -1 && setting[65]) {
         const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
         const { err, itots, itsubots, ek, ck } = p[6];
         let addk = false;
@@ -799,7 +804,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         if (gans.val === 0 && nmp >= 5) ((gans.val = 8), (gans.fan = [43]));
         postDebugInfo();
     }
-    if (substeps[4] === -1)
+    if (substeps[4] === -1 && setting[69])
         for (let i = 0; i < 6; ++i) {
             if (!p[i]) continue;
             const { err, itots, itsubots, ek, ck } = p[i];
@@ -815,7 +820,13 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (gans.val > basept) fanreview = `${loc.GB_max_fan}${loc.brace_left}${fanreview}${loc.brace_right}`;
     if (setting[39] && wt) basept = Math.ceil(basept / 3);
     let ptchange = wt ? `${loc.winner} +${(basept + setting[37]) * 3}${loc.comma}${loc.other_player} -${basept + setting[37]}` : `${loc.winner} +${basept + setting[37] * 3}${loc.comma}${loc.loser} -${basept + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
+    if (setting[59])
+        if (wt)
+            if (mw === 27) ptchange = `${loc.winner} +${(basept * 2 + setting[37]) * 3}${loc.comma}${loc.other_player} -${basept * 2 + setting[37]}`;
+            else ptchange = `${loc.winner} +${basept * 4 + setting[37] * 3}${loc.comma}${loc.other_player} -${basept * 2 + setting[37]}${loc.note_dealer}${loc.slash}-${basept + setting[37]}${loc.note_non_dealer}`;
+        else if (mw === 27 || info.includes(-1)) ptchange = `${loc.winner} +${basept * 2 + setting[37] * 3}${loc.comma}${loc.loser} -${basept * 2 + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
     if (gans.val < setting[0] + aids[2].length) ptchange = loc.wrong_win;
+    if (gans.val === aids[2].length) fanreview = "", ptchange = loc.wrong_win;
     outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }
@@ -1193,7 +1204,7 @@ function SCScore(substeps, tsumo, info, setting) {
         mfe.sort(([a], [b]) => a - b).forEach(([i, cnt]) => fanopt.push(makeTableFanLineLR(`<span style="padding-left: 1em;">* ${makeFanName(loc[`SC_FAN_NAME_${i}`])}</span>`, ...fan_times_union(SCScoreArray[i] * cnt), "font-size: small; color: #666;")));
     } else Object.entries(mfs).forEach(([x, n]) => (gans.fan[x] += n));
     for (let i = 0; i < gans.fan.length; ++i) if (gans.fan[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_${i}`]), ...fan_times_union(SCScoreArray[i] * gans.fan[i])));
-    if (tsumo && setting[11]) (fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_16`]), ...fan_times_union(1))), ++gans.val);
+    if (tsumo && setting[11] === 1) (fanopt.push(makeTableFanLineLR(makeFanName(loc[`SC_FAN_NAME_16`]), ...fan_times_union(1))), ++gans.val);
     let opthead = "";
     let v = 1 << gans.val;
     if (gans.val >= 0) {
@@ -1203,7 +1214,7 @@ function SCScore(substeps, tsumo, info, setting) {
             if (setting[16] && setting[15] > 0) v += (gans.val - setting[0]) * setting[15];
         }
     }
-    if (!setting[11] && tsumo) ++v;
+    if (tsumo && setting[11] === 2) ++v;
     let optable = makeTable(fanopt.join(""));
     let optend = tsumo > 1 ? `+${v * tsumo}${loc.brace_left}${v}∀${loc.brace_right}` : `+${v}`;
     return { output: [opthead, optable, optend].join(""), brief: [mfn, opthead, optend].filter((x) => x !== "").join(loc.comma) };

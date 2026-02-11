@@ -326,6 +326,7 @@
                         <span>和牌方式</span>
                         <div class="output-option-group">
                             <label><input type="radio" name="score-gb-wintype" value="0" checked />点和</label>
+                            <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />东家点和</label>
                             <label><input type="radio" name="score-gb-wintype" value="80" />自摸</label>
                         </div>
                         <span>和牌状态</span>
@@ -336,6 +337,7 @@
                             <label><input type="checkbox" name="score-gb-wininfo" value="46"><span data-i18n="GB_FANNAME_46"></span></label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="47"><span data-i18n="GB_FANNAME_47"></span></label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="58"><span data-i18n="GB_FANNAME_58"></span></label>
+                            <label id="gb-ready" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="84"><span data-i18n="GB_FANNAME_84"></span></label>
                         </div>
                         <button id="score-gb-button" onclick="processGBScore()" class="score-button">计算</button>
                     </div>
@@ -365,6 +367,8 @@
                                 <label title="由于张数限制，不可能出现。"><input type="checkbox" name="score-gb-setting" value="8" checked /><span data-i18n="GB_FANNAME_31"></span></label>
                                 <label title="现行规则均不允许。"><input type="checkbox" name="score-gb-setting" value="12" /><span data-i18n="GB_FANNAME_21"></span></label>
                                 <label title="绿一色七对和清幺九七对必然有一个四归一，全带五七对必然有两个四归一。世麻规则不采用。"><input type="checkbox" name="score-gb-setting" value="45" checked />必然的<span data-i18n="GB_FANNAME_64"></span></label>
+                                <label id="gb-wallet-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="71" checked /><span data-i18n="GB_FANNAME_90"></span></label>
+                                <label id="gb-purple-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="74" checked /><span data-i18n="GB_FANNAME_91"></span></label>
                             </div>
                             <span data-i18n="GB_FANNAME_53"></span>
                             <div class="output-option-group">
@@ -416,6 +420,8 @@
                                 <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span data-i18n="GB_FANNAME_1"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span data-i18n="GB_FANNAME_9"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="22" /><span data-i18n="GB_FANNAME_3"></span></label>
+                                <label id="gb-wallet-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="72" /><span data-i18n="GB_FANNAME_90"></span></label>
+                                <label id="gb-purple-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="73" /><span data-i18n="GB_FANNAME_91"></span></label>
                             </div>
                             <span><span data-i18n="GB_FANNAME_8"></span>复合</span>
                             <div class="output-option-group">
@@ -443,6 +449,7 @@
                                 <label><input type="number" id="score-gb-setting-blind" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>底分</label>
                                 <label title="JMSA规则采用 88 番封顶。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_max_fan"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="39" />自摸分三</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')"/>庄家幺二制</label>
                             </div>
                             <span data-i18n="GB_FANNAME_86"></span>
                             <div class="output-option-group">
@@ -455,12 +462,20 @@
                                 <label><input type="checkbox" name="score-gb-setting" value="49" />复合<span data-i18n="GB_FANNAME_80"></span></label>
                             </div>
                             <span>地牌和</span>
-                            <div class="output-option-group">
-                                <label><input type="radio" name="score-gb-setting-9" value="50,3" onchange="SwitchOption(this, 'gb-earth', [true])"/>8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
-                                <label><input type="radio" name="score-gb-setting-9" value="50,2" onchange="SwitchOption(this, 'gb-earth', [true])"/>24 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
-                                <label><input type="radio" name="score-gb-setting-9" value="50,1" onchange="SwitchOption(this, 'gb-earth', [true])"/>88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_87"></span></label>
-                                <label><input type="radio" name="score-gb-setting-9" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)"/>无单独定义</label>
-                                <label><input type="checkbox" name="score-gb-setting" value="51" />复合<span data-i18n="GB_FANNAME_62"></span></label>
+                            <div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-15" value="62,1" onchange="SwitchOption(this, 'gb-earth', [true])"/>算作<span data-i18n="GB_FANNAME_8A"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-15" value="62,2" onchange="SwitchOption(this, 'gb-earth', [true])"/>算作<span data-i18n="GB_FANNAME_88"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)"/>无特别定义</label>
+                                </div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,3" checked/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,4"/>16 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,2"/>24 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,5"/>64 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,1"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="51" />复合<span data-i18n="GB_FANNAME_62"></span></label>
+                                </div>
                             </div>
                             <span>一巡点和</span>
                             <div class="output-option-group">
@@ -474,7 +489,7 @@
                             <span>一巡自摸</span>
                             <div>
                                 <div class="output-option-group">
-                                    <label><input type="radio" name="score-gb-setting-12" value="55" />算作<span data-i18n="GB_FANNAME_87"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-12" value="55" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
                                     <label><input type="radio" name="score-gb-setting-12" value="0" checked />算作<span data-i18n="GB_FANNAME_88"></span></label>
                                 </div>
                                 <div class="output-option-group">
@@ -489,13 +504,39 @@
                                     <label><input type="checkbox" name="score-gb-setting" value="58" />复合<span data-i18n="GB_FANNAME_80"></span></label>
                                 </div>
                             </div>
+                            <span data-i18n="GB_FANNAME_84"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-13" value="60,1" onchange="SwitchOption(this, 'gb-ready', [true])"/>1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-13" value="60,2" onchange="SwitchOption(this, 'gb-ready', [true])"/>2 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-13" value="0" checked onchange="SwitchOption(this, 'gb-ready', [true], true)"/>关闭</label>
+                            </div>
+                            <span data-i18n="GB_FANNAME_85"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-14" value="61,1"/>1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-14" value="61,2"/>2 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-14" value="0" checked/>关闭</label>
+                            </div>
+                            <span><span data-i18n="GB_FANNAME_3"></span>系列</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="70" checked/><span data-i18n="GB_FANNAME_3"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="63" onchange="SwitchOption(this, ['gb-wallet-flush', 'gb-wallet-pairs'])"/><span data-i18n="GB_FANNAME_90"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="64" onchange="SwitchOption(this, ['gb-purple-flush', 'gb-purple-pairs'])"/><span data-i18n="GB_FANNAME_91"></span></label>
+                            </div>
+                            <span>和牌型限制</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="65" checked/><span data-i18n="normal"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="66" checked/><span data-i18n="pair7"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="67" checked/><span data-i18n="orphan13"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="68" checked/><span data-i18n="quanbukaoxing"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="69" checked/><span data-i18n="zuhelongxing"></span></label>
+                            </div>
                             <span>快速设置</span>
                             <div class="output-option-group">
                                 <button onclick="processGBSetting(0)">MIL规则</button>
                                 <button onclick="processGBSetting(1)">世麻规则</button>
                                 <button onclick="processGBSetting(2)">JMSA规则</button>
                                 <button onclick="processGBSetting(3)">雀渣</button>
-                                <button onclick="processGBSetting(4)">无限暖暖</button>
+                                <button onclick="processGBSetting(4)">无限暖暖街坊麻将</button>
                             </div>
                             <div></div>
                             <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
@@ -865,8 +906,9 @@
                         <div class="output-options">
                             <span data-i18n="SC_FAN_NAME_16"></span>
                             <div class="output-option-group">
-                                <label><input type="radio" name="score-sc-setting-1" value="0" checked /><span data-i18n="SC_FAN_NAME_16"></span>加底</label>
-                                <label><input type="radio" name="score-sc-setting-1" value="11" /><span data-i18n="SC_FAN_NAME_16"></span>加倍</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="11,2" checked /><span data-i18n="SC_FAN_NAME_16"></span>加底</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="11,1" /><span data-i18n="SC_FAN_NAME_16"></span>加倍</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="0" /><span data-i18n="SC_FAN_NAME_16"></span>不加</label>
                             </div>
                             <span data-i18n="SC_max_fan"></span>
                             <div class="output-option-group">
@@ -978,9 +1020,9 @@
         <div class="output-time">v4.8.6 Beta</div>
         <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
     </div>
-    <script src="mahjong.js?v=202602110712"></script>
-    <script src="mahjong-document.js?v=202602110712"></script>
-    <script src="mahjong-worker-lang.js?v=202602110712"></script>
+    <script src="mahjong.js?v=202602120606"></script>
+    <script src="mahjong-document.js?v=202602120606"></script>
+    <script src="mahjong-worker-lang.js?v=202602120606"></script>
     <script>
         function tilesInfo(tcnt) {
             const meld = Math.floor(tcnt / 3);

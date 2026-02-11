@@ -454,6 +454,8 @@ function GBTriBind(s, op, ma, pon, setting) {
 const GreenArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0];
 const PureGreenArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0];
 const SymmeArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0];
+const WalletArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0];
+const PurpleArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1];
 const OrphanArray = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1];
 const NoOrphanArray = OrphanArray.map((x) => 1 - x);
 const TerminalArray = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0];
@@ -680,7 +682,6 @@ function canBeListen(tiles, ta, tb, x, wint) {
     return false;
 }
 function GBKPC(ck, ek, cp, setting, fourteen_type, info) {
-    console.log(info)
     let [v, f] = [0, []];
     let [must_pengpeng, must_menqing, must_2anke] = [false, false, false];
     let [has_single_ck, has_single_ek] = [false, false];
@@ -724,6 +725,10 @@ function GBZimo(setting, zimo, ans, bless, menqing = true, must_menqing = true) 
     if (zimo === 80) (++ans.val, ans.fan.push(zimo));
     return { val: ans.val, fan: ans.fan, zimo };
 }
+function GeneralPair(melds, f = (x) => x < 27 && NumberArray[x] === 4) {
+    for (let i = 0; i < melds.length; ++i) if (melds[i].length === 2) return f(melds[i][0]);
+    return false;
+}
 function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, tiles, setting) {
     let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_pinghe, must_duan1, must_wuzi, must_quemen] = Array(8).fill(false);
     let yaojiuke = true;
@@ -731,9 +736,11 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, til
     let skip_bind = false;
     const fourteen_type = melds.length === 5 && aids[0].length % 3 !== 0;
     let { v, f, must_menqing, must_pengpeng } = GBKPC(ck, ek, cp, setting, fourteen_type, info);
-    v += info.val, f.push(...info.fan);
+    ((v += info.val), f.push(...info.fan));
     const marr = flattenMelds(melds);
-    if (melds.length >= 5 && isMask(marr, GreenArray)) ((v += 88), f.push(3), (must_hunyise ||= !setting[22]));
+    if (setting[70] && melds.length >= 5 && isMask(marr, GreenArray)) ((v += 88), f.push(3), (must_hunyise ||= !setting[22]));
+    if (setting[63] && melds.length >= 5 && isMask(marr, WalletArray)) ((v += 16), f.push(90), (must_hunyise ||= !setting[72]));
+    if (setting[64] && melds.length >= 5 && isMask(marr, PurpleArray)) ((v += 12), f.push(91), (must_hunyise ||= !setting[73]));
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, aids[0].at(-1).id)) ((v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73)));
     ({ val: v, fan: f, zimo } = GBZimo(setting[19], zimo, { val: v, fan: f }, settingBless(info.fan, setting), melds.length >= 5 && aids[1].length === ck, must_menqing));
     if (melds.length >= 5 && isMask(marr, TerminalArray)) ((v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_2tong &&= setting[28]), (can_3tong &&= setting[29]));
@@ -745,6 +752,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, til
     if (melds.length >= 5)
         if (isMask(marr, LowArray)) ((v += 24), f.push(27), (must_wuzi = true));
         else if (isMask(marr, L5Array)) ((v += 12), f.push(37), (must_wuzi = true));
+    if (setting[61] && GeneralPair(melds)) ((v += GBScoreArray[85] = setting[61]), f.push(85));
     let predict_v = 56 + predictHog(melds);
     if (!skip_bind) predict_v += predictBind(melds);
     predict_v = Math.max(predict_v, 64);
@@ -791,11 +799,12 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, til
 }
 function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, _, setting) {
     let { f, v } = GBKPC(ck, ek, cp, setting, false, info);
-    v += info.val, f.push(...info.fan);
+    ((v += info.val), f.push(...info.fan));
     ((v += 12), f.push(35));
     let must_pinghe = false;
     let must_wuzi = false;
     ({ val: v, fan: f, zimo } = GBZimo(undefined, zimo, { val: v, fan: f }, settingBless(info.fan, setting), melds.length >= 5 && aids[1].length === ck, false));
+    if (setting[61] && GeneralPair(melds)) ((v += GBScoreArray[85] = setting[61]), f.push(85));
     let predict_v = 6 + predictHog(melds);
     predict_v += predictBind(melds);
     if (v + predict_v <= gans) return { val: 0, fan: [] };
@@ -891,7 +900,9 @@ function GB7Pairs(tids, setting) {
         let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_duan1, must_wuzi, must_quemen] = Array(7).fill(false);
         const melds = finalot.map((x) => [x]);
         let hog = 0;
-        if (setting[1] && isMask(finalot, GreenArray)) (((v += 88), f.push(3), (must_hunyise ||= !setting[22])), --hog);
+        if (setting[1] && setting[70] && isMask(finalot, GreenArray)) (((v += 88), f.push(3), (must_hunyise ||= !setting[22])), --hog);
+        if (setting[71] && setting[63] && isMask(finalot, WalletArray)) (((v += 16), f.push(90), (must_hunyise ||= !setting[72])), --hog);
+        if (setting[74] && setting[64] && isMask(finalot, PurpleArray)) (((v += 12), f.push(91), (must_hunyise ||= !setting[73])), --hog);
         if (setting[2] && isMask(finalot, TerminalArray)) (((v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true)), --hog);
         if (setting[3] && isMask(finalot, HonorArray)) ((v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true));
         if (setting[4] && !must_hun19 && isMask(finalot, OrphanArray)) ((v += 32), f.push(18), (must_hun19 = true));
@@ -926,6 +937,8 @@ function GB7Pairs(tids, setting) {
     if (spr) {
         let sp = { val: 88, fan: [6] };
         if (spr.large) ((sp.val += 2), sp.fan.push(68));
+        if (setting[71] && setting[63] && (spr.color === -1 || spr.color === 1)) ((sp.val += 16), sp.fan.push(90));
+        if (setting[74] && setting[64] && (spr.color === -1 || spr.color === 2)) ((sp.val += 12), sp.fan.push(91));
         if (sp.val > gans.val) gans = sp;
     }
     // Five Color. Must be at end because of cot change.
@@ -953,7 +966,7 @@ function GB7Pairs(tids, setting) {
     }
     return gans;
 }
-const GBScoreArray = [undefined, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 5, undefined, 1, 1];
+const GBScoreArray = [undefined, 88, 88, 88, 88, 88, 88, 88, 64, 64, 64, 64, 64, 64, 48, 48, 32, 32, 32, 24, 24, 24, 24, 24, 24, 24, 24, 24, 16, 16, 16, 16, 16, 16, 12, 12, 12, 12, 12, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 5, undefined, 1, 1, 8, 8, 8, 8, 16, 12];
 const eans_jp = { val: 0, valfan: 0, fan: [], valfus: 0, fus: [], yakuman: 0, realyakuman: 0, realfus: 0, dora: 0, ura: 0 };
 let use_time = 0;
 function JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, mq = melds.length >= 5 && aids[1].length === ck, wint = aids[0].at(-1)?.id ?? -1, tb = buildHand(tiles, ta, wint)) {

@@ -546,29 +546,31 @@
                                 <label><input type="checkbox" name="score-jp-setting" value="24" /><span data-i18n="JP_YAKUNAME_10"></span>役</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="25" />允許 20 <span data-i18n="JP_FU_unit"></span></label>
                             </div>
-                            <span>快捷設定</span>
-                            <div class="output-option-group">
-                                <button onclick="processJPSetting(0)">XJTU規則</button>
-                                <button onclick="processJPSetting(1)">XJTU七星杯</button>
-                                <button onclick="processJPSetting(12)">新報知規則</button>
-                                <button onclick="processJPSetting(4)">最高位戰規則</button>
-                                <button onclick="processJPSetting(5)">最高位戰Classic規則</button>
-                                <button onclick="processJPSetting(2)">聯盟官方規則</button>
-                                <button onclick="processJPSetting(3)">聯盟WRC規則</button>
-                                <button onclick="processJPSetting(13)">μ規則</button>
-                                <button onclick="processJPSetting(6)">協會規則</button>
-                                <button onclick="processJPSetting(14)">RMU規則</button>
-                                <button onclick="processJPSetting(15)">全段審規則</button>
-                                <button onclick="processJPSetting(7)">M.League</button>
-                                <button onclick="processJPSetting(8)">EMA規則</button>
-                                <button onclick="processJPSetting(9)">雀魂</button>
-                                <button onclick="processJPSetting(10)">雀魂古役模式</button>
-                                <button onclick="processJPSetting(11)">天鳳</button>
-                            </div>
-                            <div></div>
-                            <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
                         </div>
                     </details>
+                    <div class="output-options">
+                        <span>快捷設定</span>
+                        <div class="output-option-group">
+                            <button onclick="processJPSetting(0)">XJTU規則</button>
+                            <button onclick="processJPSetting(1)">XJTU七星杯</button>
+                            <button onclick="processJPSetting(12)">新報知規則</button>
+                            <button onclick="processJPSetting(4)">最高位戰規則</button>
+                            <button onclick="processJPSetting(5)">最高位戰Classic規則</button>
+                            <button onclick="processJPSetting(2)">聯盟官方規則</button>
+                            <button onclick="processJPSetting(3)">聯盟WRC規則</button>
+                            <button onclick="processJPSetting(13)">μ規則</button>
+                            <button onclick="processJPSetting(6)">協會規則</button>
+                            <button onclick="processJPSetting(14)">RMU規則</button>
+                            <button onclick="processJPSetting(15)">全段審規則</button>
+                            <button onclick="processJPSetting(7)">M.League</button>
+                            <button onclick="processJPSetting(8)">EMA規則</button>
+                            <button onclick="processJPSetting(9)">雀魂</button>
+                            <button onclick="processJPSetting(10)">雀魂古役模式</button>
+                            <button onclick="processJPSetting(11)">天鳳</button>
+                        </div>
+                        <div></div>
+                        <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
+                    </div>
                     <div class="output-grid-div">
                         <span><span data-i18n="JP_YAKUNAME_96"></span>指示牌</span>
                         <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
@@ -591,10 +593,11 @@
                     <div class="output-grid-div">
                         <span>圈風</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-global-wind" value="27" checked>東</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="27">東</label>
                             <label><input type="radio" name="score-gb-global-wind" value="28">南</label>
                             <label><input type="radio" name="score-gb-global-wind" value="29">西</label>
                             <label><input type="radio" name="score-gb-global-wind" value="30">北</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="0" checked>無し</label>
                         </div>
                         <span>門風</span>
                         <div class="output-option-group">
@@ -643,6 +646,8 @@
                                 <label title="由於張數限制，不可能出現。"><input type="checkbox" name="score-gb-setting" value="8" checked /><span data-i18n="GB_FANNAME_31"></span></label>
                                 <label title="現行規則均不允許。"><input type="checkbox" name="score-gb-setting" value="12" /><span data-i18n="GB_FANNAME_21"></span></label>
                                 <label title="綠一色七對和清么九七對必然有四歸一，全帶五七對必然有兩個四歸一。世麻規則不採用。"><input type="checkbox" name="score-gb-setting" value="45" checked />必然的<span data-i18n="GB_FANNAME_64"></span></label>
+                                <label id="gb-wallet-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="71" checked /><span data-i18n="GB_FANNAME_90"></span></label>
+                                <label id="gb-purple-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="74" checked /><span data-i18n="GB_FANNAME_91"></span></label>
                             </div>
                             <span data-i18n="GB_FANNAME_53"></span>
                             <div class="output-option-group">
@@ -694,6 +699,8 @@
                                 <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span data-i18n="GB_FANNAME_1"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span data-i18n="GB_FANNAME_9"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="22" /><span data-i18n="GB_FANNAME_3"></span></label>
+                                <label id="gb-wallet-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="72" /><span data-i18n="GB_FANNAME_90"></span></label>
+                                <label id="gb-purple-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="73" /><span data-i18n="GB_FANNAME_91"></span></label>
                             </div>
                             <span><span data-i18n="GB_FANNAME_8"></span>複合</span>
                             <div class="output-option-group">
@@ -721,17 +728,101 @@
                                 <label><input type="number" id="score-gb-setting-blind" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>底<span data-i18n="GB_FAN_unit"></span></label>
                                 <label title="JMSA規則採用 88 台封頂。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_max_fan"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="39" />自摸分三</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')"/>庄家幺二制</label>
                             </div>
-                            <span>快捷設定</span>
+                            <span data-i18n="GB_FANNAME_86"></span>
                             <div class="output-option-group">
-                                <button onclick="processGBSetting(0)">MIL規則</button>
-                                <button onclick="processGBSetting(1)">世麻規則</button>
-                                <button onclick="processGBSetting(2)">JMSA規則</button>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>48 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 1)"/>關閉</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="47" />複合<span data-i18n="GB_FANNAME_62"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="48" />複合<span data-i18n="GB_FANNAME_56"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="49" />複合<span data-i18n="GB_FANNAME_80"></span></label>
                             </div>
-                            <div></div>
-                            <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
+                            <span>地牌和</span>
+                            <div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-15" value="62,1" onchange="SwitchOption(this, 'gb-earth', [true])"/>算作<span data-i18n="GB_FANNAME_8A"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-15" value="62,2" onchange="SwitchOption(this, 'gb-earth', [true])"/>算作<span data-i18n="GB_FANNAME_88"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)"/>無特別定義</label>
+                                </div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,3" checked/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,4"/>16 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,2"/>24 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,5"/>64 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,1"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="51" />複合<span data-i18n="GB_FANNAME_62"></span></label>
+                                </div>
+                            </div>
+                            <span>一巡點和</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-10" value="52,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>16 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>64 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 2)"/>關閉</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="53" />複合<span data-i18n="GB_FANNAME_62"></span></label>
+                            </div>
+                            <span>一巡自摸</span>
+                            <div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-12" value="55" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-12" value="0" checked />算作<span data-i18n="GB_FANNAME_88"></span></label>
+                                </div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>16 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>24 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>64 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 3)"/>關閉</label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="56" />複合<span data-i18n="GB_FANNAME_62"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="57" />複合<span data-i18n="GB_FANNAME_56"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="58" />複合<span data-i18n="GB_FANNAME_80"></span></label>
+                                </div>
+                            </div>
+                            <span data-i18n="GB_FANNAME_84"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-13" value="60,1" onchange="SwitchOption(this, 'gb-ready', [true])"/>1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-13" value="60,2" onchange="SwitchOption(this, 'gb-ready', [true])"/>2 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-13" value="0" checked onchange="SwitchOption(this, 'gb-ready', [true], true)"/>關閉</label>
+                            </div>
+                            <span data-i18n="GB_FANNAME_85"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-14" value="61,1"/>1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-14" value="61,2"/>2 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-14" value="0" checked/>關閉</label>
+                            </div>
+                            <span><span data-i18n="GB_FANNAME_3"></span>系列</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="70" checked/><span data-i18n="GB_FANNAME_3"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="63" onchange="SwitchOption(this, ['gb-wallet-flush', 'gb-wallet-pairs'])"/><span data-i18n="GB_FANNAME_90"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="64" onchange="SwitchOption(this, ['gb-purple-flush', 'gb-purple-pairs'])"/><span data-i18n="GB_FANNAME_91"></span></label>
+                            </div>
+                            <span>和牌型限制</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="65" checked/><span data-i18n="normal"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="66" checked/><span data-i18n="pair7"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="67" checked/><span data-i18n="orphan13"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="68" checked/><span data-i18n="quanbukaoxing"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="69" checked/><span data-i18n="zuhelongxing"></span></label>
+                            </div>
                         </div>
                     </details>
+                    <div class="output-options">
+                        <span>快捷設定</span>
+                        <div class="output-option-group">
+                            <button onclick="processGBSetting(0)">MIL規則</button>
+                            <button onclick="processGBSetting(1)">世麻規則</button>
+                            <button onclick="processGBSetting(2)">JMSA規則</button>
+                            <button onclick="processGBSetting(3)">雀渣</button>
+                            <button onclick="processGBSetting(4)">無限暖暖街坊麻將</button>
+                        </div>
+                        <div></div>
+                        <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
+                    </div>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -769,6 +860,7 @@
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-sc-setting-1" value="11,2" checked /><span data-i18n="SC_FAN_NAME_16"></span>加底</label>
                                 <label><input type="radio" name="score-sc-setting-1" value="11,1" /><span data-i18n="SC_FAN_NAME_16"></span>加倍</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="0" /><span data-i18n="SC_FAN_NAME_16"></span>不加</label>
                             </div>
                             <span data-i18n="SC_max_fan"></span>
                             <div class="output-option-group">
@@ -817,19 +909,21 @@
                                 <label><input type="radio" name="score-sc-setting-7" value="13" />死聽算聽牌</label>
                                 <label><input type="radio" name="score-sc-setting-7" value="0" checked />死聽不算聽</label>
                             </div>
-                            <span>快捷設定</span>
-                            <div class="output-option-group">
-                                <button onclick="processSCSetting(0)">國際麻將聯盟</button>
-                                <button onclick="processSCSetting(1)">雀魂赤羽之戰</button>
-                                <button onclick="processSCSetting(2)">雀姬川麻場</button>
-                                <button onclick="processSCSetting(3)">JJ麻將血戰川麻</button>
-                                <button onclick="processSCSetting(4)">歡樂麻將血戰到底</button>
-                                <button onclick="processSCSetting(5)">微樂麻將血戰到底</button>
-                            </div>
-                            <div></div>
-                            <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
                         </div>
                     </details>
+                    <div class="output-options">
+                        <span>快捷設定</span>
+                        <div class="output-option-group">
+                            <button onclick="processSCSetting(0)">國際麻將聯盟</button>
+                            <button onclick="processSCSetting(1)">雀魂赤羽之戰</button>
+                            <button onclick="processSCSetting(2)">雀姬川麻場</button>
+                            <button onclick="processSCSetting(3)">JJ麻將血戰川麻</button>
+                            <button onclick="processSCSetting(4)">歡樂麻將血戰到底</button>
+                            <button onclick="processSCSetting(5)">微樂麻將血戰到底</button>
+                        </div>
+                        <div></div>
+                        <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
+                    </div>
                 </div>
                 <div class="output-context" id="output-score-sc"></div>
                 <div class="output-context" id="brief-output-score-sc" style="display: none"></div>

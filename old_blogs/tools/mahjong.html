@@ -530,18 +530,20 @@
                                 <label><input type="checkbox" name="score-gb-setting" value="68" checked/><span data-i18n="quanbukaoxing"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="69" checked/><span data-i18n="zuhelongxing"></span></label>
                             </div>
-                            <span>快速设置</span>
-                            <div class="output-option-group">
-                                <button onclick="processGBSetting(0)">MIL规则</button>
-                                <button onclick="processGBSetting(1)">世麻规则</button>
-                                <button onclick="processGBSetting(2)">JMSA规则</button>
-                                <button onclick="processGBSetting(3)">雀渣</button>
-                                <button onclick="processGBSetting(4)">无限暖暖街坊麻将</button>
-                            </div>
-                            <div></div>
-                            <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
                         </div>
                     </details>
+                    <div class="output-options">
+                        <span>快速设置</span>
+                        <div class="output-option-group">
+                            <button onclick="processGBSetting(0)">MIL规则</button>
+                            <button onclick="processGBSetting(1)">世麻规则</button>
+                            <button onclick="processGBSetting(2)">JMSA规则</button>
+                            <button onclick="processGBSetting(3)">雀渣</button>
+                            <button onclick="processGBSetting(4)">无限暖暖街坊麻将</button>
+                        </div>
+                        <div></div>
+                        <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
+                    </div>
                 </div>
                 <div class="output-context" id="output-score-gb"></div>
                 <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -798,29 +800,31 @@
                                 <label><input type="checkbox" name="score-jp-setting" value="24" /><span data-i18n="JP_YAKUNAME_10"></span>役</label>
                                 <label><input type="checkbox" name="score-jp-setting" value="25" />允许 20 <span data-i18n="JP_FU_unit"></span></label>
                             </div>
-                            <span>快速设置</span>
-                            <div class="output-option-group">
-                                <button onclick="processJPSetting(0)">XJTU规则</button>
-                                <button onclick="processJPSetting(1)">XJTU七星杯</button>
-                                <button onclick="processJPSetting(12)">新报知规则</button>
-                                <button onclick="processJPSetting(4)">最高位战规则</button>
-                                <button onclick="processJPSetting(5)">最高位战Classic规则</button>
-                                <button onclick="processJPSetting(2)">联盟官方规则</button>
-                                <button onclick="processJPSetting(3)">联盟WRC规则</button>
-                                <button onclick="processJPSetting(13)">μ规则</button>
-                                <button onclick="processJPSetting(6)">协会规则</button>
-                                <button onclick="processJPSetting(14)">RMU规则</button>
-                                <button onclick="processJPSetting(15)">全段审规则</button>
-                                <button onclick="processJPSetting(7)">M.League</button>
-                                <button onclick="processJPSetting(8)">EMA规则</button>
-                                <button onclick="processJPSetting(9)">雀魂</button>
-                                <button onclick="processJPSetting(10)">雀魂古役模式</button>
-                                <button onclick="processJPSetting(11)">天凤</button>
-                            </div>
-                            <div></div>
-                            <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
                         </div>
                     </details>
+                    <div class="output-options">
+                        <span>快速设置</span>
+                        <div class="output-option-group">
+                            <button onclick="processJPSetting(0)">XJTU规则</button>
+                            <button onclick="processJPSetting(1)">XJTU七星杯</button>
+                            <button onclick="processJPSetting(12)">新报知规则</button>
+                            <button onclick="processJPSetting(4)">最高位战规则</button>
+                            <button onclick="processJPSetting(5)">最高位战Classic规则</button>
+                            <button onclick="processJPSetting(2)">联盟官方规则</button>
+                            <button onclick="processJPSetting(3)">联盟WRC规则</button>
+                            <button onclick="processJPSetting(13)">μ规则</button>
+                            <button onclick="processJPSetting(6)">协会规则</button>
+                            <button onclick="processJPSetting(14)">RMU规则</button>
+                            <button onclick="processJPSetting(15)">全段审规则</button>
+                            <button onclick="processJPSetting(7)">M.League</button>
+                            <button onclick="processJPSetting(8)">EMA规则</button>
+                            <button onclick="processJPSetting(9)">雀魂</button>
+                            <button onclick="processJPSetting(10)">雀魂古役模式</button>
+                            <button onclick="processJPSetting(11)">天凤</button>
+                        </div>
+                        <div></div>
+                        <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
+                    </div>
                     <div class="output-grid-div">
                         <span><span data-i18n="JP_YAKUNAME_96"></span>指示牌</span>
                         <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
@@ -957,19 +961,22 @@
                                 <label><input type="radio" name="score-sc-setting-7" value="13" />死听算听牌</label>
                                 <label><input type="radio" name="score-sc-setting-7" value="0" checked />死听不算听</label>
                             </div>
-                            <span>快速设置</span>
-                            <div class="output-option-group">
-                                <button onclick="processSCSetting(0)">国际麻将联盟</button>
-                                <button onclick="processSCSetting(3)">JJ麻将血战川麻</button>
-                                <button onclick="processSCSetting(4)">欢乐麻将血战到底</button>
-                                <button onclick="processSCSetting(5)">微乐麻将血战到底</button>
-                                <button onclick="processSCSetting(1)">雀魂赤羽之战</button>
-                                <button onclick="processSCSetting(2)">雀姬川麻场</button>
-                            </div>
-                            <div></div>
-                            <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
                         </div>
                     </details>
+                    <div class="output-options">
+                        <span>快速设置</span>
+                        <div class="output-option-group">
+                            <button onclick="processSCSetting(0)">国际麻将联盟</button>
+                            <button onclick="processSCSetting(3)">JJ麻将血战川麻</button>
+                            <button onclick="processSCSetting(4)">欢乐麻将血战到底</button>
+                            <button onclick="processSCSetting(5)">微乐麻将血战到底</button>
+                            <button onclick="processSCSetting(1)">雀魂赤羽之战</button>
+                            <button onclick="processSCSetting(2)">雀姬川麻场</button>
+                            <button onclick="processSCSetting(6)">无限暖暖巴适麻将</button>
+                        </div>
+                        <div></div>
+                        <div class="output-time">使用快速设定时，配置项和计算结果仅供参考，请以官方结算结果为准。若结果不一致请联系作者。</div>
+                    </div>
                 </div>
                 <div class="output-context" id="output-score-sc"></div>
                 <div class="output-context" id="brief-output-score-sc" style="display: none"></div>
@@ -1020,9 +1027,9 @@
         <div class="output-time">v4.8.6 Beta</div>
         <div class="output-time">功能建议/Bug反馈/友好交流QQ群 1021644248</div>
     </div>
-    <script src="mahjong.js?v=202602120606"></script>
-    <script src="mahjong-document.js?v=202602120606"></script>
-    <script src="mahjong-worker-lang.js?v=202602120606"></script>
+    <script src="mahjong.js?v=202602121433"></script>
+    <script src="mahjong-document.js?v=202602121433"></script>
+    <script src="mahjong-worker-lang.js?v=202602121433"></script>
     <script>
         function tilesInfo(tcnt) {
             const meld = Math.floor(tcnt / 3);

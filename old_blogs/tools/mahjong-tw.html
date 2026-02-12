@@ -609,14 +609,18 @@
                         <span>和牌方式</span>
                         <div class="output-option-group">
                             <label><input type="radio" name="score-gb-wintype" value="0" checked>點和</label>
+                            <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />東家點和</label>
                             <label><input type="radio" name="score-gb-wintype" value="80">自摸</label>
                         </div>
                         <span>和牌狀態</span>
                         <div class="output-option-group">
+                            <label id="gb-heaven" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="86">第一巡目</label>
+                            <label id="gb-earth" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="87">地牌和</label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="44">最後一張</label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="46"><span data-i18n="GB_FANNAME_46"></span></label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="47"><span data-i18n="GB_FANNAME_47"></span></label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="58"><span data-i18n="GB_FANNAME_58"></span></label>
+                            <label id="gb-ready" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="84"><span data-i18n="GB_FANNAME_84"></span></label>
                         </div>
                         <button id="score-gb-button" onclick="processGBScore()" class="score-button">計算</button>
                     </div>

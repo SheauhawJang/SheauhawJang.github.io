@@ -1215,8 +1215,7 @@ function processGBSetting(id) {
     for (let i = 0; i <= GB_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
         const rds = document.querySelectorAll(`input[name="score-gb-setting-${i}"]`);
-        rds.forEach((r) => (r.checked = r.value == radio[i]));
-        if (rds.length) rds[0].dispatchEvent(new Event("change"));
+        rds.forEach((r) => (r.checked = r.value == radio[i]), r.dispatchEvent(new Event("change")));
     }
 }
 function processJPSetting(id) {
@@ -1269,7 +1268,7 @@ function processSCSetting(id) {
         [[12, 16], [1, 2, 3, 5], [undefined, 1, 0, 0, 0, 0, 0, 13], 3, 4], // JJ
         [[12, 1, 2], [3, 5, 10, 16], [undefined, 1, 2, 5, 5, 0, 1, 13], 8], // QQ
         [[1, 2, 3, 10, 14], [5, 12], [undefined, 1, 3, 3, 2, 1, 1, 13]], // Wele
-        [[1, 2, 3], [5, 10, 12], [undefined, 0, 2, 5, 5, 0, 1, 13]], // Infinity Nikki
+        [[1, 2, 3, 12], [5, 10, 16], [undefined, 0, 2, 5, 5, 0, 1, 13], 8], // Infinity Nikki
     ];
     const second = (s, t) => {
         if (s == t) return true;

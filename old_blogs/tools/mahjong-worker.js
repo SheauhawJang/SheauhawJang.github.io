@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202602121433");
-importScripts("mahjong-score.js?v=202602121433");
-importScripts("mahjong-worker-lang.js?v=202602121433");
+importScripts("mahjong.js?v=202602131356");
+importScripts("mahjong-score.js?v=202602131356");
+importScripts("mahjong-worker-lang.js?v=202602131356");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -826,7 +826,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             else ptchange = `${loc.winner} +${basept * 4 + setting[37] * 3}${loc.comma}${loc.other_player} -${basept * 2 + setting[37]}${loc.note_dealer}${loc.slash}-${basept + setting[37]}${loc.note_non_dealer}`;
         else if (mw === 27 || info.includes(-1)) ptchange = `${loc.winner} +${basept * 2 + setting[37] * 3}${loc.comma}${loc.loser} -${basept * 2 + setting[37]}${loc.comma}${loc.observer} -${setting[37]}`;
     if (gans.val < setting[0] + aids[2].length) ptchange = loc.wrong_win;
-    if (gans.val === aids[2].length) fanreview = "", ptchange = loc.wrong_win;
+    if (m === 0) fanreview = "", ptchange = loc.wrong_win;
     outputs = [fanreview, "\n", GBFanDiv(gans.fan), ptchange];
     return { output: outputs.join(""), brief: `${outputs[0]}${loc.brace_left}${outputs[3]}${loc.brace_right}` };
 }

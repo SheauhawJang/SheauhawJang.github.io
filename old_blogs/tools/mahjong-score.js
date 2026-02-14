@@ -725,7 +725,7 @@ function GBZimo(setting, zimo, ans, bless, menqing = true, must_menqing = true) 
     if (zimo === 80) (++ans.val, ans.fan.push(zimo));
     return { val: ans.val, fan: ans.fan, zimo };
 }
-function GeneralPair(melds, f = (x) => x < 27 && NumberArray[x] === 4) {
+function GeneralPair(melds, f = (x) => GeneralArray[x]) {
     for (let i = 0; i < melds.length; ++i) if (melds[i].length === 2) return f(melds[i][0]);
     return false;
 }
@@ -818,7 +818,7 @@ function GBKnitDragon(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info,
     for (let i = 0; i < hog; ++i) ((v += 2), f.push(64));
     let [seq, tri] = [[], []];
     for (let i = 0; i < melds.length; ++i)
-        if (isSeq(melds[i][0])) seq.push(melds[i][0]);
+        if (isSeq(melds[i])) seq.push(melds[i][0]);
         else if (melds[i].length === 2) tri.push(GetHeadFromId(melds[i][0]));
         else if (melds[i].length !== 3) tri.push(melds[i][0]);
     const bind = calculateBind(seq, tri, wind60, wind61);

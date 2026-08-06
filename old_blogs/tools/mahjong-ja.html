@@ -166,9 +166,9 @@
      </div>
      <div class="card-container" id="input-pic-bonus"></div>
      <div class="output-grid-div">
-      <span>ドラ表示牌</span>
+      <span><span data-i18n="JP_YAKUNAME_96"></span>表示牌</span>
       <div class="card-container" id="input-pic-dorap"></div>
-      <span>裏ドラ表示牌</span>
+      <span><span data-i18n="JP_YAKUNAME_97"></span>表示牌</span>
       <div class="card-container" id="input-pic-urap"></div>
      </div>
     </div>
@@ -182,8 +182,8 @@
      <button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower">加槓</button>
      <button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower">暗槓</button>
      <button onclick="subtileInput(3)" class="subkey-button enable-no-empty">抜き</button>
-     <button onclick="subtileInput(4)" class="subkey-button enable-no-empty">ドラ表示</button>
-     <button onclick="subtileInput(5)" class="subkey-button enable-no-empty">裏ドラ表示</button>
+     <button onclick="subtileInput(4)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_96"></span>表示</button>
+     <button onclick="subtileInput(5)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span>表示</button>
     </div>
    </div>
   </div>
@@ -199,7 +199,7 @@
   </div>
   <div class="output-box">
    <div class="tabs">
-    <button class="tab" data-steptabid="0" onclick="switchStepTab(0)">一般形牌理</button>
+    <button class="tab" data-steptabid="0" onclick="switchStepTab(0)"><span data-i18n="normal"></span>牌理</button>
     <button class="tab" data-steptabid="2" onclick="switchStepTab(2)">立直麻雀標準形牌理</button>
     <button class="tab" data-steptabid="1" onclick="switchStepTab(1)">中国国標麻雀標準形牌理</button>
     <button class="tab" data-steptabid="4" onclick="switchStepTab(4)">四川麻雀<small>(赤血の戦)</small>牌理</button>
@@ -209,7 +209,7 @@
   </div>
   <div class="output-box" id="steps-std" style="display: none;">
    <div class="title-button-container">
-    <div class="output-title">一般形牌理</div>
+    <div class="output-title"><span data-i18n="normal"></span>牌理</div>
     <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">収納 ▲</button>
    </div>
    <div class="output-context" id="output-std"></div>
@@ -223,9 +223,9 @@
     <button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
    </div>
    <div class="output-option-group">
-    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked />一般形</label>
-    <span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked />七対形</label><span class="text-link-btn" onclick="randomWinningPairs(true)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked />国士無双形</label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
+    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
+    <span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(true)">(例)</span></span>
+    <span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="kokushi"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
    </div>
    <div id="output-group-jp">
     <div class="output-context" id="output-jp"></div>
@@ -244,11 +244,11 @@
     <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">収納 ▲</button>
    </div>
    <div class="output-option-group">
-    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked />一般形</label>
-    <span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked />七対形</label><span class="text-link-btn" onclick="randomWinningPairs()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked />十三么形</label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked />全不靠形</label><span class="text-link-btn" onclick="randomWinningBukao()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked />組合竜形</label><span class="text-link-btn" onclick="randomWinningKDragon()">(例)</span></span>
+    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
+    <span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs()">(例)</span></span>
+    <span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
+    <span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label><span class="text-link-btn" onclick="randomWinningBukao()">(例)</span></span>
+    <span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label><span class="text-link-btn" onclick="randomWinningKDragon()">(例)</span></span>
    </div>
    <div class="output-context" id="output-gb"></div>
    <div class="output-context" id="brief-output-gb" style="display: none"></div>
@@ -260,10 +260,10 @@
     <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">収納 ▲</button>
    </div>
    <div class="output-option-group">
-    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked />一般形</label>
-    <span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked />ニコニコ形</label><span class="text-link-btn" onclick="randomWinningNiconico()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked />十三么形</label><span class="text-link-btn" onclick="randomWinningOrphanMeld()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked />十六不塔形</label><span class="text-link-btn" onclick="randomWinningBuda()">(例)</span></span>
+    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
+    <span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label><span class="text-link-btn" onclick="randomWinningNiconico()">(例)</span></span>
+    <span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphanMeld()">(例)</span></span>
+    <span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label><span class="text-link-btn" onclick="randomWinningBuda()">(例)</span></span>
    </div>
    <div class="output-context" id="output-tw"></div>
    <div class="output-time" id="time-output-tw"></div>
@@ -277,9 +277,9 @@
     <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">収納 ▲</button>
    </div>
    <div class="output-option-group">
-    <span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked />萬子欠如</label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked />筒子欠如</label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked />索子欠如</label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
+    <span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
+    <span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
+    <span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
    </div>
    <div class="output-context" id="output-sc"></div>
    <div class="output-context" id="brief-output-sc" style="display: none"></div>
@@ -288,7 +288,7 @@
   <div class="output-box" id="score-global" style="display: none;">
    <div class="tabs">
     <button class="tab" data-scoretabid="1" , onclick="switchScoreTab(1)">立直麻雀点数計算</button>
-    <button class="tab" data-scoretabid="0" , onclick="switchScoreTab(0)">中国国標麻雀点数計算</button>
+    <button class="tab" data-scoretabid="0" , onclick="switchScoreTab(0)">中国国標麻雀<span data-i18n="GB_FAN_unit"></span>数計算</button>
     <button class="tab" data-scoretabid="3" , onclick="switchScoreTab(3)">四川麻雀<small>(赤血の戦)</small>計算</button>
    </div>
    <div id="score-global-viewer"></div>
@@ -322,39 +322,39 @@
       </div>
       <span>立直状態</span>
       <div class="output-option-group">
-       <label><input type="checkbox" name="score-jp-wininfo" value="1" />立直</label>
-       <label><input type="checkbox" name="score-jp-wininfo" value="16" />ダブル立直</label>
-       <label id="jp-open-riichi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="71" onchange="SwitchOption(this, 'jp-open-riichi-yakuman')" />オープン立直</label>
-       <label><input type="checkbox" name="score-jp-wininfo" value="3" />一発</label>
+       <label><input type="checkbox" name="score-jp-wininfo" value="1" /><span data-i18n="JP_YAKUNAME_1"></span></label>
+       <label><input type="checkbox" name="score-jp-wininfo" value="16" /><span data-i18n="JP_YAKUNAME_16"></span></label>
+       <label id="jp-open-riichi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="71" onchange="SwitchOption(this, 'jp-open-riichi-yakuman')" /><span data-i18n="JP_YAKUNAME_71"></span></label>
+       <label><input type="checkbox" name="score-jp-wininfo" value="3" /><span data-i18n="JP_YAKUNAME_3"></span></label>
       </div>
       <span>和了状態</span>
       <div class="output-option-group">
        <label><input type="checkbox" name="score-jp-wininfo" value="32" />第一巡目</label>
        <label><input type="checkbox" name="score-jp-wininfo" value="13" />最後の牌</label>
-       <label><input type="checkbox" name="score-jp-wininfo" value="12" />嶺上開花</label>
-       <label><input type="checkbox" name="score-jp-wininfo" value="15" />槍槓</label>
-       <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" />燕返し</label>
-       <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" />槓振り</label>
-       <label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" />オープン立直役満払い</span></label>
+       <label><input type="checkbox" name="score-jp-wininfo" value="12" /><span data-i18n="JP_YAKUNAME_12"></span></label>
+       <label><input type="checkbox" name="score-jp-wininfo" value="15" /><span data-i18n="JP_YAKUNAME_15"></span></label>
+       <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
+       <label id="jp-kan-buri" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="61" /><span data-i18n="JP_YAKUNAME_61"></span></label>
+       <label id="jp-open-riichi-yakuman" style="display: none;"><span id="jp-open-riichi-sub" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="-71" /><span data-i18n="JP_YAKUNAME_71"></span><span data-i18n="yakuman"></span>払い</span></label>
       </div>
       <button id="score-jp-button" onclick="processJPScore()" class="score-button">計算</button>
      </div>
      <details>
       <summary>ルール設定</summary>
       <div class="output-options">
-       <span>役満</span>
+       <span><span data-i18n="yakuman"></span></span>
        <div class="output-option-group">
-        <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked />役満役</label>
-        <label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked />ダブル役満</label>
-        <label title="最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTUルールでは適用される。新報知ルール・全段審ルール・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="2" checked />役満複合</label>
-        <label title="新報知ルール・最高位戦ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="3" checked />数え役満</label>
+        <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span>役</label>
+        <label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+        <label title="最高位戦ルール・連盟ルール・協会ルール・RMUルール・Mリーグ・XJTUルールでは適用される。新報知ルール・全段審ルール・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="2" checked /><span data-i18n="yakuman"></span>複合</label>
+        <label title="新報知ルール・最高位戦ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
        </div>
        <span>連風牌雀頭</span>
        <div class="output-option-group">
-        <label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 符</label>
-        <label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 符</label>
+        <label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
+        <label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
        </div>
-       <span>切り上げ満貫</span>
+       <span><span data-i18n="kiri_mangan"></span></span>
        <div class="output-option-group">
         <label title="最高位戦ルール・連盟WRCルール・協会ルール・RMUルール・Mリーグでは適用される。最高位戦Classicルール・連盟公式ルールでは適用されない。"><input type="radio" name="score-jp-setting-3" value="7" />あり</label>
         <label><input type="radio" name="score-jp-setting-3" value="0" checked />なし</label>
@@ -364,28 +364,28 @@
         <label><input type="radio" name="score-jp-setting-0" value="4" checked />あり</label>
         <label><input type="radio" name="score-jp-setting-0" value="0" />なし</label>
        </div>
-       <span>自摸平和</span>
+       <span><span data-i18n="JP_FUNAME_11"></span><span data-i18n="JP_YAKUNAME_10"></span></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-2" value="6" checked />平和の役</label>
-        <label><input type="radio" name="score-jp-setting-2" value="0" />自摸の符</label>
+        <label><input type="radio" name="score-jp-setting-2" value="6" checked /><span data-i18n="JP_YAKUNAME_10"></span>の役</label>
+        <label><input type="radio" name="score-jp-setting-2" value="0" /><span data-i18n="JP_FUNAME_11"></span>の<span data-i18n="JP_FU_unit"></span></label>
        </div>
-       <span>嶺上開花</span>
+       <span><span data-i18n="JP_YAKUNAME_12"></span></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-10" value="0" checked />ツモ符を加算する</label>
-        <label><input type="radio" name="score-jp-setting-10" value="16" />ツモ符を認めない</label>
+        <label><input type="radio" name="score-jp-setting-10" value="0" checked /><span data-i18n="JP_FUNAME_11"></span><span data-i18n="JP_FU_unit"></span>を加算する</label>
+        <label><input type="radio" name="score-jp-setting-10" value="16" /><span data-i18n="JP_FUNAME_11"></span><span data-i18n="JP_FU_unit"></span>を認めない</label>
        </div>
-       <span>縛り</span>
+       <span><span data-i18n="JP_FAN_unit"></span>縛り</span>
        <div class="output-option-group">
-        <label><input type="number" id="score-jp-setting-fan" value="1" min="0" />飜縛り</label>
-        <label><input type="checkbox" name="score-jp-setting" value="11" />役満縛り</label>
-        <label><input type="checkbox" name="score-jp-setting" value="58" />七対子縛り</label>
-        <label><input type="checkbox" name="score-jp-setting" value="12" />表ドラを含める</label>
-        <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting" value="13" checked />一発を含める</label>
+        <label><input type="number" id="score-jp-setting-fan" value="1" min="0" /><span data-i18n="JP_FAN_unit"></span>縛り</label>
+        <label><input type="checkbox" name="score-jp-setting" value="11" /><span data-i18n="yakuman"></span>縛り</label>
+        <label><input type="checkbox" name="score-jp-setting" value="58" /><span data-i18n="JP_YAKUNAME_17"></span>縛り</label>
+        <label><input type="checkbox" name="score-jp-setting" value="12" /><span data-i18n="JP_YAKUNAME_96_EX"></span>を含める</label>
+        <label title="雀魂の飜縛りモードでは適用される。"><input type="checkbox" name="score-jp-setting" value="13" checked /><span data-i18n="JP_YAKUNAME_3"></span>を含める</label>
        </div>
        <span><label><input type="checkbox" name="score-jp-setting" value="49" />三人麻雀</label></span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-jp-setting" value="52" />役牌北</label>
-        <label><input type="checkbox" name="score-jp-setting" value="53" />ドラ北</label>
+        <label><input type="checkbox" name="score-jp-setting" value="52" /><span data-i18n="JP_YAKUNAME_69"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="53" /><span data-i18n="JP_YAKUNAME_100"></span></label>
         <label><input type="radio" name="score-jp-setting-22" value="0" checked />ツモ損</label>
         <label><input type="radio" name="score-jp-setting-22" value="50, 1" />北家折半</label>
         <label><input type="radio" name="score-jp-setting-22" value="50, 3" />北家親払い</label>
@@ -399,130 +399,130 @@
        <span title="只今「ロン」と「第一巡目」の両方が選択されている場合に人和として計算します。人和の定義には揺れがあるため、「第一巡目」に該当するかは採用ルールに応じて利用者ご自身で判断してください。">人和</span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-5" value="0" />なし</label>
-        <label title="全段審ルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,3" />４飜</label>
-        <label title="連盟ルール・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,1" checked />５飜</label>
-        <label><input type="radio" name="score-jp-setting-5" value="9,4" />６飜</label>
-        <label><input type="radio" name="score-jp-setting-5" value="9,5" />８飜</label>
-        <label title="雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,2" />役満</label>
+        <label title="全段審ルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,3" />４<span data-i18n="JP_FAN_unit"></span></label>
+        <label title="連盟ルール・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,1" checked />５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-5" value="9,4" />６<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-5" value="9,5" />８<span data-i18n="JP_FAN_unit"></span></label>
+        <label title="雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,2" /><span data-i18n="yakuman"></span></label>
         <label title="連盟ルール・EMAルールでは適用される。"><input type="checkbox" name="score-jp-setting" value="39" />通常役と複合しない</label>
        </div>
-       <span>大七星</span>
+       <span><span data-i18n="JP_YAKUNAME_40"></span></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-6" value="0" />字一色</label>
-        <label title="XJTUルール・雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-6" value="10" checked />ダブル役満</label>
+        <label><input type="radio" name="score-jp-setting-6" value="0" /><span data-i18n="JP_YAKUNAME_39"></span></label>
+        <label title="XJTUルール・雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-6" value="10" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
        </div>
-       <span>発無し緑一色</span>
+       <span><span data-i18n="JP_YAKUNAME_49"></span></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-12" value="18,1" />断么九・清一色</label>
-        <label><input type="radio" name="score-jp-setting-12" value="0" checked />緑一色</label>
-        <label><input type="radio" name="score-jp-setting-12" value="18,2" />ダブル役満</label>
+        <label><input type="radio" name="score-jp-setting-12" value="18,1" /><span data-i18n="JP_YAKUNAME_4"></span>・<span data-i18n="JP_YAKUNAME_31"></span></label>
+        <label><input type="radio" name="score-jp-setting-12" value="0" checked /><span data-i18n="JP_YAKUNAME_44"></span></label>
+        <label><input type="radio" name="score-jp-setting-12" value="18,2" /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
        </div>
-       <span>七対子</span>
+       <span><span data-i18n="JP_YAKUNAME_17"></span></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-4" value="0" checked />２飜 25 符</label>
-        <label><input type="radio" name="score-jp-setting-4" value="8,1" />１飜 50 符</label>
-        <label><input type="radio" name="score-jp-setting-4" value="8,2" />０飜 100 符</label>
+        <label><input type="radio" name="score-jp-setting-4" value="0" checked />２<span data-i18n="JP_FAN_unit"></span> 25 <span data-i18n="JP_FU_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-4" value="8,1" />１<span data-i18n="JP_FAN_unit"></span> 50 <span data-i18n="JP_FU_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-4" value="8,2" />０<span data-i18n="JP_FAN_unit"></span> 100 <span data-i18n="JP_FU_unit"></span></label>
        </div>
-       <span>二盃口</span>
+       <span><span data-i18n="JP_YAKUNAME_29"></span></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-20" value="47,2" />一盃口二つ</label>
-        <label><input type="radio" name="score-jp-setting-20" value="47,1" />２飜・門前のみ</label>
-        <label><input type="radio" name="score-jp-setting-20" value="0" checked />３飜・門前のみ</label>
-        <label><input type="radio" name="score-jp-setting-20" value="47,3" />４飜・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-20" value="47,2" /><span data-i18n="JP_YAKUNAME_11"></span>二つ</label>
+        <label><input type="radio" name="score-jp-setting-20" value="47,1" />２<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-20" value="0" checked />３<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-20" value="47,3" />４<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
        </div>
        <span>立て清混</span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-jp-setting-21" value="0" checked />一飜増し</label>
-        <label><input type="radio" name="score-jp-setting-21" value="48,2" />一飜増し・七対子除外</label>
+        <label><input type="radio" name="score-jp-setting-21" value="0" checked />一<span data-i18n="JP_FAN_unit"></span>増し</label>
+        <label><input type="radio" name="score-jp-setting-21" value="48,2" />一<span data-i18n="JP_FAN_unit"></span>増し・<span data-i18n="JP_YAKUNAME_17"></span>除外</label>
         <label><input type="radio" name="score-jp-setting-21" value="48,1" />増しなし</label>
        </div>
-       <span>三連刻</span>
+       <span><span data-i18n="JP_YAKUNAME_50"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-13" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-13" value="19" />２飜</label>
+        <label><input type="radio" name="score-jp-setting-13" value="19" />２<span data-i18n="JP_FAN_unit"></span></label>
        </div>
-       <span>四連刻</span>
+       <span><span data-i18n="JP_YAKUNAME_51"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-14" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-14" value="20" />役満</label>
+        <label><input type="radio" name="score-jp-setting-14" value="20" /><span data-i18n="yakuman"></span></label>
        </div>
-       <span>三風刻</span>
+       <span><span data-i18n="JP_YAKUNAME_70"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-23" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-23" value="54,1" />２飜</label>
-        <label><input type="radio" name="score-jp-setting-23" value="54,2" />３飜</label>
+        <label><input type="radio" name="score-jp-setting-23" value="54,1" />２<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-23" value="54,2" />３<span data-i18n="JP_FAN_unit"></span></label>
         <label title="客風三刻と呼びます。"><input type="checkbox" name="score-jp-setting" value="55" />自風刻不可</label>
         <label><input type="checkbox" name="score-jp-setting" value="56" />場風刻不可</label>
         <label><input type="checkbox" name="score-jp-setting" value="57" />親限定</label>
        </div>
-       <span>三色通貫</span>
+       <span><span data-i18n="JP_YAKUNAME_48"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-11" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-11" value="17,2" />１飜</label>
-        <label><input type="radio" name="score-jp-setting-11" value="17" />２飜・食い下がり</label>
+        <label><input type="radio" name="score-jp-setting-11" value="17,2" />１<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-11" value="17" />２<span data-i18n="JP_FAN_unit"></span>・食い下がり</label>
        </div>
-       <span>一色三順</span>
+       <span><span data-i18n="JP_YAKUNAME_52"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-15" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-15" value="21,1" />２飜</label>
-        <label><input type="radio" name="score-jp-setting-15" value="21,2" />２飜・食い下がり</label>
-        <label><input type="radio" name="score-jp-setting-15" value="21,3" />３飜・食い下がり</label>
-        <label><input type="radio" name="score-jp-setting-15" value="21,4" />２飜・門前のみ</label>
-        <label><input type="radio" name="score-jp-setting-15" value="21,5" />３飜・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-15" value="21,1" />２<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-15" value="21,2" />２<span data-i18n="JP_FAN_unit"></span>・食い下がり</label>
+        <label><input type="radio" name="score-jp-setting-15" value="21,3" />３<span data-i18n="JP_FAN_unit"></span>・食い下がり</label>
+        <label><input type="radio" name="score-jp-setting-15" value="21,4" />２<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-15" value="21,5" />３<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
        </div>
-       <span>一色四順</span>
+       <span><span data-i18n="JP_YAKUNAME_53"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-16" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-16" value="22,3" />４飜</label>
-        <label><input type="radio" name="score-jp-setting-16" value="22,4" />５飜</label>
-        <label><input type="radio" name="score-jp-setting-16" value="22,5" />６飜</label>
-        <label><input type="radio" name="score-jp-setting-16" value="22,6" />６飜・食い下がり</label>
-        <label><input type="radio" name="score-jp-setting-16" value="22,1" />役満</label>
-        <label><input type="radio" name="score-jp-setting-16" value="22,2" />役満・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-16" value="22,3" />４<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-16" value="22,4" />５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-16" value="22,5" />６<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-16" value="22,6" />６<span data-i18n="JP_FAN_unit"></span>・食い下がり</label>
+        <label><input type="radio" name="score-jp-setting-16" value="22,1" /><span data-i18n="yakuman"></span></label>
+        <label><input type="radio" name="score-jp-setting-16" value="22,2" /><span data-i18n="yakuman"></span>・門前のみ</label>
        </div>
-       <span>五門斉</span>
+       <span><span data-i18n="JP_YAKUNAME_67"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-17" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,1" />１飜</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,2" />２飜</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,3" />２飜・食い下がり</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,4" />２飜・門前のみ</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,5" />５飜</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,6" />役満</label>
-        <label><input type="radio" name="score-jp-setting-17" value="40,7" />役満・門前のみ</label>
-        <label><input type="checkbox" name="score-jp-setting" value="41" />七対子不可</label>
-        <label><input type="checkbox" name="score-jp-setting" value="42" />対々和限定</label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,1" />１<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,2" />２<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,3" />２<span data-i18n="JP_FAN_unit"></span>・食い下がり</label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,4" />２<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,5" />５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,6" /><span data-i18n="yakuman"></span></label>
+        <label><input type="radio" name="score-jp-setting-17" value="40,7" /><span data-i18n="yakuman"></span>・門前のみ</label>
+        <label><input type="checkbox" name="score-jp-setting" value="41" /><span data-i18n="JP_YAKUNAME_17"></span>不可</label>
+        <label><input type="checkbox" name="score-jp-setting" value="42" /><span data-i18n="JP_YAKUNAME_18"></span>限定</label>
         <label><input type="checkbox" name="score-jp-setting" value="43" />自風牌雀頭限定</label>
        </div>
-       <span>大車輪系統</span>
+       <span><span data-i18n="JP_YAKUNAME_54"></span>系統</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-jp-setting" value="26" />大車輪役満</label>
-        <label><input type="checkbox" name="score-jp-setting" value="27" />大竹林役満</label>
-        <label><input type="checkbox" name="score-jp-setting" value="28" />大数隣役満</label>
-        <label><input type="checkbox" name="score-jp-setting" value="29" />小車輪役満</label>
-        <label><input type="checkbox" name="score-jp-setting" value="30" />小竹林役満</label>
-        <label><input type="checkbox" name="score-jp-setting" value="31" />小数隣役満</label>
+        <label><input type="checkbox" name="score-jp-setting" value="26" /><span data-i18n="JP_YAKUNAME_54"></span><span data-i18n="yakuman"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="27" /><span data-i18n="JP_YAKUNAME_55"></span><span data-i18n="yakuman"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="28" /><span data-i18n="JP_YAKUNAME_56"></span><span data-i18n="yakuman"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="29" /><span data-i18n="JP_YAKUNAME_57"></span><span data-i18n="yakuman"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="30" /><span data-i18n="JP_YAKUNAME_58"></span><span data-i18n="yakuman"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="31" /><span data-i18n="JP_YAKUNAME_59"></span><span data-i18n="yakuman"></span></label>
        </div>
-       <span>十二落抬</span>
+       <span><span data-i18n="JP_YAKUNAME_68"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-18" value="0" checked />なし</label>
-        <label><input type="radio" name="score-jp-setting-18" value="44" />１飜</label>
+        <label><input type="radio" name="score-jp-setting-18" value="44" />１<span data-i18n="JP_FAN_unit"></span></label>
        </div>
        <span>ﾛｰｶﾙ偶然役</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')" />燕返し１飜</label>
-        <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')" />槓振り１飜</label>
-        <label><input type="checkbox" name="score-jp-setting" value="34" />一筒摸月５飜</label>
-        <label><input type="checkbox" name="score-jp-setting" value="35" />九筒撈魚５飜</label>
-        <label><input type="checkbox" name="score-jp-setting" value="36" />五筒開花５飜</label>
-        <label><input type="checkbox" name="score-jp-setting" value="37" />二索槍槓５飜</label>
-        <label><input type="checkbox" name="score-jp-setting" value="38" />石の上にも三年・役満</label>
+        <label><input type="checkbox" name="score-jp-setting" value="32" onchange="SwitchOption(this, 'jp-tsubame-gaeshi')" /><span data-i18n="JP_YAKUNAME_60"></span>１<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="33" onchange="SwitchOption(this, 'jp-kan-buri')" /><span data-i18n="JP_YAKUNAME_61"></span>１<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="34" /><span data-i18n="JP_YAKUNAME_62"></span>５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="35" /><span data-i18n="JP_YAKUNAME_63"></span>５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="36" /><span data-i18n="JP_YAKUNAME_64"></span>５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="37" /><span data-i18n="JP_YAKUNAME_65"></span>５<span data-i18n="JP_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="JP_YAKUNAME_66"></span>・<span data-i18n="yakuman"></span></label>
        </div>
-       <span>オープン立直</span>
+       <span><span data-i18n="JP_YAKUNAME_71"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true], true)" />なし</label>
-        <label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])" />２飜・ダブル立直３飜</label>
-        <label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])" />２飜・ダブル立直４飜</label>
+        <label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])" />２<span data-i18n="JP_FAN_unit"></span>・<span data-i18n="JP_YAKUNAME_16"></span>３飜</label>
+        <label><input type="radio" name="score-jp-setting-24" value="59,2" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])" />２<span data-i18n="JP_FAN_unit"></span>・<span data-i18n="JP_YAKUNAME_16"></span>４飜</label>
        </div>
        <span>符跳ね</span>
        <div class="output-option-group">
@@ -540,10 +540,10 @@
         <label><input type="radio" name="score-jp-setting-9" value="15" checked />100単位で切り上げ</label>
         <label><input type="radio" name="score-jp-setting-9" value="0" />修正なし</label>
        </div>
-       <span>副露平和形</span>
+       <span>副露<span data-i18n="JP_YAKUNAME_10"></span>形</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-jp-setting" value="24" />喰い平和あり</label>
-        <label><input type="checkbox" name="score-jp-setting" value="25" />20 符可能</label>
+        <label><input type="checkbox" name="score-jp-setting" value="24" />喰い<span data-i18n="JP_YAKUNAME_10"></span>あり</label>
+        <label><input type="checkbox" name="score-jp-setting" value="25" />20 <span data-i18n="JP_FU_unit"></span>可能</label>
        </div>
       </div>
      </details>
@@ -571,9 +571,9 @@
       <div class="output-time">簡単設定を使用する場合は、設定項目および計算結果はあくまで参考です。公式の精算結果を優先してください。結果が異なる場合は、制作者までご連絡ください。</div>
      </div>
      <div class="output-grid-div">
-      <span>ドラ表示牌</span>
+      <span><span data-i18n="JP_YAKUNAME_96"></span>表示牌</span>
       <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
-      <span>裏ドラ表示牌</span>
+      <span><span data-i18n="JP_YAKUNAME_97"></span>表示牌</span>
       <div class="card-container" id="output-pic-uras" style="text-align: left"></div>
      </div>
     </div>
@@ -583,7 +583,7 @@
    </div>
    <div class="output-box" id="score-gb">
     <div class="title-button-container">
-     <div class="output-title">中国国標麻雀点数計算</div>
+     <div class="output-title">中国国標麻雀<span data-i18n="GB_FAN_unit"></span>数計算</div>
      <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput('output-score-gb')">収納 ▲</button>
     </div>
     <div id="options-output-score-gb">
@@ -607,16 +607,16 @@
       <div class="output-option-group">
        <label><input type="radio" name="score-gb-wintype" value="0" checked />出アガリ</label>
        <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />東からアガリ</label>
-       <label><input type="radio" name="score-gb-wintype" value="80" />ツモ</label>
+       <label><input type="radio" name="score-gb-wintype" value="80" /><span data-i18n="JP_FUNAME_11"></span></label>
       </div>
       <span>和了状態</span>
       <div class="output-option-group">
        <label id="gb-heaven" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="86">第一巡目</label>
        <label id="gb-earth" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="87">地牌和</label>
        <label><input type="checkbox" name="score-gb-wininfo" value="44" />最後の牌</label>
-       <label><input type="checkbox" name="score-gb-wininfo" value="46" />槓上開花</label>
-       <label><input type="checkbox" name="score-gb-wininfo" value="47" />搶槓和</label>
-       <label><input type="checkbox" name="score-gb-wininfo" value="58" />和絕張</label>
+       <label><input type="checkbox" name="score-gb-wininfo" value="46" /><span data-i18n="GB_FANNAME_46"></span></label>
+       <label><input type="checkbox" name="score-gb-wininfo" value="47" /><span data-i18n="GB_FANNAME_47"></span></label>
+       <label><input type="checkbox" name="score-gb-wininfo" value="58" /><span data-i18n="GB_FANNAME_58"></span></label>
        <label id="gb-ready" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="84"><span data-i18n="GB_FANNAME_84"></span></label>
       </div>
       <button id="score-gb-button" onclick="processGBScore()" class="score-button">計算</button>
@@ -626,116 +626,116 @@
       <div class="output-options">
        <span title="国標原文に記載された不求人の定義は一般形に限定される。問答集ルール・MILルール・JMSAルールでは不求人と以下のすべての役との複合が許可されない。WMOルールでは不求人と以下のすべての役との複合が許可される。疑問解説では不求人と以下のすべての役との複合の許可が推奨される。">不求人の複合</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-gb-setting" value="19" />九蓮宝燈/四暗刻</label>
-        <label><input type="checkbox" name="score-gb-setting" value="41" />七対/連七対</label>
-        <label><input type="checkbox" name="score-gb-setting" value="42" />十三么</label>
-        <label><input type="checkbox" name="score-gb-setting" value="43" />全不靠/七星不靠</label>
+        <label><input type="checkbox" name="score-gb-setting" value="19" /><span data-i18n="GB_FANNAME_4"></span>/<span data-i18n="GB_FANNAME_12"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="41" /><span data-i18n="GB_FANNAME_19"></span>/<span data-i18n="GB_FANNAME_6"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="42" /><span data-i18n="GB_FANNAME_7"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="43" /><span data-i18n="GB_FANNAME_34"></span>/<span data-i18n="GB_FANNAME_20"></span></label>
        </div>
        <span title="国標原文に記載された以下の役の定義は一般形に限定されるが、七対と字一色・清么九との複合の牌例も記載される。疑問解説では七対と清一色・混一色・五門斉との複合が許可される。問答集ルールでは七対と清一色から混么九までの各役との複合の許可が推奨され、MILルールでは上述の複合が正式に許可される。WMOルールでは七対と清一色から五門斉までの各役との複合が許可される。JMSAルールでは七対と清一色から推不倒まで及び字一色から混么九までの各役との複合が許可される。">七対の複合</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-gb-setting" value="5" checked />清一色</label>
-        <label><input type="checkbox" name="score-gb-setting" value="10" checked />混一色</label>
-        <label><input type="checkbox" name="score-gb-setting" value="1" checked />緑一色</label>
-        <label><input type="checkbox" name="score-gb-setting" value="6" checked />全大/全中/全小</label>
-        <label><input type="checkbox" name="score-gb-setting" value="7" checked />大于五/小于五</label>
-        <label><input type="checkbox" name="score-gb-setting" value="9" checked />推不倒</label>
-        <label><input type="checkbox" name="score-gb-setting" value="11" checked />五門斉</label>
-        <label><input type="checkbox" name="score-gb-setting" value="3" checked />字一色</label>
-        <label><input type="checkbox" name="score-gb-setting" value="2" checked />清么九</label>
-        <label><input type="checkbox" name="score-gb-setting" value="4" checked />混么九</label>
-        <label><input type="checkbox" name="score-gb-setting" value="40" checked />全帶么</label>
-        <label title="枚数制限のため成立しない。"><input type="checkbox" name="score-gb-setting" value="8" checked />全帯五</label>
-        <label title="現行の各ルールではいずれも許可されない。"><input type="checkbox" name="score-gb-setting" value="12" />全双刻</label>
-        <label title="緑一色七対や清老頭七対は必然的に四帰一が1組含まれ、全帯五七対は必然的に四帰一が2組含まれる。WMOルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="45" checked />必然の四帰一</label>
+        <label><input type="checkbox" name="score-gb-setting" value="5" checked /><span data-i18n="GB_FANNAME_22"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="10" checked /><span data-i18n="GB_FANNAME_49"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="1" checked /><span data-i18n="GB_FANNAME_3"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="6" checked /><span data-i18n="GB_FANNAME_25"></span>/<span data-i18n="GB_FANNAME_26"></span>/<span data-i18n="GB_FANNAME_27"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="7" checked /><span data-i18n="GB_FANNAME_36"></span>/<span data-i18n="GB_FANNAME_37"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="9" checked /><span data-i18n="GB_FANNAME_40"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="11" checked /><span data-i18n="GB_FANNAME_51"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="3" checked /><span data-i18n="GB_FANNAME_11"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="2" checked /><span data-i18n="GB_FANNAME_8"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="4" checked /><span data-i18n="GB_FANNAME_18"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="40" checked /><span data-i18n="GB_FANNAME_55"></span></label>
+        <label title="枚数制限のため成立しない。"><input type="checkbox" name="score-gb-setting" value="8" checked /><span data-i18n="GB_FANNAME_31"></span></label>
+        <label title="現行の各ルールではいずれも許可されない。"><input type="checkbox" name="score-gb-setting" value="12" /><span data-i18n="GB_FANNAME_21"></span></label>
+        <label title="緑一色七対や清老頭七対は必然的に四帰一が1組含まれ、全帯五七対は必然的に四帰一が2組含まれる。WMOルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="45" checked />必然の<span data-i18n="GB_FANNAME_64"></span></label>
         <label id="gb-wallet-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="71" checked /><span data-i18n="GB_FANNAME_90"></span></label>
         <label id="gb-purple-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="74" checked /><span data-i18n="GB_FANNAME_91"></span></label>
        </div>
-       <span>双暗槓</span>
+       <span><span data-i18n="GB_FANNAME_53"></span></span>
        <div class="output-option-group">
-        <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 点</label>
-        <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="23" />8 点</label>
+        <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 <span data-i18n="GB_FAN_unit"></span></label>
+        <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="23" />8 <span data-i18n="GB_FAN_unit"></span></label>
        </div>
-       <span>明暗槓</span>
+       <span><span data-i18n="GB_FANNAME_82"></span></span>
        <div class="output-option-group">
-        <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 点</label>
-        <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 点</label>
-        <label title="1999年全国麻雀運動競技大会補足規定（疑問解説を参照）。"><input type="radio" name="score-gb-setting-2" value="24,2" />明槓+暗槓</label>
-        <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,3" />双明槓+暗槓</label>
+        <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 <span data-i18n="GB_FAN_unit"></span></label>
+        <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 <span data-i18n="GB_FAN_unit"></span></label>
+        <label title="1999年全国麻雀運動競技大会補足規定（疑問解説を参照）。"><input type="radio" name="score-gb-setting-2" value="24,2" /><span data-i18n="GB_FANNAME_74"></span>+<span data-i18n="GB_FANNAME_67"></span></label>
+        <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,3" /><span data-i18n="GB_FANNAME_57"></span>+<span data-i18n="GB_FANNAME_67"></span></label>
        </div>
-       <span>三槓・四槓</span>
+       <span><span data-i18n="GB_FANNAME_17"></span>・<span data-i18n="GB_FANNAME_5"></span></span>
        <div class="output-option-group">
         <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="0" checked />暗刻加算・暗槓不加算</label>
         <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,1" />暗刻・暗槓ともに加算</label>
         <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,2" />とある複雑な計算法</label>
        </div>
-       <span>槓上開花</span>
+       <span><span data-i18n="GB_FANNAME_46"></span></span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-gb-setting" value="31,1" />明槓加算なし</label>
-        <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="31,2" />明槓加算なし・暗槓 1 点除く</label>
-        <label title="問答集ルール、MILルール、JMSAルールでは適用される。"><input type="checkbox" name="score-gb-setting" value="32" checked />妙手回春と複合できる</label>
+        <label><input type="checkbox" name="score-gb-setting" value="31,1" /><span data-i18n="GB_FANNAME_74"></span>加算なし</label>
+        <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="31,2" /><span data-i18n="GB_FANNAME_74"></span>加算なし・<span data-i18n="GB_FANNAME_67"></span> 1 <span data-i18n="GB_FAN_unit"></span>除く</label>
+        <label title="問答集ルール、MILルール、JMSAルールでは適用される。"><input type="checkbox" name="score-gb-setting" value="32" checked /><span data-i18n="GB_FANNAME_44"></span>と複合できる</label>
        </div>
-       <span>么九刻除外時</span>
+       <span><span data-i18n="GB_FANNAME_73"></span>除外時</span>
        <div class="output-option-group">
-        <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="33" />圈風刻・門風刻・箭刻は 1 点を除く</label>
-        <label><input type="checkbox" name="score-gb-setting" value="34" />三風刻と么九刻と複合する</label>
-        <label><input type="checkbox" name="score-gb-setting" value="35" />小四喜と么九刻と複合する</label>
+        <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="33" /><span data-i18n="GB_FANNAME_60"></span>・<span data-i18n="GB_FANNAME_61"></span>・<span data-i18n="GB_FANNAME_59"></span>は 1 <span data-i18n="GB_FAN_unit"></span>を除く</label>
+        <label><input type="checkbox" name="score-gb-setting" value="34" /><span data-i18n="GB_FANNAME_38"></span>と<span data-i18n="GB_FANNAME_73"></span>と複合する</label>
+        <label><input type="checkbox" name="score-gb-setting" value="35" /><span data-i18n="GB_FANNAME_9"></span>と<span data-i18n="GB_FANNAME_73"></span>と複合する</label>
        </div>
-       <span>九蓮宝燈</span>
+       <span><span data-i18n="GB_FANNAME_4"></span></span>
        <div class="output-option-group">
-        <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの么九刻を加算しない</label>
-        <label><input type="radio" name="score-gb-setting-5" value="27" />全ての么九刻を加算しない</label>
+        <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの<span data-i18n="GB_FANNAME_73"></span>を加算しない</label>
+        <label><input type="radio" name="score-gb-setting-5" value="27" />全ての<span data-i18n="GB_FANNAME_73"></span>を加算しない</label>
        </div>
        <span title="國標原文・問答集ルール・WMOルール・MILルールでは缺一門と大三元から一色四節高までの各役との複合が許可される。">缺一門の複合</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-gb-setting" value="13" checked />大三元</label>
-        <label><input type="checkbox" name="score-gb-setting" value="14" checked />小三元</label>
-        <label><input type="checkbox" name="score-gb-setting" value="15" checked />三風刻</label>
-        <label><input type="checkbox" name="score-gb-setting" value="16" checked />一色四同順</label>
-        <label><input type="checkbox" name="score-gb-setting" value="44" checked />一色四歩高</label>
-        <label><input type="checkbox" name="score-gb-setting" value="17" checked />一色四節高</label>
-        <label><input type="checkbox" name="score-gb-setting" value="18" />推不倒</label>
+        <label><input type="checkbox" name="score-gb-setting" value="13" checked /><span data-i18n="GB_FANNAME_2"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="14" checked /><span data-i18n="GB_FANNAME_10"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="15" checked /><span data-i18n="GB_FANNAME_38"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="16" checked /><span data-i18n="GB_FANNAME_14"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="44" checked /><span data-i18n="GB_FANNAME_16"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="17" checked /><span data-i18n="GB_FANNAME_15"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="18" /><span data-i18n="GB_FANNAME_40"></span></label>
        </div>
        <span title="國標原文・問答集ルール・MILルールでは混一色と大四喜・小四喜との複合が許可されており、混一色と緑一色との複合が許可されない。WMOルールでは混一色と以下のすべての役との複合が許可される。">混一色の複合</span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-gb-setting" value="20" checked />大四喜</label>
-        <label><input type="checkbox" name="score-gb-setting" value="21" checked />小四喜</label>
-        <label><input type="checkbox" name="score-gb-setting" value="22" />緑一色</label>
+        <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span data-i18n="GB_FANNAME_1"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span data-i18n="GB_FANNAME_9"></span></label>
+        <label><input type="checkbox" name="score-gb-setting" value="22" /><span data-i18n="GB_FANNAME_3"></span></label>
         <label id="gb-wallet-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="72" /><span data-i18n="GB_FANNAME_90"></span></label>
         <label id="gb-purple-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="73" /><span data-i18n="GB_FANNAME_91"></span></label>
        </div>
-       <span>清么九の複合</span>
+       <span><span data-i18n="GB_FANNAME_8"></span>の複合</span>
        <div class="output-option-group">
-        <label title="WMOルールでは適用される。問答集ルール・MILルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="28" />双同刻</label>
-        <label title="国標原文では「同刻と複合しない」と記載されており、誤記でなければ適用されない。"><input type="checkbox" name="score-gb-setting" value="29" checked />三同刻</label>
+        <label title="WMOルールでは適用される。問答集ルール・MILルールでは適用されない。"><input type="checkbox" name="score-gb-setting" value="28" /><span data-i18n="GB_FANNAME_65"></span></label>
+        <label title="国標原文では「同刻と複合しない」と記載されており、誤記でなければ適用されない。"><input type="checkbox" name="score-gb-setting" value="29" checked /><span data-i18n="GB_FANNAME_32"></span></label>
        </div>
-       <span>組合竜和了</span>
+       <span><span data-i18n="GB_FANNAME_35"></span>和了</span>
        <div class="output-option-group">
-        <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="25" />和了牌が組合竜の一部と解釈できる場合は辺張・坎張・単釣将を加算しない</label>
-        <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="0" checked />和了牌が順子又は雀頭の一部と解釈できる場合は辺張・坎張・単釣将を加算しうる</label>
+        <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="25" />和了牌が<span data-i18n="GB_FANNAME_35"></span>の一部と解釈できる場合は<span data-i18n="GB_FANNAME_77"></span>・<span data-i18n="GB_FANNAME_78"></span>・<span data-i18n="GB_FANNAME_79"></span>を加算しない</label>
+        <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-3" value="0" checked />和了牌が順子又は雀頭の一部と解釈できる場合は<span data-i18n="GB_FANNAME_77"></span>・<span data-i18n="GB_FANNAME_78"></span>・<span data-i18n="GB_FANNAME_79"></span>を加算しうる</label>
        </div>
        <span>多面待ち和了</span>
        <div class="output-option-group">
-        <label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨される。"><input type="radio" name="score-gb-setting-4" value="0" checked />辺張・坎張・単釣将を加算しない</label>
-        <label><input type="radio" name="score-gb-setting-4" value="26" />辺張・坎張・単釣将を加算しうる</label>
+        <label title="問答集ルール・WMOルール・MILルールでは適用される。疑問解説では適用が推奨される。"><input type="radio" name="score-gb-setting-4" value="0" checked /><span data-i18n="GB_FANNAME_77"></span>・<span data-i18n="GB_FANNAME_78"></span>・<span data-i18n="GB_FANNAME_79"></span>を加算しない</label>
+        <label><input type="radio" name="score-gb-setting-4" value="26" /><span data-i18n="GB_FANNAME_77"></span>・<span data-i18n="GB_FANNAME_78"></span>・<span data-i18n="GB_FANNAME_79"></span>を加算しうる</label>
        </div>
-       <span>加槓全求人</span>
+       <span>加槓<span data-i18n="GB_FANNAME_52"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-gb-setting-7" value="0" checked />あり</label>
         <label><input type="radio" name="score-gb-setting-7" value="36" />なし</label>
        </div>
        <span>点数計算</span>
        <div class="output-option-group">
-        <label><input type="number" id="score-gb-setting-fan" value="8" min="0" />点縛り</label>
-        <label><input type="number" id="score-gb-setting-blind" value="8" min="0" />点底点</label>
-        <label title="JMSAルールでは 88 点満貫制が適用される。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" />点満貫</label>
+        <label><input type="number" id="score-gb-setting-fan" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>縛り</label>
+        <label><input type="number" id="score-gb-setting-blind" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>底点</label>
+        <label title="JMSAルールでは 88 点満貫制が適用される。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_max_fan"></span></label>
         <label><input type="checkbox" name="score-gb-setting" value="39" />ツモ点数を三分割</label>
         <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')" />幺二払い</label>
        </div>
        <span data-i18n="GB_FANNAME_86"></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-gb-setting-8" value="46,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)" />8 点</label>
-        <label><input type="radio" name="score-gb-setting-8" value="46,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)" />48 点</label>
-        <label><input type="radio" name="score-gb-setting-8" value="46,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)" />88 点</label>
+        <label><input type="radio" name="score-gb-setting-8" value="46,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)" />8 <span data-i18n="GB_FAN_unit"></span></label>
+        <label><input type="radio" name="score-gb-setting-8" value="46,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)" />48 <span data-i18n="GB_FAN_unit"></span></label>
+        <label><input type="radio" name="score-gb-setting-8" value="46,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)" />88 <span data-i18n="GB_FAN_unit"></span></label>
         <label><input type="radio" name="score-gb-setting-8" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 1)" />なし</label>
         <label><input type="checkbox" name="score-gb-setting" value="47" /><span data-i18n="GB_FANNAME_62"></span>と複合する</label>
         <label><input type="checkbox" name="score-gb-setting" value="48" /><span data-i18n="GB_FANNAME_56"></span>と複合する</label>
@@ -749,20 +749,20 @@
          <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)" />個別定義なし</label>
         </div>
         <div class="output-option-group">
-         <label><input type="radio" name="score-gb-setting-9" value="50,3" checked />8 点</label>
-         <label><input type="radio" name="score-gb-setting-9" value="50,4" />16 点</label>
-         <label><input type="radio" name="score-gb-setting-9" value="50,2" />24 点</label>
-         <label><input type="radio" name="score-gb-setting-9" value="50,5" />64 点</label>
-         <label><input type="radio" name="score-gb-setting-9" value="50,1" />88 点</label>
+         <label><input type="radio" name="score-gb-setting-9" value="50,3" checked />8 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-9" value="50,4" />16 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-9" value="50,2" />24 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-9" value="50,5" />64 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-9" value="50,1" />88 <span data-i18n="GB_FAN_unit"></span></label>
          <label><input type="checkbox" name="score-gb-setting" value="51" /><span data-i18n="GB_FANNAME_62"></span>と複合する</label>
         </div>
        </div>
        <span>一巡出アガリ</span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-gb-setting-10" value="52,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />8 点<span data-i18n="GB_FANNAME_88"></span></label>
-        <label><input type="radio" name="score-gb-setting-10" value="52,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />16 点<span data-i18n="GB_FANNAME_88"></span></label>
-        <label><input type="radio" name="score-gb-setting-10" value="52,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />64 点<span data-i18n="GB_FANNAME_88"></span></label>
-        <label><input type="radio" name="score-gb-setting-10" value="52,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />88 点<span data-i18n="GB_FANNAME_88"></span></label>
+        <label><input type="radio" name="score-gb-setting-10" value="52,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />8 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+        <label><input type="radio" name="score-gb-setting-10" value="52,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />16 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+        <label><input type="radio" name="score-gb-setting-10" value="52,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />64 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
+        <label><input type="radio" name="score-gb-setting-10" value="52,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)" />88 <span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_FANNAME_88"></span></label>
         <label><input type="radio" name="score-gb-setting-10" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 2)" />なし</label>
         <label><input type="checkbox" name="score-gb-setting" value="53" /><span data-i18n="GB_FANNAME_62"></span>と複合する</label>
        </div>
@@ -773,11 +773,11 @@
          <label><input type="radio" name="score-gb-setting-12" value="0" checked /><span data-i18n="GB_FANNAME_88"></span>と呼ぶ</label>
         </div>
         <div class="output-option-group">
-         <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />8 点</label>
-         <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />16 点</label>
-         <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />24 点</label>
-         <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />64 点</label>
-         <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />88 点</label>
+         <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />8 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />16 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />24 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />64 <span data-i18n="GB_FAN_unit"></span></label>
+         <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />88 <span data-i18n="GB_FAN_unit"></span></label>
          <label><input type="radio" name="score-gb-setting-11" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 3)" />なし</label>
          <label><input type="checkbox" name="score-gb-setting" value="56" /><span data-i18n="GB_FANNAME_62"></span>と複合する</label>
          <label><input type="checkbox" name="score-gb-setting" value="57" /><span data-i18n="GB_FANNAME_56"></span>と複合する</label>
@@ -786,14 +786,14 @@
        </div>
        <span data-i18n="GB_FANNAME_84"></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-gb-setting-13" value="60,1" onchange="SwitchOption(this, 'gb-ready', [true])" />1 点</label>
-        <label><input type="radio" name="score-gb-setting-13" value="60,2" onchange="SwitchOption(this, 'gb-ready', [true])" />2 点</label>
+        <label><input type="radio" name="score-gb-setting-13" value="60,1" onchange="SwitchOption(this, 'gb-ready', [true])" />1 <span data-i18n="GB_FAN_unit"></span></label>
+        <label><input type="radio" name="score-gb-setting-13" value="60,2" onchange="SwitchOption(this, 'gb-ready', [true])" />2 <span data-i18n="GB_FAN_unit"></span></label>
         <label><input type="radio" name="score-gb-setting-13" value="0" checked onchange="SwitchOption(this, 'gb-ready', [true], true)" />なし</label>
        </div>
        <span data-i18n="GB_FANNAME_85"></span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-gb-setting-14" value="61,1" />1 点</label>
-        <label><input type="radio" name="score-gb-setting-14" value="61,2" />2 点</label>
+        <label><input type="radio" name="score-gb-setting-14" value="61,1" />1 <span data-i18n="GB_FAN_unit"></span></label>
+        <label><input type="radio" name="score-gb-setting-14" value="61,2" />2 <span data-i18n="GB_FAN_unit"></span></label>
         <label><input type="radio" name="score-gb-setting-14" value="0" checked />なし</label>
        </div>
        <span><span data-i18n="GB_FANNAME_3"></span>系統</span>
@@ -847,65 +847,65 @@
       </div>
       <span>和了状態</span>
       <div class="output-option-group">
-       <label id="sc_heaven" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="12" />天和</label>
-       <label id="sc_earth" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="13" />地和</label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="8" /><span data-i18n="SC_FAN_NAME_8"></span>嶺上開花</label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="9" /><span data-i18n="SC_FAN_NAME_9"></span>嶺上放銃</label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="10" /><span data-i18n="SC_FAN_NAME_10"></span>槍槓</label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="11" /><span data-i18n="SC_FAN_NAME_11"></span>海底摸月</label>
+       <label id="sc_heaven" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="12" /><span data-i18n="SC_FAN_NAME_12"></span></label>
+       <label id="sc_earth" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="13" /><span data-i18n="SC_FAN_NAME_13"></span></label>
+       <label><input type="checkbox" name="score-sc-wininfo" value="8" /><span data-i18n="SC_FAN_NAME_8"></span></label>
+       <label><input type="checkbox" name="score-sc-wininfo" value="9" /><span data-i18n="SC_FAN_NAME_9"></span></label>
+       <label><input type="checkbox" name="score-sc-wininfo" value="10" /><span data-i18n="SC_FAN_NAME_10"></span></label>
+       <label><input type="checkbox" name="score-sc-wininfo" value="11" /><span data-i18n="SC_FAN_NAME_11"></span></label>
       </div>
       <button id="score-sc-button" onclick="processSCScore()" class="score-button">計算</button>
      </div>
      <details>
       <summary>ルール設定</summary>
       <div class="output-options">
-       <span>自摸</span>
+       <span><span data-i18n="SC_FAN_NAME_16"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-1" value="11,2" checked />符増し</label>
         <label><input type="radio" name="score-sc-setting-1" value="11,1" />飜増し</label>
         <label><input type="radio" name="score-sc-setting-1" value="0" />増しなし</label>
        </div>
-       <span>満貫</span>
+       <span><span data-i18n="SC_max_fan"></span></span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" />飜満貫</label>
-        <label><input type="checkbox" name="score-sc-setting" value="16" />満貫以降１飜につき<input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />符加算</label>
+        <label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span><span data-i18n="SC_max_fan"></span></label>
+        <label><input type="checkbox" name="score-sc-setting" value="16" /><span data-i18n="SC_max_fan"></span>以降１<span data-i18n="SC_FAN_unit"></span>につき<input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />符加算</label>
        </div>
-       <span>将々和</span>
+       <span><span data-i18n="SC_FAN_NAME_2"></span></span>
        <div class="output-option-group">
-        <label><input type="checkbox" name="score-sc-setting" value="1" />将対</label>
-        <label><input type="checkbox" name="score-sc-setting" value="2" />将七対</label>
-        <label><input type="checkbox" name="score-sc-setting" value="3" />将金勾釣</label>
+        <label><input type="checkbox" name="score-sc-setting" value="1" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_5"></span></label>
+        <label><input type="checkbox" name="score-sc-setting" value="2" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
+        <label><input type="checkbox" name="score-sc-setting" value="3" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_NAME_6"></span></label>
        </div>
-       <span>帯么九</span>
+       <span><span data-i18n="SC_FAN_NAME_3"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-2" value="0" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-2" value="4,2" />２飜</label>
-        <label><input type="radio" name="score-sc-setting-2" value="4,3" />３飜</label>
-        <label><input type="checkbox" name="score-sc-setting" value="5" />么九七対</label>
+        <label><input type="radio" name="score-sc-setting-2" value="4,2" />２<span data-i18n="SC_FAN_unit"></span></label>
+        <label><input type="radio" name="score-sc-setting-2" value="4,3" />３<span data-i18n="SC_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-sc-setting" value="5" /><span data-i18n="SC_FAN_ADJ_3"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
        </div>
-       <span>天和</span>
+       <span><span data-i18n="SC_FAN_NAME_12"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />３飜</label>
-        <label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />５飜</label>
+        <label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />３<span data-i18n="SC_FAN_unit"></span></label>
+        <label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
        </div>
-       <span>地和</span>
+       <span><span data-i18n="SC_FAN_NAME_13"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />２飜</label>
-        <label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />５飜</label>
+        <label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />２<span data-i18n="SC_FAN_unit"></span></label>
+        <label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
        </div>
-       <span>門前清</span>
+       <span><span data-i18n="SC_FAN_NAME_14"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-5" value="0" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-5" value="8" />１飜</label>
-        <label><input type="checkbox" name="score-sc-setting" value="14" />七対子と複合する</label>
+        <label><input type="radio" name="score-sc-setting-5" value="8" />１<span data-i18n="SC_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-sc-setting" value="14" /><span data-i18n="SC_FAN_NAME_4"></span>と複合する</label>
        </div>
-       <span>斷么九</span>
+       <span><span data-i18n="SC_FAN_NAME_15"></span></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-6" value="0" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-6" value="9" />１飜</label>
-        <label><input type="checkbox" name="score-sc-setting" value="10" />将々和と複合する</label>
+        <label><input type="radio" name="score-sc-setting-6" value="9" />１<span data-i18n="SC_FAN_unit"></span></label>
+        <label><input type="checkbox" name="score-sc-setting" value="10" /><span data-i18n="SC_FAN_NAME_2"></span>と複合する</label>
        </div>
        <span>死聴</span>
        <div class="output-option-group">
@@ -975,8 +975,8 @@
   </div>
  </div>
  <div class="section title-button-container">
-   <div class="output-time">v4.8.6</div>
-   <div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
+  <div class="output-time">v4.8.6</div>
+  <div class="output-time">連絡先：<a href="https://x.com/akiko36000" style="color: inherit;">三倍満自動姫</a></div>
  </div>
  <script src="mahjong.js?v=202603031815"></script>
  <script src="mahjong-document.js?v=202603031815"></script>

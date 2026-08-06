@@ -274,7 +274,7 @@
   <div class="output-box" id="steps-sc" style="display: none;">
    <div class="title-button-container">
     <div class="output-title">
-     <div>四川麻將<span style="align-items: baseline;"><sub>(赤羽之戰)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">随机配牌</button>
+     <div>四川麻將<span style="align-items: baseline;"><sub>(赤羽之戰)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">隨機配牌</button>
     </div>
     <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">摺疊 ▲</button>
    </div>
@@ -436,7 +436,7 @@
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-21" value="0" checked />1 <span data-i18n="JP_FAN_unit"></span>增益</label>
         <label><input type="radio" name="score-jp-setting-21" value="48,2" /><span data-i18n="JP_YAKUNAME_17"></span>外 1 <span data-i18n="JP_FAN_unit"></span>增益</label>
-        <label><input type="radio" name="score-jp-setting-21" value="48,1" />无增益</label>
+        <label><input type="radio" name="score-jp-setting-21" value="48,1" />無增益</label>
        </div>
        <span data-i18n="JP_YAKUNAME_50"></span>
        <div class="output-option-group">
@@ -733,7 +733,7 @@
         <label><input type="number" id="score-gb-setting-blind" value="8" min="0" /><span data-i18n="GB_FAN_unit"></span>底<span data-i18n="GB_FAN_unit"></span></label>
         <label title="JMSA規則採用 88 台封頂。"><input type="checkbox" name="score-gb-setting" value="38" /><input type="number" id="score-gb-setting-maxfan" value="88" min="0" /><span data-i18n="GB_FAN_unit"></span><span data-i18n="GB_max_fan"></span></label>
         <label><input type="checkbox" name="score-gb-setting" value="39" />自摸分三</label>
-        <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')" />庄家幺二制</label>
+        <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')" />莊家幺二制</label>
        </div>
        <span data-i18n="GB_FANNAME_86"></span>
        <div class="output-option-group">
@@ -925,7 +925,7 @@
        <button onclick="processSCSetting(3)">JJ麻將血戰川麻</button>
        <button onclick="processSCSetting(4)">歡樂麻將血戰到底</button>
        <button onclick="processSCSetting(5)">微樂麻將血戰到底</button>
-       <button onclick="processSCSetting(6)">无限暖暖巴适麻將</button>
+       <button onclick="processSCSetting(6)">無限暖暖巴适麻將</button>
       </div>
       <div></div>
       <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>

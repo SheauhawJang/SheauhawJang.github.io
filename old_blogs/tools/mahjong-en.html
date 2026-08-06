@@ -306,10 +306,11 @@
                     <div class="output-grid-div">
                         <span>Prevalent</span>
                         <div class="output-option-group">
-                            <label><input type="radio" name="score-gb-global-wind" value="27" checked />East</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="27" />East</label>
                             <label><input type="radio" name="score-gb-global-wind" value="28" />South</label>
                             <label><input type="radio" name="score-gb-global-wind" value="29" />West</label>
                             <label><input type="radio" name="score-gb-global-wind" value="30" />North</label>
+                            <label><input type="radio" name="score-gb-global-wind" value="0" checked />None</label>
                         </div>
                         <span>Seat</span>
                         <div class="output-option-group">
@@ -321,14 +322,18 @@
                         <span>Winning Way</span>
                         <div class="output-option-group">
                             <label><input type="radio" name="score-gb-wintype" value="0" checked />Claim</label>
+                            <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />East Claim</label>
                             <label><input type="radio" name="score-gb-wintype" value="80" />Draw</label>
                         </div>
                         <span>Winning Status</span>
                         <div class="output-option-group">
+                            <label id="gb-heaven" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="86" />First Turn</label>
+                            <label id="gb-earth" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="87" />Claim of Earth Tile</label>
                             <label><input type="checkbox" name="score-gb-wininfo" value="44" />Last Tile</label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="46" /><span data-i18n="GB_FANNAME_46"></span></label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="47" /><span data-i18n="GB_FANNAME_47"></span></label>
-                            <label><input type="checkbox" name="score-gb-wininfo" value="58" /><span data-i18n="GB_FANNAME_58"></span></label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="46" /><span class="fan" data-i18n="GB_FANNAME_46"></span></label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="47" /><span class="fan" data-i18n="GB_FANNAME_47"></span></label>
+                            <label><input type="checkbox" name="score-gb-wininfo" value="58" /><span class="fan" data-i18n="GB_FANNAME_58"></span></label>
+                            <label id="gb-ready" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="84" /><span class="fan" data-i18n="GB_FANNAME_84"></span></label>
                         </div>
                         <button id="score-gb-button" onclick="processGBScore()" class="score-button">Calculate</button>
                     </div>
@@ -358,6 +363,8 @@
                                 <label title="Never appear due to the limitation on the number of tiles."><input type="checkbox" name="score-gb-setting" value="8" checked /><span class="fan" data-i18n="GB_FANNAME_31"></span></label>
                                 <label title="Disallowed in all exist rules."><input type="checkbox" name="score-gb-setting" value="12" /><span class="fan" data-i18n="GB_FANNAME_21"></span></label>
                                 <label title="&lt;span class=&quot;fan&quot;&gt;All Green&lt;/span&gt; &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; and &lt;span class=&quot;fan&quot;&gt;All Terminals&lt;/span&gt; &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; inevitably include one &lt;span class=&quot;fan&quot;&gt;Tile Hog&lt;/span&gt;. &lt;span class=&quot;fan&quot;&gt;All Fives&lt;/span&gt; &lt;span class=&quot;fan&quot;&gt;Seven Pairs&lt;/span&gt; inevitably includes two &lt;span class=&quot;fan&quot;&gt;Tile Hog&lt;/span&gt;. Unused in WMO Rules."><input type="checkbox" name="score-gb-setting" value="45" checked />Inevitable <span class="fan">Tile Hog</span></label>
+                                <label id="gb-wallet-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="71" checked /><span class="fan" data-i18n="GB_FANNAME_90"></span></label>
+                                <label id="gb-purple-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="74" checked /><span class="fan" data-i18n="GB_FANNAME_91"></span></label>
                             </div>
                             <span><span class="fan">Two Conc. Kongs</span></span>
                             <div class="output-option-group">
@@ -409,6 +416,8 @@
                                 <label><input type="checkbox" name="score-gb-setting" value="20" checked /><span class="fan" data-i18n="GB_FANNAME_1"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="21" checked /><span class="fan" data-i18n="GB_FANNAME_9"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="22" /><span class="fan" data-i18n="GB_FANNAME_3"></span></label>
+                                <label id="gb-wallet-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="72" /><span class="fan" data-i18n="GB_FANNAME_90"></span></label>
+                                <label id="gb-purple-flush" style="display: none;"><input type="checkbox" name="score-gb-setting" value="73" /><span class="fan" data-i18n="GB_FANNAME_91"></span></label>
                             </div>
                             <span><span class="fan" data-i18n="GB_FANNAME_8"></span> with</span>
                             <div class="output-option-group">
@@ -436,12 +445,94 @@
                                 <label>Extra <span data-i18n="GB_FAN_unit"></span> <input type="number" id="score-gb-setting-blind" value="8" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
                                 <label title="JMSA Rules use 88 points as maximum limit."><input type="checkbox" name="score-gb-setting" value="38" />Maximum limit <input type="number" id="score-gb-setting-maxfan" value="88" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
                                 <label><input type="checkbox" name="score-gb-setting" value="39" /><span data-i18n="GB_FAN_unit"></span> divided by 3 when self-drawn</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')"/>Dealer 1-2 System</label>
+                            </div>
+                            <span class="fan" data-i18n="GB_FANNAME_86"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-8" value="46,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>48 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="46,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 1)"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-8" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 1)"/>OFF</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="47" />with <span class="fan" data-i18n="GB_FANNAME_62"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="48" />with <span class="fan" data-i18n="GB_FANNAME_56"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="49" />with <span class="fan" data-i18n="GB_FANNAME_80"></span></label>
+                            </div>
+                            <span>Claim of Earth Tile</span>
+                            <div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-15" value="62,1" onchange="SwitchOption(this, 'gb-earth', [true])"/>as <span class="fan" data-i18n="GB_FANNAME_8A"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-15" value="62,2" onchange="SwitchOption(this, 'gb-earth', [true])"/>as <span class="fan" data-i18n="GB_FANNAME_88"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)"/>No special definition</label>
+                                </div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,3" checked/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,4"/>16 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,2"/>24 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,5"/>64 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-9" value="50,1"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="51" />with <span class="fan" data-i18n="GB_FANNAME_62"></span></label>
+                                </div>
+                            </div>
+                            <span>Claim on First Turn</span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-10" value="52,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>8 <span data-i18n="GB_FAN_unit"></span> as <span class="fan" data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>16 <span data-i18n="GB_FAN_unit"></span> as <span class="fan" data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>64 <span data-i18n="GB_FAN_unit"></span> as <span class="fan" data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="52,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 2)"/>88 <span data-i18n="GB_FAN_unit"></span> as <span class="fan" data-i18n="GB_FANNAME_88"></span></label>
+                                <label><input type="radio" name="score-gb-setting-10" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 2)"/>OFF</label>
+                                <label><input type="checkbox" name="score-gb-setting" value="53" />with <span class="fan" data-i18n="GB_FANNAME_62"></span></label>
+                            </div>
+                            <span>Draw on First Turn</span>
+                            <div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-12" value="55" />as <span class="fan" data-i18n="GB_FANNAME_8A"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-12" value="0" checked />as <span class="fan" data-i18n="GB_FANNAME_88"></span></label>
+                                </div>
+                                <div class="output-option-group">
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>8 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>16 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>24 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>64 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)"/>88 <span data-i18n="GB_FAN_unit"></span></label>
+                                    <label><input type="radio" name="score-gb-setting-11" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 3)"/>OFF</label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="56" />with <span class="fan" data-i18n="GB_FANNAME_62"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="57" />with <span class="fan" data-i18n="GB_FANNAME_56"></span></label>
+                                    <label><input type="checkbox" name="score-gb-setting" value="58" />with <span class="fan" data-i18n="GB_FANNAME_80"></span></label>
+                                </div>
+                            </div>
+                            <span class="fan" data-i18n="GB_FANNAME_84"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-13" value="60,1" onchange="SwitchOption(this, 'gb-ready', [true])"/>1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-13" value="60,2" onchange="SwitchOption(this, 'gb-ready', [true])"/>2 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-13" value="0" checked onchange="SwitchOption(this, 'gb-ready', [true], true)"/>OFF</label>
+                            </div>
+                            <span class="fan" data-i18n="GB_FANNAME_85"></span>
+                            <div class="output-option-group">
+                                <label><input type="radio" name="score-gb-setting-14" value="61,1"/>1 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-14" value="61,2"/>2 <span data-i18n="GB_FAN_unit"></span></label>
+                                <label><input type="radio" name="score-gb-setting-14" value="0" checked/>OFF</label>
+                            </div>
+                            <span><span class="fan" data-i18n="GB_FANNAME_3"></span> Series</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="70" checked/><span class="fan" data-i18n="GB_FANNAME_3"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="63" onchange="SwitchOption(this, ['gb-wallet-flush', 'gb-wallet-pairs'])"/><span class="fan" data-i18n="GB_FANNAME_90"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="64" onchange="SwitchOption(this, ['gb-purple-flush', 'gb-purple-pairs'])"/><span class="fan" data-i18n="GB_FANNAME_91"></span></label>
+                            </div>
+                            <span>Available Winning Types</span>
+                            <div class="output-option-group">
+                                <label><input type="checkbox" name="score-gb-setting" value="65" checked/><span data-i18n="normal"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="66" checked/><span data-i18n="pair7"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="67" checked/><span data-i18n="orphan13"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="68" checked/><span data-i18n="quanbukaoxing"></span></label>
+                                <label><input type="checkbox" name="score-gb-setting" value="69" checked/><span data-i18n="zuhelongxing"></span></label>
                             </div>
                             <span>Quick Start</span>
                             <div class="output-option-group">
                                 <button onclick="processGBSetting(0)">MIL Rules</button>
                                 <button onclick="processGBSetting(1)">WMO Rules</button>
                                 <button onclick="processGBSetting(2)">JMSA Rules</button>
+                                <button onclick="processGBSetting(3)">Tziakcha</button>
+                                <button onclick="processGBSetting(4)">Infinity Nikki Casual Mahjong</button>
                             </div>
                             <div></div>
                             <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
@@ -769,6 +860,7 @@
                             <div class="output-option-group">
                                 <label><input type="radio" name="score-sc-setting-1" value="11,2" checked /><span class="fan" data-i18n="SC_FAN_NAME_16"></span> with Base Point</label>
                                 <label><input type="radio" name="score-sc-setting-1" value="11,1" /><span class="fan" data-i18n="SC_FAN_NAME_16"></span> with Double</label>
+                                <label><input type="radio" name="score-sc-setting-1" value="0" /><span class="fan" data-i18n="SC_FAN_NAME_16"></span> with no Bonus</label>
                             </div>
                             <span data-i18n="SC_max_fan"></span>
                             <div class="output-option-group">
@@ -825,6 +917,7 @@
                                 <button onclick="processSCSetting(3)">JJ Mahjong Bloody SC</button>
                                 <button onclick="processSCSetting(4)">Tencent Mahjong Bloody</button>
                                 <button onclick="processSCSetting(5)">Weile Mahjong Bloody</button>
+                                <button onclick="processSCSetting(6)">Infinity Nikki Thrilling Mahjong</button>
                             </div>
                             <div></div>
                             <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
@@ -877,7 +970,7 @@
         </div>
     </div>
     <div class="section title-button-container">
-        <div class="output-time">v4.8.4</div>
+        <div class="output-time">v4.8.6</div>
         <div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
     </div>
     <script src="mahjong.js?v=202603031815"></script>

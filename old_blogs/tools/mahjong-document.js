@@ -1499,3 +1499,72 @@ async function playResultAudio(playList, character = "Ichihime") {
         currentAudioController = null;
     }
 }
+
+/* ==========================================================================
+   Antigravity Added: Component hot-loading & UI integration helper functions
+   ========================================================================== */
+if (typeof loc_all !== "undefined") {
+    Object.assign(loc_all, {
+        skin_select: { cn: "牌画选择", en: "Tile Skin" },
+        clear_btn: { cn: "清空", en: "Clear" },
+        sort_btn: { cn: "理牌", en: "Sort" },
+        backspace_btn: { cn: "退格", en: "Backspace" },
+        meld_kong_btn: { cn: "明杠", en: "Melded Kong" },
+        add_kong_btn: { cn: "加杠", en: "Added Kong" },
+        concealed_kong_btn: { cn: "暗杠", en: "Concealed Kong" },
+        flower_btn: { cn: "补花", en: "Flower" },
+        dora_btn: { cn: "宝牌指示", en: "Dora Ind." },
+        uradora_btn: { cn: "里宝牌指示", en: "Ura Dora Ind." },
+        indicator: { cn: "指示牌", en: "Indicator" },
+        indicator_short: { cn: "指示", en: "Ind." },
+        skin_jp: { cn: "雀魂牌画", en: "Majsoul" },
+        skin_gb: { cn: "雀渣牌画", en: "Quezha" },
+        skin_qq: { cn: "腾讯牌画", en: "Tencent" },
+        skin_hk: { cn: "开台喇牌画", en: "Kaitaila" },
+        skin_tw: { cn: "神来也牌画", en: "Godgame" },
+        skin_op: { cn: "园研牌画", en: "Garden" },
+        skin_nn: { cn: "暖暖牌画", en: "Nikki" }
+    });
+}
+
+async function loadComponents() {
+    const langBarContainer = document.getElementById("language-bar-container");
+    const keyboardContainer = document.getElementById("keyboard-container");
+    if (langBarContainer) {
+        const res = await fetch("language-bar.html");
+        if (res.ok) {
+            langBarContainer.innerHTML = await res.text();
+        }
+    }
+    if (keyboardContainer) {
+        const res = await fetch("keyboard.html");
+        if (res.ok) {
+            keyboardContainer.innerHTML = await res.text();
+        }
+    }
+}
+
+function toggleInput() {
+    const board = document.getElementById("keyboard-container") || document.getElementById("boardInput");
+    const button = document.getElementById("inputButton");
+    const text = document.getElementById("textInput");
+    if (!board) return;
+    const isVisible = board.style.display !== "none";
+    board.style.display = isVisible ? "none" : "block";
+    text.style.display = isVisible ? "block" : "none";
+    button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
+    if (!isVisible) {
+        drawInputCards();
+        adjustButtonsFontSize();
+    }
+}
+
+const originalUpdateCardSkin = updateCardSkin;
+updateCardSkin = function(skin) {
+    if (skin) localStorage.setItem("cardskin", (cardskin = skin));
+    const select = document.getElementById("skinSelect");
+    if (select) select.value = cardskin;
+    if (typeof originalUpdateCardSkin === "function") {
+        originalUpdateCardSkin(skin);
+    }
+};

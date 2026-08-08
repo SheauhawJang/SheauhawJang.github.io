@@ -4,7 +4,7 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1" />
- <meta name="description" content="支援十六張麻雀、港式台灣牌、日式立直麻雀、十三張麻雀一般型、國標麻雀同埋任意張麻雀嘅牌理向聽數計算。支援百搭牌（萬能牌／賴子／混子）。支援國標麻雀番數計算、日式立直麻雀分數計算。">
+ <meta name="description" content="支援十六張麻雀、港式台灣牌、立直麻雀、十三張麻雀一般型、國標麻雀同埋任意張麻雀嘅牌理向聽數計算。支援百搭牌（萬能牌／賴子／混子）。支援國標麻雀番數計算、立直麻雀分數計算。">
  <title>麻雀多功能計算機</title>
  <link rel="stylesheet" href="mahjong.css" />
  <link rel="icon" href="head.ico" type="image/x-icon">
@@ -32,9 +32,9 @@
  </div>
  <h1>麻雀多功能計算機</h1>
  <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0;">
-  <li>支援十六張麻雀、港式台灣牌、日式立直麻雀、十三張麻雀<span data-i18n="normal"></span>、國標麻雀同埋任意張麻雀嘅牌理向聽數計算。</li>
+  <li>支援十六張麻雀、港式台灣牌、立直麻雀、十三張麻雀<span data-i18n="normal"></span>、國標麻雀同埋任意張麻雀嘅牌理向聽數計算。</li>
   <li>支援百搭牌（萬能牌／賴子／混子）。</li>
-  <li>支援國標麻雀<span data-i18n="GB_FAN_unit"></span>數計算同埋日式立直麻雀分數計算。</li>
+  <li>支援國標麻雀<span data-i18n="GB_FAN_unit"></span>數計算同埋立直麻雀分數計算。</li>
  </ul>
  <div class="section">
   <div class="title-button-container">
@@ -203,7 +203,7 @@
     <button class="tab" data-steptabid="0" , onclick="switchStepTab(0)"><span data-i18n="normal"></span>牌理</button>
     <button class="tab" data-steptabid="1" , onclick="switchStepTab(1)">國標麻雀標準型牌理</button>
     <button class="tab" data-steptabid="3" , onclick="switchStepTab(3)">港式台灣牌牌理</button>
-    <button class="tab" data-steptabid="2" , onclick="switchStepTab(2)">日式立直麻雀標準型牌理</button>
+    <button class="tab" data-steptabid="2" , onclick="switchStepTab(2)">立直麻雀標準型牌理</button>
     <button class="tab" data-steptabid="4" , onclick="switchStepTab(4)">四川麻雀牌理</button>
    </div>
    <div id="steps-global-viewer"></div>
@@ -236,7 +236,7 @@
   </div>
   <div class="output-box" id="steps-jp" style="display: none;">
    <div class="title-button-container">
-    <div class="output-title">日式立直麻雀標準型牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
+    <div class="output-title">立直麻雀標準型牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
     <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">收埋 ▲</button>
     <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">收埋 ▲</button>
    </div>
@@ -290,7 +290,7 @@
   </div>
   <div class="output-box" id="score-global" style="display: none;">
    <div class="tabs">
-    <button class="tab" data-scoretabid="1" , onclick="switchScoreTab(1)">日式立直麻雀分數計算機</button>
+    <button class="tab" data-scoretabid="1" , onclick="switchScoreTab(1)">立直麻雀分數計算機</button>
     <button class="tab" data-scoretabid="0" , onclick="switchScoreTab(0)">國標麻雀<span data-i18n="GB_FAN_unit"></span>數計算機</button>
     <button class="tab" data-scoretabid="3" , onclick="switchScoreTab(3)">四川麻雀倍數計算機</button>
    </div>
@@ -299,7 +299,7 @@
   <div style="display: none;">
    <div class="output-box" id="score-jp">
     <div class="title-button-container">
-     <div class="output-title">日式立直麻雀分數計算機</div>
+     <div class="output-title">立直麻雀分數計算機</div>
      <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput('output-score-jp')">收埋 ▲</button>
     </div>
     <div id="options-output-score-jp">

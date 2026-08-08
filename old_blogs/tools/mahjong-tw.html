@@ -248,18 +248,18 @@
        <span data-i18n="yakuman"></span>
        <div class="output-option-group">
         <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span>役</label>
-        <label title="XJTU規則採用。新報知規則、最高位戰規則、聯盟規則、協會規則、RMU規則、全段審規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-        <label title="最高位戰規則、聯盟規則、協會規則、RMU規則、全段審規則、M.League、XJTU規則採用。新報知規則、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />複合<span data-i18n="yakuman"></span></label>
-        <label title="新報知規則、最高位戰規則、協會規則、RMU規則、全段審規則、M.League、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
+        <label title="XJTU規則採用。新報知規則、最高位戰、聯盟規則、協會規則、RMU規則、全段審規則、M.League、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+        <label title="最高位戰、聯盟規則、協會規則、RMU規則、全段審規則、M.League、XJTU規則採用。新報知規則、XJTU七星杯、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="2" checked />複合<span data-i18n="yakuman"></span></label>
+        <label title="新報知規則、最高位戰、協會規則、RMU規則、全段審規則、M.League、EMA規則不採用。"><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
        </div>
        <span>連風牌雀頭</span>
        <div class="output-option-group">
         <label title="雀魂、天鳳、XJTU規則、EMA規則採用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
-        <label title="新報知規則、最高位戰規則、聯盟規則、協會規則、RMU規則、全段審規則、M.League採用。"><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
+        <label title="新報知規則、最高位戰、聯盟規則、協會規則、RMU規則、全段審規則、M.League採用。"><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
        </div>
        <span data-i18n="kiri_mangan"></span>
        <div class="output-option-group">
-        <label title="最高位戰規則、聯盟WRC規則、協會規則、RMU規則、M.League採用。最高位戰Classic規則、聯盟官方規則不採用。"><input type="radio" name="score-jp-setting-3" value="7" />開啟</label>
+        <label title="最高位戰、聯盟WRC規則、協會規則、RMU規則、M.League採用。最高位戰Classic規則、聯盟官方規則不採用。"><input type="radio" name="score-jp-setting-3" value="7" />開啟</label>
         <label><input type="radio" name="score-jp-setting-3" value="0" checked />關閉</label>
        </div>
        <span>吃斷</span>
@@ -456,7 +456,7 @@
        <button onclick="processJPSetting(0)">XJTU規則</button>
        <button onclick="processJPSetting(1)">XJTU七星杯</button>
        <button onclick="processJPSetting(12)">新報知規則</button>
-       <button onclick="processJPSetting(4)">最高位戰規則</button>
+       <button onclick="processJPSetting(4)">最高位戰</button>
        <button onclick="processJPSetting(5)">最高位戰Classic規則</button>
        <button onclick="processJPSetting(2)">聯盟官方規則</button>
        <button onclick="processJPSetting(3)">聯盟WRC規則</button>
@@ -836,44 +836,57 @@
     <div class="output-time" id="time-output-score-sc">Ready to start!</div>
    </div>
   </div>
-  <div class="reference-box mobile-display-only" id="title-box"></div>
+  <div class="reference-box mobile-display-only">
+   <details open>
+    <summary>註釋</summary>
+    <div id="title-box"></div>
+   </details>
+  </div>
   <div class="reference-box">
-   相關規則：
-   <ul style="margin-top: 0">
-    <li><a href="./rules/Shinhouchi.pdf" target="_blank">平成版麻將新報知規則（新報知規則）</a></li>
-    <li><a href="./rules/Achieve/Saikouisen.html" target="_blank">最高位戰日本職業麻將協會競技規定（最高位戰規則）</a><a class="small-a" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <li><a href="./rules/JPML-Riichi.pdf" target="_blank">日本職業麻將聯盟官方規則和WRC規則（聯盟規則）</a></li>
-    <li><a href="./rules/Mu-Riichi.pdf" target="_blank">麻將聯合官方規則（μ規則）</a></li>
-    <li><a href="./rules/Achieve/ClubJPM.html" target="_blank">日本職業麻將協會競技規定（協會規則）</a><a class="small-a" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <li><a href="./rules/Achieve/RMU.html" target="_blank">RMU規則</a> <a class="small-a" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <li><a href="./rules/Zendanshin.pdf" target="_blank">全國麻將段位審查會競技規定（全段審規則）</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/Kenko-Mahjong.pdf" target="_blank">日本健康麻將協會健康麻將規則</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/Achieve/GakuJanren.html" target="_blank">學生麻將聯盟競技規定</a><a class="small-a" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <li><a href="./rules/Achieve/MLeague.html" target="_blank">M.League正式比賽規則（M.League）</a><a class="small-a" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/Achieve/Saikyosen.html" target="_blank">麻將最強戰規則（最強戰）</a><a class="small-a" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/Achieve/NihonMajan-Riichi.html" target="_blank">日本麻將聯盟立直麻將規則</a> <a class="small-a" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <li><a href="./rules/XJTU-Riichi.pdf" target="_blank">西安交通大學立直麻將比賽規則（XJTU規則）和西安交通大學七星杯立直麻將公開賽規則（XJTU七星杯）</a></li>
-    <li><a href="./rules/EMA-Riichi.pdf" target="_blank">歐洲麻將聯盟立直麻將規則（EMA規則）</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/WRC.pdf" target="_blank">世界立直麻將錦標賽規則</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/Shingendai.pdf" target="_blank">民國64年制定新《周刊現代規則》</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/Achieve/NihonMajan-22.html" target="_blank">日本麻將聯盟二十二麻將規則</a> <a class="small-a" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <!--No Summary-->
-    <li><a href="./rules/101.pdf" target="_blank">日本麻將101競技聯盟101競技規定</a></li>
-    <li><a href="./rules/GB98.pdf" target="_blank">中國麻將競賽規則（國標原文）</a></li>
-    <li><a href="./rules/GB98-EC.pdf" target="_blank">中國麻將競賽規則疑難解析（疑難解析）</a></li>
-    <li><a href="./rules/GB98-FAQ.pdf" target="_blank">《中國麻將競賽規則（試行）》問答（問答規則）</a></li>
-    <li><a href="./rules/WMO-MCR.pdf" target="_blank">世界麻將組織麻將競賽規則（世麻規則）</a></li>
-    <li><a href="./rules/MIL-MCR.pdf" target="_blank">國際麻將聯盟國標麻將規則補充細則（MIL規則）</a></li>
-    <li><a href="./rules/Achieve/JMSA-MCR.html" target="_blank">日本麻將體育協會規則和<span data-i18n="GB_FAN_unit"></span>種一覽（JMSA規則）</a><a class="small-a" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">原始內容</a></li>
-    <li><a href="./rules/MIL-SBR.pdf" target="_blank">國際麻將聯盟四川麻將競賽規則</a></li>
-   </ul>
+   <details open>
+    <summary>相關規則</summary>
+    <div class="reference-table-wrapper">
+     <table class="reference-table">
+      <thead>
+       <tr>
+        <th>簡稱</th>
+        <th>全稱</th>
+        <th><span class="cmp-word-long">規則</span>歸屬</th>
+        <th>介質</th>
+        <th>語言</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr><td>新報知規則</td><td><a href="./rules/Shinhouchi.pdf" target="_blank">平成版麻將新報知規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>最高位戰</td><td><a href="./rules/Achieve/Saikouisen.html" target="_blank">最高位戰日本職業麻將協會競技規定</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>聯盟規則</td><td><a href="./rules/JPML-Riichi.pdf" target="_blank">日本職業麻將聯盟官方規則和WRC規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>μ規則</td><td><a href="./rules/Mu-Riichi.pdf" target="_blank">麻將聯合官方規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>協會規則</td><td><a href="./rules/Achieve/ClubJPM.html" target="_blank">日本職業麻將協會競技規定</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>RMU規則</td><td><a href="./rules/Achieve/RMU.html" target="_blank">RMU規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>全段審規則</td><td><a href="./rules/Zendanshin.pdf" target="_blank">全國麻將段位審查會競技規定</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>-</td><td><a href="./rules/Kenko-Mahjong.pdf" target="_blank">日本健康麻將協會健康麻將規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>-</td><td><a href="./rules/Achieve/GakuJanren.html" target="_blank">學生麻將聯盟競技規定</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>M.League</td><td><a href="./rules/Achieve/MLeague.html" target="_blank">M.League正式比賽規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>最強戰</td><td><a href="./rules/Achieve/Saikyosen.html" target="_blank">麻將最強戰規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>-</td><td><a href="./rules/Achieve/NihonMajan-Riichi.html" target="_blank">日本麻將聯盟立直麻將規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>XJTU規則</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">西安交通大學立直麻將比賽規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>XJTU七星杯</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">西安交通大學七星杯立直麻將公開賽規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>EMA規則</td><td><a href="./rules/EMA-Riichi.pdf" target="_blank">歐洲麻將聯盟立直麻將規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>英文</td></tr>
+       <tr><td>-</td><td><a href="./rules/WRC.pdf" target="_blank">世界立直麻將錦標賽規則</a></td><td>立直<span class="cmp-word-long">麻將</span></td><td>pdf</td><td>英文</td></tr>
+       <tr><td>-</td><td><a href="./rules/101.pdf" target="_blank">日本麻將101競技聯盟101競技規定</a></td><td><span class="cmp-word-long">早期立直麻將</span><span class="cmp-word-short">舊日</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>-</td><td><a href="./rules/Shingendai.pdf" target="_blank">民國64年制定新《周刊現代規則》</a></td><td><span class="cmp-word-long">早期立直麻將</span><span class="cmp-word-short">舊日</span></td><td>pdf</td><td>日文</td></tr>
+       <tr><td>-</td><td><a href="./rules/Achieve/NihonMajan-22.html" target="_blank">日本麻將聯盟二十二麻將規則</a></td><td>古典<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>國標原文</td><td><a href="./rules/GB98.pdf" target="_blank">中國麻將競賽規則</a></td><td>國標<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>疑難解析</td><td><a href="./rules/GB98-EC.pdf" target="_blank">中國麻將競賽規則疑難解析</a></td><td>國標<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>問答規則</td><td><a href="./rules/GB98-FAQ.pdf" target="_blank">《中國麻將競賽規則（試行）》問答</a></td><td>國標<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>世麻規則</td><td><a href="./rules/WMO-MCR.pdf" target="_blank">世界麻將組織麻將競賽規則</a></td><td>國標<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>MIL規則</td><td><a href="./rules/MIL-MCR.pdf" target="_blank">國際麻將聯盟國標麻將規則補充細則</a></td><td>國標<span class="cmp-word-long">麻將</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+       <tr><td>JMSA規則</td><td><a href="./rules/Achieve/JMSA-MCR.html" target="_blank">日本麻將體育協會規則和<span data-i18n="GB_FAN_unit"></span>種一覽</a></td><td>國標<span class="cmp-word-long">麻將</span></td><td><a class="external-link" href="https://www.jmsa.jp/www/rule1.html" target="_blank" rel="noopener noreferrer">網頁</a></td><td>日文</td></tr>
+       <tr><td>-</td><td><a href="./rules/MIL-SBR.pdf" target="_blank">國際麻將聯盟四川麻將競賽規則</a></td><td><span class="cmp-word-long">四川麻將</span><span class="cmp-word-short">川麻</span></td><td>pdf</td><td><span class="cmp-word-long">簡體中文</span><span class="cmp-word-short">簡中</span></td></tr>
+      </tbody>
+     </table>
+    </div>
+   </details>
   </div>
  </div>
  <div class="section title-button-container">

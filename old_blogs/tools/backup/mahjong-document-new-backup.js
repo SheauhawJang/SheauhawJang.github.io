@@ -598,11 +598,10 @@ function subtilesImage(sids, tcnt) {
 // Input Panel Functions
 let ipids;
 function inputCardImage(ids, i, j, width, unit) {
-    const cls = j < 0 ? " removable-tile" : "";
-    return `<div class="card-div${cls}" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}${getCardImage(ids[i], "", `removeInput(${i}, ${j}, 0)`)}</div>`;
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}${getCardImage(ids[i], "", `removeInput(${i}, ${j}, 0)`)}</div>`;
 }
 function inputCardImageRotated(ids, i, j, width, unit, cnt) {
-    return `<div class="card-div rotated-tile" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit, cnt === 2 ? "k" : "r")}${getCardImage(ids[i], cnt === 2 ? "k" : "r", `removeInput(${i}, ${j}, 1)`)}</div>`;
+    return `<div class="card-div" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit, cnt === 2 ? "k" : "r")}${getCardImage(ids[i], cnt === 2 ? "k" : "r", `removeInput(${i}, ${j}, 1)`)}</div>`;
 }
 function inputCardImageBack(i, j, width, unit) {
     return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
@@ -632,14 +631,11 @@ function drawInputCards() {
         output += inputCardImageEmpty(width, unit);
         let t = getUnifiedType(sids[i]);
         if (t % 4 === 0) {
-            output += `<div class="meld-group closed-meld">`;
             for (let j = 0; j < sids[i].length; ++j)
                 if (j === 0 || j === sids[i].length - 1) output += inputCardImageBack(j, i, width, unit);
                 else output += inputCardImage(sids[i], j, i, width, unit);
-            output += `</div>`;
             rheight = Math.max(rheight, sheight);
         } else {
-            output += `<div class="meld-group open-meld">`;
             let rloc = getRotatedLocation(t, sids[i].length);
             let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
             if (seq) output += inputCardImageRotated(sids[i], rloc, i, width, unit, 1);
@@ -649,12 +645,11 @@ function drawInputCards() {
                     else if (t > 3) output += inputCardImageRotated(sids[i], j++, i, width, unit, 2);
                     else output += inputCardImageRotated(sids[i], j, i, width, unit, 1);
                 else output += inputCardImage(sids[i], j, i, width, unit, false);
-            output += `</div>`;
             if (t > 3) rheight = height;
             else rheight = Math.max(rheight, sheight);
         }
     }
-    div.style.paddingTop = `${height - rheight + 10}${unit}`;
+    div.style.paddingTop = `${height - rheight}${unit}`;
     div.innerHTML = output;
     output = "";
     const bonusd = document.getElementById("input-pic-bonus");
@@ -774,87 +769,6 @@ function subtileInput(t, k) {
     remakeInput(ipids);
     drawInputCards();
 }
-
-function hoverSubtileInput(btn, t, isHover) {
-    const allClasses = ["hover-preview-meld", "hover-preview-transfer"];
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
-        tile.classList.remove(...allClasses);
-    });
-    if (!isHover) return;
-    if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
-
-    const handTiles = document.querySelectorAll("#input-pic .removable-tile");
-    if (handTiles.length === 0) return;
-
-    const tids = ipids[0];
-    let count = 1; // 預設只高亮最後 1 張
-    // t=0,1,2 → 副露（→）；t=3,4,5 → 轉移（↓）
-    const cls = t <= 2 ? "hover-preview-meld" : "hover-preview-transfer";
-
-    if (t === 0) {
-        // 吃：固定抬起最後 3 張牌
-        count = 3;
-    } else if (t === 1) {
-        // 碰：如果是刻子抬起三張；否則一張
-        if (tids.length >= 3 && isTri(tids.slice(-3).map((a) => a.id))) {
-            count = 3;
-        } else {
-            count = 1;
-        }
-    } else if (t === 2) {
-        // 槓：如果是槓子抬起四張；否則一張
-        if (tids.length >= 4 && isQuad(tids.slice(-4).map((a) => a.id))) {
-            count = 4;
-        } else {
-            count = 1;
-        }
-    }
-
-    count = Math.min(count, handTiles.length);
-
-    for (let idx = handTiles.length - 1; idx >= handTiles.length - count; --idx) {
-        handTiles[idx].classList.add(cls);
-    }
-}
-
-function hoverDeleteInput(btn, isHover) {
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
-        tile.classList.remove("backspace-hover");
-    });
-    if (!isHover) return;
-    if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
-
-    const handTiles = document.querySelectorAll("#input-pic .removable-tile");
-    if (handTiles.length > 0) {
-        handTiles[handTiles.length - 1].classList.add("backspace-hover");
-    }
-}
-
-function hoverClearInput(btn, isHover) {
-    const targets = document.querySelectorAll("#input-pic .card-div, .removable-tile");
-    targets.forEach(tile => {
-        tile.classList.remove("backspace-hover");
-    });
-    if (!isHover) return;
-    if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
-
-    targets.forEach(tile => {
-        tile.classList.add("backspace-hover");
-    });
-}
-
-function hoverSortInput(btn, isHover) {
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
-        tile.classList.remove("hover-preview-sort");
-    });
-    if (!isHover) return;
-    if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
-
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
-        tile.classList.add("hover-preview-sort");
-    });
-}
-
 // Score workers
 let gb_worker = null;
 let gb_worker_info;
@@ -1118,130 +1032,9 @@ function replacei18n() {
         el.innerHTML = text;
     });
 }
-function initKeyboard() {
-    const boardInput = document.getElementById("boardInput");
-    if (boardInput) {
-        boardInput.innerHTML = `<div class="card-container" id="input-pic"></div>
-<div class="input-keyboard">
-	<div class="input-mainkey">
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1m.gif" onclick="addInput(0)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2m.gif" onclick="addInput(1)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3m.gif" onclick="addInput(2)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4m.gif" onclick="addInput(3)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5m.gif" onclick="addInput(4)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6m.gif" onclick="addInput(5)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7m.gif" onclick="addInput(6)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8m.gif" onclick="addInput(7)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9m.gif" onclick="addInput(8)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0m.gif" onclick="addInput({ id: 4, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1p.gif" onclick="addInput(9)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2p.gif" onclick="addInput(10)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3p.gif" onclick="addInput(11)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4p.gif" onclick="addInput(12)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5p.gif" onclick="addInput(13)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6p.gif" onclick="addInput(14)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7p.gif" onclick="addInput(15)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8p.gif" onclick="addInput(16)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9p.gif" onclick="addInput(17)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0p.gif" onclick="addInput({ id: 13, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1s.gif" onclick="addInput(18)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2s.gif" onclick="addInput(19)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3s.gif" onclick="addInput(20)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4s.gif" onclick="addInput(21)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5s.gif" onclick="addInput(22)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6s.gif" onclick="addInput(23)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7s.gif" onclick="addInput(24)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8s.gif" onclick="addInput(25)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9s.gif" onclick="addInput(26)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0s.gif" onclick="addInput({ id: 22, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1z.gif" onclick="addInput(27)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2z.gif" onclick="addInput(28)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3z.gif" onclick="addInput(29)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4z.gif" onclick="addInput(30)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5z.gif" onclick="addInput(31)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6z.gif" onclick="addInput(32)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7z.gif" onclick="addInput(33)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0z.gif" onclick="addInput({ id: 31, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1h.gif" onclick="addInput(34)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2h.gif" onclick="addInput(35)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3h.gif" onclick="addInput(36)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4h.gif" onclick="addInput(37)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5h.gif" onclick="addInput(38)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6h.gif" onclick="addInput(39)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7h.gif" onclick="addInput(40)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8h.gif" onclick="addInput(41)" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1j.gif" onclick="addInput(42)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2j.gif" onclick="addInput(43)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3j.gif" onclick="addInput(44)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4j.gif" onclick="addInput(45)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5j.gif" onclick="addInput(46)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6j.gif" onclick="addInput(47)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7j.gif" onclick="addInput(48)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8j.gif" onclick="addInput(49)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9j.gif" onclick="addInput(50)" /></div>
-			<div></div>
-		</div>
-		<div class="card-container" id="input-pic-bonus"></div>
-		<div class="output-grid-div">
-			<span><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="kb_indicator_suffix">指示牌</span></span>
-			<div class="card-container" id="input-pic-dorap"></div>
-			<span><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="kb_indicator_suffix">指示牌</span></span>
-			<div class="card-container" id="input-pic-urap"></div>
-		</div>
-	</div>
-	<div class="input-subkeys">
-		<button onclick="clearInput(); hoverClearInput(this, true)" onmouseenter="hoverClearInput(this, true)" onmouseleave="hoverClearInput(this, false)" class="subkey-button" data-i18n="kb_clear">清空</button>
-		<button onclick="sortInput(); hoverSortInput(this, true)" onmouseenter="hoverSortInput(this, true)" onmouseleave="hoverSortInput(this, false)" class="subkey-button" data-i18n="kb_sort">理牌</button>
-		<button onclick="removeInput(ipids[0].length - 1, -1); hoverDeleteInput(this, true)" onmouseenter="hoverDeleteInput(this, true)" onmouseleave="hoverDeleteInput(this, false)" class="subkey-button enable-no-empty" data-i18n="kb_delete">退格</button>
-		<button onclick="subtileInput(0); hoverSubtileInput(this, 0, true)" onmouseenter="hoverSubtileInput(this, 0, true)" onmouseleave="hoverSubtileInput(this, 0, false)" class="subkey-button" id="subkey_chi" data-i18n="chi">吃</button>
-		<button onclick="subtileInput(1); hoverSubtileInput(this, 1, true)" onmouseenter="hoverSubtileInput(this, 1, true)" onmouseleave="hoverSubtileInput(this, 1, false)" class="subkey-button enabled-no-flower" data-i18n="pong">碰</button>
-		<button onclick="subtileInput(2, 1); hoverSubtileInput(this, 2, true)" onmouseenter="hoverSubtileInput(this, 2, true)" onmouseleave="hoverSubtileInput(this, 2, false)" class="subkey-button enabled-no-flower" data-i18n="kb_expose_kong">明杠</button>
-		<button onclick="subtileInput(2, 5); hoverSubtileInput(this, 2, true)" onmouseenter="hoverSubtileInput(this, 2, true)" onmouseleave="hoverSubtileInput(this, 2, false)" class="subkey-button enabled-no-flower" data-i18n="kb_extend_kong">加杠</button>
-		<button onclick="subtileInput(2, 0); hoverSubtileInput(this, 2, true)" onmouseenter="hoverSubtileInput(this, 2, true)" onmouseleave="hoverSubtileInput(this, 2, false)" class="subkey-button enabled-no-flower" data-i18n="kb_conceal_kong">暗杠</button>
-		<button onclick="subtileInput(3); hoverSubtileInput(this, 3, true)" onmouseenter="hoverSubtileInput(this, 3, true)" onmouseleave="hoverSubtileInput(this, 3, false)" class="subkey-button enable-no-empty" data-i18n="kb_bonus">补花</button>
-		<button onclick="subtileInput(4); hoverSubtileInput(this, 4, true)" onmouseenter="hoverSubtileInput(this, 4, true)" onmouseleave="hoverSubtileInput(this, 4, false)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="kb_indicate">指示</span></button>
-		<button onclick="subtileInput(5); hoverSubtileInput(this, 5, true)" onmouseenter="hoverSubtileInput(this, 5, true)" onmouseleave="hoverSubtileInput(this, 5, false)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="kb_indicate">指示</span></button>
-	</div>
-</div>`;
-    }
-}
 const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-img-overlay-rr-0", "card-img-overlay-rr-1"]);
 function updateCardSkin(skin) {
     if (skin) localStorage.setItem("cardskin", (cardskin = skin));
-    const customSelect = document.querySelector(".custom-select");
-    if (customSelect && skin) {
-        const trigger = customSelect.querySelector(".select-trigger");
-        const options = customSelect.querySelectorAll(".select-option");
-        options.forEach(opt => {
-            const isSelected = opt.getAttribute("data-value") === skin;
-            opt.classList.toggle("selected", isSelected);
-            if (isSelected && trigger) {
-                trigger.textContent = opt.textContent;
-            }
-        });
-    }
     const divs = document.querySelectorAll(".card-div");
     divs.forEach((div) => {
         const i = getNamedImage(div);
@@ -1361,38 +1154,7 @@ function loadSCStorage() {
     loadCheckbox("score-sc-wintype", sessionStorage);
     loadCheckbox("score-sc-wininfo", sessionStorage);
 }
-function initCustomSelects() {
-    const customSelects = document.querySelectorAll(".custom-select");
-    customSelects.forEach(select => {
-        const trigger = select.querySelector(".select-trigger");
-        const options = select.querySelectorAll(".select-option");
-
-        trigger.addEventListener("click", (e) => {
-            e.stopPropagation();
-            document.querySelectorAll(".custom-select").forEach(other => {
-                if (other !== select) other.classList.remove("open");
-            });
-            select.classList.toggle("open");
-        });
-
-        options.forEach(opt => {
-            opt.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const value = opt.getAttribute("data-value");
-                updateCardSkin(value);
-                select.classList.remove("open");
-            });
-        });
-    });
-
-    document.addEventListener("click", () => {
-        document.querySelectorAll(".custom-select").forEach(select => {
-            select.classList.remove("open");
-        });
-    });
-}
 function loadStorage() {
-    initCustomSelects();
     updateCardSkin(localStorage.getItem("cardskin"));
     switchStepTab(Number(localStorage.getItem("steptab")));
     scoretab_usr = Number(localStorage.getItem("scoretab_usr") ?? -1);
@@ -1738,4 +1500,71 @@ async function playResultAudio(playList, character = "Ichihime") {
     }
 }
 
+/* ==========================================================================
+   Antigravity Added: Component hot-loading & UI integration helper functions
+   ========================================================================== */
+if (typeof loc_all !== "undefined") {
+    Object.assign(loc_all, {
+        skin_select: { cn: "牌画选择", en: "Tile Skin" },
+        clear_btn: { cn: "清空", en: "Clear" },
+        sort_btn: { cn: "理牌", en: "Sort" },
+        backspace_btn: { cn: "退格", en: "Backspace" },
+        meld_kong_btn: { cn: "明杠", en: "Melded Kong" },
+        add_kong_btn: { cn: "加杠", en: "Added Kong" },
+        concealed_kong_btn: { cn: "暗杠", en: "Concealed Kong" },
+        flower_btn: { cn: "补花", en: "Flower" },
+        dora_btn: { cn: "宝牌指示", en: "Dora Ind." },
+        uradora_btn: { cn: "里宝牌指示", en: "Ura Dora Ind." },
+        indicator: { cn: "指示牌", en: "Indicator" },
+        indicator_short: { cn: "指示", en: "Ind." },
+        skin_jp: { cn: "雀魂牌画", en: "Majsoul" },
+        skin_gb: { cn: "雀渣牌画", en: "Quezha" },
+        skin_qq: { cn: "腾讯牌画", en: "Tencent" },
+        skin_hk: { cn: "开台喇牌画", en: "Kaitaila" },
+        skin_tw: { cn: "神来也牌画", en: "Godgame" },
+        skin_op: { cn: "园研牌画", en: "Garden" },
+        skin_nn: { cn: "暖暖牌画", en: "Nikki" }
+    });
+}
 
+async function loadComponents() {
+    const langBarContainer = document.getElementById("language-bar-container");
+    const keyboardContainer = document.getElementById("keyboard-container");
+    if (langBarContainer) {
+        const res = await fetch("language-bar.html");
+        if (res.ok) {
+            langBarContainer.innerHTML = await res.text();
+        }
+    }
+    if (keyboardContainer) {
+        const res = await fetch("keyboard.html");
+        if (res.ok) {
+            keyboardContainer.innerHTML = await res.text();
+        }
+    }
+}
+
+function toggleInput() {
+    const board = document.getElementById("keyboard-container") || document.getElementById("boardInput");
+    const button = document.getElementById("inputButton");
+    const text = document.getElementById("textInput");
+    if (!board) return;
+    const isVisible = board.style.display !== "none";
+    board.style.display = isVisible ? "none" : "block";
+    text.style.display = isVisible ? "block" : "none";
+    button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
+    if (!isVisible) {
+        drawInputCards();
+        adjustButtonsFontSize();
+    }
+}
+
+const originalUpdateCardSkin = updateCardSkin;
+updateCardSkin = function(skin) {
+    if (skin) localStorage.setItem("cardskin", (cardskin = skin));
+    const select = document.getElementById("skinSelect");
+    if (select) select.value = cardskin;
+    if (typeof originalUpdateCardSkin === "function") {
+        originalUpdateCardSkin(skin);
+    }
+};

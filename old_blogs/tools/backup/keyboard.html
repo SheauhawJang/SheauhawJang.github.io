@@ -82,23 +82,23 @@
 		</div>
 		<div class="card-container" id="input-pic-bonus"></div>
 		<div class="output-grid-div">
-			<span><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="kb_indicator_suffix">指示牌</span></span>
+			<span><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="indicator"></span></span>
 			<div class="card-container" id="input-pic-dorap"></div>
-			<span><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="kb_indicator_suffix">指示牌</span></span>
+			<span><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="indicator"></span></span>
 			<div class="card-container" id="input-pic-urap"></div>
 		</div>
 	</div>
 	<div class="input-subkeys">
-		<button onclick="clearInput()" class="subkey-button" data-i18n="kb_clear">清空</button>
-		<button onclick="sortInput()" class="subkey-button" data-i18n="kb_sort">理牌</button>
-		<button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty" data-i18n="kb_delete">退格</button>
+		<button onclick="clearInput()" class="subkey-button" data-i18n="clear_btn">清空</button>
+		<button onclick="sortInput()" class="subkey-button" data-i18n="sort_btn">理牌</button>
+		<button onclick="removeInput(ipids[0].length - 1, -1)" class="subkey-button enable-no-empty" data-i18n="backspace_btn">退格</button>
 		<button onclick="subtileInput(0)" class="subkey-button" id="subkey_chi" data-i18n="chi">吃</button>
 		<button onclick="subtileInput(1)" class="subkey-button enabled-no-flower" data-i18n="pong">碰</button>
-		<button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower" data-i18n="kb_expose_kong">明杠</button>
-		<button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower" data-i18n="kb_extend_kong">加杠</button>
-		<button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower" data-i18n="kb_conceal_kong">暗杠</button>
-		<button onclick="subtileInput(3)" class="subkey-button enable-no-empty" data-i18n="kb_bonus">补花</button>
-		<button onclick="subtileInput(4)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="kb_indicate">指示</span></button>
-		<button onclick="subtileInput(5)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="kb_indicate">指示</span></button>
+		<button onclick="subtileInput(2, 1)" class="subkey-button enabled-no-flower" data-i18n="meld_kong_btn">明杠</button>
+		<button onclick="subtileInput(2, 5)" class="subkey-button enabled-no-flower" data-i18n="add_kong_btn">加杠</button>
+		<button onclick="subtileInput(2, 0)" class="subkey-button enabled-no-flower" data-i18n="concealed_kong_btn">暗杠</button>
+		<button onclick="subtileInput(3)" class="subkey-button enable-no-empty" data-i18n="flower_btn">补花</button>
+		<button onclick="subtileInput(4)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="indicator_short"></span></button>
+		<button onclick="subtileInput(5)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="indicator_short"></span></button>
 	</div>
 </div>

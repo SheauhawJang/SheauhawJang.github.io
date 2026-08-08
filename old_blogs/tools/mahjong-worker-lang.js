@@ -297,4 +297,13 @@ const loc_all = {
     SC_FAN_unit: { cn: "番", hk: "番", tw: "番", ja: "飜", en: "Doubles" },
     SC_separator: { cn: "", hk: "", tw: "", ja: "", en: " " },
     SC_max_fan: { cn: "封顶", hk: "例牌", tw: "封頂", ja: "満貫", en: "Maximum" },
+    kb_indicator_suffix: { cn: "指示牌", hk: "指示牌", tw: "指示牌", ja: "表示牌", en: " Indicator" },
+    kb_indicate: { cn: "指示", hk: "指示", tw: "指示", ja: "表示", en: " Indicate" },
+    kb_clear: { cn: "清空", hk: "清空", tw: "清空", ja: "クリア", en: "Clear" },
+    kb_sort: { cn: "理牌", hk: "理牌", tw: "理牌", ja: "理牌", en: "Sort" },
+    kb_delete: { cn: "退格", hk: "退格", tw: "退格", ja: "削除", en: "Delete" },
+    kb_expose_kong: { cn: "明杠", hk: "明槓", tw: "明槓", ja: "大明槓", en: "Expose Kong" },
+    kb_extend_kong: { cn: "加杠", hk: "加槓", tw: "加槓", ja: "加槓", en: "Extend Kong" },
+    kb_conceal_kong: { cn: "暗杠", hk: "暗槓", tw: "暗槓", ja: "暗槓", en: "Conceal Kong" },
+    kb_bonus: { cn: "补花", hk: "補花", tw: "補花", ja: "抜き", en: "+Bonus" },
 };

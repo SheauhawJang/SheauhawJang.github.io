@@ -272,203 +272,91 @@ html {
     height: 67.836257% !important;
 }
 
-.card-div:hover .card-overlay {
-    opacity: 1;
-    transition: opacity 0.2s ease; /* 僅在淡入時使用漸變 */
+@media (width > 512px) {
+    .card-div:has(.card-overlay):hover,
+    .card-div.backspace-hover,
+    .card-div.hover-preview-meld,
+    .card-div.hover-preview-transfer,
+    .card-div.hover-preview-sort,
+    .meld-group.closed-meld:hover .card-div,
+    .meld-group.open-meld:has(.rotated-tile:hover) .card-div {
+        transform: translateY(-6px);
+        filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
+        z-index: 10;
+    }
+
+    .card-div:has(.card-overlay):active,
+    .meld-group.closed-meld:active .card-div,
+    .meld-group.open-meld:has(.rotated-tile:active) .card-div {
+        transform: translateY(-1px);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        transition: transform 0.05s ease, filter 0.05s ease;
+    }
+
+    .card-div:hover .card-overlay,
+    .card-div.backspace-hover .card-overlay,
+    .card-div.hover-preview-meld .card-overlay,
+    .card-div.hover-preview-transfer .card-overlay,
+    .card-div.hover-preview-sort .card-overlay,
+    .meld-group.closed-meld:hover .card-overlay,
+    .meld-group.open-meld:has(.rotated-tile:hover) .card-overlay {
+        opacity: 1 !important;
+        transition: opacity 0.2s ease;
+    }
+
+    .card-div.removable-tile .card-overlay,
+    .card-div.backspace-hover .card-overlay,
+    .meld-group.closed-meld:hover .card-overlay,
+    .meld-group.open-meld:has(.rotated-tile:hover) .card-overlay {
+        background-color: rgba(220, 38, 38, 0.25) !important;
+        border-radius: 4px;
+    }
+
+    .card-div.hover-preview-meld .card-overlay,
+    .card-div.hover-preview-transfer .card-overlay,
+    .card-div.hover-preview-sort .card-overlay {
+        background-color: rgba(0, 123, 255, 0.4) !important;
+    }
+
+    #output-pic .card-div:hover .card-overlay::after,
+    .card-div.removable-tile .card-overlay::after,
+    .card-div.backspace-hover .card-overlay::after,
+    .card-div.hover-preview-meld .card-overlay::after,
+    .card-div.hover-preview-transfer .card-overlay::after,
+    .card-div.hover-preview-sort .card-overlay::after,
+    .meld-group.closed-meld:hover .card-overlay::after,
+    .meld-group.open-meld:has(.rotated-tile:hover) .card-overlay::after,
+    .meld-group.open-meld .card-div:not(.rotated-tile):hover .card-overlay::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    #output-pic .card-div:hover .card-overlay::after { content: '⇅'; }
+    .card-div.removable-tile .card-overlay::after,
+    .card-div.backspace-hover .card-overlay::after,
+    .meld-group.closed-meld:hover .card-overlay::after,
+    .meld-group.open-meld:has(.rotated-tile:hover) .card-overlay::after { content: '×'; }
+    .card-div.hover-preview-meld .card-overlay::after { content: '→'; }
+    .card-div.hover-preview-transfer .card-overlay::after { content: '↓'; }
+    .card-div.hover-preview-sort .card-overlay::after { content: '⇄'; }
+    .meld-group.open-meld .card-div:not(.rotated-tile):hover .card-overlay::after { content: '↻'; }
 }
 
-/* output-pic 可點擊牌在 hover 時顯示 ⇅ 符號 */
-#output-pic .card-div:hover .card-overlay::after {
-    content: '⇅';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-/* 僅針對帶有藍色遮罩的卡片在 hover 時加上抬升與投影效果 */
 .card-div:has(.card-overlay) {
     z-index: 1;
 }
 
-.card-div:has(.card-overlay):hover {
-    transform: translateY(-6px);
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
-    z-index: 10; /* 確保抬起的牌遮擋鄰近的牌 */
-}
-
-.card-div:has(.card-overlay):active {
-    transform: translateY(-1px);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    transition: transform 0.05s ease, filter 0.05s ease;
-}
-
-/* 僅針對帶有 removable-tile 的單張主手牌，將藍色遮罩替換為紅色遮罩 + × 號 */
-.card-div.removable-tile .card-overlay {
-    background-color: rgba(220, 38, 38, 0.25); /* 柔和紅色遮罩 */
-    border-radius: 4px;
-}
-
-.card-div.removable-tile .card-overlay::after {
-    content: '×';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-/* 當懸浮於退格按鈕時，最後一張可刪除手牌模擬 hover 的抬起與顯示遮罩 */
-.card-div.backspace-hover {
-    transform: translateY(-6px);
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
-    z-index: 10;
-}
-
-.card-div.backspace-hover .card-overlay {
-    background-color: rgba(220, 38, 38, 0.25) !important;
-    opacity: 1 !important;
-    transition: opacity 0.2s ease; /* 僅在淡入時使用漸變 */
-}
-
-.card-div.backspace-hover .card-overlay::after {
-    content: '×' !important;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-/* 副露（吃/碰/槓）懸浮預覽：藍色遮罩 + → 符號 */
-.card-div.hover-preview-meld,
-.card-div.hover-preview-transfer,
-.card-div.hover-preview-sort {
-    transform: translateY(-6px);
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
-    z-index: 10;
-}
-
-.card-div.hover-preview-meld .card-overlay,
-.card-div.hover-preview-transfer .card-overlay,
-.card-div.hover-preview-sort .card-overlay {
-    background-color: rgba(0, 123, 255, 0.4) !important;
-    opacity: 1 !important;
-    transition: opacity 0.2s ease;
-}
-
-.card-div.hover-preview-meld .card-overlay::after {
-    content: '→';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.card-div.hover-preview-transfer .card-overlay::after {
-    content: '↓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
-.card-div.hover-preview-sort .card-overlay::after {
-    content: none;
-}
-
-/* 鳴牌/副露分組容器：維持行內排列 */
 .meld-group {
     display: inline-block;
     vertical-align: bottom;
     white-space: nowrap;
 }
-
-/* 1. 暗鳴牌（closed-meld）：懸浮任意一張牌時，整組牌一同彈起且標記為紅色刪除遮罩 + × 號 */
-.meld-group.closed-meld:hover .card-div {
-    transform: translateY(-6px);
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
-    z-index: 10;
-}
-.meld-group.closed-meld:hover .card-overlay {
-    background-color: rgba(220, 38, 38, 0.25) !important;
-    opacity: 1 !important;
-    transition: opacity 0.2s ease;
-}
-.meld-group.closed-meld:hover .card-overlay::after {
-    content: '×';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-.meld-group.closed-meld:active .card-div {
-    transform: translateY(-1px);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-/* 2. 明鳴牌（open-meld）：懸浮在橫置（rotated-tile）的牌時，整組牌一同彈起且標記為紅色刪除遮罩 + × 號 */
-.meld-group.open-meld:has(.rotated-tile:hover) .card-div {
-    transform: translateY(-6px);
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
-    z-index: 10;
-}
-.meld-group.open-meld:has(.rotated-tile:hover) .card-overlay {
-    background-color: rgba(220, 38, 38, 0.25) !important;
-    opacity: 1 !important;
-    transition: opacity 0.2s ease;
-}
-.meld-group.open-meld:has(.rotated-tile:hover) .card-overlay::after {
-    content: '×';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-.meld-group.open-meld:has(.rotated-tile:active) .card-div {
-    transform: translateY(-1px);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-/* 3. 明鳴牌中的非刪除（非橫置）牌：懸浮時顯示原本的藍色遮罩，並在中心顯示旋轉標誌 ⟳ */
-.meld-group.open-meld .card-div:not(.rotated-tile):hover .card-overlay::after {
-    content: '⟳';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-}
-
 
 .card-helper,
 .card-helper-r,
@@ -569,14 +457,7 @@ html {
 
 .input-mainkey .card-container {
     text-align: right;
-}
-
-.input-mainkey > .card-container {
     margin-top: calc(1% - 10px);
-}
-
-.input-mainkey .output-grid-div {
-    margin-top: 1%;
 }
 
 .input-card-button {
@@ -627,35 +508,6 @@ html {
     cursor: not-allowed;
 }
 
-/* 理牌按鈕懸浮提示 */
-.subkey-button[data-sort-tooltip] {
-    position: relative;
-}
-
-.subkey-button[data-sort-tooltip]::after {
-    content: attr(data-sort-tooltip);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%) scale(0.9);
-    background-color: rgba(30, 30, 30, 0.88);
-    color: white;
-    font-size: 11px;
-    line-height: 1.4;
-    padding: 5px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease, transform 0.15s ease;
-    z-index: 100;
-}
-
-.subkey-button[data-sort-tooltip]:hover:not(:disabled)::after {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-}
-
 .win-grid {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -668,6 +520,8 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* 寬度不足時自動換行，保持左右佈局 */
+    gap: 6px 0;
     width: 100%;
     margin-bottom: 25px;
     padding: 12px 24px;
@@ -753,7 +607,9 @@ html {
 
 .lang-group {
     display: flex;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    margin-left: auto; /* 始終靠右，換行後也在右側 */
 }
 
 .lang-group a {
@@ -978,7 +834,7 @@ input[type="checkbox"] {
     color: #551A8B;
 }
 
-@media screen and (max-width: 512px) {
+@media (width <= 512px) {
     body {
         padding: 6px;
     }
@@ -1079,5 +935,17 @@ input[type="checkbox"] {
 
     .card-container {
         overflow-x: auto; /* 行動端保持滾動，防止頁面寬度溢出 */
+    }
+
+    /* 語言導航欄：行動端縮小內距，換行由 flex-wrap 自動處理 */
+    .language-bar {
+        padding: 8px 12px;
+        margin-bottom: 12px;
+        gap: 6px 0;
+    }
+
+    .lang-group a {
+        padding: 4px 10px;
+        font-size: 12.5px;
     }
 }

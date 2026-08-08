@@ -4,9 +4,9 @@
 <head>
  <meta charset="UTF-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1" />
- <meta name="description" content="支援十六張麻雀、港式台灣牌、立直麻雀、十三張麻雀一般型、國標麻雀同埋任意張麻雀嘅牌理向聽數計算。支援百搭牌（萬能牌／賴子／混子）。支援國標麻雀番數計算、立直麻雀分數計算。">
+ <meta name="description" content="支援一般型麻雀、港式台灣牌、立直麻雀、國標麻雀、十六張麻雀同埋任意多張麻雀嘅牌理向聽數計算。支援百搭牌（萬能牌／賴子／混子）。支援國標麻雀番數計算、立直麻雀分數計算。">
  <title>麻雀多功能計算機</title>
- <link rel="stylesheet" href="mahjong.css?v=202608081945" />
+ <link rel="stylesheet" href="mahjong.css?v=202608082307" />
  <link rel="icon" href="head.ico" type="image/x-icon">
  <link rel="shortcut icon" href="head.ico" type="image/x-icon">
 </head>
@@ -37,7 +37,7 @@
  </div>
  <h1>麻雀多功能計算機</h1>
  <ul class="input-note-wrapper" style="padding-left: 1.5em; margin-left: 0;">
-  <li>支援十六張麻雀、港式台灣牌、立直麻雀、十三張麻雀<span data-i18n="normal"></span>、國標麻雀同埋任意張麻雀嘅牌理向聽數計算。</li>
+  <li>支援一般型麻雀、港式台灣牌、立直麻雀、國標麻雀、十六張麻雀同埋任意多張麻雀嘅牌理向聽數計算。</li>
   <li>支援百搭牌（萬能牌／賴子／混子）。</li>
   <li>支援國標麻雀<span data-i18n="GB_FAN_unit"></span>數計算同埋立直麻雀分數計算。</li>
  </ul>
@@ -53,7 +53,7 @@
     <div class="input-note" id="inputNote" style="display: none">
      輸入欄支援以下格式，呢幾種格式可以混合使用：
      <ol style="margin-top: 0">
-      <li>天鳳格式：序數牌用序數（阿拉伯數字）＋花色（小寫字母）表示，其中：<b>萬子＝m</b>，<b>索子/條子＝s</b>，<b>筒子/餅子＝p</b>。字牌嘅<b>東南西北白發中</b>依次用<b>1z2z3z4z5z6z7z</b>表示。相同字母後綴嘅相鄰牌可以只保留最右邊嗰張牌嘅字母後綴。</li>
+      <li>天鳳格式：序數牌用序數（阿拉伯數字）＋花色（小寫字母）表示，其中：<b>萬子＝m</b>，<b>索子/條子＝s</b>，<b>筒子/餅子＝p</b>。字牌嘅<b>東南西北白發中</b>依次用<b>1z2z3z4z5z6z7z</b>表示。相同字母後綴嘅相鄰牌可以只保留最右邊嗰章嘅字母後綴。</li>
       <li>國標小助手格式：序數牌同「天鳳格式」一樣，字牌嘅<b>東南西北白發中</b>依次用大寫字母<b>ESWNPFC</b>表示。</li>
       <li>英文麻雀印刷格式：序數牌同「天鳳格式」一樣，字牌嘅<b>東南西北</b>依次用大寫字母<b>ESWN</b>表示，<b>白板＝Wh</b>，<b>發財＝G</b>，<b>紅中＝R</b>。</li>
       <li>漢語拼音格式：同天鳳格式一樣。但係<b>萬子＝w</b>，<b>筒子/餅子＝b</b>。</li>
@@ -68,8 +68,8 @@
       <li>餅子百搭牌 <img src="./cards/a3j.gif" style="vertical-align: middle" />：可以當成任何一張筒子/餅子。用<b>3j/ip/ib</b>表示。</li>
       <li>索子百搭牌 <img src="./cards/a4j.gif" style="vertical-align: middle" />：可以當成任何一張索子/條子. 用<b>4j/is</b>表示。</li>
       <li>數牌百搭牌 <img src="./cards/a5j.gif" style="vertical-align: middle" />：可以當成任何一張序數牌. 用<b>5j</b>表示。</li>
-      <li>風牌百搭牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：可以當成<b>東南西北</b>入面嘅任何一張。用<b>6j</b>表示。</li>
-      <li>三元百搭牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：可以當成<b>白發中</b>入面嘅任何一張。用<b>7j</b>表示。</li>
+      <li>風牌百搭牌 <img src="./cards/a6j.gif" style="vertical-align: middle" />：可以當成<b>東南西北</b>入面嘅任何一章。用<b>6j</b>表示。</li>
+      <li>三元百搭牌 <img src="./cards/a7j.gif" style="vertical-align: middle" />：可以當成<b>白發中</b>入面嘅任何一章。用<b>7j</b>表示。</li>
       <li>字牌百搭牌 <img src="./cards/a8j.gif" style="vertical-align: middle" />：可以當成任何一張字牌. 用<b>8j/iz</b>表示。</li>
       <li>花牌百搭牌 <img src="./cards/a9j.gif" style="vertical-align: middle" />：可以當成任何一張花牌. 用<b>9j/H/X/9h/9f/ih/if</b>表示。</li>
      </ul>
@@ -78,9 +78,9 @@
       <li>啲牌嘅左右用半形中括號<b>[]</b>包圍，表示一組固定面子。</li>
       <li>喺順子嘅手牌後面加個半形數字，並且用半形逗號隔開，對應位置嘅牌就會被標記為「上」返嚟嘅牌，會喺最左邊顯示及打橫。</li>
       <li>喺刻子嘅手牌後面加個半形數字，並且用半形逗號隔開，對應位置嘅牌就會被標記為「碰」返嚟嘅牌及打橫。</li>
-      <li>四張手牌嘅固定面子預設為暗槓。</li>
-      <li>大明槓需要喺四張手牌後面加返個 1~4 之間嘅半形數字，同埋用半形逗號隔開，對應位置嘅牌就會被標記為「槓」返嚟嘅牌及打橫。</li>
-      <li>加槓（小明槓）需要喺四張手牌後面加返個 5~8 之間嘅半形數字，同埋用半形逗號隔開，對應位置嘅牌就會被標記為「碰」返嚟嘅牌及打橫。</li>
+      <li>四章嘅固定面子預設為暗槓。</li>
+      <li>大明槓需要喺四章後面加返個 1~4 之間嘅半形數字，同埋用半形逗號隔開，對應位置嘅牌就會被標記為「槓」返嚟嘅牌及打橫。</li>
+      <li>加槓（小明槓）需要喺四章後面加返個 5~8 之間嘅半形數字，同埋用半形逗號隔開，對應位置嘅牌就會被標記為「碰」返嚟嘅牌及打橫。</li>
      </ul>
      <p>關於補花／拔北：啲牌嘅左右用半形小括號<b>()</b>包圍，表示呢啲牌係補花或者拔北之後嘅牌。<br /></p>
      <p>關於<span data-i18n="JP_YAKUNAME_96"></span>：啲牌嘅左右用半形角括號<b>&lt;&gt;</b>包圍，表示呢啲牌係<span data-i18n="JP_YAKUNAME_96"></span>指示牌。括號入面如果有半形逗號，逗號左邊嘅牌就係<span data-i18n="JP_YAKUNAME_96_EX"></span>指示牌，右邊嘅就係<span data-i18n="JP_YAKUNAME_97"></span>指示牌。<br /></p>
@@ -233,7 +233,7 @@
       <span>食糊狀態</span>
       <div class="output-option-group">
        <label><input type="checkbox" name="score-jp-wininfo" value="32">第一巡目</label>
-       <label><input type="checkbox" name="score-jp-wininfo" value="13">最後一張</label>
+       <label><input type="checkbox" name="score-jp-wininfo" value="13">最後一章</label>
        <label><input type="checkbox" name="score-jp-wininfo" value="12"><span data-i18n="JP_YAKUNAME_12"></span></label>
        <label><input type="checkbox" name="score-jp-wininfo" value="15"><span data-i18n="JP_YAKUNAME_15"></span></label>
        <label id="jp-tsubame-gaeshi" style="display: none;"><input type="checkbox" name="score-jp-wininfo" value="60" /><span data-i18n="JP_YAKUNAME_60"></span></label>
@@ -518,7 +518,7 @@
       <div class="output-option-group">
        <label id="gb-heaven" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="86">第一巡</label>
        <label id="gb-earth" style="display: none;"><input type="checkbox" name="score-gb-wininfo" value="87">地牌和</label>
-       <label><input type="checkbox" name="score-gb-wininfo" value="44">最後一張</label>
+       <label><input type="checkbox" name="score-gb-wininfo" value="44">最後一章</label>
        <label><input type="checkbox" name="score-gb-wininfo" value="46"><span data-i18n="GB_FANNAME_46"></span></label>
        <label><input type="checkbox" name="score-gb-wininfo" value="47"><span data-i18n="GB_FANNAME_47"></span></label>
        <label><input type="checkbox" name="score-gb-wininfo" value="58"><span data-i18n="GB_FANNAME_58"></span></label>
@@ -614,8 +614,8 @@
        </div>
        <span><span data-i18n="GB_FANNAME_35"></span>食糊</span>
        <div class="output-option-group">
-        <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-3" value="25" />食糊張牌可以解釋做<span data-i18n="GB_FANNAME_35"></span>部分嗰陣，唔計<span data-i18n="GB_FANNAME_77"></span>／<span data-i18n="GB_FANNAME_78"></span>／<span data-i18n="GB_FANNAME_79"></span></label>
-        <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-3" value="0" checked />食糊張牌可以解釋做順子或者眼部分嗰陣，可計<span data-i18n="GB_FANNAME_77"></span>／<span data-i18n="GB_FANNAME_78"></span>／<span data-i18n="GB_FANNAME_79"></span></label>
+        <label title="世麻規則採用。"><input type="radio" name="score-gb-setting-3" value="25" />食糊章可以解釋做<span data-i18n="GB_FANNAME_35"></span>部分嗰陣，唔計<span data-i18n="GB_FANNAME_77"></span>／<span data-i18n="GB_FANNAME_78"></span>／<span data-i18n="GB_FANNAME_79"></span></label>
+        <label title="MIL規則採用。"><input type="radio" name="score-gb-setting-3" value="0" checked />食糊章可以解釋做順子或者眼部分嗰陣，可計<span data-i18n="GB_FANNAME_77"></span>／<span data-i18n="GB_FANNAME_78"></span>／<span data-i18n="GB_FANNAME_79"></span></label>
        </div>
        <span>叫多扉食糊</span>
        <div class="output-option-group">
@@ -880,9 +880,9 @@
   <div class="output-time">v4.8.7</div>
   <div class="output-time">聯絡作者：<a href="https://x.com/akiko36000" style="color: inherit;">三倍滿自動姬</a></div>
  </div>
- <script src="mahjong.js?v=202608081945"></script>
- <script src="mahjong-document.js?v=202608081945"></script>
- <script src="mahjong-worker-lang.js?v=202608081945"></script>
+ <script src="mahjong.js?v=202608082307"></script>
+ <script src="mahjong-document.js?v=202608082307"></script>
+ <script src="mahjong-worker-lang.js?v=202608082307"></script>
  <script>
   function tilesInfo(tcnt) {
    const meld = Math.floor(tcnt / 3);

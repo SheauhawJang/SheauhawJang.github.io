@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202608081945");
-importScripts("mahjong-score.js?v=202608081945");
-importScripts("mahjong-worker-lang.js?v=202608081945");
+importScripts("mahjong.js?v=202608082307");
+importScripts("mahjong-score.js?v=202608082307");
+importScripts("mahjong-worker-lang.js?v=202608082307");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -142,12 +142,16 @@ function normalStep() {
     let output = getWaitingType(step) + "\n";
     postMessage({ output, brief: getWaitingType(step) });
     let dvd = undefined;
-    if (step === -1 && full_tcnt > 0) {
+    let win = step === -1 && full_tcnt > 0;
+    let ready = step === 0 && full_tcnt === tcnt + 1;
+    if (win || ready) {
+        if (ready) ++tiles[JokerC];
         dvd = windvd(tiles, full_tcnt);
         const ots = WinOutput(tiles, full_tcnt, dvd.dvd, MAX_OUTPUT_LENGTH);
-        output += loc.windvd + `${loc.colon}\n`;
+        output += (ready ? loc.readydvd : loc.windvd) + `${loc.colon}\n`;
         output += ots.map((a) => `<div class="card-container">${getWinningLine(a)}</div>`).join("");
-        if (BigInt(ots.length) < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - BigInt(ots.length)} ${loc.windvd_else_tail}`;
+        if (BigInt(ots.length) < dvd.cnt) output += `${loc.windvd_else_head} ${dvd.cnt - BigInt(ots.length)} ${ready ? loc.readydvd_else_tail : loc.windvd_else_tail}`;
+        if (ready) --tiles[JokerC];
     }
     const r = printWaiting(
         step,

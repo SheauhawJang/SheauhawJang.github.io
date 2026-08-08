@@ -689,12 +689,12 @@ function GBKPC(ck, ek, cp, setting, fourteen_type, info) {
         ((v += 88), f.push(5), (must_pengpeng = fourteen_type));
         if (setting[30])
             if (ck === 2) ((v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true));
-            else if (ck === 1 && (setting[30] === 1 || cp === 0)) ((v += 2), f.push(67), (has_single_ck = true));
+            else if (ck === 1) ((v += 2), f.push(67), (has_single_ck = true));
     } else if (ck + ek === 3) {
         ((v += 32), f.push(17));
         if (setting[30])
             if (ck === 2) ((v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true));
-            else if (ck === 1 && (setting[30] === 1 || cp === 0)) ((v += 2), f.push(67), (has_single_ck = true));
+            else if (ck === 1) ((v += 2), f.push(67), (has_single_ck = true));
     } else if (ck === 2) ((v += GBScoreArray[53] = setting[23] ? 8 : 6), f.push(53), (must_2anke = true));
     else if (ek === 2) ((v += 4), f.push(57));
     else if (ck + ek === 2) {

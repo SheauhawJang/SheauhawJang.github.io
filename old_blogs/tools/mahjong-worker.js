@@ -1,6 +1,6 @@
-importScripts("mahjong.js?v=202608082307");
-importScripts("mahjong-score.js?v=202608082307");
-importScripts("mahjong-worker-lang.js?v=202608082307");
+importScripts("mahjong.js?v=202608081945");
+importScripts("mahjong-score.js?v=202608081945");
+importScripts("mahjong-worker-lang.js?v=202608081945");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -881,7 +881,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     if (setting[48] === 1) (--JPScoreArray0[31], --JPScoreArray0[28]);
     if (setting[54]) JPScoreArray0[70] = JPScoreArray1[70] = [0, 2, 3][setting[54]];
     if (setting[55]) loc.JP_YAKUNAME_70 = loc.JP_YAKUNAME_70_EX;
-    let infoans = { fan: [], valfan: 0, yakuman: 0, delete: 0 };
+    let infoans = { ...eans_jp, delete: 0 };
     let riichi = false;
     function getSpecial(f) {
         let aka = 0;

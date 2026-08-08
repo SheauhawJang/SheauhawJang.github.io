@@ -346,6 +346,11 @@ html {
     .card-div.hover-preview-transfer .card-overlay::after { content: '↓'; }
     .card-div.hover-preview-sort .card-overlay::after { content: '⇄'; }
     .meld-group.open-meld .card-div:not(.rotated-tile):hover .card-overlay::after { content: '↻'; }
+
+    #input-pic-dorap .card-div:not(.removable-tile),
+    #input-pic-urap .card-div:not(.removable-tile) {
+        pointer-events: none;
+    }
 }
 
 .card-div:has(.card-overlay) {

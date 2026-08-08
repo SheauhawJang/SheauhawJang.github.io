@@ -23,10 +23,11 @@
    <a onclick="updateCardSkin('nn')">ニキ牌畫</a>
   </div>
   <div class="language-bar-group">
-   <a href="mahjong.html">简体中文</a>
-   <a href="mahjong-tw.html">正體中文</a>
-   <a>日本語</a>
-   <a href="mahjong-en.html">English</a>
+   <a lang="zh-CN" href="mahjong.html">简体中文</a>
+   <a lang="zh-TW" href="mahjong-tw.html">正體中文</a>
+   <a lang="zh-HK" href="mahjong-hk.html">粵語</a>
+   <a lang="ja-JP">日本語</a>
+   <a lang="en-US" href="mahjong-en.html">English</a>
   </div>
  </div>
  <h1>麻雀牌理・点数計算ツール</h1>
@@ -342,7 +343,7 @@
      <details>
       <summary>ルール設定</summary>
       <div class="output-options">
-       <span><span data-i18n="yakuman"></span></span>
+       <span data-i18n="yakuman"></span>
        <div class="output-option-group">
         <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span>役</label>
         <label title="XJTUルールでは適用される。新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグ・XJTU七星杯・EMAルールでは適用されない。"><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
@@ -354,7 +355,7 @@
         <label title="雀魂・天鳳・XJTUルール・EMAルールでは適用される。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
         <label title="新報知ルール・最高位戦ルール・連盟ルール・協会ルール・RMUルール・全段審ルール・Mリーグでは適用される。"><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
        </div>
-       <span><span data-i18n="kiri_mangan"></span></span>
+       <span data-i18n="kiri_mangan"></span>
        <div class="output-option-group">
         <label title="最高位戦ルール・連盟WRCルール・協会ルール・RMUルール・Mリーグでは適用される。最高位戦Classicルール・連盟公式ルールでは適用されない。"><input type="radio" name="score-jp-setting-3" value="7" />あり</label>
         <label><input type="radio" name="score-jp-setting-3" value="0" checked />なし</label>
@@ -369,7 +370,7 @@
         <label><input type="radio" name="score-jp-setting-2" value="6" checked /><span data-i18n="JP_YAKUNAME_10"></span>の役</label>
         <label><input type="radio" name="score-jp-setting-2" value="0" /><span data-i18n="JP_FUNAME_11"></span>の<span data-i18n="JP_FU_unit"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_12"></span></span>
+       <span data-i18n="JP_YAKUNAME_12"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-10" value="0" checked /><span data-i18n="JP_FUNAME_11"></span><span data-i18n="JP_FU_unit"></span>を加算する</label>
         <label><input type="radio" name="score-jp-setting-10" value="16" /><span data-i18n="JP_FUNAME_11"></span><span data-i18n="JP_FU_unit"></span>を認めない</label>
@@ -387,7 +388,7 @@
         <label><input type="checkbox" name="score-jp-setting" value="52" /><span data-i18n="JP_YAKUNAME_69"></span></label>
         <label><input type="checkbox" name="score-jp-setting" value="53" /><span data-i18n="JP_YAKUNAME_100"></span></label>
         <label><input type="radio" name="score-jp-setting-22" value="0" checked />ツモ損</label>
-        <label><input type="radio" name="score-jp-setting-22" value="50, 1" />北家折半</label>
+        <label title="雀魂のツモ損無効のモードでは適用される。"><input type="radio" name="score-jp-setting-22" value="50, 1" />北家折半</label>
         <label><input type="radio" name="score-jp-setting-22" value="50, 3" />北家親払い</label>
         <label><input type="radio" name="score-jp-setting-22" value="50, 2" />折半払い</label>
         <label><input type="radio" name="score-jp-setting-22" value="50, 6" />幺二比例払い</label>
@@ -406,24 +407,24 @@
         <label title="雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-5" value="9,2" /><span data-i18n="yakuman"></span></label>
         <label title="連盟ルール・EMAルールでは適用される。"><input type="checkbox" name="score-jp-setting" value="39" />通常役と複合しない</label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_40"></span></span>
+       <span data-i18n="JP_YAKUNAME_40"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-6" value="0" /><span data-i18n="JP_YAKUNAME_39"></span></label>
         <label title="XJTUルール・雀魂のローカル役モードでは適用される。"><input type="radio" name="score-jp-setting-6" value="10" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_49"></span></span>
+       <span data-i18n="JP_YAKUNAME_49"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-12" value="18,1" /><span data-i18n="JP_YAKUNAME_4"></span>・<span data-i18n="JP_YAKUNAME_31"></span></label>
         <label><input type="radio" name="score-jp-setting-12" value="0" checked /><span data-i18n="JP_YAKUNAME_44"></span></label>
         <label><input type="radio" name="score-jp-setting-12" value="18,2" /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_17"></span></span>
+       <span data-i18n="JP_YAKUNAME_17"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-4" value="0" checked />２<span data-i18n="JP_FAN_unit"></span> 25 <span data-i18n="JP_FU_unit"></span></label>
         <label><input type="radio" name="score-jp-setting-4" value="8,1" />１<span data-i18n="JP_FAN_unit"></span> 50 <span data-i18n="JP_FU_unit"></span></label>
         <label><input type="radio" name="score-jp-setting-4" value="8,2" />０<span data-i18n="JP_FAN_unit"></span> 100 <span data-i18n="JP_FU_unit"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_29"></span></span>
+       <span data-i18n="JP_YAKUNAME_29"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-20" value="47,2" /><span data-i18n="JP_YAKUNAME_11"></span>二つ</label>
         <label><input type="radio" name="score-jp-setting-20" value="47,1" />２<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
@@ -436,17 +437,17 @@
         <label><input type="radio" name="score-jp-setting-21" value="48,2" />一<span data-i18n="JP_FAN_unit"></span>増し・<span data-i18n="JP_YAKUNAME_17"></span>除外</label>
         <label><input type="radio" name="score-jp-setting-21" value="48,1" />増しなし</label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_50"></span></span>
+       <span data-i18n="JP_YAKUNAME_50"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-13" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-13" value="19" />２<span data-i18n="JP_FAN_unit"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_51"></span></span>
+       <span data-i18n="JP_YAKUNAME_51"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-14" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-14" value="20" /><span data-i18n="yakuman"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_70"></span></span>
+       <span data-i18n="JP_YAKUNAME_70"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-23" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-23" value="54,1" />２<span data-i18n="JP_FAN_unit"></span></label>
@@ -455,13 +456,13 @@
         <label><input type="checkbox" name="score-jp-setting" value="56" />場風刻不可</label>
         <label><input type="checkbox" name="score-jp-setting" value="57" />親限定</label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_48"></span></span>
+       <span data-i18n="JP_YAKUNAME_48"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-11" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-11" value="17,2" />１<span data-i18n="JP_FAN_unit"></span></label>
         <label><input type="radio" name="score-jp-setting-11" value="17" />２<span data-i18n="JP_FAN_unit"></span>・食い下がり</label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_52"></span></span>
+       <span data-i18n="JP_YAKUNAME_52"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-15" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-15" value="21,1" />２<span data-i18n="JP_FAN_unit"></span></label>
@@ -470,7 +471,7 @@
         <label><input type="radio" name="score-jp-setting-15" value="21,4" />２<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
         <label><input type="radio" name="score-jp-setting-15" value="21,5" />３<span data-i18n="JP_FAN_unit"></span>・門前のみ</label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_53"></span></span>
+       <span data-i18n="JP_YAKUNAME_53"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-16" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-16" value="22,3" />４<span data-i18n="JP_FAN_unit"></span></label>
@@ -480,7 +481,7 @@
         <label><input type="radio" name="score-jp-setting-16" value="22,1" /><span data-i18n="yakuman"></span></label>
         <label><input type="radio" name="score-jp-setting-16" value="22,2" /><span data-i18n="yakuman"></span>・門前のみ</label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_67"></span></span>
+       <span data-i18n="JP_YAKUNAME_67"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-17" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-17" value="40,1" />１<span data-i18n="JP_FAN_unit"></span></label>
@@ -503,7 +504,7 @@
         <label><input type="checkbox" name="score-jp-setting" value="30" /><span data-i18n="JP_YAKUNAME_58"></span><span data-i18n="yakuman"></span></label>
         <label><input type="checkbox" name="score-jp-setting" value="31" /><span data-i18n="JP_YAKUNAME_59"></span><span data-i18n="yakuman"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_68"></span></span>
+       <span data-i18n="JP_YAKUNAME_68"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-18" value="0" checked />なし</label>
         <label><input type="radio" name="score-jp-setting-18" value="44" />１<span data-i18n="JP_FAN_unit"></span></label>
@@ -518,7 +519,7 @@
         <label><input type="checkbox" name="score-jp-setting" value="37" /><span data-i18n="JP_YAKUNAME_65"></span>５<span data-i18n="JP_FAN_unit"></span></label>
         <label><input type="checkbox" name="score-jp-setting" value="38" /><span data-i18n="JP_YAKUNAME_66"></span>・<span data-i18n="yakuman"></span></label>
        </div>
-       <span><span data-i18n="JP_YAKUNAME_71"></span></span>
+       <span data-i18n="JP_YAKUNAME_71"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-jp-setting-24" value="0" checked onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true], true)" />なし</label>
         <label><input type="radio" name="score-jp-setting-24" value="59,1" onchange="SwitchOption(this, ['jp-open-riichi', 'jp-open-riichi-sub'], [true])" />２<span data-i18n="JP_FAN_unit"></span>・<span data-i18n="JP_YAKUNAME_16"></span>３<span data-i18n="JP_FAN_unit"></span></label>
@@ -650,12 +651,12 @@
         <label id="gb-wallet-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="71" checked /><span data-i18n="GB_FANNAME_90"></span></label>
         <label id="gb-purple-pairs" style="display: none;"><input type="checkbox" name="score-gb-setting" value="74" checked /><span data-i18n="GB_FANNAME_91"></span></label>
        </div>
-       <span><span data-i18n="GB_FANNAME_53"></span></span>
+       <span data-i18n="GB_FANNAME_53"></span>
        <div class="output-option-group">
         <label title="國標原文・問答集ルール・MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="0" checked />6 <span data-i18n="GB_FAN_unit"></span></label>
         <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-1" value="23" />8 <span data-i18n="GB_FAN_unit"></span></label>
        </div>
-       <span><span data-i18n="GB_FANNAME_82"></span></span>
+       <span data-i18n="GB_FANNAME_82"></span>
        <div class="output-option-group">
         <label title="MILルール・JMSAルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="0" checked />5 <span data-i18n="GB_FAN_unit"></span></label>
         <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-2" value="24,1" />6 <span data-i18n="GB_FAN_unit"></span></label>
@@ -668,7 +669,7 @@
         <label title="WMOルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,1" />暗刻・暗槓ともに加算</label>
         <label title="問答集ルールでは適用される。"><input type="radio" name="score-gb-setting-6" value="30,2" />とある複雑な計算法</label>
        </div>
-       <span><span data-i18n="GB_FANNAME_46"></span></span>
+       <span data-i18n="GB_FANNAME_46"></span>
        <div class="output-option-group">
         <label><input type="checkbox" name="score-gb-setting" value="31,1" /><span data-i18n="GB_FANNAME_74"></span>加算なし</label>
         <label title="疑問解説では適用される。"><input type="checkbox" name="score-gb-setting" value="31,2" /><span data-i18n="GB_FANNAME_74"></span>加算なし・<span data-i18n="GB_FANNAME_67"></span> 1 <span data-i18n="GB_FAN_unit"></span>除く</label>
@@ -680,7 +681,7 @@
         <label><input type="checkbox" name="score-gb-setting" value="34" /><span data-i18n="GB_FANNAME_38"></span>と<span data-i18n="GB_FANNAME_73"></span>と複合する</label>
         <label><input type="checkbox" name="score-gb-setting" value="35" /><span data-i18n="GB_FANNAME_9"></span>と<span data-i18n="GB_FANNAME_73"></span>と複合する</label>
        </div>
-       <span><span data-i18n="GB_FANNAME_4"></span></span>
+       <span data-i18n="GB_FANNAME_4"></span>
        <div class="output-option-group">
         <label title="MILルールでは適用される。"><input type="radio" name="score-gb-setting-5" value="0" checked />一つの<span data-i18n="GB_FANNAME_73"></span>を加算しない</label>
         <label><input type="radio" name="score-gb-setting-5" value="27" />全ての<span data-i18n="GB_FANNAME_73"></span>を加算しない</label>
@@ -859,49 +860,49 @@
      <details>
       <summary>ルール設定</summary>
       <div class="output-options">
-       <span><span data-i18n="SC_FAN_NAME_16"></span></span>
+       <span data-i18n="SC_FAN_NAME_16"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-1" value="11,2" checked />符増し</label>
         <label><input type="radio" name="score-sc-setting-1" value="11,1" />飜増し</label>
         <label><input type="radio" name="score-sc-setting-1" value="0" />増しなし</label>
        </div>
-       <span><span data-i18n="SC_max_fan"></span></span>
+       <span data-i18n="SC_max_fan"></span>
        <div class="output-option-group">
         <label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span><span data-i18n="SC_max_fan"></span></label>
         <label><input type="checkbox" name="score-sc-setting" value="16" /><span data-i18n="SC_max_fan"></span>以降１<span data-i18n="SC_FAN_unit"></span>につき<input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />符加算</label>
        </div>
-       <span><span data-i18n="SC_FAN_NAME_2"></span></span>
+       <span data-i18n="SC_FAN_NAME_2"></span>
        <div class="output-option-group">
         <label><input type="checkbox" name="score-sc-setting" value="1" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_5"></span></label>
         <label><input type="checkbox" name="score-sc-setting" value="2" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
         <label><input type="checkbox" name="score-sc-setting" value="3" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_NAME_6"></span></label>
        </div>
-       <span><span data-i18n="SC_FAN_NAME_3"></span></span>
+       <span data-i18n="SC_FAN_NAME_3"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-2" value="0" checked />關閉</label>
         <label><input type="radio" name="score-sc-setting-2" value="4,2" />２<span data-i18n="SC_FAN_unit"></span></label>
         <label><input type="radio" name="score-sc-setting-2" value="4,3" />３<span data-i18n="SC_FAN_unit"></span></label>
         <label><input type="checkbox" name="score-sc-setting" value="5" /><span data-i18n="SC_FAN_ADJ_3"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
        </div>
-       <span><span data-i18n="SC_FAN_NAME_12"></span></span>
+       <span data-i18n="SC_FAN_NAME_12"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />關閉</label>
         <label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />３<span data-i18n="SC_FAN_unit"></span></label>
         <label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
        </div>
-       <span><span data-i18n="SC_FAN_NAME_13"></span></span>
+       <span data-i18n="SC_FAN_NAME_13"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />關閉</label>
         <label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />２<span data-i18n="SC_FAN_unit"></span></label>
         <label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
        </div>
-       <span><span data-i18n="SC_FAN_NAME_14"></span></span>
+       <span data-i18n="SC_FAN_NAME_14"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-5" value="0" checked />關閉</label>
         <label><input type="radio" name="score-sc-setting-5" value="8" />１<span data-i18n="SC_FAN_unit"></span></label>
         <label><input type="checkbox" name="score-sc-setting" value="14" /><span data-i18n="SC_FAN_NAME_4"></span>と複合する</label>
        </div>
-       <span><span data-i18n="SC_FAN_NAME_15"></span></span>
+       <span data-i18n="SC_FAN_NAME_15"></span>
        <div class="output-option-group">
         <label><input type="radio" name="score-sc-setting-6" value="0" checked />關閉</label>
         <label><input type="radio" name="score-sc-setting-6" value="9" />１<span data-i18n="SC_FAN_unit"></span></label>

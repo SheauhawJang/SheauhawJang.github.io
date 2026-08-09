@@ -1343,7 +1343,7 @@ function JP7Pairs(tids, infoans, tsumo, doras, uras, nuki, setting) {
     if (tsuiso) JPUpdateFan(gans, setting, setting[1] && setting[10] ? 40 : 39);
     let [sp, sped] = [tsuiso ? null : isShiftPairs(ot), false];
     if (sp) {
-        let sarr = [[[28, 56, 31, 59]], [[26, 54, 29, 57]], [[27, 55, 30, 58]]];
+        let sarr = [[28, 56, 31, 59], [26, 54, 29, 57], [27, 55, 30, 58]];
         if (setting[49]) sarr[0][0] = sarr[0][2] = -1;
         const c = sp.color;
         const [l, r] = c === -1 ? [0, 3] : [c, c + 1];

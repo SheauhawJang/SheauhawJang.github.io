@@ -628,13 +628,15 @@ html {
 
 .lang-group a {
     display: inline-flex;
-    align-items: center; /* 文字高度不同時付中對齊 */
-    line-height: 1; /* 統一行高，消除不同字符集高度的差異 */
+    align-items: center;
+    justify-content: center;
+    height: 30px; /* 固定高度，確保所有語言膠囊一致 */
+    line-height: 1;
     color: #78716c;
     text-decoration: none;
     font-size: 13.5px;
     font-weight: 600;
-    padding: 6px 14px;
+    padding: 0 14px;
     border-radius: 999px; /* Capsule shape */
     cursor: pointer;
     white-space: nowrap;

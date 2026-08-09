@@ -650,7 +650,7 @@
 				<div class="output-option-group">
 				 <label><input type="radio" name="score-gb-setting-15" value="62,1" onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true])" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
 				 <label><input type="radio" name="score-gb-setting-15" value="62,2" onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true])" />算作<span data-i18n="GB_FANNAME_88"></span></label>
-				 <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true], true)" />無特別定義</label>
+				 <label title="即視同下面嘅「第一巡食出」，用一樣嘅設定。"><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true], true)" />無特別定義</label>
 				</div>
 				<div class="output-option-group" id="gb-earth-options" style="display: none;">
 				 <label><input type="radio" name="score-gb-setting-9" value="50,3" checked />8 <span data-i18n="GB_FAN_unit"></span></label>
@@ -672,20 +672,21 @@
 			 </div>
 			 <span>第一巡自摸</span>
 			 <div>
+				
 				<div class="output-option-group">
-				 <label><input type="radio" name="score-gb-setting-12" value="55" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
-				 <label><input type="radio" name="score-gb-setting-12" value="0" checked />算作<span data-i18n="GB_FANNAME_88"></span></label>
-				</div>
-				<div class="output-option-group">
-				 <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />8 <span data-i18n="GB_FAN_unit"></span></label>
-				 <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />16 <span data-i18n="GB_FAN_unit"></span></label>
-				 <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />24 <span data-i18n="GB_FAN_unit"></span></label>
-				 <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />64 <span data-i18n="GB_FAN_unit"></span></label>
-				 <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3)" />88 <span data-i18n="GB_FAN_unit"></span></label>
-				 <label><input type="radio" name="score-gb-setting-11" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 3)" />關</label>
+				 <label><input type="radio" name="score-gb-setting-11" value="54,5" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3); SwitchOption(this, ['1', '2'].map((i) => `score-gb-12-${i}`), [true])" />8 <span data-i18n="GB_FAN_unit"></span></label>
+				 <label><input type="radio" name="score-gb-setting-11" value="54,4" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3); SwitchOption(this, ['1', '2'].map((i) => `score-gb-12-${i}`), [true])" />16 <span data-i18n="GB_FAN_unit"></span></label>
+				 <label><input type="radio" name="score-gb-setting-11" value="54,3" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3); SwitchOption(this, ['1', '2'].map((i) => `score-gb-12-${i}`), [true])" />24 <span data-i18n="GB_FAN_unit"></span></label>
+				 <label><input type="radio" name="score-gb-setting-11" value="54,2" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3); SwitchOption(this, ['1', '2'].map((i) => `score-gb-12-${i}`), [true])" />64 <span data-i18n="GB_FAN_unit"></span></label>
+				 <label><input type="radio" name="score-gb-setting-11" value="54,1" onchange="SwitchOption(this, 'gb-heaven', [true], false, 3); SwitchOption(this, ['1', '2'].map((i) => `score-gb-12-${i}`), [true])" />88 <span data-i18n="GB_FAN_unit"></span></label>
+				 <label><input type="radio" name="score-gb-setting-11" value="0" checked onchange="SwitchOption(this, 'gb-heaven', [true], true, 3); SwitchOption(this, ['1', '2'].map((i) => `score-gb-12-${i}`), [true], true)" />關</label>
 				 <label><input type="checkbox" name="score-gb-setting" value="56" />複合<span data-i18n="GB_FANNAME_62"></span></label>
 				 <label><input type="checkbox" name="score-gb-setting" value="57" />複合<span data-i18n="GB_FANNAME_56"></span></label>
 				 <label><input type="checkbox" name="score-gb-setting" value="58" />複合<span data-i18n="GB_FANNAME_80"></span></label>
+				
+				 <label id="score-gb-12-1"><input type="radio" name="score-gb-setting-12" value="55" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
+				 <label id="score-gb-12-2"><input type="radio" name="score-gb-setting-12" value="0" checked />算作<span data-i18n="GB_FANNAME_88"></span></label>
+
 				</div>
 			 </div>
 			 <span data-i18n="GB_FANNAME_84"></span>

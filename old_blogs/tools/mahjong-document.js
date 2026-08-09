@@ -153,8 +153,8 @@ function processInput() {
                     updateJPOutput.immediate("");
                     updateJPBrief.immediate("");
                     document.getElementById("time-output-score-jp").textContent = "Ready to start!";
-                    sf(() => document.getElementById("voice-button-jp").disabled = true);
-                    if (currentAudioController) currentAudioController.abort(), currentAudioController = null;
+                    sf(() => (document.getElementById("voice-button-jp").disabled = true));
+                    if (currentAudioController) (currentAudioController.abort(), (currentAudioController = null));
                     updateScoreVisiable(1, "block");
                     jp_worker = null;
                     jp_worker_info = newstepjp;
@@ -777,7 +777,7 @@ function subtileInput(t, k) {
 
 function hoverSubtileInput(btn, t, isHover) {
     const allClasses = ["hover-preview-meld", "hover-preview-transfer"];
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
+    document.querySelectorAll("#input-pic .removable-tile").forEach((tile) => {
         tile.classList.remove(...allClasses);
     });
     if (!isHover) return;
@@ -818,7 +818,7 @@ function hoverSubtileInput(btn, t, isHover) {
 }
 
 function hoverDeleteInput(btn, isHover) {
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
+    document.querySelectorAll("#input-pic .removable-tile").forEach((tile) => {
         tile.classList.remove("backspace-hover");
     });
     if (!isHover) return;
@@ -832,25 +832,25 @@ function hoverDeleteInput(btn, isHover) {
 
 function hoverClearInput(btn, isHover) {
     const targets = document.querySelectorAll("#input-pic .card-div, .removable-tile");
-    targets.forEach(tile => {
+    targets.forEach((tile) => {
         tile.classList.remove("backspace-hover");
     });
     if (!isHover) return;
     if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
 
-    targets.forEach(tile => {
+    targets.forEach((tile) => {
         tile.classList.add("backspace-hover");
     });
 }
 
 function hoverSortInput(btn, isHover) {
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
+    document.querySelectorAll("#input-pic .removable-tile").forEach((tile) => {
         tile.classList.remove("hover-preview-sort");
     });
     if (!isHover) return;
     if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
 
-    document.querySelectorAll("#input-pic .removable-tile").forEach(tile => {
+    document.querySelectorAll("#input-pic .removable-tile").forEach((tile) => {
         tile.classList.add("hover-preview-sort");
     });
 }
@@ -876,22 +876,12 @@ function processGBScore() {
     let wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked').value);
     let info = document.querySelectorAll('input[name="score-gb-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
-    if (wt === -1) wt = 0, info.push(-1);
+    if (wt === -1) ((wt = 0), info.push(-1));
     let sq = Array.from(document.querySelectorAll('input[name="score-gb-setting"]:checked'));
-    let sqall = Array.from(document.querySelectorAll('input[name="score-gb-setting"]'))
-    for (let i = 0; i <= GB_RADIO_MAX; ++i) {
-        sq.push(...Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`)));
-        sqall.push(...Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]`)));
-    }
-    sq = sq.map(x => x.value);
-    const force = ["65", "66", "67", "68", "69"];
-    if (force.every(x => !sq.includes(x))) {
-        sq.push(...force);
-        if (["70", "63", "64"].every(x => !sq.includes(x))) sq.push("70");
-    }
+    for (let i = 0; i <= GB_RADIO_MAX; ++i) sq.push(...Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`)));
     let setting = Array(GB_SETTING_SIZE).fill(0);
     for (let i = 0; i < sq.length; ++i) {
-        const [a, b] = sq[i].split(",");
+        const [a, b] = sq[i].value.split(",");
         if (Number(a) === 0 && b === undefined) continue;
         setting[a] = Number(b ?? 1);
     }
@@ -916,7 +906,7 @@ function processGBScore() {
 let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 24;
-const JP_SETTING_SIZE = 128;
+const JP_SETTING_SIZE = 61;
 const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 let JPResult = [];
@@ -929,18 +919,15 @@ function processJPScore() {
     updateJPOutput("");
     updateJPBrief("");
     document.getElementById("time-output-score-jp").textContent = "Calculating......";
-    sf(() => document.getElementById("voice-button-jp").disabled = true);
-    if (currentAudioController) currentAudioController.abort(), currentAudioController = null;
+    sf(() => (document.getElementById("voice-button-jp").disabled = true));
+    if (currentAudioController) (currentAudioController.abort(), (currentAudioController = null));
     const gw = Number(document.querySelector('input[name="score-jp-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-jp-local-wind"]:checked').value);
     const wt = Number(document.querySelector('input[name="score-jp-wintype"]:checked').value);
     let info = document.querySelectorAll('input[name="score-jp-wininfo"]:checked');
     info = Array.from(info).map((x) => Number(x.value));
     let sq = Array.from(document.querySelectorAll('input[name="score-jp-setting"]:checked'));
-    for (let i = 0; i <= JP_RADIO_MAX; ++i) {
-        const ssq = Array.from(document.querySelectorAll(`input[name="score-jp-setting-${i}"]:checked`));
-        sq.push(...ssq);
-    }
+    for (let i = 0; i <= JP_RADIO_MAX; ++i) sq.push(...Array.from(document.querySelectorAll(`input[name="score-jp-setting-${i}"]:checked`)));
     let setting = Array(JP_SETTING_SIZE).fill(0);
     for (let i = 0; i < sq.length; ++i) {
         const [a, b] = sq[i].value.split(",");
@@ -959,7 +946,7 @@ function processJPScore() {
         updateJPOutput.immediate(e.data.result.output);
         updateJPBrief.immediate(e.data.result.brief);
         JPResult = e.data.result.audio;
-        if (JPResult) sf(() => document.getElementById("voice-button-jp").disabled = false);
+        if (JPResult) sf(() => (document.getElementById("voice-button-jp").disabled = false));
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
     };
     jp_worker.postMessage({ task: "jp-score", aids, tiles, substeps: jp_worker_info, gw, mw, wt, info, setting, lang });
@@ -1234,7 +1221,7 @@ function updateCardSkin(skin) {
     if (customSelect && skin) {
         const trigger = customSelect.querySelector(".select-trigger");
         const options = customSelect.querySelectorAll(".select-option");
-        options.forEach(opt => {
+        options.forEach((opt) => {
             const isSelected = opt.getAttribute("data-value") === skin;
             opt.classList.toggle("selected", isSelected);
             if (isSelected && trigger) {
@@ -1289,10 +1276,12 @@ function loadCheckbox(key, st = localStorage) {
     const cbs = document.querySelectorAll(`input[name="${key}"]`);
     let cvs = new Set();
     const cvstorage = st.getItem(key);
+    const cvrange = st.getItem("max_" + key);
+    const rangecheck = (cb) => cvrange === null || Number(cb.value) < Number(cvrange);
     if (cvstorage !== null)
         try {
             cvs = new Set(JSON.parse(cvstorage));
-            cbs.forEach((cb) => ((cb.checked = cvs.has(cb.value)), cb.dispatchEvent(new Event("change"))));
+            cbs.forEach((cb) => (rangecheck(cb) && (cb.checked = cvs.has(cb.value)), cb.dispatchEvent(new Event("change"))));
         } catch {}
 
     const cf = debounce(() => {
@@ -1327,8 +1316,10 @@ function loadInputbox(key, st = localStorage) {
     for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) e.addEventListener("change", () => updateScoreTabUser(i));
 }
 function loadGBStorage() {
+    if (localStorage.getItem("max_score-gb-setting") === null) localStorage.setItem("max_score-gb-setting", 45);
     loadCheckbox("score-gb-setting");
     for (let i = 0; i <= GB_RADIO_MAX; ++i) loadRadio(`score-gb-setting-${i}`);
+    localStorage.setItem("max_score-gb-setting", GB_SETTING_SIZE);
 
     loadInputbox("score-gb-setting-fan");
     loadInputbox("score-gb-setting-blind");
@@ -1340,8 +1331,10 @@ function loadGBStorage() {
     loadCheckbox("score-gb-wininfo", sessionStorage);
 }
 function loadJPStorage() {
+    if (localStorage.getItem("max_score-jp-setting") === null) localStorage.setItem("max_score-jp-setting", 61);
     loadCheckbox("score-jp-setting");
     for (let i = 0; i <= JP_RADIO_MAX; ++i) loadRadio(`score-jp-setting-${i}`);
+    localStorage.setItem("max_score-jp-setting", JP_SETTING_SIZE);
 
     loadInputbox("score-jp-setting-fan");
     loadInputbox("score-jp-voice-char");
@@ -1363,19 +1356,19 @@ function loadSCStorage() {
 }
 function initCustomSelects() {
     const customSelects = document.querySelectorAll(".custom-select");
-    customSelects.forEach(select => {
+    customSelects.forEach((select) => {
         const trigger = select.querySelector(".select-trigger");
         const options = select.querySelectorAll(".select-option");
 
         trigger.addEventListener("click", (e) => {
             e.stopPropagation();
-            document.querySelectorAll(".custom-select").forEach(other => {
+            document.querySelectorAll(".custom-select").forEach((other) => {
                 if (other !== select) other.classList.remove("open");
             });
             select.classList.toggle("open");
         });
 
-        options.forEach(opt => {
+        options.forEach((opt) => {
             opt.addEventListener("click", (e) => {
                 e.stopPropagation();
                 const value = opt.getAttribute("data-value");
@@ -1386,7 +1379,7 @@ function initCustomSelects() {
     });
 
     document.addEventListener("click", () => {
-        document.querySelectorAll(".custom-select").forEach(select => {
+        document.querySelectorAll(".custom-select").forEach((select) => {
             select.classList.remove("open");
         });
     });
@@ -1456,7 +1449,7 @@ function processGBSetting(id) {
     for (let i = 0; i <= GB_RADIO_MAX; ++i) {
         if (radio[i] == undefined) continue;
         const rds = document.querySelectorAll(`input[name="score-gb-setting-${i}"]`);
-        rds.forEach((r) => (r.checked = r.value == radio[i], r.dispatchEvent(new Event("change"))));
+        rds.forEach((r) => ((r.checked = r.value == radio[i]), r.dispatchEvent(new Event("change"))));
     }
 }
 function processJPSetting(id) {
@@ -1582,7 +1575,7 @@ function SwitchOption(es, id, rge = [true, false], reverse = false, group = 0) {
     if (!Array.isArray(id)) id = [id];
     id.forEach((id) => {
         let signal = optionMap.get(id);
-        if (!signal) optionMap.set(id, signal = new Map());
+        if (!signal) optionMap.set(id, (signal = new Map()));
         signal.set(group, es.checked !== reverse);
         const et = document.getElementById(id);
         if (et !== null) et.style.display = Array.from(signal.values()).some(Boolean) ? "" : "none";
@@ -1691,27 +1684,27 @@ async function convertQingque() {
 let currentAudioController = null;
 async function playResultAudio(playList, character = "Ichihime") {
     console.log(playList, character);
-    if (currentAudioController) currentAudioController.abort(), currentAudioController = null;
+    if (currentAudioController) (currentAudioController.abort(), (currentAudioController = null));
     const controller = new AbortController();
     currentAudioController = controller;
     const { signal } = controller;
-    const audioPool = playList.map(item => {
-        if (typeof item === 'number') return item;
+    const audioPool = playList.map((item) => {
+        if (typeof item === "number") return item;
         const audio = new Audio(`voices/${character}/${item}`);
         audio.preload = "auto";
         return audio;
     });
     for (const item of audioPool) {
         if (signal.aborted) break;
-        if (typeof item === 'number') {
-            await new Promise(resolve => {
+        if (typeof item === "number") {
+            await new Promise((resolve) => {
                 let timer = null;
                 const finish = () => {
                     clearTimeout(timer);
-                    signal.removeEventListener('abort', finish);
+                    signal.removeEventListener("abort", finish);
                     resolve();
-                }
-                signal.addEventListener('abort', finish);
+                };
+                signal.addEventListener("abort", finish);
                 timer = setTimeout(finish, item);
             });
             continue;
@@ -1724,10 +1717,10 @@ async function playResultAudio(playList, character = "Ichihime") {
                 resolve();
             };
             const finish = () => {
-                signal.removeEventListener('abort', abortHandler);
+                signal.removeEventListener("abort", abortHandler);
                 resolve();
-            }
-            signal.addEventListener('abort', abortHandler);
+            };
+            signal.addEventListener("abort", abortHandler);
             audio.onended = finish;
             audio.onerror = finish;
             audio.play().catch(finish);
@@ -1737,5 +1730,3 @@ async function playResultAudio(playList, character = "Ichihime") {
         currentAudioController = null;
     }
 }
-
-

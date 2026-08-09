@@ -634,7 +634,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         const GBPrintSeq = ArraySeq(0, GBScoreArray.length)
             .filter((x) => GBScoreArray[x] !== undefined)
             .sort((a, b) => GBScoreArray[b] - GBScoreArray[a]);
-        for (const i of GBPrintSeq) if (fans[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${Math.max(GBScoreArray[i], 1)} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
+        for (const i of GBPrintSeq) if (fans[i] && GBScoreArray[i]) fanopt.push(makeTableFanLineLR(makeFanName(loc[`GB_FANNAME_${i}`]), `${fans[i] < 0 ? "-" : ""}${Math.max(GBScoreArray[i], 1)} ${loc.GB_FAN_unit}`, Math.abs(fans[i]) > 1 ? `×${Math.abs(fans[i])}` : ""));
         return makeTable(fanopt.join(""));
     }
     let [infov, infof] = [0, []];
@@ -654,6 +654,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (setting[62] === 1) loc.GB_FANNAME_87 = loc.GB_FANNAME_8A;
     else if (setting[62] === 2) loc.GB_FANNAME_87 = loc.GB_FANNAME_88;
     if (info.includes(84)) ((infov += GBScoreArray[84] = setting[60]), infof.push(84));
+    console.log(setting[60]);
     if (wt) {
         if (mw === 27 && setting[46] && (info.includes(86) || (setting[50] && info.includes(87)))) {
             ((infov += GBScoreArray[86]), infof.push(86));

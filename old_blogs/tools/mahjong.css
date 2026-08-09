@@ -613,11 +613,15 @@ html {
 .lang-group {
     display: flex;
     flex-wrap: wrap;
+    align-items: center; /* 連結徠首行按中線對齊 */
     gap: 4px 6px;
     margin-left: auto; /* 始終靠右，換行後也在右側 */
 }
 
 .lang-group a {
+    display: inline-flex;
+    align-items: center; /* 文字高度不同時付中對齊 */
+    line-height: 1; /* 統一行高，消除不同字符集高度的差異 */
     color: #78716c;
     text-decoration: none;
     font-size: 13.5px;
@@ -625,6 +629,7 @@ html {
     padding: 6px 14px;
     border-radius: 999px; /* Capsule shape */
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .lang-group a:hover, .lang-group a.active {

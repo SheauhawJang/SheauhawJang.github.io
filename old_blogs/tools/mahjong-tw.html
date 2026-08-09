@@ -648,11 +648,11 @@
        <span>地牌和</span>
        <div>
         <div class="output-option-group">
-         <label><input type="radio" name="score-gb-setting-15" value="62,1" onchange="SwitchOption(this, 'gb-earth', [true])" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
-         <label><input type="radio" name="score-gb-setting-15" value="62,2" onchange="SwitchOption(this, 'gb-earth', [true])" />算作<span data-i18n="GB_FANNAME_88"></span></label>
-         <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, 'gb-earth', [true], true)" />無特別定義</label>
+         <label><input type="radio" name="score-gb-setting-15" value="62,1" onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true])" />算作<span data-i18n="GB_FANNAME_8A"></span></label>
+         <label><input type="radio" name="score-gb-setting-15" value="62,2" onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true])" />算作<span data-i18n="GB_FANNAME_88"></span></label>
+         <label><input type="radio" name="score-gb-setting-15" value="0" checked onchange="SwitchOption(this, ['gb-earth', 'gb-earth-options'], [true], true)" />無特別定義</label>
         </div>
-        <div class="output-option-group">
+        <div class="output-option-group" id="gb-earth-options" style="display: none;">
          <label><input type="radio" name="score-gb-setting-9" value="50,3" checked />8 <span data-i18n="GB_FAN_unit"></span></label>
          <label><input type="radio" name="score-gb-setting-9" value="50,4" />16 <span data-i18n="GB_FAN_unit"></span></label>
          <label><input type="radio" name="score-gb-setting-9" value="50,2" />24 <span data-i18n="GB_FAN_unit"></span></label>

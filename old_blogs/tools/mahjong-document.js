@@ -780,6 +780,7 @@ function hoverSubtileInput(btn, t, isHover) {
     document.querySelectorAll("#input-pic .removable-tile").forEach((tile) => {
         tile.classList.remove(...allClasses);
     });
+    document.querySelectorAll("#input-pic .ghost-tile").forEach((g) => g.remove());
     if (!isHover) return;
     if (btn && btn.disabled) return; // 如果按鈕處於禁用狀態，不執行任何效果
 
@@ -788,6 +789,7 @@ function hoverSubtileInput(btn, t, isHover) {
 
     const tids = ipids[0];
     let count = 1; // 預設只高亮最後 1 張
+    let ghostCount = 0; // 需要補的虛擬牌數量
     // t=0,1,2 → 副露（→）；t=3,4,5 → 轉移（↓）
     const cls = t <= 2 ? "hover-preview-meld" : "hover-preview-transfer";
 
@@ -795,18 +797,20 @@ function hoverSubtileInput(btn, t, isHover) {
         // 吃：固定抬起最後 3 張牌
         count = 3;
     } else if (t === 1) {
-        // 碰：如果是刻子抬起三張；否則一張
+        // 碰：如果是刻子抬起三張；否則一張 + 補 2 張虛擬牌
         if (tids.length >= 3 && isTri(tids.slice(-3).map((a) => a.id))) {
             count = 3;
         } else {
             count = 1;
+            ghostCount = 2;
         }
     } else if (t === 2) {
-        // 槓：如果是槓子抬起四張；否則一張
+        // 槓：如果是槓子抬起四張；否則一張 + 補 3 張虛擬牌
         if (tids.length >= 4 && isQuad(tids.slice(-4).map((a) => a.id))) {
             count = 4;
         } else {
             count = 1;
+            ghostCount = 3;
         }
     }
 
@@ -814,6 +818,19 @@ function hoverSubtileInput(btn, t, isHover) {
 
     for (let idx = handTiles.length - 1; idx >= handTiles.length - count; --idx) {
         handTiles[idx].classList.add(cls);
+    }
+
+    // 補虛擬牌：複製最後一張牌，加上 ghost-tile 屬性
+    if (ghostCount > 0) {
+        const lastTile = handTiles[handTiles.length - 1];
+        for (let i = 0; i < ghostCount; ++i) {
+            const ghost = lastTile.cloneNode(true);
+            ghost.classList.remove("removable-tile", ...allClasses);
+            ghost.classList.add("ghost-tile");
+            lastTile.after(ghost);
+            // 延一幀再加 class，讓 CSS transition 有初始狀態可以過渡
+            requestAnimationFrame(() => ghost.classList.add(cls));
+        }
     }
 }
 

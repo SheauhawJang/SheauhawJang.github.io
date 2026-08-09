@@ -654,7 +654,6 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (setting[62] === 1) loc.GB_FANNAME_87 = loc.GB_FANNAME_8A;
     else if (setting[62] === 2) loc.GB_FANNAME_87 = loc.GB_FANNAME_88;
     if (info.includes(84)) ((infov += GBScoreArray[84] = setting[60]), infof.push(84));
-    console.log(setting[60]);
     if (wt) {
         if (mw === 27 && setting[46] && (info.includes(86) || (setting[50] && info.includes(87)))) {
             ((infov += GBScoreArray[86]), infof.push(86));

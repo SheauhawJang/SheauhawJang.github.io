@@ -45,11 +45,11 @@ input[type="text"] {
 
 .output-box {
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-left: 5px solid #4caf50;
+    border: 1px solid #ebe9e7;
     padding: 15px;
     margin-top: 20px;
-    border-radius: 4px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 6px 20px rgba(0, 0, 0, 0.04);
 }
 
 .output-title {
@@ -113,27 +113,51 @@ input[type="text"] {
     display: inline-block;
 }
 
+.primary-button,
 .random-button {
     margin-bottom: 10px;
     padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    font-size: 15px;
+    border: 1.5px solid;
+    border-radius: 8px;
     cursor: pointer;
     width: 200px;
+}
+
+.primary-button {
+    font-weight: 600;
+    background-color: #16a34a;
+    color: white;
+    border-color: #16a34a;
+    transition: background-color 0.15s, transform 0.1s;
+}
+
+.primary-button:hover {
+    background-color: #15803d;
+}
+
+.primary-button:active {
+    transform: translateY(1px);
+}
+
+.random-button {
+    font-weight: 500;
+    background: #fff;
+    color: #44403c;
+    border-color: #d6d3d1;
     align-items: center;
+    transition: border-color 0.15s;
 }
 
 .random-button:hover {
-    background-color: #45a049;
+    border-color: #a8a29e;
 }
 
 .random-button input {
     width: 5ch;
-    border: 1px solid #ccc;
+    border: 1px solid #d6d3d1;
     border-radius: 4px;
+    background: #f5f5f4;
 }
 
 html {
@@ -625,28 +649,27 @@ html {
 .lang-group {
     display: flex;
     flex-wrap: wrap;
-    align-items: center; /* 連結徠首行按中線對齊 */
     gap: 4px 6px;
     margin-left: auto; /* 始終靠右，換行後也在右側 */
 }
 
 .lang-group a {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 30px; /* 固定高度，確保所有語言膠囊一致 */
+    align-items: center; /* 文字在固定高度膠囊內垂直置中 */
+    height: 30px;        /* 固定高度，確保所有語言膠囊一致 */
     line-height: 1;
+    padding: 0 14px;
+    border-radius: 999px;
     color: #78716c;
-    text-decoration: none;
     font-size: 13.5px;
     font-weight: 600;
-    padding: 0 14px;
-    border-radius: 999px; /* Capsule shape */
-    cursor: pointer;
+    text-decoration: none;
     white-space: nowrap;
+    cursor: pointer;
 }
 
-.lang-group a:hover, .lang-group a.active {
+.lang-group a:hover,
+.lang-group a.active {
     color: #15803d;
     background: #f0fdf4;
 }
@@ -925,34 +948,41 @@ input[type="checkbox"] {
     top: 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
-    margin: -20px -15px 12px -15px;
-    padding-left: 10px;
-    border-bottom: 1px solid #ddd;
+    align-items: stretch;
+    margin: -20px -15px 16px -15px;
+    padding: 0 5px;
+    border-bottom: 2px solid #e7e5e4;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
 }
 
 .output-box .tab {
-    padding: 6px 14px;
-    margin-right: 6px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-bottom: none;
-    border-radius: 4px 4px 0 0;
+    padding: 9px 14px;
+    margin-bottom: -2px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
     cursor: pointer;
-    color: #555;
+    color: #78716c;
     font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.output-box .tab:hover {
+    color: #15803d;
 }
 
 .output-box .tab:not(.active) {
-    background: #f3f3f3;
+    background: none;
 }
 
 .output-box .tab.active {
-    background: #fff;
-    color: #333;
+    color: #15803d;
     font-weight: 600;
-    position: relative;
-    z-index: 1;
+    border-bottom: 2px solid #15803d;
 }
 
 .output-box .tab:focus {
@@ -988,10 +1018,11 @@ input[type="checkbox"] {
         font-size: 16px;
     }
 
+    .primary-button,
     .random-button {
         width: 100%;
         padding: 12px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .output-box {
@@ -1079,8 +1110,14 @@ input[type="checkbox"] {
     }
     
     .output-box .tabs {
-        margin: -15px 0 12px -9px;
-        padding-left: 6px;
+        margin: -9px 0 12px -9px;
+        padding: 0;
+        flex-wrap: wrap;
+    }
+
+    .output-box .tab {
+        font-size: 12px;
+        padding: 7px 8px;
     }
 
     .card-container {
@@ -1095,7 +1132,7 @@ input[type="checkbox"] {
     }
 
     .lang-group a {
-        padding: 4px 10px;
+        padding: 0 10px;   /* 固定高度不需垂直 padding */
         font-size: 12.5px;
     }
 

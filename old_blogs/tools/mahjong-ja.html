@@ -44,12 +44,12 @@
  <div class="section">
   <div class="title-button-container">
    <label for="inputText">手牌を入力してください</label>
-   <button class="toggle-button" id="inputButton" onclick="toggleInput()" style="color: #f58c8a">入力パネルを開く ▼</button>
+    <button class="toggle-button toggle-button--action" id="inputButton" onclick="toggleInput()">入力パネルを開く ▼</button>
   </div>
   <div class="input-area" id="textInput">
-   <input type="text" id="inputText" placeholder="例えば：1112345678999mE" />
-   <div class="input-note-wrapper">
-    <button class="toggle-button" id="inputNoteButton" onclick="toggleNote()" style="color: #4caf50">入力説明を表示する ▼</button>
+    <input type="text" id="inputText" placeholder="例: 1112345678999mE" />
+    <div class="input-note-wrapper">
+      <button class="toggle-button toggle-button--success" id="inputNoteButton" onclick="toggleNote()">入力説明を表示する ▼</button>
     <div class="input-note" id="inputNote" style="display: none">
      入力欄は以下の形式を使用でき、以下の形式は混在可能である：
      <ol style="margin-top: 0">

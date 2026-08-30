@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202608091324");
+    worker = new Worker("mahjong-worker.js?v=202608301143");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -259,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202608091324");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202608301143");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -905,7 +905,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202608091324");
+    gb_worker = new Worker("mahjong-worker.js?v=202608301143");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -951,7 +951,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202608091324");
+    jp_worker = new Worker("mahjong-worker.js?v=202608301143");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -999,7 +999,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202608091324");
+    sc_worker = new Worker("mahjong-worker.js?v=202608301143");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1294,7 +1294,7 @@ function loadCheckbox(key, st = localStorage) {
     const cbs = document.querySelectorAll(`input[name="${key}"]`);
     let cvs = new Set();
     const cvstorage = st.getItem(key);
-    const cvrange = st.getItem("max_" + key);
+    const cvrange = st.getItem("max-" + key);
     const rangecheck = (cb) => cvrange === null || Number(cb.value) < Number(cvrange);
     if (cvstorage !== null)
         try {
@@ -1334,10 +1334,10 @@ function loadInputbox(key, st = localStorage) {
     for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) e.addEventListener("change", () => updateScoreTabUser(i));
 }
 function loadGBStorage() {
-    if (localStorage.getItem("max_score-gb-setting") === null) localStorage.setItem("max_score-gb-setting", 45);
+    if (localStorage.getItem("max-score-gb-setting") === null) localStorage.setItem("max-score-gb-setting", 45);
     loadCheckbox("score-gb-setting");
     for (let i = 0; i <= GB_RADIO_MAX; ++i) loadRadio(`score-gb-setting-${i}`);
-    localStorage.setItem("max_score-gb-setting", GB_SETTING_SIZE);
+    localStorage.setItem("max-score-gb-setting", GB_SETTING_SIZE);
 
     loadInputbox("score-gb-setting-fan");
     loadInputbox("score-gb-setting-blind");
@@ -1349,10 +1349,10 @@ function loadGBStorage() {
     loadCheckbox("score-gb-wininfo", sessionStorage);
 }
 function loadJPStorage() {
-    if (localStorage.getItem("max_score-jp-setting") === null) localStorage.setItem("max_score-jp-setting", 61);
+    if (localStorage.getItem("max-score-jp-setting") === null) localStorage.setItem("max-score-jp-setting", 61);
     loadCheckbox("score-jp-setting");
     for (let i = 0; i <= JP_RADIO_MAX; ++i) loadRadio(`score-jp-setting-${i}`);
-    localStorage.setItem("max_score-jp-setting", JP_SETTING_SIZE);
+    localStorage.setItem("max-score-jp-setting", JP_SETTING_SIZE);
 
     loadInputbox("score-jp-setting-fan");
     loadInputbox("score-jp-voice-char");

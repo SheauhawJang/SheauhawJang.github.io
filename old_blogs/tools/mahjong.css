@@ -1,5 +1,5 @@
 :root {
-  --bg-page: #fdf2f4;
+  --bg-page: #fff8fa;
   --bg-surface: #ffffff;
   --bg-card: #fff7f8;
   --bg-soft: #fff1f2;
@@ -15,8 +15,8 @@
   --border-normal: #e7e5e4;
   --border-strong: #d6d3d1;
 
-  --primary: #f43f5e;
-  --primary-strong: #e11d48;
+  --primary: #fb8aa0;
+  --primary-strong: #eb4c71;
   --primary-soft: #fff1f2;
 
   --success: #16a34a;
@@ -804,7 +804,7 @@ input[type="checkbox"] {
   display: none;
   position: sticky;
   top: 0;
-  background: #f9f9f9;
+  background: var(--bg-page);
   z-index: 1000;
 }
 

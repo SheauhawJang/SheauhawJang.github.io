@@ -130,7 +130,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202608301143");
+    worker = new Worker("mahjong-worker.js?v=202609032304");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -259,7 +259,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202608301143");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202609032304");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -270,9 +270,10 @@ function restartInput(i) {
     };
     reworkers[i].postMessage({ mask, task: i, aids, tiles, subtiles, lang, steps: worker_substeps[i], dvds: worker_dvds[i], save: save_normal });
 }
-function updateInput(s) {
+function updateInput(s, auto = true) {
     const e = document.getElementById("inputText");
     e.value = s;
+    if (auto) subkey_info = "";
     //e.dispatchEvent(new Event("change"));
 }
 function shuffle(array) {
@@ -424,8 +425,8 @@ function loadInput() {
     const e = document.getElementById("inputText");
     const s = sakiSpecialInput();
     //e.addEventListener("change", () => sessionStorage.setItem("inputText", e.value));
-    if (t !== null) e.value = t;
-    else if (s !== null) e.value = s;
+    if (t !== null) subkey_info = e.value = t;
+    else if (s !== null) subkey_info = e.value = s;
     else randomInputText();
 
     drawInputCards();
@@ -685,7 +686,7 @@ function drawInputCards() {
     const noempty = document.getElementsByClassName("enable-no-empty");
     for (let i = 0; i < noempty.length; ++i) noempty[i].disabled = tids.length === 0;
 }
-function remakeInput(ipids) {
+function remakeInput(ipids, prefix, sep = "|") {
     let newInput = joinHand(ipids[0]);
     for (let i = 0; i < ipids[1].length; ++i) {
         const partInput = joinHand(ipids[1][i]);
@@ -694,84 +695,106 @@ function remakeInput(ipids) {
     }
     if (ipids[2].length > 0) newInput += `(${joinHand(ipids[2])})`;
     if (ipids[3].length > 0 || ipids[4].length > 0) newInput += `<${joinHand(ipids[3])},${joinHand(ipids[4])}>`;
-    updateInput(newInput);
+    if (prefix === undefined) prefix = subkey_info = "";
+    updateInput(`${prefix}${Math.min(prefix.length, newInput.length) == 0 ? "" : sep}${newInput}`, false);
+}
+let subkey_info = "";
+function subkeySplitLeftRight() {
+    let v = document.getElementById("inputText").value;
+    if (!v.startsWith(subkey_info)) {
+        subkey_info = v;
+        return { left: splitTiles(subkey_info), right: splitTiles("") }
+    }
+    v = v.slice(subkey_info.length);
+    return { left: splitTiles(subkey_info), right: splitTiles(v) }
 }
 function addInput(i) {
     if (typeof i === "number") i = { id: i };
-    document.getElementById("inputText").value += " ";
-    document.getElementById("inputText").value += cardName(i);
-    //document.getElementById("inputText").dispatchEvent(new Event("change"));
+    let lr = subkeySplitLeftRight();
+    lr.right[0].push(i);
+    remakeInput(lr.right, subkey_info);
     drawInputCards();
 }
+function spliceLeftRight(i, j, lr, f = (i, j, ids) => ids[i].splice(j, 1)) {
+    console.log(i, j);
+    const ll = lr.left[i].length;
+    if (j >= ll) f(i, j - ll, lr.right);
+    else f(i, j, ipids);
+    return j >= ll;
+}
 function removeInput(i, j, k) {
-    if (j === -1) ipids[0].splice(i, 1);
-    else if (j <= -2)
-        // ipids[0].push(ipids[2][i]);
-        ipids[-j].splice(i, 1);
+    console.log(i, j, k);
+    let lr = subkeySplitLeftRight();
+    let lru = false;
+    if (j === -1) lru = spliceLeftRight(0, i, lr);
+    else if (j <= -2) lru = spliceLeftRight(-j, i, lr);
     else {
         let t = getUnifiedType(ipids[1][j]);
-        if (t % 4 === 0 || k === 1)
-            // for (let i = 0; i < ipids[1][j].length; ++i) ipids[0].push(ipids[1][j][i]);
-            ipids[1].splice(j, 1);
+        if (t % 4 === 0 || k === 1) lru = spliceLeftRight(1, j, lr);
         else {
             let nt = 2;
             if (i < 1) nt = 1;
             else if (i === ipids[1][j].length - 1) nt = 3;
             if (t > 3) nt += 4;
-            ipids[1][j].type = nt;
+            lru = spliceLeftRight(1, j, lr, (i, j, ipids) => ipids[i][j].type = nt);
         }
     }
-    remakeInput(ipids);
+    if (!lru) remakeInput(ipids);
+    else remakeInput(lr.right, subkey_info);
     drawInputCards();
 }
 function clearInput() {
-    updateInput("");
+    let l = splitTiles(subkey_info);
+    let keepleft = true;
+    for (const arr of l) if (arr.length) keepleft = false;
+    if (!keepleft) subkey_info = "";
+    updateInput(subkey_info, false);
     drawInputCards();
 }
 function sortInput() {
-    ipids[0].sort((a, b) => a.id - b.id);
-    remakeInput(ipids);
+    let lr = subkeySplitLeftRight();
+    let sorter = ipids;
+    if (!lr.left[0].length) sorter = lr.right;
+    sorter[0].sort((a, b) => a.id - b.id);
+    if (sorter === ipids) remakeInput(ipids);
+    else remakeInput(sorter, subkey_info);
     drawInputCards();
 }
+function spliceAppendRight(i, sub, n, lr) {
+    let appender = ipids;
+    if (lr.right[0].length >= n) appender = lr.right;
+    appender[i].push(sub);
+    appender[0].splice(-n);
+    return appender != ipids;
+}
 function subtileInput(t, k) {
+    let lr = subkeySplitLeftRight();
+    let lru = false;
+    let sub, n;
     switch (t) {
         default:
-            ipids[1].push(ipids[0].slice(-3));
-            ipids[0].splice(-3);
+            sub = ipids[0].slice(-3), n = 3;
+            lru = spliceAppendRight(1, sub, n, lr);
             break;
         case 1:
-            if (isTri(ipids[0].slice(-3).map((a) => a.id))) {
-                ipids[1].push(ipids[0].slice(-3));
-                ipids[0].splice(-3);
-            } else {
-                ipids[1].push(Array(3).fill(ipids[0].at(-1)));
-                ipids[0].pop();
-            }
+            sub = ipids[0].slice(-3), n = 3;
+            if (!isTri(sub.map((a) => a.id))) sub = Array(3).fill(ipids[0].at(-1)), n = 1;
+            lru = spliceAppendRight(1, sub, n, lr);
             break;
         case 2:
-            if (isQuad(ipids[0].slice(-4).map((a) => a.id))) {
-                ipids[1].push(ipids[0].slice(-4));
-                ipids[0].splice(-4);
-            } else {
-                ipids[1].push(Array(4).fill(ipids[0].at(-1)));
-                ipids[0].pop();
-            }
-            ipids[1].at(-1).type = k;
+            sub = ipids[0].slice(-4), n = 4;
+            if (!isQuad(sub.map((a) => a.id))) sub = Array(4).fill(ipids[0].at(-1)), n = 1;
+            sub.type = k;
+            lru = spliceAppendRight(1, sub, n, lr);
             break;
         case 3:
-            ipids[2].push(ipids[0].at(-1));
-            ipids[0].pop();
-            break;
         case 4:
-            ipids[3].push(ipids[0].at(-1));
-            ipids[0].pop();
-            break;
         case 5:
-            ipids[4].push(ipids[0].at(-1));
-            ipids[0].pop();
+            lru = spliceAppendRight(t - 1, ipids[0].at(-1), 1, lr);
             break;
     }
-    remakeInput(ipids);
+    if (!lru) remakeInput(ipids);
+    else remakeInput(lr.right, subkey_info);
     drawInputCards();
 }
 
@@ -905,7 +928,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202608301143");
+    gb_worker = new Worker("mahjong-worker.js?v=202609032304");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -951,7 +974,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202608301143");
+    jp_worker = new Worker("mahjong-worker.js?v=202609032304");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -999,7 +1022,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202608301143");
+    sc_worker = new Worker("mahjong-worker.js?v=202609032304");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1746,5 +1769,17 @@ async function playResultAudio(playList, character = "Ichihime") {
     }
     if (currentAudioController === controller) {
         currentAudioController = null;
+    }
+}
+function boundListener() {
+    const inputText = document.getElementById("inputText");
+    if (inputText) {
+        inputText.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") processInput();
+        });
+        inputText.addEventListener("input", () => {
+            subkey_info = inputText.value;
+            console.log(subkey_info);
+        })
     }
 }

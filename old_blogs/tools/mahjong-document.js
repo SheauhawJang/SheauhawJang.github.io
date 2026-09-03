@@ -417,6 +417,10 @@ function sakiSpecialInput() {
             return "東東南南西西北白白発発中中北";
         case "10-27":
             return "4445p0p[1111p,1][2222p][3333p]";
+        case "04-08":
+            return "222s444m西西西66p88m6p";
+        case "02-18":
+            return "1112345678999m9m";
     }
     return null;
 }

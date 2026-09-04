@@ -106,98 +106,97 @@
     <button class="tab" data-steptabid="1" , onclick="switchStepTab(1)">國標麻將標準型牌理</button>
     <button class="tab" data-steptabid="4" , onclick="switchStepTab(4)">四川麻將牌理</button>
    </div>
-   <div id="steps-global-viewer"></div>
-  </div>
-  <div class="output-box" id="steps-std" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">
-     <div><span data-i18n="normal"></span>牌理</div>
+    <div id="steps-global-viewer">
+     <div class="tab-panel active" id="steps-std">
+      <div class="title-button-container">
+       <div class="output-title">
+        <div><span data-i18n="normal"></span>牌理</div>
+       </div>
+       <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">摺疊 ▲</button>
+      </div>
+      <div class="output-context" id="output-std"></div>
+      <div class="output-context" id="brief-output-std" style="display: none"></div>
+      <div class="output-time" id="time-output-std"></div>
+     </div>
+     <div class="tab-panel" id="steps-tw">
+      <div class="title-button-container">
+       <div class="output-title">港式台灣麻將牌理</div>
+       <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">摺疊 ▲</button>
+      </div>
+      <div class="output-option-group">
+       <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
+       <span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label><span class="text-link-btn" onclick="randomWinningNiconico()">(例)</span></span>
+       <span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphanMeld()">(例)</span></span>
+       <span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label><span class="text-link-btn" onclick="randomWinningBuda()">(例)</span></span>
+      </div>
+      <div class="output-context" id="output-tw"></div>
+      <div class="output-context" id="brief-output-tw" style="display: none"></div>
+      <div class="output-time" id="time-output-tw"></div>
+     </div>
+     <div class="tab-panel" id="steps-jp">
+      <div class="title-button-container">
+       <div class="output-title">立直麻將標準型牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
+       <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">摺疊 ▲</button>
+       <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">摺疊 ▲</button>
+      </div>
+      <div class="output-option-group">
+       <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
+       <span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(true)">(例)</span></span>
+       <span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="kokushi"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
+      </div>
+      <div id="output-group-jp">
+       <div class="output-context" id="output-jp"></div>
+       <div class="output-context" id="brief-output-jp" style="display: none"></div>
+       <div class="output-time" id="time-output-jp"></div>
+      </div>
+      <div id="output-group-jp3p" style="display: none;">
+       <div class="output-context" id="output-jp3p"></div>
+       <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
+       <div class="output-time" id="time-output-jp3p"></div>
+      </div>
+     </div>
+     <div class="tab-panel" id="steps-gb">
+      <div class="title-button-container">
+       <div class="output-title">國標麻將標準型牌理</div>
+       <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">摺疊 ▲</button>
+      </div>
+      <div class="output-option-group">
+       <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
+       <span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs()">(例)</span></span>
+       <span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
+       <span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label><span class="text-link-btn" onclick="randomWinningBukao()">(例)</span></span>
+       <span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label><span class="text-link-btn" onclick="randomWinningKDragon()">(例)</span></span>
+      </div>
+      <div class="output-context" id="output-gb"></div>
+      <div class="output-context" id="brief-output-gb" style="display: none"></div>
+      <div class="output-time" id="time-output-gb"></div>
+     </div>
+     <div class="tab-panel" id="steps-sc">
+      <div class="title-button-container">
+       <div class="output-title">
+        <div>四川麻將<span style="align-items: baseline;"><sub>(赤羽之戰)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">隨機配牌</button>
+       </div>
+       <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">摺疊 ▲</button>
+      </div>
+      <div class="output-option-group">
+       <span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
+       <span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
+       <span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
+      </div>
+      <div class="output-context" id="output-sc"></div>
+      <div class="output-context" id="brief-output-sc" style="display: none"></div>
+      <div class="output-time" id="time-output-sc"></div>
+     </div>
     </div>
-    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">摺疊 ▲</button>
    </div>
-   <div class="output-context" id="output-std"></div>
-   <div class="output-context" id="brief-output-std" style="display: none"></div>
-   <div class="output-time" id="time-output-std"></div>
-  </div>
-  <div class="output-box" id="steps-tw" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">港式台灣麻將牌理</div>
-    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">摺疊 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
-    <span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label><span class="text-link-btn" onclick="randomWinningNiconico()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphanMeld()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label><span class="text-link-btn" onclick="randomWinningBuda()">(例)</span></span>
-   </div>
-   <div class="output-context" id="output-tw"></div>
-   <div class="output-context" id="brief-output-tw" style="display: none"></div>
-   <div class="output-time" id="time-output-tw"></div>
-  </div>
-  <div class="output-box" id="steps-jp" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">立直麻將標準型牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
-    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">摺疊 ▲</button>
-    <button class="toggle-button" id="toggle-output-jp3p" style="display: none;">摺疊 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
-    <span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(true)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="kokushi"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
-   </div>
-   <div id="output-group-jp">
-    <div class="output-context" id="output-jp"></div>
-    <div class="output-context" id="brief-output-jp" style="display: none"></div>
-    <div class="output-time" id="time-output-jp"></div>
-   </div>
-   <div id="output-group-jp3p" style="display: none;">
-    <div class="output-context" id="output-jp3p"></div>
-    <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
-    <div class="output-time" id="time-output-jp3p"></div>
-   </div>
-  </div>
-  <div class="output-box" id="steps-gb" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">國標麻將標準型牌理</div>
-    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">摺疊 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
-    <span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label><span class="text-link-btn" onclick="randomWinningBukao()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label><span class="text-link-btn" onclick="randomWinningKDragon()">(例)</span></span>
-   </div>
-   <div class="output-context" id="output-gb"></div>
-   <div class="output-context" id="brief-output-gb" style="display: none"></div>
-   <div class="output-time" id="time-output-gb"></div>
-  </div>
-  <div class="output-box" id="steps-sc" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">
-     <div>四川麻將<span style="align-items: baseline;"><sub>(赤羽之戰)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">隨機配牌</button>
+   <div class="output-box" id="score-global" style="display: none;">
+    <div class="tabs">
+     <button class="tab" data-scoretabid="1" , onclick="switchScoreTab(1)">立直麻將分數計算機</button>
+     <button class="tab" data-scoretabid="0" , onclick="switchScoreTab(0)">國標麻將<span data-i18n="GB_FAN_unit"></span>數計算機</button>
+     <button class="tab" data-scoretabid="3" , onclick="switchScoreTab(3)">四川麻將倍數計算機</button>
     </div>
-    <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">摺疊 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
-   </div>
-   <div class="output-context" id="output-sc"></div>
-   <div class="output-context" id="brief-output-sc" style="display: none"></div>
-   <div class="output-time" id="time-output-sc"></div>
-  </div>
-  <div class="output-box" id="score-global" style="display: none;">
-   <div class="tabs">
-    <button class="tab" data-scoretabid="1" , onclick="switchScoreTab(1)">立直麻將分數計算機</button>
-    <button class="tab" data-scoretabid="0" , onclick="switchScoreTab(0)">國標麻將<span data-i18n="GB_FAN_unit"></span>數計算機</button>
-    <button class="tab" data-scoretabid="3" , onclick="switchScoreTab(3)">四川麻將倍數計算機</button>
-   </div>
-   <div id="score-global-viewer"></div>
-  </div>
-  <div style="display: none;">
-   <div class="output-box" id="score-jp">
+    <div id="score-global-viewer">
+     <div class="tab-panel" id="score-jp">
     <div class="title-button-container">
      <div class="output-title">立直麻將分數計算機</div>
      <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput('output-score-jp')">摺疊 ▲</button>
@@ -484,7 +483,7 @@
     <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
     <div class="output-time" id="time-output-score-jp">Ready to start!</div>
    </div>
-   <div class="output-box" id="score-gb">
+   <div class="tab-panel" id="score-gb">
     <div class="title-button-container">
      <div class="output-title">
       <div>國標麻將<span data-i18n="GB_FAN_unit"></span>數計算機</div>
@@ -734,7 +733,7 @@
     <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
     <div class="output-time" id="time-output-score-gb">Ready to start!</div>
    </div>
-   <div class="output-box" id="score-sc">
+   <div class="tab-panel" id="score-sc">
     <div class="title-button-container">
      <div class="output-title">四川麻將倍數計算機</div>
      <button class="toggle-button" id="toggle-output-score-sc" onclick="toggleOutput('output-score-sc')">摺疊 ▲</button>
@@ -830,11 +829,12 @@
       </div>
       <div></div>
       <div class="output-time">使用快捷設定時，配置項和計算結果僅供參考，請以官方結算結果為準。若結果不一致請聯繫作者。</div>
+      </div>
      </div>
+     <div class="output-context" id="output-score-sc"></div>
+     <div class="output-context" id="brief-output-score-sc" style="display: none"></div>
+     <div class="output-time" id="time-output-score-sc">Ready to start!</div>
     </div>
-    <div class="output-context" id="output-score-sc"></div>
-    <div class="output-context" id="brief-output-score-sc" style="display: none"></div>
-    <div class="output-time" id="time-output-score-sc">Ready to start!</div>
    </div>
   </div>
   <div class="reference-box mobile-display-only">

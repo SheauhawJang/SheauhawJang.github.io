@@ -51,6 +51,7 @@ function opencheck(openids, seq = true) {
     return true;
 }
 const document_scores_ids = ["score-gb", "score-jp", "score-qingque", "score-sc"];
+let score_enabled = Array(document_scores_ids.length).fill(false);
 const updateScoreVisiableBar = ArrayMap(document_scores_ids.length, (_, id) =>
     debounce((visiable) => {
         const tab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
@@ -63,7 +64,7 @@ const updateScoreVisiableUI = debounce(function (visiable) {
     for (let i = 0; i < document_scores_ids.length; ++i) {
         const se = document.getElementById(document_scores_ids[i]);
         const te = document.querySelector(`.tab[data-scoretabid="${i}"]`);
-        if (se && se.style.display !== "none" && te) vid.push([i, se, te]);
+        if (se && score_enabled[i] && te) vid.push([i, se, te]);
     }
     vid.sort((a, b) => (a[2] === b[2] ? 0 : a[2].compareDocumentPosition(b[2]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
     if (visiable === "none") {
@@ -76,9 +77,7 @@ const updateScoreVisiableUI = debounce(function (visiable) {
     }
 }, ui_debounce_delay);
 function updateScoreVisiable(id, visiable = "none") {
-    const e = document.getElementById(document_scores_ids[id]);
-    if (!e) return;
-    e.style.display = visiable;
+    score_enabled[id] = visiable !== "none";
     const b = document.getElementById(`${document_scores_ids[id]}-button`);
     if (b) b.disabled = visiable === "none";
     else console.log(`${document_scores_ids[id]}-button`);
@@ -88,8 +87,7 @@ function updateScoreVisiable(id, visiable = "none") {
     } else {
         updateScoreVisiableBar[id](visiable);
     }
-    const usrse = document.getElementById(document_scores_ids[scoretab_usr]);
-    if (usrse && usrse.style.display !== "none" && visiable !== "none") {
+    if (score_enabled[scoretab_usr] && visiable !== "none") {
         updateScoreVisiableUI.immediate(visiable);
     } else {
         updateScoreVisiableUI(visiable);
@@ -1629,20 +1627,21 @@ function debugopen(id) {
     const e = document.getElementById(id);
     if (e) e.style.display = "";
 }
+function switchTab(group, activeIndex, panelIds) {
+    document.querySelectorAll(`.tab[data-${group}tabid]`).forEach((tab) => {
+        tab.classList.toggle("active", Number(tab.dataset[`${group}tabid`]) === activeIndex);
+    });
+    panelIds.forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle("active", idx === activeIndex);
+    });
+}
 let steptab = -1;
+const document_steps_ids = ["steps-std", "steps-gb", "steps-jp", "steps-tw", "steps-sc"];
 function switchStepTab(i) {
-    const subboxes = ["steps-std", "steps-gb", "steps-jp", "steps-tw", "steps-sc"];
-    if (!(i >= 0 && i < subboxes.length)) return;
-    const viewer = document.getElementById("steps-global-viewer");
-    if (!viewer) return;
-    if (steptab >= 0 && steptab < subboxes.length) {
-        const oldbox = document.getElementById(subboxes[steptab]);
-        if (oldbox) while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
-    }
-    const newbox = document.getElementById(subboxes[i]);
-    if (newbox) while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
+    if (i < 0 || i >= document_steps_ids.length) return;
     steptab = i;
-    document.querySelectorAll(".tab[data-steptabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.steptabid) === i));
+    switchTab("step", i, document_steps_ids);
     localStorage.setItem("steptab", i);
 }
 let scoretab = -1;
@@ -1652,19 +1651,8 @@ function updateScoreTabUser(i) {
     localStorage.setItem("scoretab_usr", i);
 }
 function switchScoreTab(i, auto = false) {
-    const subboxes = document_scores_ids;
-    const viewer = document.getElementById("score-global-viewer");
-    if (!viewer) return;
-    if (scoretab >= 0 && scoretab < subboxes.length) {
-        const oldbox = document.getElementById(subboxes[scoretab]);
-        if (oldbox) while (viewer.firstChild) oldbox.appendChild(viewer.firstChild);
-    }
-    if (i >= 0 && i < subboxes.length) {
-        const newbox = document.getElementById(subboxes[i]);
-        if (newbox) while (newbox.firstChild) viewer.appendChild(newbox.firstChild);
-    }
     scoretab = i;
-    document.querySelectorAll(".tab[data-scoretabid]").forEach((tab) => tab.classList.toggle("active", Number(tab.dataset.scoretabid) === i));
+    switchTab("score", i, document_scores_ids);
     if (!auto) updateScoreTabUser(i);
 }
 let qingqueController = null;

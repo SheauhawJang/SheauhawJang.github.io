@@ -1029,16 +1029,16 @@ input[type="checkbox"] {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  margin: 0 0 16px;
-  padding: 0;
-  border-bottom: 1px solid var(--border-normal);
+  margin: -15px -15px 16px -15px;
+  padding: 3px 5px 0px 5px;
+  border-bottom: 2px solid var(--border-normal);
   background: transparent;
-  border-radius: 0;
+  border-radius: 10px 10px 0 0;
 }
 
 .output-box .tab {
   padding: 9px 14px;
-  margin-bottom: -1px;
+  margin-bottom: -2px;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
@@ -1069,6 +1069,13 @@ input[type="checkbox"] {
 
 .output-box .tab:focus {
   outline: none;
+}
+
+.tab-panel {
+  display: none;
+}
+.tab-panel.active {
+  display: block;
 }
 
 .text-link-btn {

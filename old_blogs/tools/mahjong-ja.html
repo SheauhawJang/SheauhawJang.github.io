@@ -106,85 +106,86 @@
     <button class="tab" data-steptabid="4" onclick="switchStepTab(4)">四川麻雀<small>(赤血の戦)</small>牌理</button>
     <button class="tab" data-steptabid="3" onclick="switchStepTab(3)">香港式台湾麻雀牌理</button>
    </div>
-   <div id="steps-global-viewer"></div>
-  </div>
-  <div class="output-box" id="steps-std" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title"><span data-i18n="normal"></span>牌理</div>
-    <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">収納 ▲</button>
-   </div>
-   <div class="output-context" id="output-std"></div>
-   <div class="output-context" id="brief-output-std" style="display: none"></div>
-   <div class="output-time" id="time-output-std"></div>
-  </div>
-  <div class="output-box" id="steps-jp" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">立直麻雀標準形牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
-    <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">収納 ▲</button>
-    <button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
-    <span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(true)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="kokushi"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
-   </div>
-   <div id="output-group-jp">
-    <div class="output-context" id="output-jp"></div>
-    <div class="output-context" id="brief-output-jp" style="display: none"></div>
-    <div class="output-time" id="time-output-jp"></div>
-   </div>
-   <div id="output-group-jp3p" style="display: none">
-    <div class="output-context" id="output-jp3p"></div>
-    <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
-    <div class="output-time" id="time-output-jp3p"></div>
-   </div>
-  </div>
-  <div class="output-box" id="steps-gb" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">中国国標麻雀標準形牌理</div>
-    <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">収納 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
-    <span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label><span class="text-link-btn" onclick="randomWinningBukao()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label><span class="text-link-btn" onclick="randomWinningKDragon()">(例)</span></span>
-   </div>
-   <div class="output-context" id="output-gb"></div>
-   <div class="output-context" id="brief-output-gb" style="display: none"></div>
-   <div class="output-time" id="time-output-gb"></div>
-  </div>
-  <div class="output-box" id="steps-tw" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">香港式台湾麻雀牌理</div>
-    <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">収納 ▲</button>
-   </div>
-   <div class="output-option-group">
-    <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
-    <span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label><span class="text-link-btn" onclick="randomWinningNiconico()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphanMeld()">(例)</span></span>
-    <span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label><span class="text-link-btn" onclick="randomWinningBuda()">(例)</span></span>
-   </div>
-   <div class="output-context" id="output-tw"></div>
-   <div class="output-time" id="time-output-tw"></div>
-   <div class="output-context" id="brief-output-tw" style="display: none"></div>
-  </div>
-  <div class="output-box" id="steps-sc" style="display: none;">
-   <div class="title-button-container">
-    <div class="output-title">
-     <div>四川麻雀<span style="align-items: baseline;"><sub>(赤血の戦)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">ランダム配牌</button>
+   <div id="steps-global-viewer">
+    <div class="tab-panel active" id="steps-std">
+     <div class="title-button-container">
+      <div class="output-title"><span data-i18n="normal"></span>牌理</div>
+      <button class="toggle-button" id="toggle-output-std" onclick="toggleOutput('output-std')">収納 ▲</button>
+     </div>
+     <div class="output-context" id="output-std"></div>
+     <div class="output-context" id="brief-output-std" style="display: none"></div>
+     <div class="output-time" id="time-output-std"></div>
     </div>
-    <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">収納 ▲</button>
+    <div class="tab-panel" id="steps-jp">
+     <div class="title-button-container">
+      <div class="output-title">立直麻雀標準形牌理<button id="mySwitch" class="switch on" aria-pressed="true" onclick="toggleSwitch(event, '四人', '三人', switchJP34)"><span class="label-text">四人</span><span class="thumb"></span></button></div>
+      <button class="toggle-button" id="toggle-output-jp" onclick="toggleOutput('output-jp'); toggleOutput('output-jp3p');">収納 ▲</button>
+      <button class="toggle-button" id="toggle-output-jp3p" style="display: none">収納 ▲</button>
+     </div>
+     <div class="output-option-group">
+      <label><input type="checkbox" name="step-jp-types" value="0" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="normal"></span></label>
+      <span><label><input type="checkbox" name="step-jp-types" value="1" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs(true)">(例)</span></span>
+      <span><label><input type="checkbox" name="step-jp-types" value="2" onchange="restartInput(1); restartInput(4)" checked /><span data-i18n="kokushi"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
+     </div>
+     <div id="output-group-jp">
+      <div class="output-context" id="output-jp"></div>
+      <div class="output-context" id="brief-output-jp" style="display: none"></div>
+      <div class="output-time" id="time-output-jp"></div>
+     </div>
+     <div id="output-group-jp3p" style="display: none">
+      <div class="output-context" id="output-jp3p"></div>
+      <div class="output-context" id="brief-output-jp3p" style="display: none"></div>
+      <div class="output-time" id="time-output-jp3p"></div>
+     </div>
+    </div>
+    <div class="tab-panel" id="steps-gb">
+     <div class="title-button-container">
+      <div class="output-title">中国国標麻雀標準形牌理</div>
+      <button class="toggle-button" id="toggle-output-gb" onclick="toggleOutput('output-gb')">収納 ▲</button>
+     </div>
+     <div class="output-option-group">
+      <label><input type="checkbox" name="step-gb-types" value="0" onchange="restartInput(2)" checked /><span data-i18n="normal"></span></label>
+      <span><label><input type="checkbox" name="step-gb-types" value="1" onchange="restartInput(2)" checked /><span data-i18n="pair7"></span></label><span class="text-link-btn" onclick="randomWinningPairs()">(例)</span></span>
+      <span><label><input type="checkbox" name="step-gb-types" value="2" onchange="restartInput(2)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphan()">(例)</span></span>
+      <span><label><input type="checkbox" name="step-gb-types" value="3" onchange="restartInput(2)" checked /><span data-i18n="quanbukaoxing"></span></label><span class="text-link-btn" onclick="randomWinningBukao()">(例)</span></span>
+      <span><label><input type="checkbox" name="step-gb-types" value="4" onchange="restartInput(2)" checked /><span data-i18n="zuhelongxing"></span></label><span class="text-link-btn" onclick="randomWinningKDragon()">(例)</span></span>
+     </div>
+     <div class="output-context" id="output-gb"></div>
+     <div class="output-context" id="brief-output-gb" style="display: none"></div>
+     <div class="output-time" id="time-output-gb"></div>
+    </div>
+    <div class="tab-panel" id="steps-tw">
+     <div class="title-button-container">
+      <div class="output-title">香港式台湾麻雀牌理</div>
+      <button class="toggle-button" id="toggle-output-tw" onclick="toggleOutput('output-tw')">収納 ▲</button>
+     </div>
+     <div class="output-option-group">
+      <label><input type="checkbox" name="step-tw-types" value="0" onchange="restartInput(3)" checked /><span data-i18n="normal"></span></label>
+      <span><label><input type="checkbox" name="step-tw-types" value="1" onchange="restartInput(3)" checked /><span data-i18n="niconico"></span></label><span class="text-link-btn" onclick="randomWinningNiconico()">(例)</span></span>
+      <span><label><input type="checkbox" name="step-tw-types" value="2" onchange="restartInput(3)" checked /><span data-i18n="orphan13"></span></label><span class="text-link-btn" onclick="randomWinningOrphanMeld()">(例)</span></span>
+      <span><label><input type="checkbox" name="step-tw-types" value="3" onchange="restartInput(3)" checked /><span data-i18n="shiliubudaxing"></span></label><span class="text-link-btn" onclick="randomWinningBuda()">(例)</span></span>
+     </div>
+     <div class="output-context" id="output-tw"></div>
+     <div class="output-time" id="time-output-tw"></div>
+     <div class="output-context" id="brief-output-tw" style="display: none"></div>
+    </div>
+    <div class="tab-panel" id="steps-sc">
+     <div class="title-button-container">
+      <div class="output-title">
+       <div>四川麻雀<span style="align-items: baseline;"><sub>(赤血の戦)</sub></span>牌理</div><button style="margin-left: 10px;" onclick="randomInput(aids[0].length + aids[1].length * 3, 108)">ランダム配牌</button>
+      </div>
+      <button class="toggle-button" id="toggle-output-sc" onclick="toggleOutput('output-sc')">収納 ▲</button>
+     </div>
+     <div class="output-option-group">
+      <span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
+      <span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
+      <span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
+     </div>
+     <div class="output-context" id="output-sc"></div>
+     <div class="output-context" id="brief-output-sc" style="display: none"></div>
+     <div class="output-time" id="time-output-sc"></div>
+    </div>
    </div>
-   <div class="output-option-group">
-    <span><label><input type="checkbox" name="step-sc-types" value="0" onchange="restartInput(5)" checked /><span data-i18n="quewan"></span></label><span class="text-link-btn" onclick="randomWinningSC(0)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-sc-types" value="1" onchange="restartInput(5)" checked /><span data-i18n="quetong"></span></label><span class="text-link-btn" onclick="randomWinningSC(1)">(例)</span></span>
-    <span><label><input type="checkbox" name="step-sc-types" value="2" onchange="restartInput(5)" checked /><span data-i18n="quetiao"></span></label><span class="text-link-btn" onclick="randomWinningSC(2)">(例)</span></span>
-   </div>
-   <div class="output-context" id="output-sc"></div>
-   <div class="output-context" id="brief-output-sc" style="display: none"></div>
-   <div class="output-time" id="time-output-sc"></div>
   </div>
   <div class="output-box" id="score-global" style="display: none;">
    <div class="tabs">
@@ -192,10 +193,8 @@
     <button class="tab" data-scoretabid="0" , onclick="switchScoreTab(0)">中国国標麻雀<span data-i18n="GB_FAN_unit"></span>数計算</button>
     <button class="tab" data-scoretabid="3" , onclick="switchScoreTab(3)">四川麻雀<small>(赤血の戦)</small>計算</button>
    </div>
-   <div id="score-global-viewer"></div>
-  </div>
-  <div style="display: none;">
-   <div class="output-box" id="score-jp">
+   <div id="score-global-viewer">
+    <div class="tab-panel" id="score-jp">
     <div class="title-button-container">
      <div class="output-title">立直麻雀点数計算</div>
      <button class="toggle-button" id="toggle-output-score-jp" onclick="toggleOutput('output-score-jp')">収納 ▲</button>
@@ -482,7 +481,7 @@
     <div class="output-context" id="brief-output-score-jp" style="display: none"></div>
     <div class="output-time" id="time-output-score-jp">Ready to start!</div>
    </div>
-   <div class="output-box" id="score-gb">
+   <div class="tab-panel" id="score-gb">
     <div class="title-button-container">
      <div class="output-title">中国国標麻雀<span data-i18n="GB_FAN_unit"></span>数計算</div>
      <button class="toggle-button" id="toggle-output-score-gb" onclick="toggleOutput('output-score-gb')">収納 ▲</button>
@@ -730,111 +729,112 @@
     <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
     <div class="output-time" id="time-output-score-gb">Ready to start!</div>
    </div>
-   <div class="output-box" id="score-sc">
-    <div class="title-button-container">
-     <div class="output-title">
-      <div>四川麻雀<span style="align-items: baseline;"><sub>(赤血の戦)</sub></span>計算</div>
-     </div>
-     <button class="toggle-button" id="toggle-output-score-sc" onclick="toggleOutput('output-score-sc')">収納 ▲</button>
-    </div>
-    <div id="options-output-score-sc">
-     <div class="output-grid-div">
-      <span>和了種類</span>
-      <div class="output-option-group">
-       <label><input type="radio" name="score-sc-wintype" value="0" checked />出アガリ</label>
-       <label><input type="radio" name="score-sc-wintype" value="1" />ツモ・一人払い</label>
-       <label><input type="radio" name="score-sc-wintype" value="2" />ツモ・二人払い</label>
-       <label><input type="radio" name="score-sc-wintype" value="3" />ツモ・三人払い</label>
+    <div class="tab-panel" id="score-sc">
+     <div class="title-button-container">
+      <div class="output-title">
+       <div>四川麻雀<span style="align-items: baseline;"><sub>(赤血の戦)</sub></span>計算</div>
       </div>
-      <span>和了状態</span>
-      <div class="output-option-group">
-       <label id="sc_heaven" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="12" /><span data-i18n="SC_FAN_NAME_12"></span></label>
-       <label id="sc_earth" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="13" /><span data-i18n="SC_FAN_NAME_13"></span></label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="8" /><span data-i18n="SC_FAN_NAME_8"></span></label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="9" /><span data-i18n="SC_FAN_NAME_9"></span></label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="10" /><span data-i18n="SC_FAN_NAME_10"></span></label>
-       <label><input type="checkbox" name="score-sc-wininfo" value="11" /><span data-i18n="SC_FAN_NAME_11"></span></label>
-      </div>
-      <button id="score-sc-button" onclick="processSCScore()" class="score-button">計算</button>
+      <button class="toggle-button" id="toggle-output-score-sc" onclick="toggleOutput('output-score-sc')">収納 ▲</button>
      </div>
-     <details>
-      <summary>ルール設定</summary>
+     <div id="options-output-score-sc">
+      <div class="output-grid-div">
+       <span>和了種類</span>
+       <div class="output-option-group">
+        <label><input type="radio" name="score-sc-wintype" value="0" checked />出アガリ</label>
+        <label><input type="radio" name="score-sc-wintype" value="1" />ツモ・一人払い</label>
+        <label><input type="radio" name="score-sc-wintype" value="2" />ツモ・二人払い</label>
+        <label><input type="radio" name="score-sc-wintype" value="3" />ツモ・三人払い</label>
+       </div>
+       <span>和了状態</span>
+       <div class="output-option-group">
+        <label id="sc_heaven" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="12" /><span data-i18n="SC_FAN_NAME_12"></span></label>
+        <label id="sc_earth" style="display: none;"><input type="checkbox" name="score-sc-wininfo" value="13" /><span data-i18n="SC_FAN_NAME_13"></span></label>
+        <label><input type="checkbox" name="score-sc-wininfo" value="8" /><span data-i18n="SC_FAN_NAME_8"></span></label>
+        <label><input type="checkbox" name="score-sc-wininfo" value="9" /><span data-i18n="SC_FAN_NAME_9"></span></label>
+        <label><input type="checkbox" name="score-sc-wininfo" value="10" /><span data-i18n="SC_FAN_NAME_10"></span></label>
+        <label><input type="checkbox" name="score-sc-wininfo" value="11" /><span data-i18n="SC_FAN_NAME_11"></span></label>
+       </div>
+       <button id="score-sc-button" onclick="processSCScore()" class="score-button">計算</button>
+      </div>
+      <details>
+       <summary>ルール設定</summary>
+       <div class="output-options">
+        <span data-i18n="SC_FAN_NAME_16"></span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-1" value="11,2" checked />符増し</label>
+         <label><input type="radio" name="score-sc-setting-1" value="11,1" />飜増し</label>
+         <label><input type="radio" name="score-sc-setting-1" value="0" />増しなし</label>
+        </div>
+        <span data-i18n="SC_max_fan"></span>
+        <div class="output-option-group">
+         <label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span><span data-i18n="SC_max_fan"></span></label>
+         <label><input type="checkbox" name="score-sc-setting" value="16" /><span data-i18n="SC_max_fan"></span>以降１<span data-i18n="SC_FAN_unit"></span>につき<input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />符加算</label>
+        </div>
+        <span data-i18n="SC_FAN_NAME_2"></span>
+        <div class="output-option-group">
+         <label><input type="checkbox" name="score-sc-setting" value="1" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_5"></span></label>
+         <label><input type="checkbox" name="score-sc-setting" value="2" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
+         <label><input type="checkbox" name="score-sc-setting" value="3" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_NAME_6"></span></label>
+        </div>
+        <span data-i18n="SC_FAN_NAME_3"></span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-2" value="0" checked />關閉</label>
+         <label><input type="radio" name="score-sc-setting-2" value="4,2" />２<span data-i18n="SC_FAN_unit"></span></label>
+         <label><input type="radio" name="score-sc-setting-2" value="4,3" />３<span data-i18n="SC_FAN_unit"></span></label>
+         <label><input type="checkbox" name="score-sc-setting" value="5" /><span data-i18n="SC_FAN_ADJ_3"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
+        </div>
+        <span data-i18n="SC_FAN_NAME_12"></span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />關閉</label>
+         <label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />３<span data-i18n="SC_FAN_unit"></span></label>
+         <label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
+        </div>
+        <span data-i18n="SC_FAN_NAME_13"></span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />關閉</label>
+         <label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />２<span data-i18n="SC_FAN_unit"></span></label>
+         <label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
+        </div>
+        <span data-i18n="SC_FAN_NAME_14"></span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-5" value="0" checked />關閉</label>
+         <label><input type="radio" name="score-sc-setting-5" value="8" />１<span data-i18n="SC_FAN_unit"></span></label>
+         <label><input type="checkbox" name="score-sc-setting" value="14" /><span data-i18n="SC_FAN_NAME_4"></span>と複合する</label>
+        </div>
+        <span data-i18n="SC_FAN_NAME_15"></span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-6" value="0" checked />關閉</label>
+         <label><input type="radio" name="score-sc-setting-6" value="9" />１<span data-i18n="SC_FAN_unit"></span></label>
+         <label><input type="checkbox" name="score-sc-setting" value="10" /><span data-i18n="SC_FAN_NAME_2"></span>と複合する</label>
+        </div>
+        <span>死聴</span>
+        <div class="output-option-group">
+         <label><input type="radio" name="score-sc-setting-7" value="13" />死聴は聴牌</label>
+         <label><input type="radio" name="score-sc-setting-7" value="0" checked />死聴は不聴</label>
+        </div>
+       </div>
+      </details>
       <div class="output-options">
-       <span data-i18n="SC_FAN_NAME_16"></span>
+       <span>簡単設定</span>
        <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-1" value="11,2" checked />符増し</label>
-        <label><input type="radio" name="score-sc-setting-1" value="11,1" />飜増し</label>
-        <label><input type="radio" name="score-sc-setting-1" value="0" />増しなし</label>
+        <button onclick="processSCSetting(0)">国際麻雀連盟</button>
+        <button onclick="processSCSetting(1)">雀魂・赤血の戦</button>
+        <button onclick="processSCSetting(2)">姫麻雀・血戦麻雀</button>
+        <button onclick="processSCSetting(3)">ＪＪ麻雀・血戦川麻</button>
+        <button onclick="processSCSetting(4)">ＱＱ麻雀・血戦到底</button>
+        <button onclick="processSCSetting(5)">微楽麻雀・血戦到底</button>
+        <button onclick="processSCSetting(6)">ニキ・快哉麻将</button>
        </div>
-       <span data-i18n="SC_max_fan"></span>
-       <div class="output-option-group">
-        <label><input type="checkbox" name="score-sc-setting" value="12" checked /><input type="number" id="score-sc-setting-maxfan" value="3" min="0" /><span data-i18n="SC_FAN_unit"></span><span data-i18n="SC_max_fan"></span></label>
-        <label><input type="checkbox" name="score-sc-setting" value="16" /><span data-i18n="SC_max_fan"></span>以降１<span data-i18n="SC_FAN_unit"></span>につき<input type="number" id="score-sc-setting-fan-linear" value="4" min="0" />符加算</label>
-       </div>
-       <span data-i18n="SC_FAN_NAME_2"></span>
-       <div class="output-option-group">
-        <label><input type="checkbox" name="score-sc-setting" value="1" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_5"></span></label>
-        <label><input type="checkbox" name="score-sc-setting" value="2" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
-        <label><input type="checkbox" name="score-sc-setting" value="3" /><span data-i18n="SC_FAN_ADJ_2"></span><span data-i18n="SC_FAN_NAME_6"></span></label>
-       </div>
-       <span data-i18n="SC_FAN_NAME_3"></span>
-       <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-2" value="0" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-2" value="4,2" />２<span data-i18n="SC_FAN_unit"></span></label>
-        <label><input type="radio" name="score-sc-setting-2" value="4,3" />３<span data-i18n="SC_FAN_unit"></span></label>
-        <label><input type="checkbox" name="score-sc-setting" value="5" /><span data-i18n="SC_FAN_ADJ_3"></span><span data-i18n="SC_FAN_ADJ_4"></span></label>
-       </div>
-       <span data-i18n="SC_FAN_NAME_12"></span>
-       <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-3" value="0" onchange="SwitchOption(this, 'sc_heaven', [true], true)" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-3" value="6,3" onchange="SwitchOption(this, 'sc_heaven', [true])" />３<span data-i18n="SC_FAN_unit"></span></label>
-        <label><input type="radio" name="score-sc-setting-3" value="6,5" onchange="SwitchOption(this, 'sc_heaven', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
-       </div>
-       <span data-i18n="SC_FAN_NAME_13"></span>
-       <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-4" value="0" onchange="SwitchOption(this, 'sc_earth', [true], true)" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-4" value="7,2" onchange="SwitchOption(this, 'sc_earth', [true])" />２<span data-i18n="SC_FAN_unit"></span></label>
-        <label><input type="radio" name="score-sc-setting-4" value="7,5" onchange="SwitchOption(this, 'sc_earth', [true])" />５<span data-i18n="SC_FAN_unit"></span></label>
-       </div>
-       <span data-i18n="SC_FAN_NAME_14"></span>
-       <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-5" value="0" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-5" value="8" />１<span data-i18n="SC_FAN_unit"></span></label>
-        <label><input type="checkbox" name="score-sc-setting" value="14" /><span data-i18n="SC_FAN_NAME_4"></span>と複合する</label>
-       </div>
-       <span data-i18n="SC_FAN_NAME_15"></span>
-       <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-6" value="0" checked />關閉</label>
-        <label><input type="radio" name="score-sc-setting-6" value="9" />１<span data-i18n="SC_FAN_unit"></span></label>
-        <label><input type="checkbox" name="score-sc-setting" value="10" /><span data-i18n="SC_FAN_NAME_2"></span>と複合する</label>
-       </div>
-       <span>死聴</span>
-       <div class="output-option-group">
-        <label><input type="radio" name="score-sc-setting-7" value="13" />死聴は聴牌</label>
-        <label><input type="radio" name="score-sc-setting-7" value="0" checked />死聴は不聴</label>
-       </div>
+       <div></div>
+       <div class="output-time">簡単設定を使用する場合は、設定項目および計算結果はあくまで参考です。公式の精算結果を優先してください。結果が異なる場合は、制作者までご連絡ください。</div>
       </div>
-     </details>
-     <div class="output-options">
-      <span>簡単設定</span>
-      <div class="output-option-group">
-       <button onclick="processSCSetting(0)">国際麻雀連盟</button>
-       <button onclick="processSCSetting(1)">雀魂・赤血の戦</button>
-       <button onclick="processSCSetting(2)">姫麻雀・血戦麻雀</button>
-       <button onclick="processSCSetting(3)">ＪＪ麻雀・血戦川麻</button>
-       <button onclick="processSCSetting(4)">ＱＱ麻雀・血戦到底</button>
-       <button onclick="processSCSetting(5)">微楽麻雀・血戦到底</button>
-       <button onclick="processSCSetting(6)">ニキ・快哉麻将</button>
-      </div>
-      <div></div>
-      <div class="output-time">簡単設定を使用する場合は、設定項目および計算結果はあくまで参考です。公式の精算結果を優先してください。結果が異なる場合は、制作者までご連絡ください。</div>
      </div>
+     <div class="output-context" id="output-score-sc"></div>
+     <div class="output-context" id="brief-output-score-sc" style="display: none"></div>
+     <div class="output-time" id="time-output-score-sc">Ready to start!</div>
     </div>
-    <div class="output-context" id="output-score-sc"></div>
-    <div class="output-context" id="brief-output-score-sc" style="display: none"></div>
-    <div class="output-time" id="time-output-score-sc">Ready to start!</div>
+    </div>
    </div>
-  </div>
   <div class="reference-box mobile-display-only">
    <details>
     <summary>注釈</summary>

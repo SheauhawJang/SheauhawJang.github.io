@@ -720,14 +720,12 @@ function addInput(i) {
     drawInputCards();
 }
 function spliceLeftRight(i, j, lr, f = (i, j, ids) => ids[i].splice(j, 1)) {
-    console.log(i, j);
     const ll = lr.left[i].length;
     if (j >= ll) f(i, j - ll, lr.right);
     else f(i, j, ipids);
     return j >= ll;
 }
 function removeInput(i, j, k) {
-    console.log(i, j, k);
     let lr = subkeySplitLeftRight();
     let lru = false;
     if (j === -1) lru = spliceLeftRight(0, i, lr);
@@ -1779,11 +1777,10 @@ function boundListener() {
     const inputText = document.getElementById("inputText");
     if (inputText) {
         inputText.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") processInput();
+            if (e.key === "Enter" && !e.isComposing) processInput();
         });
         inputText.addEventListener("input", () => {
             subkey_info = inputText.value;
-            console.log(subkey_info);
         })
     }
 }

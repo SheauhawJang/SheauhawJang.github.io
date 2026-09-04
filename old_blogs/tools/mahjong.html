@@ -7,6 +7,12 @@
 	<meta name="description" content="支持一般型麻将、国标麻将、立直麻将、十六张麻将、港式台湾麻将以及任意张麻将的牌理向听数计算。支持百搭牌（万能牌/癞子/混儿）。支持国标麻将算番、立直麻将算点。" />
 	<title>麻将多功能计算器</title>
 	<link rel="stylesheet" href="mahjong.css?v=202609042142" />
+	<script>
+		try {
+			const savedTheme = localStorage.getItem("mahjong-theme");
+			if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+		} catch (e) { }
+	</script>
 	<link rel="icon" href="head.ico" type="image/x-icon">
 	<link rel="shortcut icon" href="head.ico" type="image/x-icon">
 </head>
@@ -26,6 +32,12 @@
 					<div class="select-option" data-value="nn">暖暖牌画</div>
 				</div>
 			</div>
+		</div>
+		<div class="theme-group">
+			<button class="theme-dot" data-theme="pink" aria-label="樱花粉"></button>
+			<button class="theme-dot" data-theme="green" aria-label="抹茶绿"></button>
+			<button class="theme-dot" data-theme="blue" aria-label="空色蓝"></button>
+			<button class="theme-dot" data-theme="dark" aria-label="夜间模式"></button>
 		</div>
 		<div class="lang-group">
 			<a lang="zh-CN" class="active">简体中文</a>

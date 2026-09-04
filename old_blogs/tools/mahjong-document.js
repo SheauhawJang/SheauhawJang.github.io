@@ -1425,7 +1425,29 @@ function initCustomSelects() {
         });
     });
 }
+
+const theme_colors = { green: "#f4faf6", pink: "#fff8fa", blue: "#f6f9fc", dark: "#151826" };
+function setTheme(theme) {
+    if (!Object.hasOwn(theme_colors, theme)) theme = "green";
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("mahjong-theme", theme);
+    document.querySelectorAll(".theme-dot").forEach((dot) => dot.classList.toggle("active", dot.dataset.theme === theme));
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("name", "theme-color");
+        document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", theme_colors[theme]);
+}
+function initThemeSwitcher() {
+    document.querySelectorAll(".theme-dot").forEach((dot) => {
+        dot.addEventListener("click", () => setTheme(dot.dataset.theme));
+    });
+    setTheme(localStorage.getItem("mahjong-theme"));
+}
 function loadStorage() {
+    initThemeSwitcher();
     initCustomSelects();
     updateCardSkin(localStorage.getItem("cardskin"));
     switchStepTab(Number(localStorage.getItem("steptab")));

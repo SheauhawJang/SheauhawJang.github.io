@@ -700,7 +700,7 @@ function remakeInput(ipids, prefix, sep = "|") {
     if (ipids[2].length > 0) newInput += `(${joinHand(ipids[2])})`;
     if (ipids[3].length > 0 || ipids[4].length > 0) newInput += `<${joinHand(ipids[3])},${joinHand(ipids[4])}>`;
     if (prefix === undefined) prefix = subkey_info = "";
-    updateInput(`${prefix}${Math.min(prefix.length, newInput.length) == 0 ? "" : sep}${newInput}`, false);
+    updateInput(`${prefix}${Math.min(prefix.length, newInput.length) === 0 ? "" : sep}${newInput}`, false);
 }
 let subkey_info = "";
 function subkeySplitLeftRight() {
@@ -767,7 +767,7 @@ function spliceAppendRight(i, sub, n, lr) {
     if (lr.right[0].length >= n) appender = lr.right;
     appender[i].push(sub);
     appender[0].splice(-n);
-    return appender != ipids;
+    return appender !== ipids;
 }
 function subtileInput(t, k) {
     let lr = subkeySplitLeftRight();
@@ -1773,7 +1773,7 @@ async function playResultAudio(playList, character = "Ichihime") {
         currentAudioController = null;
     }
 }
-function boundListener() {
+function bindListener() {
     const inputText = document.getElementById("inputText");
     if (inputText) {
         inputText.addEventListener("keydown", function (e) {

@@ -486,10 +486,15 @@ function hasQQCard(id) {
     if (id.id >= JokerC + 4) return false;
     return true;
 }
-function getOverlay(path, t, class_suffix = undefined) {
-    if (t === "r") return `<img src="${path}" class="card-img-overlay-r ${class_suffix ? `${class_suffix}-r` : ""}">`;
-    if (t === "k") return `<img src="${path}" class="card-img-overlay-rr-0 ${class_suffix ? `${class_suffix}-rr-0` : ""}"><img src="${path}" class="card-img-overlay-rr-1 ${class_suffix ? `${class_suffix}-rr-1` : ""}">`;
-    return `<img src="${path}" class="card-img-overlay ${class_suffix ?? ""}">`;
+function getOverlay(path, t, class_suffix = "") {
+    const isArr = Array.isArray(path);
+    const render = (cls, suf = "") => {
+        const fullCls = `${cls}${class_suffix ? ` ${class_suffix}${suf}` : ""}`;
+        return isArr ? `<div class="${fullCls}" data-src="${path[0]}">${path.slice(1).map(p => `<img src="${p}">`).join("")}</div>` : `<img src="${path}" class="${fullCls}">`;
+    };
+    if (t === "r") return render("card-img-overlay-r", "-r");
+    if (t === "k") return render("card-img-overlay-rr-0", "-rr-0") + render("card-img-overlay-rr-1", "-rr-1");
+    return render("card-img-overlay");
 }
 function getCardImage(id, t = "", onclick = "") {
     let [name, overlay] = [cardName(id), null];
@@ -500,14 +505,23 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
     if (cardskin === "nn" && hasQQCard(id)) overlay = getOverlay(`./nncards/${name}.png`, t, "card-img-overlay-nikki");
     // prettier-ignore
+    if (cardskin === "qq")
+        switch (id.id) {
+            case 46: overlay = getOverlay(`./qqcards/5j.png`, t); break;
+            case 47: overlay = getOverlay([`./cards/${name}.gif`, `./qqcards/1z.png`, `./qqcards/2z.png`, `./qqcards/3z.png`, `./qqcards/4z.png`], t); break;
+            case 48: overlay = getOverlay([`./cards/${name}.gif`, `./qqcards/7z.png`, `./qqcards/6z.png`, `./qqcards/5z.png`], t); break;
+        }
+    // prettier-ignore
     if (cardskin === "jp")
         switch (id.id) {
             case 42: name = "ij"; break;
-            case 43: overlay = getOverlay(`./cards/im.png`, t); break;
-            case 44: overlay = getOverlay(`./cards/ip.png`, t); break;
-            case 45: overlay = getOverlay(`./cards/is.png`, t); break;
-            case 47: overlay = getOverlay(`./cards/8z.png`, t); break;
-            case 48: overlay = getOverlay(`./cards/9z.png`, t); break;
+            case 43: overlay = getOverlay(`./mscards/im.png`, t); break;
+            case 44: overlay = getOverlay(`./mscards/ip.png`, t); break;
+            case 45: overlay = getOverlay(`./mscards/is.png`, t); break;
+            case 46: overlay = getOverlay(`./mscards/5j.png`, t); break;
+            case 47: overlay = getOverlay(`./mscards/8z.png`, t); break;
+            case 48: overlay = getOverlay(`./mscards/9z.png`, t); break;
+            case 49: overlay = getOverlay(`./mscards/8j.png`, t); break;
         }
     if (!overlay && id.id > JokerC && id.id <= 50) overlay = getOverlay(`./cards/${name}.png`, t);
     if (overlay) return `${overlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
@@ -1044,13 +1058,13 @@ function processSCScore() {
     sc_worker.postMessage({ task: "sc-score", aids, tiles, substeps: sc_worker_info, wt, info, lang, setting });
 }
 function getFixedImage(div) {
-    return Array.from(div.querySelectorAll("img")).find((img) => getComputedStyle(img).position !== "absolute");
+    return Array.from(div.querySelectorAll(":scope > img")).find((img) => getComputedStyle(img).position !== "absolute");
 }
 function getNamedImage(div) {
-    return div.querySelector("img.card-img-overlay, img.card-img-overlay-r, img.card-img-overlay-rr-0") ?? getFixedImage(div);
+    return div.querySelector(".card-img-overlay, .card-img-overlay-r, .card-img-overlay-rr-0") ?? getFixedImage(div);
 }
 function getImageId(img, withtype = false) {
-    const src = img.src;
+    const src = img.src ?? img.getAttribute("data-src");
     const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
     const filename = filenameWithExt.split(".")[0];
     if (!withtype) return id(filename).id;
@@ -1156,90 +1170,21 @@ function replacei18n() {
 }
 function initKeyboard() {
     const boardInput = document.getElementById("boardInput");
-    if (boardInput) {
-        boardInput.innerHTML = `<div class="card-container" id="input-pic"></div>
+    if (!boardInput) return;
+
+    let id = 0, rows = "";
+    const btn = (f, v) => `<div class="card-div input-card-button"><img src="./cards/${f}.gif" onclick="addInput(${v})" /></div>`;
+    for (const [s, len, red] of [["m", 9, 1], ["p", 9, 1], ["s", 9, 1], ["z", 7, 1], ["h", 8, 0], ["j", 9, 0]]) {
+        let cols = "", base = id;
+        for (let i = 1; i <= len; i++) cols += btn(`${i}${s}`, id++);
+        if (red) cols += btn(`0${s}`, `{ id: ${base + 4}, sp: 1 }`);
+        rows += `\t\t<div class="input-row"><div></div>${cols}<div></div></div>\n`;
+    }
+
+    boardInput.innerHTML = `<div class="card-container" id="input-pic"></div>
 <div class="input-keyboard">
 	<div class="input-mainkey">
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1m.gif" onclick="addInput(0)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2m.gif" onclick="addInput(1)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3m.gif" onclick="addInput(2)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4m.gif" onclick="addInput(3)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5m.gif" onclick="addInput(4)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6m.gif" onclick="addInput(5)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7m.gif" onclick="addInput(6)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8m.gif" onclick="addInput(7)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9m.gif" onclick="addInput(8)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0m.gif" onclick="addInput({ id: 4, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1p.gif" onclick="addInput(9)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2p.gif" onclick="addInput(10)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3p.gif" onclick="addInput(11)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4p.gif" onclick="addInput(12)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5p.gif" onclick="addInput(13)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6p.gif" onclick="addInput(14)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7p.gif" onclick="addInput(15)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8p.gif" onclick="addInput(16)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9p.gif" onclick="addInput(17)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0p.gif" onclick="addInput({ id: 13, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1s.gif" onclick="addInput(18)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2s.gif" onclick="addInput(19)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3s.gif" onclick="addInput(20)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4s.gif" onclick="addInput(21)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5s.gif" onclick="addInput(22)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6s.gif" onclick="addInput(23)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7s.gif" onclick="addInput(24)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8s.gif" onclick="addInput(25)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9s.gif" onclick="addInput(26)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0s.gif" onclick="addInput({ id: 22, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1z.gif" onclick="addInput(27)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2z.gif" onclick="addInput(28)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3z.gif" onclick="addInput(29)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4z.gif" onclick="addInput(30)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5z.gif" onclick="addInput(31)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6z.gif" onclick="addInput(32)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7z.gif" onclick="addInput(33)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/0z.gif" onclick="addInput({ id: 31, sp: 1 })" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1h.gif" onclick="addInput(34)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2h.gif" onclick="addInput(35)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3h.gif" onclick="addInput(36)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4h.gif" onclick="addInput(37)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5h.gif" onclick="addInput(38)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6h.gif" onclick="addInput(39)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7h.gif" onclick="addInput(40)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8h.gif" onclick="addInput(41)" /></div>
-			<div></div>
-		</div>
-		<div class="input-row">
-			<div></div>
-			<div class="card-div input-card-button"><img src="./cards/1j.gif" onclick="addInput(42)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/2j.gif" onclick="addInput(43)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/3j.gif" onclick="addInput(44)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/4j.gif" onclick="addInput(45)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/5j.gif" onclick="addInput(46)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/6j.gif" onclick="addInput(47)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/7j.gif" onclick="addInput(48)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/8j.gif" onclick="addInput(49)" /></div>
-			<div class="card-div input-card-button"><img src="./cards/9j.gif" onclick="addInput(50)" /></div>
-			<div></div>
-		</div>
-		<div class="card-container" id="input-pic-bonus"></div>
+${rows}\t\t<div class="card-container" id="input-pic-bonus"></div>
 		<div class="output-grid-div">
 			<span><span data-i18n="JP_YAKUNAME_96"></span><span data-i18n="kb_indicator_suffix">指示牌</span></span>
 			<div class="card-container" id="input-pic-dorap"></div>
@@ -1261,7 +1206,6 @@ function initKeyboard() {
 		<button onclick="subtileInput(5); hoverSubtileInput(this, 5, true)" onmouseenter="hoverSubtileInput(this, 5, true)" onmouseleave="hoverSubtileInput(this, 5, false)" class="subkey-button enable-no-empty"><span data-i18n="JP_YAKUNAME_97"></span><span data-i18n="kb_indicate">指示</span></button>
 	</div>
 </div>`;
-    }
 }
 const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-img-overlay-rr-0", "card-img-overlay-rr-1"]);
 function updateCardSkin(skin) {
@@ -1287,7 +1231,7 @@ function updateCardSkin(skin) {
         if (div.querySelector("img.card-img-overlay-r")) type = "r";
         if (div.querySelector("img.card-img-overlay-rr-0")) type = "k";
         const onclick = getFixedImage(div).getAttribute("onclick");
-        const imgs = div.querySelectorAll("img");
+        const imgs = div.querySelectorAll(":scope > *");
         imgs.forEach((img) => {
             if (Array.from(img.classList).some((cls) => gboverlays.has(cls))) div.removeChild(img);
         });

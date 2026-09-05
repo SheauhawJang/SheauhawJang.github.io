@@ -698,6 +698,18 @@ html {
   left: 0.2em;
 }
 
+.card-helper.card-helper-right {
+  top: 0.3em;
+  left: auto;
+  right: 0.2em;
+}
+
+.card-helper-r.card-helper-right,
+.card-helper-rr-0.card-helper-right,
+.card-helper-rr-1.card-helper-right {
+  text-align: right;
+}
+
 .card-helper-r,
 .card-helper-rr-0,
 .card-helper-rr-1 {

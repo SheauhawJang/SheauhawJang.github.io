@@ -443,18 +443,34 @@ function getCardHelperFontSize(width, unit) {
 function useHelper() {
     return typeof card_helper !== "undefined" && card_helper;
 }
+function useRightHelper(id) {
+    if (typeof card_helper_right !== "undefined" && card_helper_right) return true;
+    else
+        switch (localStorage.getItem("cardskin")) {
+            case "qq":
+                return id >= sizeUT && id < JokerC;
+            case "gb":
+            case "hk":
+            case "tw":
+            default:
+                return id >= 38 && id < JokerC;
+            case "nn":
+                return false;
+        }
+}
 function getCardHelperDiv(tile, width, unit = "%", t = "") {
     if (!useHelper()) return "";
     const id = tile.id;
     const helper = HelperArray[id] ?? "";
     const fontSize = getCardHelperFontSize(width, unit);
-    if (t === "r") return `<span class="card-helper-r" style="font-size: ${fontSize}px">${helper}</span>`;
-    if (t === "k") return `<span class="card-helper-rr-0" style="font-size: ${fontSize}px">${helper}</span><span class="card-helper-rr-1" style="font-size: ${fontSize}px">${helper}</span>`;
-    return `<span class="card-helper" style="font-size: ${fontSize}px">${helper}</span>`;
+    const rh = useRightHelper(id) ? " card-helper-right" : "";
+    if (t === "r") return `<span class="card-helper-r${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
+    if (t === "k") return `<span class="card-helper-rr-0${rh}" style="font-size: ${fontSize}px">${helper}</span><span class="card-helper-rr-1${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
+    return `<span class="card-helper${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
 }
 let cardskin = "jp";
 function hasGBCard(id) {
-    if (id.sp) return false;
+    if (id.id > 27 && id.sp) return false;
     if (id.id >= JokerC) return false;
     return true;
 }
@@ -477,33 +493,23 @@ function getOverlay(path, t, class_suffix = undefined) {
 }
 function getCardImage(id, t = "", onclick = "") {
     let [name, overlay] = [cardName(id), null];
-    if (cardskin === "qq" && hasQQCard(id)) overlay = getOverlay(`./qqcards/${name}.png`, t);
-    if (cardskin === "gb" && (hasGBCard(id) || (id.sp && id.id < 27))) overlay = getOverlay(`./gbcards/${name}.gif`, t);
+    if (cardskin === "qq" && (hasQQCard(id) || (id.sp && id.id < 27))) overlay = getOverlay(`./qqcards/${name}.png`, t);
+    if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.gif`, t);
     if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`, t);
     if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
     if (cardskin === "nn" && hasQQCard(id)) overlay = getOverlay(`./nncards/${name}.png`, t, "card-img-overlay-nikki");
+    // prettier-ignore
     if (cardskin === "jp")
         switch (id.id) {
-            case 42:
-                name = "ij";
-                break;
-            case 43:
-                ((name = "im"), (overlay = getOverlay(`./cards/im.png`, t)));
-                break;
-            case 44:
-                ((name = "ip"), (overlay = getOverlay(`./cards/ip.png`, t)));
-                break;
-            case 45:
-                ((name = "is"), (overlay = getOverlay(`./cards/is.png`, t)));
-                break;
-            case 47:
-                ((name = "8z"), (overlay = getOverlay(`./cards/8z.png`, t)));
-                break;
-            case 48:
-                ((name = "9z"), (overlay = getOverlay(`./cards/9z.png`, t)));
-                break;
+            case 42: name = "ij"; break;
+            case 43: overlay = getOverlay(`./cards/im.png`, t); break;
+            case 44: overlay = getOverlay(`./cards/ip.png`, t); break;
+            case 45: overlay = getOverlay(`./cards/is.png`, t); break;
+            case 47: overlay = getOverlay(`./cards/8z.png`, t); break;
+            case 48: overlay = getOverlay(`./cards/9z.png`, t); break;
         }
+    if (!overlay && id.id > JokerC && id.id <= 50) overlay = getOverlay(`./cards/${name}.png`, t);
     if (overlay) return `${overlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     return `<img src="./cards/${t}${name}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }
@@ -1043,6 +1049,21 @@ function getFixedImage(div) {
 function getNamedImage(div) {
     return div.querySelector("img.card-img-overlay, img.card-img-overlay-r, img.card-img-overlay-rr-0") ?? getFixedImage(div);
 }
+function getImageId(img, withtype = false) {
+    const src = img.src;
+    const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
+    const filename = filenameWithExt.split(".")[0];
+    if (!withtype) return id(filename).id;
+    return { idx: id(filename.slice(-2)), type: filename.at(-3) ?? "" }
+}
+function createCardHelperSpan(idx) {
+    const displayNumber = HelperArray[idx];
+    const numberSpan = document.createElement("span");
+    numberSpan.className = "card-helper";
+    if (useRightHelper(idx)) numberSpan.className += " card-helper-right";
+    numberSpan.textContent = displayNumber;
+    return numberSpan;
+}
 function adjustButtonsFontSize() {
     const baseBtn = document.getElementById("subkey_chi");
     if (!baseBtn) return;
@@ -1065,16 +1086,9 @@ function adjustButtonsFontSize() {
         divs.forEach((div) => {
             let numberSpan = div.querySelector("span.card-helper");
             if (!numberSpan) {
-                const src = getNamedImage(div).src;
-                const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
-                const filename = filenameWithExt.split(".")[0];
-                const idx = id(filename).id;
+                const idx = getImageId(getNamedImage(div));
                 if (idx === undefined) return;
-                const displayNumber = HelperArray[idx];
-                numberSpan = document.createElement("span");
-                numberSpan.className = "card-helper";
-                numberSpan.textContent = displayNumber;
-                div.appendChild(numberSpan);
+                div.appendChild(numberSpan = createCardHelperSpan(idx));
             }
             numberSpan.style.fontSize = `${getCardHelperFontSize(div.offsetWidth, "px")}px`;
         });
@@ -1083,19 +1097,13 @@ function adjustButtonsFontSize() {
 function addWorkerCardHelper() {
     const imgs = document.querySelectorAll(".no-helper");
     imgs.forEach((img) => {
-        const src = img.src;
-        const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
-        const filename = filenameWithExt.split(".")[0];
-        const idx = id(filename).id;
+        const idx = getImageId(img);
         if (idx === undefined) return;
-        const displayNumber = HelperArray[idx];
         const div = img.parentNode;
         img.classList.remove("no-helper");
-        const numberSpan = document.createElement("span");
-        numberSpan.className = "card-helper";
         if (img.offsetWidth === 0) return;
+        let numberSpan = createCardHelperSpan(idx);
         numberSpan.style.fontSize = `${getCardHelperFontSize(img.offsetWidth, "px")}px`;
-        numberSpan.textContent = displayNumber;
         div.appendChild(numberSpan);
     });
 }
@@ -1274,12 +1282,8 @@ function updateCardSkin(skin) {
     divs.forEach((div) => {
         const i = getNamedImage(div);
         if (!i) return;
-        const src = i.src;
-        const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
-        const filename = filenameWithExt.split(".")[0];
-        const idx = id(filename.slice(-2));
+        let { idx, type } = getImageId(i, true);
         if (idx.id === undefined) return;
-        let type = filename.at(-3) ?? "";
         if (div.querySelector("img.card-img-overlay-r")) type = "r";
         if (div.querySelector("img.card-img-overlay-rr-0")) type = "k";
         const onclick = getFixedImage(div).getAttribute("onclick");
@@ -1291,6 +1295,9 @@ function updateCardSkin(skin) {
         const tmpdiv = document.createElement("div");
         tmpdiv.innerHTML = getCardImage(idx, type, onclick ?? "");
         while (tmpdiv.firstChild) div.appendChild(tmpdiv.firstChild);
+        div.querySelectorAll("[class*='card-helper']").forEach((span) => {
+            span.classList.toggle("card-helper-right", useRightHelper(idx.id));
+        });
     });
 }
 function debounce(f, delay = 20, maxdelay = Infinity) {

@@ -523,6 +523,7 @@ function getCardImage(id, t = "", onclick = "") {
             case 48: overlay = getOverlay(`./mscards/9z.png`, t); break;
             case 49: overlay = getOverlay(`./mscards/8j.png`, t); break;
         }
+    if (!overlay && id.id >= 27 && id.sp) overlay = getOverlay(`./cards/0z.png`, t);
     if (!overlay && id.id > JokerC && id.id <= 50) overlay = getOverlay(`./cards/${name}.png`, t);
     if (overlay) return `${overlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     return `<img src="./cards/${t}${name}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;

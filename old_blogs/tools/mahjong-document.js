@@ -535,8 +535,11 @@ function getCardImage(id, t = "", onclick = "") {
         }
     if (!overlay && id.id === 31 && id.sp) overlay = getOverlay(`./cards/0z.png`, t);
     if (!overlay && id.id > JokerC && id.id <= 50) overlay = getOverlay(`./cards/${name}.png`, t);
-    if (overlay) return `${overlay}<img src="./cards/${t}5z.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
-    return `<img src="./cards/${t}${name}.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    const mask = `<img src="./cards/${t}ff.png" class="card-tile-mask">`;
+    if (overlay) 
+        if (cardskin === "nn") return `${overlay}${mask}<img src="./nncards/${t}b.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable card-tile-mask-nikki"`}>`; 
+        else return `${overlay}${mask}<img src="./cards/${t}5z.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    return `${mask}<img src="./cards/${t}${name}.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }
 function outputCardImage(tids, i, width, link) {
     return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? `discard(${i})` : "")}</div>`;
@@ -554,7 +557,7 @@ function outputCardImageRotated(id, width) {
     return `<div class="card-div rotated-tile" style="width: ${w}%;">${getCardHelperDiv(singleId, width, undefined, "r")}${getCardImage(singleId, "r")}</div>`;
 }
 function outputCardImageBack(width) {
-    return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.png"></div>`;
+    return `<div class="card-div" style="width: ${width}%;"><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
 }
 function outputCardImageEmpty(width) {
     return `<div class="card-div" style="width: ${width / 5}%;"></div>`;
@@ -659,7 +662,7 @@ function inputCardImageRotated(ids, i, j, width, unit) {
     return `<div class="card-div rotated-tile" style="width: ${w}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[singleIdx], width, unit, "r")}${getCardImage(ids[singleIdx], "r", `removeInput(${singleIdx}, ${j}, 1)`)}</div>`;
 }
 function inputCardImageBack(i, j, width, unit) {
-    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
+    return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
 }
 function inputCardImageEmpty(width, unit) {
     return `<div class="card-div" style="width: ${width / 5}${unit};"></div>`;
@@ -1236,7 +1239,7 @@ ${rows}\t\t<div class="card-container" id="input-pic-bonus"></div>
 	</div>
 </div>`;
 }
-const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r"]);
+const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-tile-mask"]);
 function updateCardSkin(skin) {
     if (skin) localStorage.setItem("cardskin", (cardskin = skin));
     const customSelect = document.querySelector(".custom-select");

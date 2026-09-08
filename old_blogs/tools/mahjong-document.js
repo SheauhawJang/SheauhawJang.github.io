@@ -6,6 +6,11 @@ let worker_dvds = Array(TASK_NUM).fill(null);
 let worker_substeps = Array(TASK_NUM).fill(null);
 let lastmask = Array(TASK_NUM).fill(null);
 const document_element_ids = ["output-std", "output-jp", "output-gb", "output-tw", "output-jp3p", "output-sc"];
+const CARDSIZEW = 80;
+const CARDSIZEH = 129;
+const CARDSIZEWR = 118;
+const CARDSIZEHR = 91;
+const CARDSIZEHRR = 168;
 function sf(f) {
     try {
         f();
@@ -465,7 +470,6 @@ function getCardHelperDiv(tile, width, unit = "%", t = "") {
     const fontSize = getCardHelperFontSize(width, unit);
     const rh = useRightHelper(id) ? " card-helper-right" : "";
     if (t === "r") return `<span class="card-helper-r${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
-    if (t === "k") return `<span class="card-helper-rr-0${rh}" style="font-size: ${fontSize}px">${helper}</span><span class="card-helper-rr-1${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
     return `<span class="card-helper${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
 }
 let cardskin = "jp";
@@ -493,7 +497,6 @@ function getOverlay(path, t, class_suffix = "") {
         return isArr ? `<div class="${fullCls}" data-src="${path[0]}">${path.slice(1).map(p => `<img src="${p}">`).join("")}</div>` : `<img src="${path}" class="${fullCls}">`;
     };
     if (t === "r") return render("card-img-overlay-r", "-r");
-    if (t === "k") return render("card-img-overlay-rr-0", "-rr-0") + render("card-img-overlay-rr-1", "-rr-1");
     return render("card-img-overlay");
 }
 function getCardImage(id, t = "", onclick = "") {
@@ -508,13 +511,20 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "qq")
         switch (id.id) {
             case 46: overlay = getOverlay(`./qqcards/5j.png`, t); break;
-            case 47: overlay = getOverlay([`./cards/${name}.gif`, `./qqcards/1z.png`, `./qqcards/2z.png`, `./qqcards/3z.png`, `./qqcards/4z.png`], t); break;
-            case 48: overlay = getOverlay([`./cards/${name}.gif`, `./qqcards/7z.png`, `./qqcards/6z.png`, `./qqcards/5z.png`], t); break;
+            case 47: overlay = getOverlay([`./cards/${name}.png`, `./qqcards/1z.png`, `./qqcards/2z.png`, `./qqcards/3z.png`, `./qqcards/4z.png`], t); break;
+            case 48: overlay = getOverlay([`./cards/${name}.png`, `./qqcards/7z.png`, `./qqcards/6z.png`, `./qqcards/5z.png`], t); break;
+        }
+    // prettier-ignore
+    if (cardskin === "nn")
+        switch (id.id) {
+            case 46: overlay = getOverlay([`./cards/${name}.png`, `./nncards/0j.png`, `./nncards/2j.png`, `./nncards/3j.png`, `./nncards/4j.png`], t, "card-img-overlay-nikki"); break;
+            case 47: overlay = getOverlay([`./cards/${name}.png`, `./nncards/1z.png`, `./nncards/2z.png`, `./nncards/3z.png`, `./nncards/4z.png`], t, "card-img-overlay-nikki"); break;
+            case 48: overlay = getOverlay([`./cards/${name}.png`, `./nncards/0j.png`, `./nncards/7z.png`, `./nncards/6z.png`, `./nncards/5z.png`], t, "card-img-overlay-nikki"); break;
         }
     // prettier-ignore
     if (cardskin === "jp")
         switch (id.id) {
-            case 42: name = "ij"; break;
+            case 42: name = id.sp ? "0j" : "ij"; break;
             case 43: overlay = getOverlay(`./mscards/im.png`, t); break;
             case 44: overlay = getOverlay(`./mscards/ip.png`, t); break;
             case 45: overlay = getOverlay(`./mscards/is.png`, t); break;
@@ -523,16 +533,25 @@ function getCardImage(id, t = "", onclick = "") {
             case 48: overlay = getOverlay(`./mscards/9z.png`, t); break;
             case 49: overlay = getOverlay(`./mscards/8j.png`, t); break;
         }
-    if (!overlay && id.id >= 27 && id.sp) overlay = getOverlay(`./cards/0z.png`, t);
+    if (!overlay && id.id === 31 && id.sp) overlay = getOverlay(`./cards/0z.png`, t);
     if (!overlay && id.id > JokerC && id.id <= 50) overlay = getOverlay(`./cards/${name}.png`, t);
-    if (overlay) return `${overlay}<img src="./cards/${t}5z.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
-    return `<img src="./cards/${t}${name}.gif"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    if (overlay) return `${overlay}<img src="./cards/${t}5z.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
+    return `<img src="./cards/${t}${name}.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }
 function outputCardImage(tids, i, width, link) {
     return `<div class="card-div" style="width: ${width}%;">${link ? `<div class="card-overlay"></div>` : ""}${getCardHelperDiv(tids[i], width)}${getCardImage(tids[i], "", link ? `discard(${i})` : "")}</div>`;
 }
-function outputCardImageRotated(id, width, cnt) {
-    return `<div class="card-div" style="width: ${(width * 120) / 80}%;">${getCardHelperDiv(id, width, undefined, cnt === 2 ? "k" : "r")}${getCardImage(id, cnt === 2 ? "k" : "r")}</div>`;
+function outputCardImageRotated(id, width) {
+    const w = (width * CARDSIZEWR) / CARDSIZEW;
+    if (Array.isArray(id) && id.length === 2) {
+        const [uId, lId] = id;
+        return `<div class="kong-container" style="width: ${w}%;">` +
+            `<div class="card-div rotated-tile" style="width: 100%;">${getCardHelperDiv(uId, width, undefined, "r")}${getCardImage(uId, "r")}</div>` +
+            `<div class="card-div rotated-tile" style="width: 100%;">${getCardHelperDiv(lId, width, undefined, "r")}${getCardImage(lId, "r")}</div>` +
+        `</div>`;
+    }
+    const singleId = Array.isArray(id) ? id[0] : id;
+    return `<div class="card-div rotated-tile" style="width: ${w}%;">${getCardHelperDiv(singleId, width, undefined, "r")}${getCardImage(singleId, "r")}</div>`;
 }
 function outputCardImageBack(width) {
     return `<div class="card-div" style="width: ${width}%;"><img src="./cards/b.png"></div>`;
@@ -608,12 +627,14 @@ function subtilesImage(sids, tcnt) {
         else {
             let rloc = getRotatedLocation(t, sids[i].length);
             let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
-            if (seq) output += outputCardImageRotated(sids[i][rloc], width, 1);
+            if (seq) output += outputCardImageRotated(sids[i][rloc], width);
             for (let j = 0; j < sids[i].length; ++j)
                 if (j === rloc)
                     if (seq) continue;
-                    else if (t > 3) output += outputCardImageRotated(sids[i][j++], width, 2);
-                    else output += outputCardImageRotated(sids[i][j], width, 1);
+                    else if (t > 3) {
+                        output += outputCardImageRotated([sids[i][j], sids[i][j + 1]], width);
+                        j++;
+                    } else output += outputCardImageRotated(sids[i][j], width);
                 else output += outputCardImage(sids[i], j, width, false);
         }
     }
@@ -625,8 +646,17 @@ function inputCardImage(ids, i, j, width, unit) {
     const cls = j < 0 ? " removable-tile" : "";
     return `<div class="card-div${cls}" style="width: ${width}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit)}${getCardImage(ids[i], "", `removeInput(${i}, ${j}, 0)`)}</div>`;
 }
-function inputCardImageRotated(ids, i, j, width, unit, cnt) {
-    return `<div class="card-div rotated-tile" style="width: ${(width * 120) / 80}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[i], width, unit, cnt === 2 ? "k" : "r")}${getCardImage(ids[i], cnt === 2 ? "k" : "r", `removeInput(${i}, ${j}, 1)`)}</div>`;
+function inputCardImageRotated(ids, i, j, width, unit) {
+    const w = (width * CARDSIZEWR) / CARDSIZEW;
+    if (Array.isArray(i) && i.length === 2) {
+        const [uIdx, lIdx] = i;
+        return `<div class="kong-container" style="width: ${w}${unit};">` +
+            `<div class="card-div rotated-tile" style="width: 100%;"><div class="card-overlay"></div>${getCardHelperDiv(ids[uIdx], width, unit, "r")}${getCardImage(ids[uIdx], "r", `removeInput(${uIdx}, ${j}, 1)`)}</div>` +
+            `<div class="card-div rotated-tile" style="width: 100%;"><div class="card-overlay"></div>${getCardHelperDiv(ids[lIdx], width, unit, "r")}${getCardImage(ids[lIdx], "r", `removeInput(${lIdx}, ${j}, 1)`)}</div>` +
+        `</div>`;
+    }
+    const singleIdx = Array.isArray(i) ? i[0] : i;
+    return `<div class="card-div rotated-tile" style="width: ${w}${unit};"><div class="card-overlay"></div>${getCardHelperDiv(ids[singleIdx], width, unit, "r")}${getCardImage(ids[singleIdx], "r", `removeInput(${singleIdx}, ${j}, 1)`)}</div>`;
 }
 function inputCardImageBack(i, j, width, unit) {
     return `<div class="card-div" style="width: ${width}${unit};"><div class="card-overlay"></div><img src="./cards/b.png" onclick="removeInput(${i}, ${j}, 0)" class="clickable"></div>`;
@@ -639,18 +669,15 @@ function drawInputCards() {
     const div = document.getElementById("input-pic");
     let output = "";
     let width = 400 / 14;
-    let height = (400 * 171) / 14 / 80;
-    let sheight = (400 * 129) / 14 / 80;
-    let rheight = 0;
+    let height = (400 * CARDSIZEHRR) / 14 / CARDSIZEW;
     let unit = "px";
     if (window.matchMedia("(width <= 512px)").matches) {
         width = div.clientWidth / 20;
-        height = (div.clientWidth * 171) / 20 / 80;
-        sheight = (div.clientWidth * 129) / 20 / 80;
+        height = (div.clientWidth * CARDSIZEHRR) / 20 / CARDSIZEW;
         unit = "px";
     }
     const tids = ipids[0];
-    for (let i = 0; i < tids.length; ++i) ((output += inputCardImage(tids, i, -1, width, unit)), (rheight = sheight));
+    for (let i = 0; i < tids.length; ++i) output += inputCardImage(tids, i, -1, width, unit);
     const sids = ipids[1];
     for (let i = 0; i < sids.length; ++i) {
         output += inputCardImageEmpty(width, unit);
@@ -661,24 +688,24 @@ function drawInputCards() {
                 if (j === 0 || j === sids[i].length - 1) output += inputCardImageBack(j, i, width, unit);
                 else output += inputCardImage(sids[i], j, i, width, unit);
             output += `</div>`;
-            rheight = Math.max(rheight, sheight);
         } else {
             output += `<div class="meld-group open-meld">`;
             let rloc = getRotatedLocation(t, sids[i].length);
             let seq = isSeq(sids[i].map((a) => a.id).sort((a, b) => a - b));
-            if (seq) output += inputCardImageRotated(sids[i], rloc, i, width, unit, 1);
+            if (seq) output += inputCardImageRotated(sids[i], rloc, i, width, unit);
             for (let j = 0; j < sids[i].length; ++j)
                 if (j === rloc)
                     if (seq) continue;
-                    else if (t > 3) output += inputCardImageRotated(sids[i], j++, i, width, unit, 2);
-                    else output += inputCardImageRotated(sids[i], j, i, width, unit, 1);
+                    else if (t > 3) {
+                        output += inputCardImageRotated(sids[i], [j, j + 1], i, width, unit);
+                        j++;
+                    } else output += inputCardImageRotated(sids[i], j, i, width, unit);
                 else output += inputCardImage(sids[i], j, i, width, unit, false);
             output += `</div>`;
-            if (t > 3) rheight = height;
-            else rheight = Math.max(rheight, sheight);
         }
     }
-    div.style.paddingTop = `${height - rheight + 10}${unit}`;
+    div.style.height = `${height + 10}${unit}`;
+    div.style.paddingTop = "";
     div.innerHTML = output;
     output = "";
     const bonusd = document.getElementById("input-pic-bonus");
@@ -1062,12 +1089,13 @@ function getFixedImage(div) {
     return Array.from(div.querySelectorAll(":scope > img")).find((img) => getComputedStyle(img).position !== "absolute");
 }
 function getNamedImage(div) {
-    return div.querySelector(".card-img-overlay, .card-img-overlay-r, .card-img-overlay-rr-0") ?? getFixedImage(div);
+    return div.querySelector(".card-img-overlay, .card-img-overlay-r") ?? getFixedImage(div);
 }
 function getImageId(img, withtype = false) {
     const src = img.src ?? img.getAttribute("data-src");
     const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
     const filename = filenameWithExt.split(".")[0];
+    console.log(filename);
     if (!withtype) return id(filename).id;
     return { idx: id(filename.slice(-2)), type: filename.at(-3) ?? "" }
 }
@@ -1174,7 +1202,7 @@ function initKeyboard() {
     if (!boardInput) return;
 
     let id = 0, rows = "";
-    const btn = (f, v) => `<div class="card-div input-card-button"><img src="./cards/${f}.gif" onclick="addInput(${v})" /></div>`;
+    const btn = (f, v) => `<div class="card-div input-card-button"><img src="./cards/${f}.png" onclick="addInput(${v})" /></div>`;
     for (const [s, len, red] of [["m", 9, 1], ["p", 9, 1], ["s", 9, 1], ["z", 7, 1], ["h", 8, 0], ["j", 9, 0]]) {
         let cols = "", base = id;
         for (let i = 1; i <= len; i++) cols += btn(`${i}${s}`, id++);
@@ -1208,7 +1236,7 @@ ${rows}\t\t<div class="card-container" id="input-pic-bonus"></div>
 	</div>
 </div>`;
 }
-const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r", "card-img-overlay-rr-0", "card-img-overlay-rr-1"]);
+const gboverlays = new Set(["card-img-overlay", "card-img-overlay-r"]);
 function updateCardSkin(skin) {
     if (skin) localStorage.setItem("cardskin", (cardskin = skin));
     const customSelect = document.querySelector(".custom-select");
@@ -1230,7 +1258,6 @@ function updateCardSkin(skin) {
         let { idx, type } = getImageId(i, true);
         if (idx.id === undefined) return;
         if (div.querySelector("img.card-img-overlay-r")) type = "r";
-        if (div.querySelector("img.card-img-overlay-rr-0")) type = "k";
         const onclick = getFixedImage(div).getAttribute("onclick");
         const imgs = div.querySelectorAll(":scope > *");
         imgs.forEach((img) => {

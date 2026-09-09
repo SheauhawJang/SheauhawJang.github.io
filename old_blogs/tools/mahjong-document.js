@@ -500,6 +500,7 @@ function getOverlay(path, t, class_suffix = "") {
     return render("card-img-overlay");
 }
 function getCardImage(id, t = "", onclick = "") {
+    console.log(cardskin);
     let [name, overlay] = [cardName(id), null];
     if (cardskin === "qq" && (hasQQCard(id) || (id.sp && id.id < 27))) overlay = getOverlay(`./qqcards/${name}.png`, t);
     if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.png`, t);
@@ -507,6 +508,7 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
     if (cardskin === "nn" && hasQQCard(id)) overlay = getOverlay(`./nncards/${name}.png`, t, "card-img-overlay-nikki");
+    if (cardskin === "saki-zenkoku" && (hasJPCard(id) || (id.id >= 34 && id.id < 38))) overlay = getOverlay(`./saki-zenkoku/${name}.png`, t, "card-img-overlay-saki-zenkoku");
     // prettier-ignore
     if (cardskin === "qq")
         switch (id.id) {

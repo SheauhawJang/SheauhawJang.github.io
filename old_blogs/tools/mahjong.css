@@ -573,6 +573,20 @@ html {
   height: 127.413127% !important;
 }
 
+.card-div .card-img-overlay-saki-zenkoku {
+  top: 15.906380% !important;
+  left: 6.250000% !important;
+  width: 87.500000% !important;
+  height: 78.264758% !important;
+}
+
+.card-div .card-img-overlay-saki-zenkoku-r {
+  top: 95.604396% !important;
+  left: 7.219687% !important;
+  width: 59.322034% !important;
+  height: 110.946746% !important;
+}
+
 .card-div div[class*="card-img-overlay"] {
   display: grid;
   gap: 0;

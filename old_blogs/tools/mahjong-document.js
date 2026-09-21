@@ -509,6 +509,7 @@ function getCardImage(id, t = "", onclick = "") {
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
     if (cardskin === "nn" && hasQQCard(id)) overlay = getOverlay(`./nncards/${name}.png`, t, "card-img-overlay-nikki");
     if (cardskin === "saki-zenkoku" && (hasJPCard(id) || (id.id >= 34 && id.id < 38))) overlay = getOverlay(`./saki-zenkoku/${name}.png`, t, "card-img-overlay-saki-zenkoku");
+    if (cardskin === "saki-ver2.0" && (hasJPCard(id) || (id.id >= 34 && id.id < 38))) overlay = getOverlay(`./saki-ver2.0/${name}.png`, t, "card-img-overlay-saki-2");
     // prettier-ignore
     if (cardskin === "qq")
         switch (id.id) {

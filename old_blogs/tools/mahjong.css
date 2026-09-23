@@ -587,6 +587,20 @@ html {
   height: 110.946746% !important;
 }
 
+.card-div .card-img-overlay-saki-2 {
+  top: 12.956811% !important;
+  left: 2.500000% !important;
+  width: 95.000000% !important;
+  height: 84.163898% !important;
+}
+
+.card-div .card-img-overlay-saki-2-r {
+  top: 98.901099% !important;
+  left: 3.995157% !important;
+  width: 64.406780% !important;
+  height: 119.309262% !important;
+}
+
 .card-div div[class*="card-img-overlay"] {
   display: grid;
   gap: 0;

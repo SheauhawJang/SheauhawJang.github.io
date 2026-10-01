@@ -441,18 +441,20 @@
                 <label><input type="checkbox" name="score-gb-setting" value="68" checked/><span data-i18n="quanbukaoxing"></span></label>
                 <label><input type="checkbox" name="score-gb-setting" value="69" checked/><span data-i18n="zuhelongxing"></span></label>
               </div>
-              <span>Quick Start</span>
-              <div class="output-option-group">
-                <button onclick="processGBSetting(0)">MIL Rules</button>
-                <button onclick="processGBSetting(1)">WMO Rules</button>
-                <button onclick="processGBSetting(2)">JMSA Rules</button>
-                <button onclick="processGBSetting(3)">Tziakcha</button>
-                <button onclick="processGBSetting(4)">Infinity Nikki Casual Mahjong</button>
-              </div>
-              <div></div>
-              <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
             </div>
           </details>
+          <div class="output-options">
+            <span>Quick Start</span>
+            <div class="output-option-group">
+              <button onclick="processGBSetting(0)">MIL Rules</button>
+              <button onclick="processGBSetting(1)">WMO Rules</button>
+              <button onclick="processGBSetting(2)">JMSA Rules</button>
+              <button onclick="processGBSetting(3)">Tziakcha</button>
+              <button onclick="processGBSetting(4)">Infinity Nikki Casual Mahjong</button>
+            </div>
+            <div></div>
+            <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
+          </div>
         </div>
         <div class="output-context" id="output-score-gb"></div>
         <div class="output-context" id="brief-output-score-gb" style="display: none"></div>
@@ -709,6 +711,9 @@
                 <label><input type="checkbox" name="score-jp-setting" value="24" />Enable <span class="fan" data-i18n="JP_YAKUNAME_10"></span> Yaku</label>
                 <label><input type="checkbox" name="score-jp-setting" value="25" />Allow 20 <span data-i18n="JP_FU_unit"></span></label>
               </div>
+            </div>
+          </details>
+            <div class="output-options">
               <span>Quick Start</span>
               <div class="output-option-group">
                 <button onclick="processJPSetting(0)">XJTU Rules</button>
@@ -731,7 +736,6 @@
               <div></div>
               <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
             </div>
-          </details>
           <div class="output-grid-div">
             <span><span data-i18n="JP_YAKUNAME_96"></span> Indicator</span>
             <div class="card-container" id="output-pic-doras" style="text-align: left"></div>
@@ -824,20 +828,22 @@
                 <label><input type="radio" name="score-sc-setting-7" value="13" />Death Ready as Ready</label>
                 <label><input type="radio" name="score-sc-setting-7" value="0" checked />Death Ready as Unready</label>
               </div>
-              <span>Quick Start</span>
-              <div class="output-option-group">
-                <button onclick="processSCSetting(0)">MIL</button>
-                <button onclick="processSCSetting(1)">MahjongSoul Bloodshed Skirmish</button>
-                <button onclick="processSCSetting(2)">Mahjong Hime Sichuan Mode</button>
-                <button onclick="processSCSetting(3)">JJ Mahjong Bloody SC</button>
-                <button onclick="processSCSetting(4)">Tencent Mahjong Bloody</button>
-                <button onclick="processSCSetting(5)">Weile Mahjong Bloody</button>
-                <button onclick="processSCSetting(6)">Infinity Nikki Thrilling Mahjong</button>
-              </div>
-              <div></div>
-              <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
             </div>
           </details>
+          <div class="output-options">
+            <span>Quick Start</span>
+            <div class="output-option-group">
+              <button onclick="processSCSetting(0)">MIL</button>
+              <button onclick="processSCSetting(1)">MahjongSoul Bloodshed Skirmish</button>
+              <button onclick="processSCSetting(2)">Mahjong Hime Sichuan Mode</button>
+              <button onclick="processSCSetting(3)">JJ Mahjong Bloody SC</button>
+              <button onclick="processSCSetting(4)">Tencent Mahjong Bloody</button>
+              <button onclick="processSCSetting(5)">Weile Mahjong Bloody</button>
+              <button onclick="processSCSetting(6)">Infinity Nikki Thrilling Mahjong</button>
+            </div>
+            <div></div>
+            <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
+          </div>
         </div>
         <div class="output-context" id="output-score-sc"></div>
         <div class="output-context" id="brief-output-score-sc" style="display: none"></div>

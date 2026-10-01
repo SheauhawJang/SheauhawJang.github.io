@@ -503,7 +503,7 @@ function getCardImage(id, t = "", onclick = "") {
     console.log(cardskin);
     let [name, overlay] = [cardName(id), null];
     if (cardskin === "qq" && (hasQQCard(id) || (id.sp && id.id < 27))) overlay = getOverlay(`./qqcards/${name}.png`, t);
-    if (cardskin === "qqold" && hasQQCard(id)) overlay = getOverlay(`./qqolds/${name}.gif`, t);
+    if (cardskin === "qqold" && hasGBCard(id)) overlay = getOverlay(`./qqolds/${name}.gif`, t);
     if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.png`, t);
     if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`, t);
     if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
@@ -541,7 +541,7 @@ function getCardImage(id, t = "", onclick = "") {
     if (!overlay && id.id > JokerC && id.id <= 50) overlay = getOverlay(`./cards/${name}.png`, t);
     const mask = `<img src="./cards/${t}ff.png" class="card-tile-mask">`;
     if (overlay) 
-        if (cardskin === "nn") return `${overlay}${mask}<img src="./nncards/${t}b.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable card-tile-mask-nikki"`}>`; 
+        if (overlay.includes("card-img-overlay-nikki")) return `${overlay}${mask}<img src="./nncards/${t}b.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable card-tile-mask-nikki"`}>`; 
         else return `${overlay}${mask}<img src="./cards/${t}5z.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
     return `${mask}<img src="./cards/${t}${name}.png"${onclick === "" ? "" : ` onclick="${onclick}" class="clickable"`}>`;
 }

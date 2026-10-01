@@ -979,7 +979,7 @@ html {
   border-radius: 12px;
   box-shadow: 0 10px 25px var(--shadow-soft);
   display: none;
-  z-index: 1000;
+  z-index: 1001; /* 高於 .output-box-head 的 sticky z-index:1000 */
   padding: 6px;
 }
 

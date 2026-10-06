@@ -504,13 +504,14 @@ function getCardImage(id, t = "", onclick = "") {
     let [name, overlay] = [cardName(id), null];
     if (cardskin === "qq" && (hasQQCard(id) || (id.sp && id.id < 27))) overlay = getOverlay(`./qqcards/${name}.png`, t);
     if (cardskin === "qqold" && hasGBCard(id)) overlay = getOverlay(`./qqolds/${name}.gif`, t);
-    if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.png`, t);
+    if (cardskin === "gb" && hasGBCard(id)) overlay = getOverlay(`./gbcards/${name}.gif`, t);
     if (cardskin === "hk" && hasGBCard(id)) overlay = getOverlay(`./hkcards/${name}.png`, t);
     if (cardskin === "op" && hasJPCard(id)) overlay = getOverlay(`./opcards/${name}.png`, t);
     if (cardskin === "tw" && hasGBCard(id)) overlay = getOverlay(`./twcards/${name}.png`, t);
     if (cardskin === "nn" && hasQQCard(id)) overlay = getOverlay(`./nncards/${name}.png`, t, "card-img-overlay-nikki");
     if (cardskin === "saki-zenkoku" && (hasJPCard(id) || (id.id >= 34 && id.id < 38))) overlay = getOverlay(`./saki-zenkoku/${name}.png`, t, "card-img-overlay-saki-zenkoku");
     if (cardskin === "saki-ver2.0" && (hasJPCard(id) || (id.id >= 34 && id.id < 38))) overlay = getOverlay(`./saki-ver2.0/${name}.png`, t, "card-img-overlay-saki-2");
+    if (cardskin === "dm" && hasJPCard(id)) overlay = getOverlay(`./dmcards/${name}.png`, t);
     // prettier-ignore
     if (cardskin === "qq")
         switch (id.id) {
@@ -1513,7 +1514,7 @@ function processJPSetting(id) {
         [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // JPML WRC (3)
         [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Saikouisen (4)
         [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Saikouisen Classic (5)
-        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // ClubJPM (6=4)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // ClubNPM (6=4)
         [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // M.League (7=4)
         [[39, 46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 0, 6, 0, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // EMA (8)
         [[1, 2, 3, 13, 46], [11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 51, 52, 53, 58], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, 0, 0, 0]], // Mahjong Soul (9)
@@ -1523,6 +1524,12 @@ function processJPSetting(id) {
         [[46], [1, 2, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Mu (13=12)
         [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // RMU (14=4)
         [[46], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 0, 0, "9,3", 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Zendanshin (15)
+        [[2, 3, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 51, 52, 53, 58], [4, 0, 6, 0, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, 0, 0, 0]], // FF14 (16)
+        [[46], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Kenko Mahjong (17)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // GakuJanren (18=7)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Saikyosen (19=4)
+        [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // WRC (20=3)
+        [[46], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // JMF / Nihon Majan (21=17)
     ];
     const positive = rules[id][0],
         negative = rules[id][1],

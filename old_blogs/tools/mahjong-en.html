@@ -24,15 +24,16 @@
         <button class="select-trigger">Mahjong Soul Skin</button>
         <div class="select-options">
           <div class="select-option" data-value="jp">Mahjong Soul Skin</div>
-          <div class="select-option" data-value="gb">Tziakcha Skin</div>
           <div class="select-option" data-value="qq">Tencent Skin</div>
-          <div class="select-option" data-value="qqold">Tencent Classic</div>
           <div class="select-option" data-value="hk">Let's Mahjong Skin</div>
           <div class="select-option" data-value="tw">GodGame Skin</div>
           <div class="select-option" data-value="op">Sonoken Skin</div>
+          <div class="select-option" data-value="gb">Tziakcha Skin</div>
+          <div class="select-option" data-value="qqold">Tencent Classic</div>
           <div class="select-option" data-value="nn">Nikki Skin</div>
           <div class="select-option" data-value="saki-zenkoku">Saki: The Nationals</div>
           <div class="select-option" data-value="saki-ver2.0">Saki Ver.2.0</div>
+          <div class="select-option" data-value="dm">Final Fantasy XIV Skin</div>
         </div>
       </div>
     </div>
@@ -512,18 +513,18 @@
               <span data-i18n="yakuman"></span>
               <div class="output-option-group">
                 <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span> Yaku</label>
-                <label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative <span data-i18n="yakuman"></span></label>
-                <label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
+                <label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Kenko Mahjong, Student Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+                <label title="Used in Saikouisen Rules, JPML Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Student Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, Kenko Mahjong, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative <span data-i18n="yakuman"></span></label>
+                <label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Kenko Mahjong, Student Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
               </div>
               <span>Double Wind Pair</span>
               <div class="output-option-group">
                 <label title="Used in MahjongSoul, Tenhou, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
-                <label title="Used in Saikouisen Rules, JPML Rules, ClubJPM Rules, RMU Rules, Zendanshin Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
+                <label title="Used in Saikouisen Rules, JPML Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Kenko Mahjong, Student Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
               </div>
               <span data-i18n="kiri_mangan"></span>
               <div class="output-option-group">
-                <label title="Used in Saikouisen Rules, JPML WRC Rules, ClubJPM Rules, RMU Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
+                <label title="Used in Saikouisen Rules, JPML WRC Rules, ClubNPM Rules, RMU Rules, Kenko Mahjong, Student Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
                 <label><input type="radio" name="score-jp-setting-3" value="0" checked />OFF</label>
               </div>
               <span>Open <span class="fan" data-i18n="JP_YAKUNAME_4"></span></span>
@@ -725,14 +726,20 @@
                 <button onclick="processJPSetting(2)">JPML Official Rules</button>
                 <button onclick="processJPSetting(3)">JPML WRC Rules</button>
                 <button onclick="processJPSetting(13)">μ Rules</button>
-                <button onclick="processJPSetting(6)">ClubJPM Rules</button>
+                <button onclick="processJPSetting(6)">ClubNPM Rules</button>
                 <button onclick="processJPSetting(14)">RMU Rules</button>
                 <button onclick="processJPSetting(15)">Zendanshin Rules</button>
+                <button onclick="processJPSetting(17)">Kenko Mahjong</button>
+                <button onclick="processJPSetting(18)">Student Rules</button>
                 <button onclick="processJPSetting(7)">M.League</button>
+                <button onclick="processJPSetting(19)">Saikyosen</button>
+                <button onclick="processJPSetting(21)">JMF Riichi</button>
                 <button onclick="processJPSetting(8)">EMA Rules</button>
+                <button onclick="processJPSetting(20)">WRC Rules</button>
                 <button onclick="processJPSetting(9)">MahjongSoul</button>
                 <button onclick="processJPSetting(10)">MahjongSoul Local Yaku Mode</button>
                 <button onclick="processJPSetting(11)">Tenhou</button>
+                <button onclick="processJPSetting(16)">Final Fantasy XIV</button>
               </div>
               <div></div>
               <div class="output-time">When using Quick Start, the configurations and calculation results are for reference only. Please refer to the official settlement results for accuracy. If there are any discrepancies, please contact the author.</div>
@@ -883,21 +890,21 @@
               <tr><td>Saikouisen Rules</td><td><a href="./rules/Achieve/Saikouisen.html" target="_blank">Saikouisen Nihon Pro Mahjong Association Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://saikouisen.com/about/rules/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>JPML Rules</td><td><a href="./rules/JPML-Riichi.pdf" target="_blank">Japan Professional Mahjong League Official Rules and WRC Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>μ Rules</td><td><a href="./rules/Mu-Riichi.pdf" target="_blank">Mahjong Union Official Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
-              <tr><td>ClubJPM Rules</td><td><a href="./rules/Achieve/ClubJPM.html" target="_blank">Nihon Pro Mahjong Association Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>ClubNPM Rules</td><td><a href="./rules/Achieve/ClubNPM.html" target="_blank">Nihon Pro Mahjong Association Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://npm2001.com/about/regulations/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>RMU Rules</td><td><a href="./rules/Achieve/RMU.html" target="_blank">RMU Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://rmu.jp/rule" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>Zendanshin Rules</td><td><a href="./rules/Zendanshin.pdf" target="_blank">National Mahjong Rank Committee Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
-              <tr><td>-</td><td><a href="./rules/Kenko-Mahjong.pdf" target="_blank">Japan Kenko-Mahjong Assciation Healthy Mahjong Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
-              <tr><td>-</td><td><a href="./rules/Achieve/GakuJanren.html" target="_blank">Student Mahjong Assciation Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>Kenko Mahjong</td><td><a href="./rules/Kenko-Mahjong.pdf" target="_blank">Japan Kenko-Mahjong Association Healthy Mahjong Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>Student Rules</td><td><a href="./rules/Achieve/GakuJanren.html" target="_blank">Student Mahjong Association Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>M.League</td><td><a href="./rules/Achieve/MLeague.html" target="_blank">M.League Official Match Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
-              <tr><td>-</td><td><a href="./rules/Achieve/Saikyosen.html" target="_blank">Mahjong Saikyosen Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
-              <tr><td>-</td><td><a href="./rules/Achieve/NihonMajan-Riichi.html" target="_blank">Nihon Majan Organization Riichi Mahjong Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>Saikyosen</td><td><a href="./rules/Achieve/Saikyosen.html" target="_blank">Mahjong Saikyosen Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>JMF Riichi</td><td><a href="./rules/Achieve/NihonMajan-Riichi.html" target="_blank">Japan Mahjong Federation Riichi Mahjong Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>XJTU Rules</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">Xi’an Jiaotong University Riichi Mahjong Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Simplified Chinese</span><span class="cmp-word-short">CHS</span></td></tr>
               <tr><td>XJTU 7-stars</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">Xi’an Jiaotong University Seven Stars Cup Riichi Mahjong Open Tournament Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Simplified Chinese</span><span class="cmp-word-short">CHS</span></td></tr>
               <tr><td>EMA Rules</td><td><a href="./rules/EMA-Riichi.pdf" target="_blank">European Mahjong Association Riichi Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">English</span><span class="cmp-word-short">ENG</span></td></tr>
-              <tr><td>-</td><td><a href="./rules/WRC.pdf" target="_blank">World Riichi Championship Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">English</span><span class="cmp-word-short">ENG</span></td></tr>
+              <tr><td>WRC Rules</td><td><a href="./rules/WRC.pdf" target="_blank">World Riichi Championship Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">English</span><span class="cmp-word-short">ENG</span></td></tr>
               <tr><td>-</td><td><a href="./rules/101.pdf" target="_blank">Japanese Mahjong League of 101: 101 Competition Rules</a></td><td><span class="cmp-word-long">Old Riichi Mahjong</span><span class="cmp-word-short">Old RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>-</td><td><a href="./rules/Shingendai.pdf" target="_blank">New <i>Modern Weekly Rules</i> Established in 1975</a></td><td><span class="cmp-word-long">Old Riichi Mahjong</span><span class="cmp-word-short">Old RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
-              <tr><td>-</td><td><a href="./rules/Achieve/NihonMajan-22.html" target="_blank">Nihon Majan Organization Arushiaru Mahjong Rules</a></td><td><span class="cmp-word-long">Traditional Mahjong</span><span class="cmp-word-short">Trad.</span></td><td><a class="external-link" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>-</td><td><a href="./rules/Achieve/NihonMajan-22.html" target="_blank">Japan Mahjong Federation Arushiaru Mahjong Rules</a></td><td><span class="cmp-word-long">Traditional Mahjong</span><span class="cmp-word-short">Trad.</span></td><td><a class="external-link" href="https://www.nihon-majan.org/arusiarumajyanruru.html" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>-</td><td><a href="./rules/MIL-SBR.pdf" target="_blank">Mahjong International League Sichuan Mahjong Competition Rules</a></td><td>Sichuan<span class="cmp-word-long"> Mahjong</span></td><td>pdf</td><td><span class="cmp-word-long">Simplified Chinese</span><span class="cmp-word-short">CHS</span></td></tr>
             </tbody>
           </table>

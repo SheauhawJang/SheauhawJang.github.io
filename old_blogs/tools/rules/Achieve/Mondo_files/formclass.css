@@ -1,0 +1,232 @@
+@charset "UTF-8";
+
+#form_contents {
+	margin-top: 30px;
+}
+
+#form_contents #main {
+	margin-bottom: 21px;
+	padding-bottom: 17px;
+	border-bottom: 1px solid #323232;
+	background: url("contents_back.png") no-repeat left top;
+}
+
+#form_contents #conts .h2_box {
+	margin-bottom: 18px;
+	padding:0 0 10px;
+	background:url("box_top.png") 0 0 repeat-x;
+}
+
+#form_contents #conts .h2_box h2 img {
+	vertical-align:bottom;
+}
+
+
+#form_contents #conts .conts_box {
+	width: 690px;
+	margin: 0 auto;
+}
+
+#form_contents #conts .conts_box h3 {
+	border: 1px solid #f4185c;
+	margin-bottom: 18px;
+	color: #a7a7a7;
+	font-size: 19px;
+	text-align: center;
+	line-height: 38px;
+}
+
+#form_contents #conts .conts_box .center {
+	margin-bottom: 18px;
+	text-align: center;
+}
+
+#form_contents #conts .conts_box table {
+	width: 99.9%;
+	margin: 0 0 6px 1px;
+}
+
+#form_contents #conts .conts_box table th {
+	width: 183px;
+	padding: 10px 30px 23px 0;
+	background: url("th_back.gif") no-repeat left top;
+	color: #a7a7a7;
+	font-size: 14px;
+	text-align: right;
+	vertical-align: top;
+}
+
+#form_contents #conts .conts_box table th span {
+	color: #c00;
+	font-weight: bold;
+}
+
+#form_contents #conts .conts_box table th.special {
+	padding: 5px 30px 13px 0;
+}
+
+#form_contents #conts .conts_box table td {
+	padding: 0 0 8px 4px;
+	color: #a7a7a7;
+	font-size: 14px;
+	vertical-align: middle;
+}
+
+#form_contents #conts .conts_box table td input,
+#form_contents #conts .conts_box table td select,
+#form_contents #conts .conts_box table td textarea {
+	background-color: #F6F6F6;
+	color: #333333;
+	border: 1px solid #505050;
+}
+
+#form_contents #conts .conts_box table td input[type="checkbox"],  
+#form_contents #conts .conts_box table td input[type="radio"] {  
+	background-color: transparent;
+	border: none;
+}
+
+#form_contents #conts .conts_box table td input.text {
+	width: 468px;
+}
+
+#form_contents #conts .conts_box table td ul {
+	margin-left: 5px;
+}
+
+#form_contents #conts .conts_box table td ul li {
+	float: left;
+	margin-right: 20px;
+}
+
+#form_contents #conts .conts_box table td ul.row li {
+	margin-right: 40px;
+}
+
+#form_contents #conts .conts_box table td ul li input {
+	vertical-align: -2px;
+	border: none;
+}
+
+#form_contents #conts .conts_box table td input.w72 {
+	width: 72px;
+	margin-right: 5px;
+}
+
+#form_contents #conts .conts_box table td input.w108 {
+	width: 105px;
+	margin-left: 5px;
+}
+
+#form_contents #conts .conts_box table td select {
+	width: 212px;
+}
+
+#form_contents #conts .conts_box table td textarea {
+	width: 468px;
+	height: 92px;
+}
+
+#form_contents #conts .conts_box ul.submit {
+	margin-left: 224px;
+}
+
+#form_contents #conts .conts_box ul.submit li {
+	float: left;
+	margin-right: 17px;
+}
+
+#form_contents .main_box {
+	padding: 10px 69px 89px 12px;
+	background: url("back01.png") no-repeat left top;
+}
+
+#form_contents .main_box .lBox {
+	width: 765px;
+	float: left;
+	padding-top: 13px;
+}
+
+#form_contents .main_box .lBox p {
+	color: #a7a7a7;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+#form_contents .main_box .rBox {
+	float: right;
+}
+
+#form_contents #conts .warn {
+	color: #c00;
+	font-weight: bold;
+}
+
+#form_contents .user-edit{
+	background:#CCC;
+	height:75px;
+	color:#000;
+	text-align:left;
+	padding:20px;
+	margin-bottom:50px;
+}
+
+#form_contents #conts .common_box .box-body #step_flow{ text-align:center; margin:40px 0px 60px 0px;}
+
+
+#form_contents #conts .common_box .right_link{ text-align:right;}
+
+#form_contents #conts .common_box #agreement_area{ margin-bottom:10px; margin-top:15px; height:100%; height:50px; background-color:#CCC; text-align:center; padding-top:25px; color:#000;}
+
+
+#form_contents #conts .common_box #btn_wrap{ width:100%;}
+
+#form_contents #conts .common_box #btn_box{ text-align:center; margin-top:15px; width:403px; margin:0 auto;}
+
+#form_contents #conts .common_box #btn_box #left{ float:left;}
+
+#form_contents #conts .common_box #btn_box #right{ float:right;}
+
+#form_contents #conts .common_box #input_form_btn{}
+
+#form_contents #conts .common_box #thanks_txt{ text-align:center; margin:15px 0px 60px 0px;}
+#form_contents #conts .common_box #ad_list_btn{ text-align:center; margin-top:15px;}
+#form_contents #conts .common_box #ad_top_btn{ text-align:center; margin-top:15px;}
+
+#form_contents #conts .common_box #ssl_text{ margin-top:20px;	background: url("line_back.gif") repeat-x left top; padding: 15px 0 15px 10px;
+
+}
+
+#form_contents #conts .common_box #ssl_text #left{ float:left; width:775px;}
+#form_contents #conts .common_box #ssl_text #right{ float:right;}
+
+
+#form_contents #conts .conts_box table td.birth select {
+	width: 52px;
+}
+
+#form_contents #conts .conts_box table td.category {
+	font-size:13px;
+}
+
+/*
+     FILE ARCHIVED ON 15:08:09 May 02, 2023 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 04:12:50 Oct 09, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  capture_cache.get: 4.512
+  captures_list: 0.445
+  exclusion.robots: 0.071
+  exclusion.robots.policy: 0.065
+  esindex: 0.007
+  cdx.remote: 10.17
+  LoadShardBlock: 132.519 (3)
+  PetaboxLoader3.datanode: 280.993 (5)
+  load_resource: 411.154 (2)
+  PetaboxLoader3.resolve: 222.429 (2)
+*/

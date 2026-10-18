@@ -510,21 +510,21 @@
           <details>
             <summary>Rules Settings</summary>
             <div class="output-options">
-              <span data-i18n="yakuman"></span>
+              <span><span data-i18n="yakuman"></span><a href="#rule-comparison-title" data-no-ref title="See &quot;Riichi Mahjong Rules Settings&quot; table in the notes section" onclick="const d=document.getElementById('rule-comparison-title')?.closest('details');if(d)d.open=true;"><sup class="reference-sup" title="See &quot;Riichi Mahjong Rules Settings&quot; table in the notes section">[↓]</sup></a></span>
               <div class="output-option-group">
                 <label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span> Yaku</label>
-                <label title="Used in XJTU Rules. Unused in New Hōchi Rules, Saikouisen Rules, JPML Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Kenko Mahjong, Student Rules, M.League, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-                <label title="Used in Saikouisen Rules, JPML Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Student Rules, M.League and XJTU Rules. Unused in New Hōchi Rules, Kenko Mahjong, XJTU 7-stars and EMA Rules."><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative <span data-i18n="yakuman"></span></label>
-                <label title="Unused in New Hōchi Rules, Saikouisen Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Kenko Mahjong, Student Rules, M.League and EMA Rules."><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
+                <label><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+                <label><input type="checkbox" name="score-jp-setting" value="2" checked />Cumulative <span data-i18n="yakuman"></span></label>
+                <label><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
               </div>
-              <span>Double Wind Pair</span>
+              <span>Double Wind Pair<a href="#rule-comparison-title" data-no-ref title="See &quot;Riichi Mahjong Rules Settings&quot; table in the notes section" onclick="const d=document.getElementById('rule-comparison-title')?.closest('details');if(d)d.open=true;"><sup class="reference-sup" title="See &quot;Riichi Mahjong Rules Settings&quot; table in the notes section">[↓]</sup></a></span>
               <div class="output-option-group">
-                <label title="Used in MahjongSoul, Tenhou, XJTU Rules and EMA Rules."><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
-                <label title="Used in Saikouisen Rules, JPML Rules, ClubNPM Rules, RMU Rules, Zendanshin Rules, Kenko Mahjong, Student Rules and M.League."><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
+                <label><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
+                <label><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
               </div>
-              <span data-i18n="kiri_mangan"></span>
+              <span><span data-i18n="kiri_mangan"></span><a href="#rule-comparison-title" data-no-ref title="See &quot;Riichi Mahjong Rules Settings&quot; table in the notes section" onclick="const d=document.getElementById('rule-comparison-title')?.closest('details');if(d)d.open=true;"><sup class="reference-sup" title="See &quot;Riichi Mahjong Rules Settings&quot; table in the notes section">[↓]</sup></a></span>
               <div class="output-option-group">
-                <label title="Used in Saikouisen Rules, JPML WRC Rules, ClubNPM Rules, RMU Rules, Kenko Mahjong, Student Rules and M.League. Unused in Saikouisen Classic Rules and JPML Official Rules."><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
+                <label><input type="radio" name="score-jp-setting-3" value="7" />ON</label>
                 <label><input type="radio" name="score-jp-setting-3" value="0" checked />OFF</label>
               </div>
               <span>Open <span class="fan" data-i18n="JP_YAKUNAME_4"></span></span>
@@ -733,6 +733,7 @@
                 <button onclick="processJPSetting(18)">Student Rules</button>
                 <button onclick="processJPSetting(7)">M.League</button>
                 <button onclick="processJPSetting(19)">Saikyosen</button>
+                <button onclick="processJPSetting(22)">MONDO TV</button>
                 <button onclick="processJPSetting(21)">JMF Riichi</button>
                 <button onclick="processJPSetting(8)">EMA Rules</button>
                 <button onclick="processJPSetting(20)">WRC Rules</button>
@@ -863,6 +864,165 @@
       <details>
         <summary>Notes</summary>
         <div id="title-box"></div>
+				<div class="rule-comparison-title" id="rule-comparison-title">Riichi Mahjong Rules Settings</div>
+				<div class="rule-comparison-wrapper">
+				<table class="rule-comparison-table">
+					<thead>
+						<tr>
+							<th class="sticky-col"></th>
+							<th class="th-angle"><div class="th-angle-inner">XJTU Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">XJTU 7-stars</div></th>
+							<th class="th-angle"><div class="th-angle-inner">New Hōchi Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Saikouisen Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Saikouisen Classic</div></th>
+							<th class="th-angle"><div class="th-angle-inner">JPML Official Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">JPML WRC Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">μ Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">ClubNPM Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">RMU Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Zendanshin Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Kenko Mahjong</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Student Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">M.League</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Saikyosen</div></th>
+							<th class="th-angle"><div class="th-angle-inner">MONDO TV</div></th>
+							<th class="th-angle"><div class="th-angle-inner">JMF Riichi</div></th>
+							<th class="th-angle"><div class="th-angle-inner">EMA Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">WRC Rules</div></th>
+							<th class="th-angle"><div class="th-angle-inner">MahjongSoul</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Tenhou</div></th>
+							<th class="th-angle"><div class="th-angle-inner">Final Fantasy XIV</div></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="sticky-col"><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col">Cumulative <span data-i18n="yakuman"></span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col"><span data-i18n="counted_yakuman"></span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col"><span data-i18n="JP_FU_unit"></span> of<span class="cmp-word-long"> </span><span class="cmp-word-short"><br></span>Double Wind Pair</td>
+							<td><span class="badge-fu-4">4</span></td>
+							<td><span class="badge-fu-4">4</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-4">4</span></td>
+							<td><span class="badge-fu-2">2</span></td>
+							<td><span class="badge-fu-4">4</span></td>
+							<td><span class="badge-fu-4">4</span></td>
+							<td><span class="badge-fu-4">4</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col"><span data-i18n="kiri_mangan"></span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-yes">ON</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+							<td><span class="badge-no">OFF</span></td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
       </details>
     </div>
     <div class="reference-box">
@@ -897,6 +1057,7 @@
               <tr><td>Student Rules</td><td><a href="./rules/Achieve/GakuJanren.html" target="_blank">Student Mahjong Association Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>M.League</td><td><a href="./rules/Achieve/MLeague.html" target="_blank">M.League Official Match Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>Saikyosen</td><td><a href="./rules/Achieve/Saikyosen.html" target="_blank">Mahjong Saikyosen Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
+              <tr><td>MONDO TV</td><td><a href="./rules/Achieve/Mondo.html" target="_blank">Mondo Mahjong Pro League Official Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://web.archive.org/web/20230513050957/https://www.mondotv.jp/special/about_mpl/rule" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>JMF Riichi</td><td><a href="./rules/Achieve/NihonMajan-Riichi.html" target="_blank">Japan Mahjong Federation Riichi Mahjong Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td><a class="external-link" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">Web</a></td><td><span class="cmp-word-long">Japanese</span><span class="cmp-word-short">JPN</span></td></tr>
               <tr><td>XJTU Rules</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">Xi’an Jiaotong University Riichi Mahjong Competition Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Simplified Chinese</span><span class="cmp-word-short">CHS</span></td></tr>
               <tr><td>XJTU 7-stars</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">Xi’an Jiaotong University Seven Stars Cup Riichi Mahjong Open Tournament Rules</a></td><td><span class="cmp-word-long">Riichi Mahjong</span><span class="cmp-word-short">RCR</span></td><td>pdf</td><td><span class="cmp-word-long">Simplified Chinese</span><span class="cmp-word-short">CHS</span></td></tr>

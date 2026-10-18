@@ -510,21 +510,21 @@
 					<details>
 						<summary>规则设置</summary>
 						<div class="output-options">
-							<span data-i18n="yakuman"></span>
+							<span><span data-i18n="yakuman"></span><a href="#rule-comparison-title" data-no-ref title="见注释区“立直麻将规则设置”表格" onclick="const d=document.getElementById('rule-comparison-title')?.closest('details');if(d)d.open=true;"><sup class="reference-sup" title="见注释区“立直麻将规则设置”表格">[↓]</sup></a></span>
 							<div class="output-option-group">
 								<label id="debug-yakuman" style="display: none;"><input type="checkbox" name="score-jp-setting" value="46" checked /><span data-i18n="yakuman"></span>役</label>
-								<label title="XJTU规则采用。新报知规则、最高位战、联盟规则、协会规则、RMU规则、全段审规则、健康麻将、学雀连规则、M.League、XJTU七星杯、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
-								<label title="最高位战、联盟规则、协会规则、RMU规则、全段审规则、学雀连规则、M.League、XJTU规则采用。新报知规则、健康麻将、XJTU七星杯、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="2" checked />复合<span data-i18n="yakuman"></span></label>
-								<label title="新报知规则、最高位战、协会规则、RMU规则、全段审规则、健康麻将、学雀连规则、M.League、EMA规则不采用。"><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
+								<label><input type="checkbox" name="score-jp-setting" value="1" checked /><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></label>
+								<label><input type="checkbox" name="score-jp-setting" value="2" checked />复合<span data-i18n="yakuman"></span></label>
+								<label><input type="checkbox" name="score-jp-setting" value="3" checked /><span data-i18n="counted_yakuman"></span></label>
 							</div>
-							<span>连风牌雀头</span>
+							<span>连风牌雀头<a href="#rule-comparison-title" data-no-ref title="见注释区“立直麻将规则设置”表格" onclick="const d=document.getElementById('rule-comparison-title')?.closest('details');if(d)d.open=true;"><sup class="reference-sup" title="见注释区“立直麻将规则设置”表格">[↓]</sup></a></span>
 							<div class="output-option-group">
-								<label title="雀魂、天凤、XJTU规则、EMA规则采用。"><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
-								<label title="新报知规则、最高位战、联盟规则、协会规则、RMU规则、全段审规则、健康麻将、学雀连规则、M.League采用。"><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
+								<label><input type="radio" name="score-jp-setting-1" value="0" checked />4 <span data-i18n="JP_FU_unit"></span></label>
+								<label><input type="radio" name="score-jp-setting-1" value="5" />2 <span data-i18n="JP_FU_unit"></span></label>
 							</div>
-							<span data-i18n="kiri_mangan"></span>
+							<span><span data-i18n="kiri_mangan"></span><a href="#rule-comparison-title" data-no-ref title="见注释区“立直麻将规则设置”表格" onclick="const d=document.getElementById('rule-comparison-title')?.closest('details');if(d)d.open=true;"><sup class="reference-sup" title="见注释区“立直麻将规则设置”表格">[↓]</sup></a></span>
 							<div class="output-option-group">
-								<label title="最高位战、联盟WRC规则、协会规则、RMU规则、健康麻将、学雀连规则、M.League采用。最高位战Classic规则、联盟官方规则不采用。"><input type="radio" name="score-jp-setting-3" value="7" />开启</label>
+								<label><input type="radio" name="score-jp-setting-3" value="7" />开启</label>
 								<label><input type="radio" name="score-jp-setting-3" value="0" checked />关闭</label>
 							</div>
 							<span>食断</span>
@@ -733,6 +733,7 @@
 							<button onclick="processJPSetting(18)">学雀连规则</button>
 							<button onclick="processJPSetting(7)">M.League</button>
 							<button onclick="processJPSetting(19)">麻将最强战</button>
+							<button onclick="processJPSetting(22)">MONDO TV</button>
 							<button onclick="processJPSetting(21)">日麻联立直</button>
 							<button onclick="processJPSetting(8)">EMA规则</button>
 							<button onclick="processJPSetting(20)">WRC规则</button>
@@ -907,6 +908,165 @@
 			<details>
 				<summary>注释</summary>
 				<div id="title-box"></div>
+				<div class="rule-comparison-title" id="rule-comparison-title">立直麻将规则设置</div>
+				<div class="rule-comparison-wrapper">
+				<table class="rule-comparison-table">
+					<thead>
+						<tr>
+							<th class="sticky-col"></th>
+							<th class="th-angle"><div class="th-angle-inner">XJTU规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">XJTU七星杯</div></th>
+							<th class="th-angle"><div class="th-angle-inner">新报知规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">最高位战</div></th>
+							<th class="th-angle"><div class="th-angle-inner">最高位战Classic</div></th>
+							<th class="th-angle"><div class="th-angle-inner">联盟官方规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">联盟WRC规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">μ规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">协会规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">RMU规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">全段审规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">健康麻将</div></th>
+							<th class="th-angle"><div class="th-angle-inner">学雀连规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">M.League</div></th>
+							<th class="th-angle"><div class="th-angle-inner">麻将最强战</div></th>
+							<th class="th-angle"><div class="th-angle-inner">MONDO TV</div></th>
+							<th class="th-angle"><div class="th-angle-inner">日麻联立直</div></th>
+							<th class="th-angle"><div class="th-angle-inner">EMA规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">WRC规则</div></th>
+							<th class="th-angle"><div class="th-angle-inner">雀魂</div></th>
+							<th class="th-angle"><div class="th-angle-inner">天凤</div></th>
+							<th class="th-angle"><div class="th-angle-inner">最终幻想XIV</div></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="sticky-col"><span data-i18n="times_2"></span><span data-i18n="yakuman"></span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col">复合<span data-i18n="yakuman"></span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col"><span data-i18n="counted_yakuman"></span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col">连风牌雀头</td>
+							<td><span class="badge-fu-4">4 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-4">4 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-4">4 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-2">2 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-4">4 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-4">4 <span data-i18n="JP_FU_unit"></span></span></td>
+							<td><span class="badge-fu-4">4 <span data-i18n="JP_FU_unit"></span></span></td>
+						</tr>
+						<tr>
+							<td class="sticky-col"><span data-i18n="kiri_mangan"></span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-yes">开启</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+							<td><span class="badge-no">关闭</span></td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
 			</details>
 		</div>
 		<div class="reference-box">
@@ -941,6 +1101,7 @@
 						<tr><td>学雀连规则</td><td><a href="./rules/Achieve/GakuJanren.html" target="_blank">学生麻将联盟竞技规定</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td><a class="external-link" href="https://gakusei-majan.com/rule/" target="_blank" rel="noopener noreferrer">网页</a></td><td>日文</td></tr>
 						<tr><td>M.League</td><td><a href="./rules/Achieve/MLeague.html" target="_blank">M.League正式比赛规则</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td><a class="external-link" href="https://m-league.jp/about/" target="_blank" rel="noopener noreferrer">网页</a></td><td>日文</td></tr>
 						<tr><td>麻将最强战</td><td><a href="./rules/Achieve/Saikyosen.html" target="_blank">麻将最强战规则</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td><a class="external-link" href="https://mahjong-saikyosen.com/?page_id=365" target="_blank" rel="noopener noreferrer">网页</a></td><td>日文</td></tr>
+						<tr><td>MONDO TV</td><td><a href="./rules/Achieve/Mondo.html" target="_blank">MONDO麻雀职业联赛官方规则</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td><a class="external-link" href="https://web.archive.org/web/20230513050957/https://www.mondotv.jp/special/about_mpl/rule" target="_blank" rel="noopener noreferrer">网页</a></td><td>日文</td></tr>
 						<tr><td>日麻联立直</td><td><a href="./rules/Achieve/NihonMajan-Riichi.html" target="_blank">日本麻将联盟立直麻将规则</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td><a class="external-link" href="https://www.nihon-majan.org/ritimajyan.html" target="_blank" rel="noopener noreferrer">网页</a></td><td>日文</td></tr>
 						<tr><td>XJTU规则</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">西安交通大学立直麻将比赛规则</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td>pdf</td><td><span class="cmp-word-long">简体中文</span><span class="cmp-word-short">简中</span></td></tr>
 						<tr><td>XJTU七星杯</td><td><a href="./rules/XJTU-Riichi.pdf" target="_blank">西安交通大学七星杯立直麻将公开赛规则</a></td><td>立直<span class="cmp-word-long">麻将</span></td><td>pdf</td><td><span class="cmp-word-long">简体中文</span><span class="cmp-word-short">简中</span></td></tr>

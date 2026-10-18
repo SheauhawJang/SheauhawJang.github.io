@@ -1,0 +1,282 @@
+@charset "UTF-8";
+
+/*==========================================================================================
+	The Green Friend - CSS initialize
+	URL: 
+	Date: 2010-04-24(+09:00)
+	Maintained: R.Suzuki
+==========================================================================================*/
+
+/* Table of contents: */
+/* ------------------
+ *
+ * 00:初期化
+ * 00:accessibility tweaks
+ *
+ */
+
+/* プロパティの指定順序 */
+/*
+ * display
+ * list-style
+ * position
+ * float
+ * clear
+ * width
+ * height
+ * margin
+ * padding
+ * border
+ * background
+ * color
+ * font
+ * text-decoration
+ * text-align
+ * vertical-align
+ * white-space
+ * other text
+ * content
+ *
+ */
+
+
+
+/*==========================================================================================
+
+	//初期化
+
+==========================================================================================*/
+
+/*==========================================================================================
+
+	1-1.Yahoo UI Library Fonts CSS
+	http://developer.yahoo.com/yui/fonts/
+	*Copyright (c) 2006, Yahoo! Inc. All rights reserved.
+	*http://developer.yahoo.com/yui/license.txt
+
+	フォントサイズ対応表↓
+
+	77% = 10px	|	122% = 16px	|	167% = 22px
+	85% = 11px	|	129% = 17px	|	174% = 23px
+	93% = 12px	|	136% = 18px	|	182% = 24px
+	100% = 13px	|	144% = 19px	|	189% = 25px
+	108% = 14px	|	152% = 20px	|	197% = 26px
+	116% = 15px	|	159% = 21px	|
+
+==========================================================================================*/
+
+body {
+	font-size: 13px; /* 基本フォントサイズ */
+	*font-size: small; /* IE7およびIE6標準準拠モード用 */
+	*font: x-small; /* IE6後方互換モード用 */
+	line-height:1.231;
+}
+html>/**/body {font-size/*\**/: small\9;	 /* IE8用 */}
+pre,code,kbd,samp,tt{font-family:monospace;*font-size:108%;line-height:100%;}
+
+
+/*==========================================================================================
+
+	// マージン・パディングをリセット
+
+==========================================================================================*/
+body,div,h1,h2,h3,h4,h5,h6,form,ul,li,ol,dl,dt,dd,fieldset,pre,code,legend,blockquote {
+	margin: 0;
+	padding:0;
+}
+
+p { margin: 0;}
+
+
+h1,h2,h3,h4,h5,h6 {
+	font-size: 100%;
+}
+/*
+h1 {
+	font-size: 189%;
+}
+
+h2 {
+	font-size: 161.6%;
+}
+
+h3 {
+	font-size: 146.5%;
+
+}
+
+h4 {
+	font-size: 123.1%;
+}
+
+h5 {
+	font-size: 108%;
+}
+
+h6 {
+	font-size: 108%;
+}
+*/
+
+
+/*==========================================================================================
+
+	// リスト
+
+==========================================================================================*/
+li { list-style:none; }
+
+
+
+/*==========================================================================================
+
+	// イメージ
+
+==========================================================================================*/
+img { border:none; }
+/** html .img { behavior: expression(IEPNGFIX.fix(this)); }*/
+
+
+
+/*==========================================================================================
+
+	// フォーム
+
+==========================================================================================*/
+input,textarea,select {
+	font-size:100%;
+}
+legend { display:none;}
+fieldset { border:none; }
+button {
+	width: auto;
+	padding:0;
+	margin:0;
+	background:none;
+	border:0;
+	font-size:0;
+	line-height:0;
+	overflow:visible;
+	cursor:pointer;
+}
+
+
+/*==========================================================================================
+
+	// テーブル
+
+==========================================================================================*/
+table {
+	empty-cells:show;
+	border-collapse:collapse;
+	border-spacing:0;
+	font-size:inherit;
+	font:100%;
+}
+caption { 
+	text-align:left; 
+} 
+th {
+	font-weight:normal;
+	text-align:left;
+}
+td {
+	text-align:left;
+}
+
+
+
+/*==========================================================================================
+
+	// 
+
+==========================================================================================*/
+q:before,q:after { 
+	content:''; 
+}
+address,caption,cite,code,dfn,em,strong,th,var { 
+	font-style:normal; 
+	font-weight:normal; 
+}
+
+
+
+
+/*==========================================================================================
+
+	// accessibility tweaks
+
+==========================================================================================*/
+
+/* スキップボタン
+==========================================================================================*/
+.skipNav {
+	position : absolute ;
+	left : -999px ;
+	width : 999px ;
+}
+
+
+/* 区切り線
+==========================================================================================*/
+hr.divider { display:none;}
+
+
+.clear {
+	clear: both;
+}
+
+.floatL {
+	float: left;
+}
+
+.floatR {
+	float: right;
+}
+
+.mr0 {
+	margin-right: 0!important;
+}
+
+.mb0 {
+	margin-bottom: 0!important;
+}
+
+.pb0 {
+	padding-bottom: 0!important;
+}
+
+.pb10 {
+	padding-bottom: 10px!important;
+}
+
+.mt20 {
+	margin-top: 20px!important;
+}
+
+.mt10 {
+	margin-top: 10px!important;
+}
+
+.mb20 {
+	margin-bottom: 20px!important;
+}
+
+.mb10 {
+	margin-bottom: 10px!important;
+}
+/*
+     FILE ARCHIVED ON 15:08:07 May 02, 2023 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 04:12:51 Oct 09, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  capture_cache.get: 1.135
+  load_resource: 1156.353 (2)
+  PetaboxLoader3.resolve: 1086.857 (2)
+  PetaboxLoader3.datanode: 44.758 (2)
+*/

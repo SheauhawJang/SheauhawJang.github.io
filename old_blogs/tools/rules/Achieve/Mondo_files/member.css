@@ -1,0 +1,217 @@
+@charset "UTF-8";
+
+* html .clearfix {
+	zoom: 1;
+}
+
+*+html .clearfix {
+	zoom: 1;
+}
+
+.clearfix:after {
+	height: 0;
+	visibility: hidden;
+	content: ".";
+	display: block;
+	clear: both;
+}
+
+#user h2.h201 {
+	margin: 24px 0 0 ;
+}
+
+#user #contsBox {
+	margin-top: 27px;
+}
+
+#user #conts {
+	float:right;
+	width: 690px;
+}
+
+#user .common_box .box-body {
+	padding:0 20px;
+}
+
+#user #conts .common_box .box-head  {
+	padding-bottom: 8px;
+ background:url("box_top.png") 0 bottom repeat-x;
+}
+
+
+#user #conts .common_box .box-body { 
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+
+#user #conts .common_box .box-body dl.dl01 dt {
+	padding: 2px 0 0 6px;
+	float: left;
+}
+
+#user #conts .common_box .box-body dl.dl01 dd {
+	margin-bottom: 6px;
+	padding: 15px 0 15px 1px;
+	_text-indent: -3px;
+	background: url("line_back.gif") repeat-x left bottom;
+}
+
+#user #conts .common_box .box-body dl.dl01 dd.backNo {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	background: none;
+}
+
+
+#user p.right_link{ text-align:right;}
+
+#user #conts .common_box div#agreement_area { 
+	margin-bottom: 5px;
+	padding: 1em;
+	background-color: #F6F6F6;
+	border: 1px solid #333333;
+}
+
+#user #conts .common_box #input_form_btn{ text-align:center; margin-top:15px;}
+
+#user #conts .common_box #ssl_text{ margin-top:20px;	background: url("line_back.gif") repeat-x left top;	padding: 15px 0 15px 10px;
+
+}
+
+#user #conts .common_box #ssl_text #left{ float:left; width:515px;}
+#user #conts .common_box #ssl_text #right{ float:right;}
+
+
+#user #sideBar .common_box .box-body dl.dl01 dd.backNo {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	background: none;
+}
+
+#user #sideBar {
+	float:left;
+	width:240px;
+	line-height: 1.5;
+}
+
+#user #sideBar .common_box .box-body { 
+	padding: 12px 10px 19px;
+	width:220px;
+}
+
+#user #sideBar .common_box .pad10 {
+	padding-bottom: 8px;
+}
+
+
+
+#user #sideBar .common_box .box-head {
+	margin: 0 9px 0 5px;
+	padding: 0 0 8px;
+ background:url("box_top.png") 0 bottom repeat-x;
+}
+
+#user #sideBar .common_box .box-body dl.dl01 dt {
+	padding: 2px 0 0 6px;
+	float: left;
+}
+
+#user #sideBar .common_box .box-body dl.dl01 dd {
+	margin-bottom: 6px;
+	padding: 10px 0 10px 10px;
+	_text-indent: -3px;
+	background: url("line_back.gif") repeat-x left bottom;
+}
+
+#user #sideBar .common_box .box-body dl.dl01 dd.backNo {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	background: none;
+}
+
+#user #sideBar .common_box .box-body dl.dl01 dd.backNo p#pass-navi{
+
+	text-align:right;
+}
+
+#user #sideBar .common_box .box-body dl.dl01 dd.backNo {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	background: none;
+}
+
+#user #sideBar .common_box .box-body .sBox {
+	margin-bottom: 15px;
+	padding: 0 15px 15px 4px;
+	background: url("line_back.gif") repeat-x left bottom;
+	clear: both;
+}
+
+#user #sideBar .common_box .box-body .backNo {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	background: none;
+}
+
+#user #sideBar .common_box .box-body dl.wid01 {
+	width: 122px;
+	float: right;
+}
+
+#user #sideBar .common_box .box-body dl.wid01 dd {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	background: none;
+}
+
+#user textarea {
+	background-color:#000;
+	color: #a7a7a7;
+	border: 1px solid #505050;
+}
+
+
+#user textarea {
+	width: 640px;
+	height: 200px;
+}
+
+/* ログインエリア
+==========================================================================================*/
+#user #sideBar .input-login {
+width:200px;
+height:25px;
+background:url("input_bg.gif") 0px 0px repeat-x;
+}
+
+#user #sideBar .input-login .inputfield {
+float:left;
+width:180px;
+margin:5px 0 0 10px;
+border:none;
+background:#fff;
+}
+* html #user #sideBar .input-login .inputfield {
+display:inline;
+}
+
+#user #sideBar #login_btn{ text-align:center; margin:0 auto; width:105px; margin-top:15px;}
+
+
+
+/*
+     FILE ARCHIVED ON 15:08:08 May 02, 2023 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 04:12:50 Oct 09, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  capture_cache.get: 0.32
+  load_resource: 322.118 (2)
+  PetaboxLoader3.resolve: 197.539 (2)
+  PetaboxLoader3.datanode: 53.938 (2)
+*/

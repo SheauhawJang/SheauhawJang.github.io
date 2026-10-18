@@ -1164,7 +1164,7 @@ function removeFanSpans(htmlString) {
     return container.textContent;
 }
 function addReferenceMark() {
-    const ref = document.querySelectorAll("[title]");
+    const ref = document.querySelectorAll("[title]:not(.reference-sup):not([data-no-ref])");
     const box = document.getElementById("title-box");
     let notes = [];
     ref.forEach((e, i) => {
@@ -1530,6 +1530,7 @@ function processJPSetting(id) {
         [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // Saikyosen (19=4)
         [[2, 3, 39, 46], [1, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, "9,1", 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // WRC (20=3)
         [[46], [1, 2, 3, 39, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // JMF / Nihon Majan (21=17)
+        [[2, 46], [1, 3, 11, 24, 25, ...bigwheels, ...luckylocals, 41, 42, 43, 58], [4, 5, 6, 7, 0, 0, 0, undefined, 14, 15, ...localyaku0, 0, 0, 0, undefined, 0, 0]], // MONDO TV (22=4)
     ];
     const positive = rules[id][0],
         negative = rules[id][1],

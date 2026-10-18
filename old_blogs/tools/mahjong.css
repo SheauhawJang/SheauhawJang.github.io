@@ -48,6 +48,11 @@
   --link-hover: #551a8b;
   --switch-off: #d0d0d0;
 
+  --fu-4-bg: #fef3c7;
+  --fu-4-color: #b45309;
+  --fu-2-bg: #e0f2fe;
+  --fu-2-color: #0369a1;
+
   /* 麻將手牌/背紋 mask 濾鏡轉換 (原色 #f49829 -> 各主題色) */
   --tile-mask-filter: hue-rotate(103deg) saturate(0.76) brightness(0.8);
 }
@@ -76,6 +81,11 @@ html[data-theme="blue"] {
   --bg-soft: #ecf4fb;
   --border-soft: #c8dff2;
   --shadow-soft: rgba(37, 121, 199, 0.1);
+
+  --fu-4-bg: #fef3c7;
+  --fu-4-color: #b45309;
+  --fu-2-bg: #ede9fe;
+  --fu-2-color: #6d28d9;
 
   --tile-mask-filter: hue-rotate(191deg) saturate(1.4) brightness(0.86);
 }
@@ -131,6 +141,11 @@ html[data-theme="dark"] {
   --link: #f7d660;
   --link-hover: #fbe49b;
   --switch-off: #363e58;
+
+  --fu-4-bg: #382015;
+  --fu-4-color: #fb923c;
+  --fu-2-bg: #172e48;
+  --fu-2-color: #38bdf8;
 }
 
 html[data-theme="dark"] body::before {
@@ -408,6 +423,7 @@ input[type="text"] {
 
 html {
   overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 .toggle-button {
@@ -1143,6 +1159,12 @@ input[type="checkbox"] {
   vertical-align: super;
   cursor: pointer;
 }
+a:has(> .reference-sup),
+a.reference-sup,
+a > .reference-sup {
+  color: inherit;
+  text-decoration: none;
+}
 .reference-box {
   font-size: 14px;
   color: var(--text-muted);
@@ -1249,6 +1271,193 @@ input[type="checkbox"] {
 
 .reference-table tr:hover td {
   background-color: var(--bg-card);
+}
+
+/* Riichi Mahjong Rule Comparison Table
+   表頭不加底色，斜向標題直接浮在頁面背景上，可自由溢出表格右側；
+   外框只畫在表身（tbody）上，滾動容器本身不帶框線與底色。 */
+.rule-comparison-title {
+  scroll-margin-top: 60px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-strong);
+  margin-top: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rule-comparison-title::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 15px;
+  background-color: var(--primary);
+  border-radius: 2px;
+}
+
+.rule-comparison-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.rule-comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: center;
+  font-size: 12.5px;
+}
+
+/* Header：無底色、無框線 */
+.rule-comparison-table th {
+  font-weight: 600;
+  color: var(--text-strong);
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+/* 45-degree Angled Header
+   標題絕對定位、不參與佈局，列寬與文字長度無關 */
+.th-angle {
+  height: 95px;
+  position: relative;
+  width: 52px;
+  min-width: 52px;
+  padding: 0 !important;
+}
+
+.th-angle-inner {
+  position: absolute;
+  left: 16px;
+  bottom: 10px;
+  transform: rotate(-45deg);
+  transform-origin: left bottom;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-normal);
+  line-height: 1;
+  text-align: left;
+}
+
+/* 左上角（配置項 \ 規則）：固定在左側，需不透明以遮住滑過的斜向標題 */
+.rule-comparison-table th.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background-color: var(--bg-page);
+  text-align: left;
+  vertical-align: bottom;
+  padding: 0 12px 10px 4px;
+  white-space: nowrap;
+}
+
+/* Body cells */
+.rule-comparison-table td {
+  padding: 7px 4px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-normal);
+  border-right: 1px solid var(--border-normal);
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+
+.rule-comparison-table td.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  text-align: left;
+  padding: 8px 12px;
+  font-weight: 600;
+  border-right: 2px solid var(--border-soft);
+}
+
+/* 表身外框：頂線用主題淡色，四角圓角 */
+.rule-comparison-table tbody tr:first-child td {
+  border-top: 2px solid var(--border-soft);
+}
+
+.rule-comparison-table tbody td:first-child {
+  border-left: 1px solid var(--border-normal);
+}
+
+.rule-comparison-table tbody td:last-child {
+  border-right: 1px solid var(--border-normal);
+}
+
+.rule-comparison-table tbody tr:first-child td:first-child {
+  border-top-left-radius: 8px;
+}
+
+.rule-comparison-table tbody tr:first-child td:last-child {
+  border-top-right-radius: 8px;
+}
+
+.rule-comparison-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 8px;
+}
+
+.rule-comparison-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 8px;
+}
+
+.rule-comparison-table tbody tr:hover td {
+  background-color: var(--bg-card);
+}
+
+/* Badges / Values */
+.badge-yes {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: var(--primary-soft);
+  color: var(--primary-strong);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+.badge-no {
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+
+.badge-fu-4 {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: var(--fu-4-bg);
+  color: var(--fu-4-color);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+.badge-fu-2 {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: var(--fu-2-bg);
+  color: var(--fu-2-color);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+
+.badge-val {
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.rule-comparison-footnote {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 0 4px;
+  line-height: 1.5;
 }
 
 .reference-table a {

@@ -1,0 +1,258 @@
+@charset "utf-8";
+
+#wrapper {
+	text-align: left;
+	width: 950px;
+	margin: 0 auto;
+}
+
+#container, #top, #bottom {
+	width: 950px;
+	overflow: hidden;
+}
+
+#container div#left,
+#container div#center,
+#container div#right {
+	float: left;
+}
+
+div#container {
+	margin: 20px 0 0 0;
+}
+
+#container div#right {
+	padding: 0;
+}
+
+div.block {
+	border: 0px solid #CCCCCC;
+	padding: 10px;
+}
+
+div.block .controls {
+	border-top: 1px solid #CCCCCC;
+	padding-top: 5px;
+	font-size: 12px;
+}
+
+#wrapper .box {
+	background: url("common_box_back.png") no-repeat scroll 0 0 transparent;
+	border: 1px solid #323232;
+	padding: 9px;
+	margin-bottom: 20px;
+}
+
+#wrapper .box h2 {
+	background: url("box_top.png") repeat-x scroll 0 bottom transparent;
+	padding-bottom: 15px;
+	font-size: 1.25em;
+}
+
+#wrapper #container div#right .box {
+	margin-left: 20px;
+}
+
+
+/* gэmy[W
+------------------------------------------------------------------------------------------*/
+
+#mobile_wrap {
+	width:690px;
+}
+.mobile_box {
+	width:688px;
+	text-align:left;
+	position:relative;
+	margin-bottom:20px;
+	border:1px solid #323232;
+	background: url("common_box_back.png") 0 0 no-repeat;
+}
+.mobile_box .box-head_pachi {
+	margin:0 9px;
+	padding:0 0 10px 37px;
+	background:url("pachi_pachi-slot_line01.png") 0 bottom repeat-x;
+}
+.mobile_box .box-head_idol {
+	margin:0 9px;
+	padding:0 0 10px 37px;
+	background:url("idol_line01.png") 0 bottom repeat-x;
+}
+.mobile_box .box-head_mah {
+	margin:0 9px;
+	padding:0 0 10px 37px;
+	background:url("mah-jong_line01.png") 0 bottom repeat-x;
+}
+.mobile_box .mobile_img {
+	position:absolute;
+	top:-12px;
+	left:5px;
+}
+.mobile_box #mobile_box_pachi {
+	padding:15px 10px 15px 10px;
+}
+.mobile_box #mobile_box_pachi #left {
+	height:260px;
+	width:188px;
+	float:left;
+	padding:10px 10px 10px 5px;
+	border-right:1px solid #343433;
+}
+.mobile_box #mobile_box_pachi #left img {
+	margin-bottom:15px;
+}
+.mobile_box #mobile_box_pachi #center {
+	height:260px;
+	float:left;
+	padding:10px 15px 10px 15px;
+	background:url("mobile_img03.png") 15px 10px no-repeat;
+	border-left:1px solid #000;
+	width:212px;
+	border-right:1px solid #343433;
+}
+.mobile_box #mobile_box_pachi #center p {
+	width:100px;
+}
+.mobile_box #mobile_box_pachi #right {
+	height:260px;
+	width:188px;
+	float:left;
+	padding:10px 5px 10px 15px;
+	border-left:1px solid #000;
+}
+.mobile_box #mobile_box_pachi #right #text01 {
+	width:95px;
+	float:left;
+	margin-top:15px;
+}
+.mobile_box #mobile_box_pachi #right #img01 {
+	width:77px;
+	float:right;
+	margin-top:15px;
+}
+.mobile_box #mobile_box_mah {
+	padding:15px 10px 15px 10px;
+}
+.mobile_box #mobile_box_mah #left {
+	height:305px;
+	width:188px;
+	float:left;
+	padding:10px 10px 10px 5px;
+	border-right:1px solid #343433;
+}
+.mobile_box #mobile_box_mah #left #text01 {
+	width:120px;
+	float:left;
+	margin-bottom:30px;
+}
+.mobile_box #mobile_box_mah #left #img01 {
+	width:60px;
+	float:right;
+}
+.mobile_box #mobile_box_mah #center {
+	height:305px;
+	float:left;
+	padding:10px 15px 10px 15px;
+	text-align:center;
+	border-left:1px solid #000;
+	width:212px;
+	border-right:1px solid #343433;
+}
+.mobile_box #mobile_box_mah #center #text03 {
+	text-align:left;
+	margin-bottom:10px;
+}
+.mobile_box #mobile_box_mah #center img {
+	margin-bottom:15px;
+}
+.mobile_box #mobile_box_mah #right {
+	text-align:center;
+	height:305px;
+	width:188px;
+	float:left;
+	padding:10px 5px 10px 15px;
+	border-left:1px solid #000;
+}
+.mobile_box #mobile_box_mah #right #text04 {
+	text-align:left;
+	margin-bottom:10px;
+}
+.mobile_box #mobile_box_mah #right img {
+	margin-bottom:15px;
+}
+.mobile_box #mobile_box_idol {
+	padding:15px 10px 15px 10px;
+}
+.mobile_box #mobile_box_idol #left {
+	height:250px;
+	width:188px;
+	float:left;
+	padding:10px 10px 10px 5px;
+	border-right:1px solid #343433;
+}
+.mobile_box #mobile_box_idol #left img {
+	margin-bottom:15px;
+}
+.mobile_box #mobile_box_idol #center {
+	height:250px;
+	float:left;
+	padding:10px 15px 10px 15px;
+	border-left:1px solid #000;
+	width:212px;
+	border-right:1px solid #343433;
+}
+.mobile_box #mobile_box_idol #center img {
+	margin-bottom:15px;
+}
+.mobile_box #mobile_box_idol #right {
+	height:250px;
+	width:188px;
+	float:left;
+	padding:10px 5px 10px 15px;
+	border-left:1px solid #000;
+}
+.mobile_box #mobile_box_idol #right #text01 {
+	width:95px;
+	float:left;
+	margin-top:15px;
+}
+.mobile_box #mobile_box_idol #right #img01 {
+	width:77px;
+	float:right;
+	margin-top:15px;
+}
+#mobile_copy {
+	text-align:center;
+	width:640px;
+	margin:0 auto;
+	margin-bottom:50px;
+	margin-top:50px;
+}
+#mobile_sidebox {
+	text-align:center;
+}
+#mobile_sidebox #qr_box {
+	text-align:center;
+	width:123px;
+	margin:0 auto;
+	margin-top:20px;
+}
+
+
+
+
+/*
+     FILE ARCHIVED ON 15:08:07 May 02, 2023 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 04:12:50 Oct 09, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  capture_cache.get: 9.754
+  load_resource: 238.874 (2)
+  PetaboxLoader3.resolve: 114.499 (2)
+  PetaboxLoader3.datanode: 98.69 (2)
+*/

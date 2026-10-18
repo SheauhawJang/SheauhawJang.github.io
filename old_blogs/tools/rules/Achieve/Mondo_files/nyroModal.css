@@ -1,0 +1,135 @@
+div#nyroModalFull {
+	font-size: 12px;
+	color: #777;
+}
+div#nyroModalLoading {
+	border: 4px solid #777;
+	width: 150px;
+	height: 150px;
+	text-indent: -9999em;
+	background: #fff url("ajaxLoader.gif") no-repeat;
+	background-position: center;
+}
+div#nyroModalLoading.error {
+	border: 4px solid #f66;
+	line-height: 20px;
+	padding: 20px;
+	width: 300px;
+	height: 100px;
+	text-indent: 0;
+	background: #fff;
+}
+div#nyroModalWrapper {
+	background: #000000;
+	border: 5px solid #FFFFFF;
+}
+a#closeBut {
+	position: absolute;
+	display: block;
+	top: -16px;
+	right: -16px;
+	width: 12px;
+	height: 12px;
+	text-indent: -9999em;
+	background: url("close.gif") no-repeat;
+	outline: 0;
+}
+h1#nyroModalTitle {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: -22px;
+	left: 5px;
+	font-size: 12px;
+	color: #ddd;
+}
+div#nyroModalContent {
+	overflow: auto;
+}
+
+div#nyroModalContent p {
+	margin: 0px;
+}
+div#nyroModalContent p a {
+	color: #000;
+}
+
+div.wrapper div#nyroModalContent {
+	padding: 5px;
+}
+div.wrapperimage div#nyroModalContent {
+	position: relative;
+	overflow: hidden;
+	text-align: center;
+}
+div.wrapperimage image {
+	vertical-align: baseline;
+}
+div.wrapperimage div#nyroModalContent div {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background: black;
+	padding: 10px;
+	margin: 10px;
+	border: 1px white dotted;
+	overflow: hidden;
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+}
+div.wrapperimage div#nyroModalContent div:hover {
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	cursor: help;
+}
+a.nyroModalPrev, a.nyroModalNext {
+	z-index: 105;
+	outline: none;
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 40%;
+	cursor: pointer;
+	text-indent: -9999em;
+	background: left 20% no-repeat;
+	background-image: url(data:image/gif;base64,AAAA); /* Trick IE6 */
+}
+div.wrapperSwf a.nyroModalPrev, div.wrapperSwf a.nyroModalNext, div.wrapper a.nyroModalPrev, div.wrapper a.nyroModalNext {
+	height: 60%;
+	width: 20%;
+}
+a.nyroModalPrev {
+	left: 0;
+}
+a.nyroModalPrev:hover {
+	background-image: url("prev.gif");
+}
+a.nyroModalNext {
+	right: 0;
+	background-position: right 20%;
+}
+a.nyroModalNext:hover {
+	background-image: url("next.gif");
+}
+
+div#nyroModalContent div {
+	text-align:center;
+}
+div#nyroModalContent div p {
+	background-color:#000000;
+}
+/*
+     FILE ARCHIVED ON 15:08:07 May 02, 2023 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 04:12:50 Oct 09, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  capture_cache.get: 7.032
+  load_resource: 340.351 (2)
+  PetaboxLoader3.resolve: 210.907 (2)
+  PetaboxLoader3.datanode: 41.078 (2)
+*/

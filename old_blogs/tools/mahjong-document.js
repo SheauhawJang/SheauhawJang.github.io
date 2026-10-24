@@ -1180,6 +1180,10 @@ function addReferenceMark() {
     box.innerHTML = notes.join("<br/>");
     if (window.matchMedia("(width <= 512px)").matches) box.closest('details').open = true;
 }
+function openRuleComparison() {
+    const d = document.getElementById("rule-comparison-title")?.closest("details");
+    if (d) d.open = true;
+}
 function replacei18n() {
     setLoc(lang);
     document.querySelectorAll("[data-i18n]").forEach((el) => {

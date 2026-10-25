@@ -233,8 +233,15 @@
       </div>
       <span>和了種類</span>
       <div class="output-option-group">
-       <label><input type="radio" name="score-jp-wintype" value="0" checked />ロン</label>
-       <label><input type="radio" name="score-jp-wintype" value="1" />ツモ</label>
+       <label><input type="radio" name="score-jp-wintype" value="0" onchange="SwitchOption(this, 'jp-wint-details', [true], true)" checked />ロン</label>
+       <label><input type="radio" name="score-jp-wintype" value="1" onchange="SwitchOption(this, 'jp-wint-details', [true])" />ツモ</label>
+       <details id="jp-wint-details" style="display: none;">
+         <summary>アガリ牌判定</summary>
+         <label><input type="radio" name="score-jp-setting-25" value="0" checked />右端</label>
+         <label><input type="radio" name="score-jp-setting-25" value="61,3" />左端</label>
+         <label data-title-ref="gb-wint-max"><input type="radio" name="score-jp-setting-25" value="61,1" />最大値</label>
+         <label data-title-ref="gb-wint-min"><input type="radio" name="score-jp-setting-25" value="61,2" />最小値</label>
+       </details>
       </div>
       <span>立直状態</span>
       <div class="output-option-group">
@@ -528,9 +535,16 @@
       </div>
       <span>和了種類</span>
       <div class="output-option-group">
-       <label><input type="radio" name="score-gb-wintype" value="0" checked />出アガリ</label>
-       <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />東からアガリ</label>
-       <label><input type="radio" name="score-gb-wintype" value="80" />ツモ</label>
+       <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" checked />出アガリ</label>
+       <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" />東からアガリ</label>
+       <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true])" />ツモ</label>
+       <details id="gb-wint-details" style="display: none;">
+         <summary>アガリ牌判定</summary>
+         <label><input type="radio" name="score-gb-setting-16" value="0" checked />右端</label>
+         <label><input type="radio" name="score-gb-setting-16" value="75,3" />左端</label>
+         <label id="gb-wint-max" title="跳牌後のツモ時などに選択できる。"><input type="radio" name="score-gb-setting-16" value="75,1" />最大値</label>
+         <label id="gb-wint-min" title="反則でアガリ牌を混入させたツモ時などに選択できる。"><input type="radio" name="score-gb-setting-16" value="75,2" />最小値</label>
+       </details>
       </div>
       <span>和了状態</span>
       <div class="output-option-group">

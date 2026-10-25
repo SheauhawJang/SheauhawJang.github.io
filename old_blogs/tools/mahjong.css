@@ -1119,6 +1119,28 @@ html {
   gap: 0px 10px;
 }
 
+.output-option-group details,
+#gb-wint-details,
+#jp-wint-details {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0px 10px;
+}
+
+.output-option-group details summary,
+#gb-wint-details summary,
+#jp-wint-details summary {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.output-option-group details label,
+#gb-wint-details label,
+#jp-wint-details label {
+  white-space: nowrap;
+}
+
 .output-option-group div {
   white-space: nowrap;
   flex-shrink: 1;

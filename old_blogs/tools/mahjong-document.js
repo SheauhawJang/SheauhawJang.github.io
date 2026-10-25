@@ -954,8 +954,8 @@ function hoverSortInput(btn, isHover) {
 // Score workers
 let gb_worker = null;
 let gb_worker_info;
-const GB_RADIO_MAX = 15;
-const GB_SETTING_SIZE = 74;
+const GB_RADIO_MAX = 16;
+const GB_SETTING_SIZE = 76;
 const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 function processGBScore() {
@@ -1001,8 +1001,8 @@ function processGBScore() {
 }
 let jp_worker = null;
 let jp_worker_info;
-const JP_RADIO_MAX = 24;
-const JP_SETTING_SIZE = 61;
+const JP_RADIO_MAX = 25;
+const JP_SETTING_SIZE = 63;
 const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
 let JPResult = [];
@@ -1164,13 +1164,27 @@ function removeFanSpans(htmlString) {
     return container.textContent;
 }
 function addReferenceMark() {
-    const ref = document.querySelectorAll("[title]:not(.reference-sup):not([data-no-ref])");
+    const ref = document.querySelectorAll("[title]:not(.reference-sup):not([data-no-ref]), [data-title-ref]:not(.reference-sup):not([data-no-ref])");
     const box = document.getElementById("title-box");
+    if (!box) return;
     let notes = [];
-    ref.forEach((e, i) => {
-        const t = e.getAttribute("title");
-        const n = i + 1;
-        notes.push(`[${n}] ${t}`);
+    const titleMap = new Map();
+    ref.forEach((e) => {
+        let t = e.getAttribute("title");
+        const refId = e.getAttribute("data-title-ref");
+        if (!t && refId) {
+            const target = document.getElementById(refId);
+            if (target) t = target.getAttribute("title");
+        }
+        if (!t) return;
+        let n;
+        if (titleMap.has(t)) {
+            n = titleMap.get(t);
+        } else {
+            n = notes.length + 1;
+            titleMap.set(t, n);
+            notes.push(`[${n}] ${t}`);
+        }
         const sup = document.createElement("sup");
         sup.className = "reference-sup";
         sup.textContent = `[${n}]`;

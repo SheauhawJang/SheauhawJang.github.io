@@ -238,9 +238,16 @@
             </div>
             <span>Winning Way</span>
             <div class="output-option-group">
-              <label><input type="radio" name="score-gb-wintype" value="0" checked />Claim</label>
-              <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />East Claim</label>
-              <label><input type="radio" name="score-gb-wintype" value="80" />Draw</label>
+              <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" checked />Claim</label>
+              <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" />East Claim</label>
+              <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true])" />Draw</label>
+              <details id="gb-wint-details" style="display: none;">
+                <summary>Winning Tile</summary>
+                <label><input type="radio" name="score-gb-setting-16" value="0" checked />Rightmost</label>
+                <label><input type="radio" name="score-gb-setting-16" value="75,3" />Leftmost</label>
+                <label id="gb-wint-max" title="May be selected on self-draw with the initial 14 tiles."><input type="radio" name="score-gb-setting-16" value="75,1" />Maximum</label>
+                <label id="gb-wint-min" title="May be selected on self-draw with the winning tile illegally mixed into the hand."><input type="radio" name="score-gb-setting-16" value="75,2" />Minimum</label>
+              </details>
             </div>
             <span>Winning Status</span>
             <div class="output-option-group">
@@ -360,7 +367,7 @@
                 <label>Minimum limit <input type="number" id="score-gb-setting-fan" value="8" min="0" /> <span data-i18n="GB_FAN_unit"></span></label>
                 <label>Extra <span data-i18n="GB_FAN_unit"></span> <input type="number" id="score-gb-setting-blind" value="8" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
                 <label title="JMSA Rules use 88 points as maximum limit."><input type="checkbox" name="score-gb-setting" value="38" />Maximum limit <input type="number" id="score-gb-setting-maxfan" value="88" min="0" /> <span data-i18n="GB_FAN_unit" data-i18n-case="lower"></span></label>
-                <label><input type="checkbox" name="score-gb-setting" value="39" /><span data-i18n="GB_FAN_unit"></span> divided by 3 when self-drawn</label>
+                <label><input type="checkbox" name="score-gb-setting" value="39" /><span data-i18n="GB_FAN_unit"></span> divided by 3 on self-draw</label>
                 <label><input type="checkbox" name="score-gb-setting" value="59" onchange="SwitchOption(this, 'gb-dealer')"/>Dealer 1-2 System</label>
               </div>
               <span class="fan" data-i18n="GB_FANNAME_86"></span>
@@ -485,8 +492,15 @@
             </div>
             <span>Winning Way</span>
             <div class="output-option-group">
-              <label><input type="radio" name="score-jp-wintype" value="0" checked>Claim</label>
-              <label><input type="radio" name="score-jp-wintype" value="1">Draw</label>
+              <label><input type="radio" name="score-jp-wintype" value="0" onchange="SwitchOption(this, 'jp-wint-details', [true], true)" checked>Claim</label>
+              <label><input type="radio" name="score-jp-wintype" value="1" onchange="SwitchOption(this, 'jp-wint-details', [true])">Draw</label>
+              <details id="jp-wint-details" style="display: none;">
+                <summary>Winning Tile</summary>
+                <label><input type="radio" name="score-jp-setting-25" value="0" checked />Rightmost</label>
+                <label><input type="radio" name="score-jp-setting-25" value="61,3" />Leftmost</label>
+                <label data-title-ref="gb-wint-max"><input type="radio" name="score-jp-setting-25" value="61,1" />Maximum</label>
+                <label data-title-ref="gb-wint-min"><input type="radio" name="score-jp-setting-25" value="61,2" />Minimum</label>
+              </details>
             </div>
             <span>Riichi Status</span>
             <div class="output-option-group">

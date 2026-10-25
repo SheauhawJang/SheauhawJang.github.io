@@ -670,21 +670,6 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         }
     }
     const bless = settingBless(infof, setting);
-    const wint = aids[0].at(-1)?.id;
-    let listen_cnt = 0;
-    if (wint === undefined) listen_cnt = 999;
-    else {
-        --tiles[wint];
-        listen_cnt = GBWaiting(
-            tiles,
-            0,
-            substeps.map((i) => Math.max(0, i)),
-            aids[0].length,
-        ).ans.length;
-        ++tiles[wint];
-    }
-    let must_single_listen = listen_cnt === 999;
-    let gans = { val: 0, fan: [] };
     let [cm, m] = [0, 0];
     let p = Array(7).fill(null);
     if (substeps[0] === -1 && setting[65]) ((p[6] = MeldsPermutation(aids, tiles)), debugPermutation(p[6]));
@@ -710,112 +695,148 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             p[i] = MeldsPermutation(aids, tcp, aids[0].length - 9, ota);
         }
     for (let i = 0; i < 7; ++i) if (p[i]) m += p[i].nots * p[i].nsubots;
-    const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, `${loc.at_least} ${gans.val + aids[2].length} ${loc.GB_FAN_unit}\n${GBFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}`);
-    function inMelds(melds, ta, tb, x) {
-        for (let i = 0; i < melds.length; ++i) for (let j = 0; j < melds[i].length; ++j) if (canBeListen(tiles, ta, tb, melds[i][j], x)) return true;
-        return false;
+    // 和牌張候選：0 = 取最右側(最後一張)，3 = 取最左側(第一張)，1 = 遍歷取最大值，2 = 遍歷取最小值(防止選手迷惑和牌張犯規)
+    // 僅自摸(wt)且非聽牌試算(report)時才考慮 wint mode，點和時和牌張明確來自點炮張，不考慮迷惑情況
+    const lastid = aids[0].at(-1)?.id;
+    const firstid = aids[0].at(0)?.id;
+    const wint_mode = report && wt ? (setting[75] || 0) : 0;
+    let wints = [lastid];
+    if (wint_mode === 3) wints = [firstid];
+    else if (wint_mode === 1 || wint_mode === 2) {
+        wints = lastid === undefined ? [lastid] : [...new Set(aids[0].map((a) => a.id))];
     }
-    function cal(ots, ota, subots, ck, ek, f, others = []) {
-        let cp = 0;
-        let wintf = 0;
-        let bilisten = false;
-        const otb = buildHand(tiles, ota, wint);
-        for (let k = 0; k < ots.length; ++k)
-            if (ots[k].length === 1) ++cp;
-            else {
-                if (wintf) continue;
-                if (ots[k].length === 2) {
-                    if (canBeListen(tiles, ota, otb, ots[k][0], wint)) wintf = 79;
-                } else if (canBeListen(tiles, ota, otb, ots[k][0], wint))
-                    if (NumberArray[ots[k][0]] === 6) wintf = 77;
-                    else bilisten = true;
-                else if (canBeListen(tiles, ota, otb, ots[k][1], wint)) wintf = 78;
-                else if (canBeListen(tiles, ota, otb, ots[k][2], wint))
-                    if (NumberArray[ots[k][2]] === 2) wintf = 77;
-                    else bilisten = true;
-            }
-        if (wint !== undefined && !wt && !wintf && !bilisten && !inMelds(others, ota, otb, wint)) --cp;
-        if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
-        let info = { val: infov, fan: infof.slice() };
-        if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) (++info.val, info.fan.push(wintf));
-        let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, info, tiles, setting);
-        if (ans.val > gans.val) gans = ans;
-        ++cm;
-        if (!(cm & 1048575)) postDebugInfo();
-    }
+    m *= wints.length; // 每個候選和牌張都會完整計算一遍，進度總量隨之放大(cm 跨候選累加)
     const st = new Date();
-    if (substeps[1] === -1 && setting[66]) {
-        let pans = GB7Pairs(aids[0], setting);
-        ((pans.val += infov), pans.fan.push(...infof));
-        GBZimo(setting[41], wt, pans, bless);
-        if (pans.val > gans.val) gans = pans;
-        ++cm;
-        postDebugInfo();
-    }
-    if (substeps[2] === -1 && setting[67]) {
-        let pans = { val: 88 + infov, fan: [7, ...infof] };
-        GBZimo(setting[42], wt, pans, bless);
-        if (pans.val > gans.val) gans = pans;
-        ++cm;
-        postDebugInfo();
-    }
-    if (substeps[3] === -1 && setting[68]) {
-        let pans = { val: 12, fan: [34] };
-        let tcp = tiles.slice();
-        let seven_stars = true;
-        for (let i = 27; i < 34; ++i) {
-            let rid = getRealId(tcp, i);
-            if (rid === -1) {
-                seven_stars = false;
-                break;
-            }
-            --tcp[rid];
+    const [base_infov, base_infof] = [infov, infof];
+    function GBScoreByWint(wint) {
+        let infov = base_infov;
+        const infof = base_infof.slice();
+        let listen_cnt = 0;
+        if (wint === undefined) listen_cnt = 999;
+        else {
+            --tiles[wint];
+            listen_cnt = GBWaiting(
+                tiles,
+                0,
+                substeps.map((i) => Math.max(0, i)),
+                aids[0].length,
+            ).ans.length;
+            ++tiles[wint];
         }
-        if (seven_stars) pans = { val: 24, fan: [20] };
-        else
-            for (let i = 0; i < 6; ++i) {
-                let tcp = tiles.slice();
-                let win = true;
-                for (let j = 0; j < 9; ++j) {
-                    const id = KnitDragonSave[i][j];
-                    let rid = getRealId(tcp, id);
-                    if (rid === -1) {
-                        win = false;
-                        break;
-                    }
-                    --tcp[rid];
+        let must_single_listen = listen_cnt === 999;
+        let gans = { val: 0, fan: [] };
+        const postDebugInfo = () => postDebugInfoGlobal(st, m, cm, `${loc.at_least} ${gans.val + aids[2].length} ${loc.GB_FAN_unit}\n${GBFanDiv([...gans.fan, ...Array(aids[2].length).fill(81)])}`);
+        function inMelds(melds, ta, tb, x) {
+            for (let i = 0; i < melds.length; ++i) for (let j = 0; j < melds[i].length; ++j) if (canBeListen(tiles, ta, tb, melds[i][j], x)) return true;
+            return false;
+        }
+        function cal(ots, ota, subots, ck, ek, f, others = []) {
+            let cp = 0;
+            let wintf = 0;
+            let bilisten = false;
+            const otb = buildHand(tiles, ota, wint);
+            for (let k = 0; k < ots.length; ++k)
+                if (ots[k].length === 1) ++cp;
+                else {
+                    if (wintf) continue;
+                    if (ots[k].length === 2) {
+                        if (canBeListen(tiles, ota, otb, ots[k][0], wint)) wintf = 79;
+                    } else if (canBeListen(tiles, ota, otb, ots[k][0], wint))
+                        if (NumberArray[ots[k][0]] === 6) wintf = 77;
+                        else bilisten = true;
+                    else if (canBeListen(tiles, ota, otb, ots[k][1], wint)) wintf = 78;
+                    else if (canBeListen(tiles, ota, otb, ots[k][2], wint))
+                        if (NumberArray[ots[k][2]] === 2) wintf = 77;
+                        else bilisten = true;
                 }
-                if (win) {
-                    pans.val += 12;
-                    pans.fan.push(35);
-                    break;
-                }
-            }
-        ((pans.val += infov), pans.fan.push(...infof));
-        GBZimo(setting[43], wt, pans, bless);
-        if (pans.val > gans.val) gans = pans;
-        ++cm;
-        postDebugInfo();
-    }
-    if (substeps[0] === -1 && setting[65]) {
-        const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
-        const { err, itots, itsubots, ek, ck } = p[6];
-        let addk = false;
-        for (let i = 0; i < aids[1].length; ++i) if (getUnifiedType(aids[1][i]) > 4) addk = true;
-        if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) ((must_single_listen = true), (infov += 6), infof.push(52));
-        if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
-        itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
-        if (gans.val === 0 && nmp >= 5) ((gans.val = 8), (gans.fan = [43]));
-        postDebugInfo();
-    }
-    if (substeps[4] === -1 && setting[69])
-        for (let i = 0; i < 6; ++i) {
-            if (!p[i]) continue;
-            const { err, itots, itsubots, ek, ck } = p[i];
-            const other = [KnitDragonSave[i].slice(0, 3), KnitDragonSave[i].slice(3, 6), KnitDragonSave[i].slice(6, 9)];
-            itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
+            if (wint !== undefined && !wt && !wintf && !bilisten && !inMelds(others, ota, otb, wint)) --cp;
+            if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
+            let info = { val: infov, fan: infof.slice() };
+            if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) (++info.val, info.fan.push(wintf));
+            let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, info, tiles, setting, wint);
+            if (ans.val > gans.val) gans = ans;
+            ++cm;
+            if (!(cm & 1048575)) postDebugInfo();
+        }
+        if (substeps[1] === -1 && setting[66]) {
+            let pans = GB7Pairs(aids[0], setting);
+            ((pans.val += infov), pans.fan.push(...infof));
+            GBZimo(setting[41], wt, pans, bless);
+            if (pans.val > gans.val) gans = pans;
+            ++cm;
             postDebugInfo();
         }
+        if (substeps[2] === -1 && setting[67]) {
+            let pans = { val: 88 + infov, fan: [7, ...infof] };
+            GBZimo(setting[42], wt, pans, bless);
+            if (pans.val > gans.val) gans = pans;
+            ++cm;
+            postDebugInfo();
+        }
+        if (substeps[3] === -1 && setting[68]) {
+            let pans = { val: 12, fan: [34] };
+            let tcp = tiles.slice();
+            let seven_stars = true;
+            for (let i = 27; i < 34; ++i) {
+                let rid = getRealId(tcp, i);
+                if (rid === -1) {
+                    seven_stars = false;
+                    break;
+                }
+                --tcp[rid];
+            }
+            if (seven_stars) pans = { val: 24, fan: [20] };
+            else
+                for (let i = 0; i < 6; ++i) {
+                    let tcp = tiles.slice();
+                    let win = true;
+                    for (let j = 0; j < 9; ++j) {
+                        const id = KnitDragonSave[i][j];
+                        let rid = getRealId(tcp, id);
+                        if (rid === -1) {
+                            win = false;
+                            break;
+                        }
+                        --tcp[rid];
+                    }
+                    if (win) {
+                        pans.val += 12;
+                        pans.fan.push(35);
+                        break;
+                    }
+                }
+            ((pans.val += infov), pans.fan.push(...infof));
+            GBZimo(setting[43], wt, pans, bless);
+            if (pans.val > gans.val) gans = pans;
+            ++cm;
+            postDebugInfo();
+        }
+        if (substeps[0] === -1 && setting[65]) {
+            const nmp = Math.ceil(aids[0].length / 3) + aids[1].length;
+            const { err, itots, itsubots, ek, ck } = p[6];
+            let addk = false;
+            for (let i = 0; i < aids[1].length; ++i) if (getUnifiedType(aids[1][i]) > 4) addk = true;
+            if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) ((must_single_listen = true), (infov += 6), infof.push(52));
+            if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
+            itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
+            if (gans.val === 0 && nmp >= 5) ((gans.val = 8), (gans.fan = [43]));
+            postDebugInfo();
+        }
+        if (substeps[4] === -1 && setting[69])
+            for (let i = 0; i < 6; ++i) {
+                if (!p[i]) continue;
+                const { err, itots, itsubots, ek, ck } = p[i];
+                const other = [KnitDragonSave[i].slice(0, 3), KnitDragonSave[i].slice(3, 6), KnitDragonSave[i].slice(6, 9)];
+                itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKnitDragon, other)));
+                postDebugInfo();
+            }
+        return gans;
+    }
+    let gans = null;
+    for (const w of wints) {
+        const ans = GBScoreByWint(w);
+        if (gans === null || (wint_mode === 2 ? ans.val < gans.val : ans.val > gans.val)) gans = ans;
+    }
     (seqsave.clear(), trisave.clear());
     filter_cnt = 0;
     let basept = (setting[38] >= 0 ? Math.min(setting[38], gans.val) : gans.val) + aids[2].length;
@@ -870,7 +891,6 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         for (let i = 0; i < fan.length; ++i) if (fan[i] > 0) ++fans[fan[i]];
         return fans;
     }
-    let gans = eans_jp;
     if (!setting[1]) for (let i = 0; i < JPScoreArray0.length; ++i) ((JPScoreArray0[i] = Math.max(-1, JPScoreArray0[i])), (JPScoreArray1[i] = Math.max(-1, JPScoreArray1[i])));
     if (setting[17]) ((JPScoreArray0[48] = [0, 2, 1][setting[17]]), (JPScoreArray1[48] = 1));
     if (setting[21]) ((JPScoreArray0[52] = [0, 2, 2, 3, 2, 3][setting[21]]), (JPScoreArray1[52] = [0, 2, 1, 2, 0, 0][setting[21]]));
@@ -881,7 +901,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     if (setting[48] === 1) (--JPScoreArray0[31], --JPScoreArray0[28]);
     if (setting[54]) JPScoreArray0[70] = JPScoreArray1[70] = [0, 2, 3][setting[54]];
     if (setting[55]) loc.JP_YAKUNAME_70 = loc.JP_YAKUNAME_70_EX;
-    let infoans = { ...eans_jp, delete: 0 };
+    let base_infoans = { ...eans_jp, delete: 0 };
     let riichi = false;
     function getSpecial(f) {
         let aka = 0;
@@ -896,51 +916,50 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
     const guse = setting[49] ? guse3p : guseall;
     const p = MeldsPermutation(aids, undefined, undefined, undefined, guse);
     debugPermutation(p);
-    let searchList = [() => normalSearch(substeps, p)];
-    const infoupdate = (id) => JPUpdateFan(infoans, setting, id);
+    const infoupdate = (id) => JPUpdateFan(base_infoans, setting, id);
+    let renhou = 0;
     if (info.includes(32))
         if (tsumo)
             if (mw === 27) infoupdate(32);
             else infoupdate(33);
         else {
             const RenhouScoreArray = [0, 5, -1, 4, 6, 8];
-            const renhou = (JPScoreArray0[30] = JPScoreArray1[30] = RenhouScoreArray[setting[9]]);
-            if (renhou > 0 && setting[39]) fixYakuSearch(30, renhou);
-            else infoupdate(30);
+            renhou = JPScoreArray0[30] = JPScoreArray1[30] = RenhouScoreArray[setting[9]];
+            if (!(renhou > 0 && setting[39])) infoupdate(30);
         }
     if (setting[38] && info.includes(16) && info.includes(13)) infoupdate(66);
     if (setting[59] && info.includes(71) && info.includes(-71) && !tsumo) ((JPScoreArray0[71] = JPScoreArray1[71] = -1), infoupdate(71));
-    function canBeFixWin(t) {
-        if (aids[0].length === 0) return false;
-        const s = aids[0].at(-1).id;
-        return [t, JokerA[t], JokerB[t], JokerC].includes(s);
+    function canBeFixWin(t, wint) {
+        if (wint === undefined) return false;
+        return [t, JokerA[t], JokerB[t], JokerC].includes(wint);
     }
-    if (!infoans.yakuman) {
+    if (!base_infoans.yakuman) {
         if (info.includes(16)) (infoupdate(16), (riichi = true), (JPScoreArray0[71] = JPScoreArray1[71] = setting[59]));
         if (setting[59] && info.includes(71)) (infoupdate(71), (riichi = true));
         if (!riichi && info.includes(1)) (infoupdate(1), (riichi = true));
-        if (riichi && info.includes(3)) (infoupdate(3), (infoans.delete += setting[13] ? 0 : 1));
-        if (info.includes(12) && tsumo) {
-            infoupdate(12);
-            if (setting[36] && canBeFixWin(13)) searchList.push(() => fixWinTileSearch(13, 12, 64, 1, 5));
-        } else if (info.includes(13))
-            if (tsumo) {
-                infoupdate(13);
-                if (setting[34] && canBeFixWin(9)) searchList.push(() => fixWinTileSearch(9, 13, 62, 1, 5));
-            } else {
-                infoupdate(14);
-                if (setting[35] && canBeFixWin(17)) searchList.push(() => fixWinTileSearch(17, 14, 63, 1, 5));
-            }
-        if (info.includes(15) && !tsumo) {
-            infoupdate(15);
-            if (setting[37] && canBeFixWin(19)) searchList.push(() => fixWinTileSearch(19, 15, 65, 1, 5));
-        }
+        if (riichi && info.includes(3)) (infoupdate(3), (base_infoans.delete += setting[13] ? 0 : 1));
+        if (info.includes(12) && tsumo) infoupdate(12);
+        else if (info.includes(13))
+            if (tsumo) infoupdate(13);
+            else infoupdate(14);
+        if (info.includes(15) && !tsumo) infoupdate(15);
         if (setting[32] && info.includes(60) && !tsumo) infoupdate(60);
         if (setting[33] && info.includes(61) && !tsumo) infoupdate(61);
-        infoans.valfan += aka + north + nukicnt;
-        infoans.delete += setting[12] ? 0 : aka + north + nukicnt;
+        base_infoans.valfan += aka + north + nukicnt;
+        base_infoans.delete += setting[12] ? 0 : aka + north + nukicnt;
+    }
+    // 和牌張候選：0 = 取最右側(最後一張)，3 = 取最左側(第一張)，1 = 遍歷取最大值，2 = 遍歷取最小值(防止選手迷惑和牌張犯規)
+    // 僅自摸(tsumo)且非聽牌試算(report)時才考慮 wint mode，點和時和牌張明確來自點炮張，不考慮迷惑情況
+    const lastid = aids[0].at(-1)?.id;
+    const firstid = aids[0].at(0)?.id;
+    const wint_mode = report && tsumo ? (setting[61] || 0) : 0;
+    let wints = [lastid];
+    if (wint_mode === 3) wints = [firstid];
+    else if (wint_mode === 1 || wint_mode === 2) {
+        wints = lastid === undefined ? [lastid] : [...new Set(aids[0].map((a) => a.id))];
     }
     let [cm, m] = [0, 0];
+    if (substeps[0] === -1 && !setting[58]) m = p.nots * p.nsubots * wints.length;
     let mq = aids[1].length === 0;
     const nukis = getTiles(aids[2]);
     let [doras, uras] = [getTiles(aids[3]), getTiles(riichi ? aids[4] : [])];
@@ -961,99 +980,138 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         if (!ans.yakuman && setting[11])
             if (!setting[3]) return false;
             else limit = Math.max(limit, 13);
-        return ans.yakuman || ans.valfan - (setting[12] ? 0 : ans.dora) - ans.ura - infoans.delete >= limit;
+        return ans.yakuman || ans.valfan - (setting[12] ? 0 : ans.dora) - ans.ura - base_infoans.delete >= limit;
     }
-    function replaceCheck(ans) {
-        if (ans.val > gans.val) return true;
-        else if (ans.val === gans.val)
-            if (ans.yakuman > gans.yakuman) return true;
-            else if (ans.yakuman === gans.yakuman)
-                if (ans.realyakuman > gans.realyakuman) return true;
-                else if (ans.realyakuman === gans.realyakuman)
-                    if (ans.valfan > gans.valfan) return true;
-                    else if (ans.valfan === gans.valfan) if (ans.realfus > gans.realfus) return true;
+    function compareJPAns(a, b, mode) {
+        if (!b) return true;
+        const yakuA = ansYakuAri(a), yakuB = ansYakuAri(b);
+        if (mode === 2) {
+            if (!yakuA && yakuB) return true;
+            if (yakuA && !yakuB) return false;
+            if (a.val < b.val) return true;
+            if (a.val > b.val) return false;
+            if (a.yakuman < b.yakuman) return true;
+            if (a.yakuman > b.yakuman) return false;
+            if (a.realyakuman < b.realyakuman) return true;
+            if (a.realyakuman > b.realyakuman) return false;
+            if (a.valfan < b.valfan) return true;
+            if (a.valfan > b.valfan) return false;
+            if (a.realfus < b.realfus) return true;
+            return false;
+        } else {
+            if (yakuA && !yakuB) return true;
+            if (!yakuA && yakuB) return false;
+            if (a.val > b.val) return true;
+            if (a.val < b.val) return false;
+            if (a.yakuman > b.yakuman) return true;
+            if (a.yakuman > b.yakuman) return false;
+            if (a.realyakuman > b.realyakuman) return true;
+            if (a.realyakuman > b.realyakuman) return false;
+            if (a.valfan > b.valfan) return true;
+            if (a.valfan < b.valfan) return false;
+            if (a.realfus > b.realfus) return true;
+            return false;
+        }
     }
-    function updateAns(ans) {
-        if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
-        else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
-    }
-    function cal(ots, ota, subots, ck, ek) {
-        updateAns(JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting));
-        ++cm;
-        if (!(cm & 1048575)) postDebugInfo();
-    }
-    function normalSearch(substeps, p) {
-        if (substeps[1] === -1) updateAns(JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting));
-        if (substeps[2] === -1 && !setting[58]) {
-            let tcp = tiles.slice();
-            --tcp[aids[0].at(-1).id];
-            let listen_13 = setting[1];
-            for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {
-                const rid = getRealId(tcp, Orphan13Array[i]);
-                if (rid === -1) listen_13 = false;
-                else --tcp[rid];
+    function JPScoreByWint(wint) {
+        let gans = eans_jp;
+        let infoans = ansCopy(base_infoans);
+        function updateAns(ans) {
+            if (compareJPAns(ans, gans, 1)) gans = ans;
+        }
+        function cal(ots, ota, subots, ck, ek) {
+            updateAns(JPKernel([...ots, ...subots], infoans, gans, aids, ck, ek, gw, mw, tsumo, tiles, ota, doras, uras, nukis, setting, wint));
+            ++cm;
+            if (!(cm & 1048575)) postDebugInfo();
+        }
+        function normalSearch(substeps, p, wint) {
+            if (substeps[1] === -1) updateAns(JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting));
+            if (substeps[2] === -1 && !setting[58]) {
+                let tcp = tiles.slice();
+                if (wint !== undefined) --tcp[wint];
+                let listen_13 = setting[1];
+                for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {
+                    const rid = getRealId(tcp, Orphan13Array[i]);
+                    if (rid === -1) listen_13 = false;
+                    else --tcp[rid];
+                }
+                let kksans = { ...infoans, fan: infoans.fan.slice() };
+                JPUpdateFan(kksans, setting, listen_13 ? 37 : 36);
+                JPUpdateFan(kksans, setting, 25);
+                if (setting[40] && !setting[42] && !setting[43]) JPUpdateFan(kksans, setting, 67);
+                if (tsumo) JPUpdateFan(kksans, setting, 2);
+                let [gd, gu] = [0, 0];
+                let vaildora = nukis.slice();
+                for (let i = 0; i < Orphan13Array.length; ++i) ++vaildora[Orphan13Array[i]];
+                const head = OrphanOutput(tiles).at(-1)[0];
+                for (let i = 0; i < Orphan13Array.length; ++i) {
+                    if (!isJokerEqual(head, Orphan13Array[i])) continue;
+                    ++vaildora[Orphan13Array[i]];
+                    let [d, u] = getDoras(vaildora, doras, uras);
+                    if (d + u > gd + gu) [gd, gu] = [d, u];
+                    --vaildora[Orphan13Array[i]];
+                }
+                kksans.valfan += gd + gu;
+                updateAns(getJPAnsUnion(setting, kksans, [8], 20, 20, gd, gu));
             }
-            let kksans = { ...infoans, fan: infoans.fan.slice() };
-            JPUpdateFan(kksans, setting, listen_13 ? 37 : 36);
-            JPUpdateFan(kksans, setting, 25);
-            if (setting[40] && !setting[42] && !setting[43]) JPUpdateFan(kksans, setting, 67);
-            if (tsumo) JPUpdateFan(kksans, setting, 2);
-            let [gd, gu] = [0, 0];
-            let vaildora = nukis.slice();
-            for (let i = 0; i < Orphan13Array.length; ++i) ++vaildora[Orphan13Array[i]];
-            const head = OrphanOutput(tiles).at(-1)[0];
-            for (let i = 0; i < Orphan13Array.length; ++i) {
-                if (!isJokerEqual(head, Orphan13Array[i])) continue;
-                ++vaildora[Orphan13Array[i]];
-                let [d, u] = getDoras(vaildora, doras, uras);
-                if (d + u > gd + gu) [gd, gu] = [d, u];
-                --vaildora[Orphan13Array[i]];
+            if (substeps[0] === -1 && !setting[58]) {
+                const { itots, itsubots, ek, ck } = p;
+                mq = ck === aids[1].length;
+                itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
             }
-            kksans.valfan += gd + gu;
-            updateAns(getJPAnsUnion(setting, kksans, [8], 20, 20, gd, gu));
         }
-        if (substeps[0] === -1 && !setting[58]) {
-            const { itots, itsubots, ek, ck, nots, nsubots } = p;
-            [cm, m] = [0, nots * nsubots];
-            mq = ck === aids[1].length;
-            itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek)));
+        function fixYakuSearch(fan, valfan, wint) {
+            let [gf, gvf, grf] = [[8], 20, 0];
+            function calfu(ots, ota, subots, ck, ek) {
+                const mq = ots.length + subots.length >= 5 && subots.length === ck;
+                let { listen_type, bilisten, valfus, fus } = JPGetFusMain([...ots, ...subots], aids, ck, gw, mw, tsumo, tiles, ota, setting, mq, wint);
+                let realfus = 0;
+                ({ valfus, fus, realfus } = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, mq));
+                if (realfus > grf) ((gf = fus), (gvf = valfus), (grf = realfus));
+            }
+            if (substeps[0] === -1) {
+                const { err, itots, itsubots, ck, ek } = p;
+                itots((ots, ota) => itsubots((subots) => calfu(ots, ota, subots, ck, ek)));
+            }
+            if (substeps[1] === -1) {
+                const SevenPairsFusArray = [25, 50, 100];
+                const sf = (JPFuArray[10] = SevenPairsFusArray[setting[8]]);
+                if (sf >= gvf) ((gvf = grf = sf), (gf = [10]));
+            }
+            const ans = getJPAns(setting, [fan], valfan, 0, 0, gf, gvf, grf);
+            updateAns(ans);
         }
+        function fixWinTileSearch(t, sf, tf, svf, tvf, wint) {
+            let i = infoans.fan.findIndex((e) => e === sf);
+            if (i === -1 || i === undefined) (infoans.fan.push(tf), (infoans.valfan += tvf));
+            else ((infoans.fan[i] = tf), (infoans.valfan += tvf - svf));
+            const s = wint;
+            (--tiles[s], ++tiles[t]);
+            let idx = aids[0].findLastIndex((a) => a.id === s);
+            if (idx !== -1) aids[0][idx].id = t;
+            normalSearch(JPStep(), MeldsPermutation(aids, undefined, undefined, undefined, guse), t);
+            if (idx !== -1) aids[0][idx].id = s;
+            (++tiles[s], --tiles[t]);
+            if (i === -1 || i === undefined) (infoans.fan.pop(), (infoans.valfan -= tvf));
+            else ((infoans.fan[i] = sf), (infoans.valfan += svf - tvf));
+        }
+        let searchList = [() => normalSearch(substeps, p, wint)];
+        if (!tsumo && renhou > 0 && setting[39]) searchList.push(() => fixYakuSearch(30, renhou, wint));
+        if (!base_infoans.yakuman) {
+            if (info.includes(12) && tsumo && setting[36] && canBeFixWin(13, wint)) searchList.push(() => fixWinTileSearch(13, 12, 64, 1, 5, wint));
+            if (info.includes(13) && tsumo && setting[34] && canBeFixWin(9, wint)) searchList.push(() => fixWinTileSearch(9, 13, 62, 1, 5, wint));
+            if (info.includes(13) && !tsumo && setting[35] && canBeFixWin(17, wint)) searchList.push(() => fixWinTileSearch(17, 14, 63, 1, 5, wint));
+            if (info.includes(15) && !tsumo && setting[37] && canBeFixWin(19, wint)) searchList.push(() => fixWinTileSearch(19, 15, 65, 1, 5, wint));
+        }
+        searchList.forEach((f) => f());
+        return gans;
     }
-    function fixYakuSearch(fan, valfan) {
-        let [gf, gvf, grf] = [[8], 20, 0];
-        function calfu(ots, ota, subots, ck, ek) {
-            let { listen_type, bilisten, valfus, fus } = JPGetFusMain([...ots, ...subots], aids, ck, gw, mw, tsumo, tiles, ota, setting);
-            let realfus = 0;
-            ({ valfus, fus, realfus } = JPGetFusRemain(1, undefined, tsumo, fus, valfus, listen_type, bilisten, setting, ots.length + subots.length >= 5 && subots.length === ck));
-            if (realfus > grf) ((gf = fus), (gvf = valfus), (grf = realfus));
-        }
-        if (substeps[0] === -1) {
-            const { err, itots, itsubots, ck, ek } = p;
-            itots((ots, ota) => itsubots((subots) => calfu(ots, ota, subots, ck, ek)));
-        }
-        if (substeps[1] === -1) {
-            const SevenPairsFusArray = [25, 50, 100];
-            const sf = (JPFuArray[10] = SevenPairsFusArray[setting[8]]);
-            if (sf >= gvf) ((gvf = grf = sf), (gf = [10]));
-        }
-        const ans = getJPAns(setting, [fan], valfan, 0, 0, gf, gvf, grf);
-        if (ansYakuAri(gans) && ansYakuAri(ans) && replaceCheck(ans)) gans = ans;
-        else if (!ansYakuAri(gans) && (ansYakuAri(ans) || replaceCheck(ans))) gans = ans;
+    let gans = null;
+    for (const w of wints) {
+        const ans = JPScoreByWint(w);
+        if (compareJPAns(ans, gans, wint_mode)) gans = ans;
     }
-    function fixWinTileSearch(t, sf, tf, svf, tvf) {
-        let i = infoans.fan.findIndex((e) => e === sf);
-        if (i === undefined) (infoans.push(tf), (infoans.valfan += tvf));
-        else ((infoans.fan[i] = tf), (infoans.valfan += tvf - svf));
-        const s = aids[0].at(-1).id;
-        (--tiles[s], ++tiles[t]);
-        aids[0].at(-1).id = t;
-        normalSearch(JPStep(), MeldsPermutation(aids, undefined, undefined, undefined, guse));
-        aids[0].at(-1).id = s;
-        (++tiles[s], --tiles[t]);
-        if (i === undefined) (infoans.pop(), (infoans.valfan -= tvf));
-        else ((infoans.fan[i] = sf), (infoans.valfan += svf - tvf));
-    }
-    searchList.forEach((f) => f());
+    if (!gans) gans = eans_jp;
     if (gans.yakuman) aka = north = nukicnt = 0;
     const name = JPPrintName(gans.yakuman, gans.print);
     if (setting[49]) {

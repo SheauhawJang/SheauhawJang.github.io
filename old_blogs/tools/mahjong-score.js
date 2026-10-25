@@ -729,7 +729,7 @@ function GeneralPair(melds, f = (x) => GeneralArray[x]) {
     for (let i = 0; i < melds.length; ++i) if (melds[i].length === 2) return f(melds[i][0]);
     return false;
 }
-function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, tiles, setting) {
+function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, tiles, setting, wint = aids[0].at(-1)?.id) {
     let [must_hunyise, must_qingyise, must_quandai, must_hun19, must_pinghe, must_duan1, must_wuzi, must_quemen] = Array(8).fill(false);
     let yaojiuke = true;
     let [can_2tong, can_3tong] = [true, true];
@@ -741,7 +741,7 @@ function GBKernel(melds, gans, aids, ck, ek, cp, wind60, wind61, zimo, info, til
     if (setting[70] && melds.length >= 5 && isMask(marr, GreenArray)) ((v += 88), f.push(3), (must_hunyise ||= !setting[22]));
     if (setting[63] && melds.length >= 5 && isMask(marr, WalletArray)) ((v += 16), f.push(90), (must_hunyise ||= !setting[72]));
     if (setting[64] && melds.length >= 5 && isMask(marr, PurpleArray)) ((v += 12), f.push(91), (must_hunyise ||= !setting[73]));
-    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, aids[0].at(-1).id)) ((v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73)));
+    if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds, tiles, wint)) ((v += 88), f.push(4), (must_qingyise = true), (must_menqing = true), setting[27] ? (yaojiuke = false) : (--v, f.push(-73)));
     ({ val: v, fan: f, zimo } = GBZimo(setting[19], zimo, { val: v, fan: f }, settingBless(info.fan, setting), melds.length >= 5 && aids[1].length === ck, must_menqing));
     if (melds.length >= 5 && isMask(marr, TerminalArray)) ((v += 64), f.push(8), (must_hun19 = true), (must_wuzi = true), (can_2tong &&= setting[28]), (can_3tong &&= setting[29]));
     if (melds.length >= 5 && isMask(marr, HonorArray)) ((v += 64), f.push(11), (must_hun19 = true), (must_hunyise = true));
@@ -1063,12 +1063,11 @@ function getDoras(vaildora, doras, uras) {
     return [d, u];
 }
 const JP3PArray = guse3p.map((x) => (x === Infinity ? 0 : 1));
-function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting) {
+function JPKernel(melds, infoans, gans, aids, ck, ek, wind5, wind6, tsumo, tiles, ta, doras, uras, nuki, setting, wint = aids[0].at(-1)?.id ?? -1) {
     //if (setting[49] && !isMask(flattenMelds(melds), JP3PArray)) return eans_jp;
     let ans = ansCopy(infoans);
     const mq = melds.length >= 5 && aids[1].length === ck;
     const update = (id, n) => JPUpdateFan(ans, setting, id, n, mq);
-    const wint = aids[0].at(-1)?.id ?? -1;
     const tb = buildHand(tiles, ta, wint);
     let { head, listen_type, cp, bilisten, valfus, fus } = JPGetFusMain(melds, aids, ck, wind5, wind6, tsumo, tiles, ta, setting, mq, wint, tb);
     if (aids[0].length === 14 && aids[1].length === 0 && ninegate(melds))

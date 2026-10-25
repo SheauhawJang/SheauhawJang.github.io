@@ -235,8 +235,15 @@
       </div>
       <span>和牌方式</span>
       <div class="output-option-group">
-       <label><input type="radio" name="score-jp-wintype" value="0" checked>榮和</label>
-       <label><input type="radio" name="score-jp-wintype" value="1">自摸</label>
+       <label><input type="radio" name="score-jp-wintype" value="0" onchange="SwitchOption(this, 'jp-wint-details', [true], true)" checked>榮和</label>
+       <label><input type="radio" name="score-jp-wintype" value="1" onchange="SwitchOption(this, 'jp-wint-details', [true])">自摸</label>
+       <details id="jp-wint-details" style="display: none;">
+         <summary>和牌張判定</summary>
+         <label><input type="radio" name="score-jp-setting-25" value="0" checked />最右側</label>
+         <label><input type="radio" name="score-jp-setting-25" value="61,3" />最左側</label>
+         <label data-title-ref="gb-wint-max"><input type="radio" name="score-jp-setting-25" value="61,1" />最大值</label>
+         <label data-title-ref="gb-wint-min"><input type="radio" name="score-jp-setting-25" value="61,2" />最小值</label>
+       </details>
       </div>
       <span>立直狀態</span>
       <div class="output-option-group">
@@ -532,9 +539,16 @@
       </div>
       <span>和牌方式</span>
       <div class="output-option-group">
-       <label><input type="radio" name="score-gb-wintype" value="0" checked>點和</label>
-       <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" />東家點和</label>
-       <label><input type="radio" name="score-gb-wintype" value="80">自摸</label>
+       <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" checked>點和</label>
+       <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" />東家點和</label>
+       <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true])">自摸</label>
+       <details id="gb-wint-details" style="display: none;">
+         <summary>和牌張判定</summary>
+         <label><input type="radio" name="score-gb-setting-16" value="0" checked />最右側</label>
+         <label><input type="radio" name="score-gb-setting-16" value="75,3" />最左側</label>
+         <label id="gb-wint-max" title="跳牌後自摸可選擇該選項。"><input type="radio" name="score-gb-setting-16" value="75,1" />最大值</label>
+         <label id="gb-wint-min" title="反則插入和牌張後自摸可選擇該選項。"><input type="radio" name="score-gb-setting-16" value="75,2" />最小值</label>
+       </details>
       </div>
       <span>和牌狀態</span>
       <div class="output-option-group">

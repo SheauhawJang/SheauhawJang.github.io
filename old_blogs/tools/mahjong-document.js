@@ -1102,7 +1102,6 @@ function getImageId(img, withtype = false) {
     const src = img.src ?? img.getAttribute("data-src");
     const filenameWithExt = src.substring(src.lastIndexOf("/") + 1);
     const filename = filenameWithExt.split(".")[0];
-    console.log(filename);
     if (!withtype) return id(filename).id;
     return { idx: id(filename.slice(-2)), type: filename.at(-3) ?? "" }
 }

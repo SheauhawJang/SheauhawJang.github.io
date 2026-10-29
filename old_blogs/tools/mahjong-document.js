@@ -500,7 +500,6 @@ function getOverlay(path, t, class_suffix = "") {
     return render("card-img-overlay");
 }
 function getCardImage(id, t = "", onclick = "") {
-    console.log(cardskin);
     let [name, overlay] = [cardName(id), null];
     if (cardskin === "qq" && (hasQQCard(id) || (id.sp && id.id < 27))) overlay = getOverlay(`./qqcards/${name}.png`, t);
     if (cardskin === "qqold" && hasGBCard(id)) overlay = getOverlay(`./qqolds/${name}.gif`, t);

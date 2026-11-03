@@ -21,6 +21,7 @@
     const MODE_META = {
         jp4: { nameKey: "mode_jp4_name", handSize: 14, poolKey: "sim_pool_jp4", calcTab: 2, dealerFreq: 2.7, matchMinutes: 40, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false },
         jp3: { nameKey: "mode_jp3_name", handSize: 14, poolKey: "sim_pool_jp3", calcTab: 2, dealerFreq: 3.5, matchMinutes: 25, unitKey: "sim_unit_banzhuang", guse: guse3p,  hasFlowers: false },
+        shura: { nameKey: "mode_shura_name", handSize: 14, drawSize: 13, poolKey: "sim_pool_shura", handKey: "sim_hand_shura", calcTab: 2, dealerFreq: 2.7, matchMinutes: 15, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false, hasWildcard: true },
         gb:  { nameKey: "mode_gb_name", handSize: 14, poolKey: "sim_pool_gb", calcTab: 1, dealerFreq: 4.0, matchMinutes: 70, unitKey: "sim_unit_pan",       guse: guseall, hasFlowers: true },
         sc:  { nameKey: "mode_sc_name", handSize: 14, poolKey: "sim_pool_sc", calcTab: 4, dealerFreq: 0.25, matchMinutes: 4, unitKey: "sim_unit_ju",        guse: guseSC,  hasFlowers: false },
         tw:  { nameKey: "mode_tw_name", handSize: 17, poolKey: "sim_pool_tw", calcTab: 3, dealerFreq: 4.5, matchMinutes: 90, unitKey: "sim_unit_zhuang",    guse: guseall, hasFlowers: true }
@@ -48,6 +49,17 @@
             },
             overlaps: [
                 { types: ["normal", "pair7"], count: 375394176 } // Exact Ryanpeikou with 7 distinct pairs
+            ]
+        },
+        shura: {
+            totalSpace: 483774556165488000, // C(136, 13)
+            types: {
+                normal:  32244742336860, // Standard 4 melds + 1 pair Tenpai (Profile 1: 12,019,520,232,324; Profile 2: 20,225,222,104,536)
+                pair7:   7027758194688,  // 7 pairs Tenpai (C(34, 6) * 28 * 6^6 * 4)
+                kokushi: 3992977408      // Thirteen Orphans Tenpai (4^13 + 13 * 12 * 6 * 4^11)
+            },
+            overlaps: [
+                { types: ["normal", "pair7"], count: 6098125824 } // Exact Normal ∩ Pair7 overlap (32,676 patterns * 186,624)
             ]
         },
         sc: {
@@ -126,19 +138,21 @@
     };
 
     const MODE_HAND_TYPES = {
-        jp4: ["normal", "pair7", "kokushi"],
-        jp3: ["normal", "pair7", "kokushi"],
-        gb:  ["normal", "pair7", "orphan13", "quanbukaoxing", "zuhelongxing"],
-        sc:  ["normal", "pair7"],
-        tw:  ["normal", "niconico", "orphan13", "shiliubudaxing"]
+        jp4:   ["normal", "pair7", "kokushi"],
+        jp3:   ["normal", "pair7", "kokushi"],
+        shura: ["normal", "pair7", "kokushi"],
+        gb:    ["normal", "pair7", "orphan13", "quanbukaoxing", "zuhelongxing"],
+        sc:    ["normal", "pair7"],
+        tw:    ["normal", "niconico", "orphan13", "shiliubudaxing"]
     };
 
     const selectedTypes = {
-        jp4: new Set(MODE_HAND_TYPES.jp4),
-        jp3: new Set(MODE_HAND_TYPES.jp3),
-        gb:  new Set(MODE_HAND_TYPES.gb),
-        sc:  new Set(MODE_HAND_TYPES.sc),
-        tw:  new Set(MODE_HAND_TYPES.tw)
+        jp4:   new Set(MODE_HAND_TYPES.jp4),
+        jp3:   new Set(MODE_HAND_TYPES.jp3),
+        shura: new Set(MODE_HAND_TYPES.shura),
+        gb:    new Set(MODE_HAND_TYPES.gb),
+        sc:    new Set(MODE_HAND_TYPES.sc),
+        tw:    new Set(MODE_HAND_TYPES.tw)
     };
 
     function fmtTiles(n) {
@@ -316,9 +330,19 @@
     // Reuses joinHand from mahjong-document.js to format hand in standard MPSZ notation
     function formatHandString(handArr, flowersArr) {
         if (!handArr || handArr.length === 0) return "";
-        const handFront = handArr.length - 1;
-        const sorted = handArr.slice(0, handFront).sort((a, b) => a - b);
-        sorted.push(handArr[handFront]);
+        const meta = MODE_META[currentMode] || MODE_META.jp4;
+        let sorted;
+        if (meta.hasWildcard) {
+            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
+            const regular = handArr.filter(id => (typeof id === "number" ? id : (id && id.id)) !== jc);
+            const handFrontReg = regular.length - 1;
+            const regFront = regular.slice(0, handFrontReg).sort((a, b) => a - b);
+            sorted = [{ id: jc, sp: 1 }, ...regFront, regular[handFrontReg]];
+        } else {
+            const handFront = handArr.length - 1;
+            sorted = handArr.slice(0, handFront).sort((a, b) => a - b);
+            sorted.push(handArr[handFront]);
+        }
         let res = typeof joinHand === "function" ? joinHand(sorted) : sorted.join(",");
         if (flowersArr && flowersArr.length > 0) {
             const flowerStr = flowersArr.map(id => typeof cardName === "function" ? cardName(id) : `${id}`).join("");
@@ -431,12 +455,69 @@
         }
     }
 
+    // Maps aliases to the 5 supported canonical languages (aligned with reverse proxy):
+    // cn: zh, cn, sg
+    // tw: tw
+    // hk: hk, mo
+    // ja: jp, ja
+    // en: en, kr, eu, us, vn, uk
+    function normalizeLang(raw) {
+        if (!raw) return null;
+        const l = String(raw).trim().toLowerCase();
+        if (/^(?:zh|cn|sg)$/.test(l)) return "cn";
+        if (/^(?:tw)$/.test(l)) return "tw";
+        if (/^(?:hk|mo)$/.test(l)) return "hk";
+        if (/^(?:jp|ja)$/.test(l)) return "ja";
+        if (/^(?:en|kr|eu|us|vn|uk)$/.test(l)) return "en";
+        if (l.startsWith("zh-tw") || l.startsWith("zh-hant")) return "tw";
+        if (l.startsWith("zh-hk") || l.startsWith("zh-mo")) return "hk";
+        if (l.startsWith("zh")) return "cn";
+        if (l.startsWith("ja")) return "ja";
+        if (l.startsWith("en")) return "en";
+        return null;
+    }
+
+    function updateUrlParams(updates = {}) {
+        if (!window.history || !window.history.replaceState) return;
+        try {
+            const url = new URL(window.location.href);
+            for (const [key, val] of Object.entries(updates)) {
+                if (val === null || val === undefined) {
+                    url.searchParams.delete(key);
+                } else {
+                    url.searchParams.set(key, val);
+                }
+            }
+            window.history.replaceState(null, "", url.toString());
+        } catch (e) {}
+    }
+
+    function getShareUrl() {
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set("lang", currentLang);
+            if (currentMode) {
+                url.searchParams.set("mode", currentMode);
+            }
+            url.searchParams.delete("deal");
+            url.searchParams.delete("demoWin");
+            return url.toString();
+        } catch (e) {
+            return window.location.href;
+        }
+    }
+
     // Apply language dynamically across DOM reusing setLoc and replacei18n
-    function applyLanguage(lang) {
+    function applyLanguage(rawLang, updateUrl = true) {
+        const lang = normalizeLang(rawLang) || "cn";
         currentLang = lang;
         window.lang = lang;
         window.card_helper = (lang === "en");
         try { localStorage.setItem("mahjong-lang", lang); } catch (e) {}
+
+        if (updateUrl) {
+            updateUrlParams({ lang: lang });
+        }
 
         if (typeof setLoc === "function") setLoc(lang);
         if (typeof replacei18n === "function") replacei18n();
@@ -489,14 +570,17 @@
 
     function initDOM() {
         let detectedLang = "cn";
+        let hasUrlLang = false;
         try {
             const urlParams = new URLSearchParams(window.location.search);
-            const pLang = urlParams.get("lang");
-            if (pLang && ["cn", "tw", "hk", "ja", "en"].includes(pLang)) {
+            const rawLang = urlParams.get("lang");
+            const pLang = normalizeLang(rawLang);
+            if (pLang) {
                 detectedLang = pLang;
+                hasUrlLang = true;
             } else {
-                const savedLang = localStorage.getItem("mahjong-lang");
-                if (savedLang && ["cn", "tw", "hk", "ja", "en"].includes(savedLang)) {
+                const savedLang = normalizeLang(localStorage.getItem("mahjong-lang"));
+                if (savedLang) {
                     detectedLang = savedLang;
                 }
             }
@@ -512,13 +596,13 @@
         const savedSkin = localStorage.getItem("cardskin") || "jp";
         if (typeof updateCardSkin === "function") updateCardSkin(savedSkin);
 
-        applyLanguage(detectedLang);
+        applyLanguage(detectedLang, hasUrlLang);
 
         // Language buttons listener
         document.querySelectorAll(".lang-group .lang-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const lang = btn.getAttribute("data-lang");
-                if (lang && lang !== currentLang) applyLanguage(lang);
+                if (lang && lang !== currentLang) applyLanguage(lang, true);
             });
         });
 
@@ -560,6 +644,7 @@
     function switchMode(mode) {
         if (isRunning) stopSimulation();
         currentMode = mode;
+        updateUrlParams({ mode: mode });
 
         totalAttempts = 0;
         lastElapsedSec = 0;
@@ -607,8 +692,14 @@
 
         const handEl = document.getElementById("spec-hand");
         if (handEl) {
-            const zimoWord = loc.SC_FAN_NAME_16 || "自摸";
-            handEl.textContent = `${fmtTiles(meta.handSize)} (${zimoWord})`;
+            if (meta.handKey && loc[meta.handKey]) {
+                handEl.setAttribute("data-i18n", meta.handKey);
+                handEl.textContent = loc[meta.handKey];
+            } else {
+                handEl.removeAttribute("data-i18n");
+                const zimoWord = loc.SC_FAN_NAME_16 || "自摸";
+                handEl.textContent = `${fmtTiles(meta.handSize)} (${zimoWord})`;
+            }
         }
 
                 const probData = getSelectedProbData(currentMode);
@@ -651,8 +742,19 @@
         const backHtml = typeof outputCardImageBack === "function" ? outputCardImageBack() : `<div class="card-div"><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
 
         let html = "";
-        for (let i = 0; i < handFront; i++) html += backHtml;
-        html += `<div class="tsumo-gap"></div>` + backHtml;
+        if (meta.hasWildcard) {
+            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
+            const wildcardObj = { id: jc, sp: 1 };
+            const wildcardWord = currentLang === "ja" ? "萬象牌" : (currentLang === "en" ? "Wildcard" : "百搭牌");
+            const wHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(wildcardObj) : "";
+            const wImg = typeof getCardImage === "function" ? getCardImage(wildcardObj) : "";
+            html += `<div class="card-div" title="${wildcardWord}">${wHelper}${wImg}</div>`;
+            for (let i = 0; i < handFront - 1; i++) html += backHtml;
+            html += `<div class="tsumo-gap"></div>` + backHtml;
+        } else {
+            for (let i = 0; i < handFront; i++) html += backHtml;
+            html += `<div class="tsumo-gap"></div>` + backHtml;
+        }
 
         container.innerHTML = html;
         renderFlowersDisplay([]);
@@ -716,22 +818,66 @@
         const container = document.getElementById("tenhou-tiles-display");
         if (!container || !handArr || handArr.length < 14) return;
 
-        const handFront = handArr.length - 1;
-        const tilesFront = handArr.slice(0, handFront).sort((a, b) => a - b);
-        const tsumo = handArr[handFront];
-
+        const meta = MODE_META[currentMode] || MODE_META.jp4;
         let html = "";
-        for (let i = 0; i < handFront; i++) {
-            const tid = tilesFront[i];
-            const name = typeof cardName === "function" ? cardName(tid) : `${tid}`;
-            const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv({ id: tid }) : "";
-            const imgHtml = typeof getCardImage === "function" ? getCardImage({ id: tid }) : "";
-            html += `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
+
+        if (meta.hasWildcard) {
+            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
+            const regularTiles = [];
+            for (let i = 0; i < handArr.length; i++) {
+                const tid = handArr[i];
+                const id = typeof tid === "number" ? tid : (tid && tid.id);
+                if (id !== jc) {
+                    regularTiles.push(tid);
+                }
+            }
+
+            const handFrontReg = regularTiles.length - 1;
+            const regularFront = regularTiles.slice(0, handFrontReg).sort((a, b) => (typeof a === "number" ? a : a.id) - (typeof b === "number" ? b : b.id));
+            const tsumo = regularTiles[handFrontReg];
+
+            // 1. Wildcard at far left, seamlessly part of the hand (no gap)
+            const wildcardObj = { id: jc, sp: 1 };
+            const wildcardWord = currentLang === "ja" ? "萬象牌" : (currentLang === "en" ? "Wildcard" : "百搭牌");
+            const wHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(wildcardObj) : "";
+            const wImg = typeof getCardImage === "function" ? getCardImage(wildcardObj) : "";
+            html += `<div class="card-div" title="${wildcardWord}">${wHelper}${wImg}</div>`;
+
+            // 2. 12 sorted regular hand tiles
+            for (let i = 0; i < regularFront.length; i++) {
+                const tid = regularFront[i];
+                const tileObj = (typeof tid === "object") ? tid : { id: tid };
+                const name = typeof cardName === "function" ? cardName(tileObj) : `${tid}`;
+                const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tileObj) : "";
+                const imgHtml = typeof getCardImage === "function" ? getCardImage(tileObj) : "";
+                html += `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
+            }
+
+            // 3. Tsumo gap and 13th regular tile (drawn/winning tile)
+            const tsumoObj = (typeof tsumo === "object") ? tsumo : { id: tsumo };
+            const tsumoName = typeof cardName === "function" ? cardName(tsumoObj) : `${tsumo}`;
+            const tsumoHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tsumoObj) : "";
+            const tsumoImg = typeof getCardImage === "function" ? getCardImage(tsumoObj) : "";
+            html += `<div class="tsumo-gap"></div><div class="card-div" title="${tsumoName}">${tsumoHelper}${tsumoImg}</div>`;
+        } else {
+            const handFront = handArr.length - 1;
+            const tilesFront = handArr.slice(0, handFront).sort((a, b) => a - b);
+            const tsumo = handArr[handFront];
+
+            for (let i = 0; i < handFront; i++) {
+                const tid = tilesFront[i];
+                const tileObj = (typeof tid === "object") ? tid : { id: tid };
+                const name = typeof cardName === "function" ? cardName(tileObj) : `${tid}`;
+                const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tileObj) : "";
+                const imgHtml = typeof getCardImage === "function" ? getCardImage(tileObj) : "";
+                html += `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
+            }
+            const tsumoObj = (typeof tsumo === "object") ? tsumo : { id: tsumo };
+            const tsumoName = typeof cardName === "function" ? cardName(tsumoObj) : `${tsumo}`;
+            const tsumoHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tsumoObj) : "";
+            const tsumoImg = typeof getCardImage === "function" ? getCardImage(tsumoObj) : "";
+            html += `<div class="tsumo-gap"></div><div class="card-div" title="${tsumoName}">${tsumoHelper}${tsumoImg}</div>`;
         }
-        const tsumoName = typeof cardName === "function" ? cardName(tsumo) : `${tsumo}`;
-        const tsumoHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv({ id: tsumo }) : "";
-        const tsumoImg = typeof getCardImage === "function" ? getCardImage({ id: tsumo }) : "";
-        html += `<div class="tsumo-gap"></div><div class="card-div" title="${tsumoName}">${tsumoHelper}${tsumoImg}</div>`;
 
         container.innerHTML = html;
         renderFlowersDisplay(flowersArr || []);
@@ -787,7 +933,7 @@
 
         try {
             if (worker) worker.terminate();
-            worker = new Worker("tenhou-worker.js?v=202611031620");
+            worker = new Worker("tenhou-worker.js?v=202611032240");
             worker.onmessage = function (e) {
                 const data = e.data;
                 if (data.type === "progress") {
@@ -862,6 +1008,7 @@
         if (isRunning) stopSimulation();
 
         const meta = MODE_META[currentMode] || MODE_META.jp4;
+        const drawSize = meta.drawSize || meta.handSize;
         const wall = Array.from(getMahjongWall(meta.guse, meta.hasFlowers));
 
         // Full shuffle for accurate flower distribution
@@ -875,8 +1022,11 @@
                 flowers.push(id);
             } else {
                 hand.push(id);
-                if (hand.length === meta.handSize) break;
+                if (hand.length === drawSize) break;
             }
+        }
+        if (meta.hasWildcard) {
+            hand.unshift(typeof JokerC !== "undefined" ? JokerC : 42);
         }
 
         totalAttempts++;
@@ -978,7 +1128,8 @@
             exp: loc.sim_copy_expected || "Expected"
         };
 
-        const text = `【${simTitle}】\n${labels.rule}: ${modeName}\n${labels.win}: ${cleanYakuName}\n${labels.att}: ${totalAttempts.toLocaleString()} (${cleanEvalTitle})\n${labels.exp}: ${getSelectedProbData(currentMode).meanStr}${flowerLine}\nHand: ${handStr}\nURL: ${window.location.href}`;
+        const shareUrl = getShareUrl();
+        const text = `【${simTitle}】\n${labels.rule}: ${modeName}\n${labels.win}: ${cleanYakuName}\n${labels.att}: ${totalAttempts.toLocaleString()} (${cleanEvalTitle})\n${labels.exp}: ${getSelectedProbData(currentMode).meanStr}${flowerLine}\nHand: ${handStr}\nURL: ${shareUrl}`;
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
@@ -1007,6 +1158,15 @@
                 demoTiles = [0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 28, 29, 30, 31, 32, 33, 0];
             } else {
                 demoTiles = [0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 30, 30, 30, 33, 33];
+            }
+        } else if (currentMode === "shura") {
+            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
+            if (type === "pair7") {
+                demoTiles = [jc, 0, 0, 9, 9, 18, 18, 27, 27, 28, 28, 29, 29, 30];
+            } else if (type === "kokushi") {
+                demoTiles = [jc, 0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
+            } else {
+                demoTiles = [jc, 0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 33];
             }
         } else if (currentMode === "gb") {
             if (type === "pair7") {
@@ -1041,6 +1201,7 @@
         demoWin: triggerDemoWin,
         importToCalculator: importToCalculator,
         copyResult: copyResult,
+        getShareUrl: getShareUrl,
         setLanguage: applyLanguage,
         switchMode: switchMode
     };

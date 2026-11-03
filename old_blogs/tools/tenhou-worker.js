@@ -1,6 +1,6 @@
 // Multi-rule Tenhou / Tianhu Simulator Web Worker (Optimized & Mathematically Unbiased)
 // Uses existing mahjong.js functions without modifying Win.
-importScripts("mahjong.js?v=202611031620");
+importScripts("mahjong.js?v=202611032240");
 
 let isRunning = false;
 let currentMode = "jp4";
@@ -39,6 +39,7 @@ const guseSC = guseall.map((_, i) => (i >= 27 ? Infinity : 0));
 const MODE_CONFIG = {
     jp4: { handSize: 14, guse: guseall, hasFlowers: false },
     jp3: { handSize: 14, guse: guse3p,  hasFlowers: false },
+    shura: { handSize: 13, guse: guseall, hasFlowers: false },
     gb:  { handSize: 14, guse: guseall, hasFlowers: true },
     sc:  { handSize: 14, guse: guseSC,  hasFlowers: false },
     tw:  { handSize: 17, guse: guseall, hasFlowers: true }
@@ -129,6 +130,16 @@ function runLoop(batchSize) {
             } else if (allowedTypesSet.has("kokushi") && nonOrphan === 0 && OrphanStep(t) === -1) {
                 yakuType = "kokushi";
             }
+        } else if (mode === "shura") {
+            // Majsoul All-Form Shura: 13 dealt tiles + 1 universal wildcard (JokerC)
+            // 13 tiles achieve Tenhou iff they are in Tenpai (reusing native Listen, PairStep, OrphanStep from mahjong.js)
+            if (allowedTypesSet.has("normal") && Listen(t, 13, 14)) {
+                yakuType = "normal";
+            } else if (allowedTypesSet.has("pair7") && pairs2 === 6 && PairStep(t, true) === 0) {
+                yakuType = "pair7";
+            } else if (allowedTypesSet.has("kokushi") && nonOrphan === 0 && OrphanStep(t) === 0) {
+                yakuType = "kokushi";
+            }
         } else if (mode === "gb") {
             // Guobiao: Standard, 7 pairs, 13 orphans, Bukao (all unsuited), Knit Dragon
             if (allowedTypesSet.has("normal") && hasPair && Win(t, 14)) {
@@ -193,6 +204,9 @@ function runLoop(batchSize) {
                     hand.push(id);
                     t[id] = 0;
                 }
+            }
+            if (mode === "shura") {
+                hand.unshift(typeof JokerC !== "undefined" ? JokerC : 42);
             }
             self.postMessage({ type: "success", count: localCount, hand, flowers, yakuType, mode });
             return;

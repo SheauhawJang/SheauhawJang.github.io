@@ -422,6 +422,7 @@ const loc_all = {
 
     mode_jp4_name: { cn: "立直麻将 (四人)", tw: "立直麻將 (四人)", hk: "立直麻雀 (四人)", ja: "立直麻雀 (四人)", en: "JP Riichi (4-Player)" },
     mode_jp3_name: { cn: "立直麻将 (三人)", tw: "立直麻將 (三人)", hk: "立直麻雀 (三人)", ja: "立直麻雀 (三人)", en: "JP Riichi (3-Player)" },
+    mode_shura_name: { cn: "万象修罗 (百搭)", tw: "萬象修羅 (百搭)", hk: "萬象修羅 (百搭)", ja: "万象修羅 (百搭)", en: "All-Form Shura (Wildcard)" },
     mode_gb_name: { cn: "国标麻将标准型", tw: "國標麻將標準型", hk: "國標麻雀標準型", ja: "中国国標麻雀標準形", en: "CN Off. (MCR) Std-T" },
     mode_sc_name: { cn: "四川麻将", tw: "四川麻將", hk: "四川麻雀", ja: "四川麻雀(赤血の戦)", en: "Sichuan Mahjong" },
     mode_tw_name: { cn: "港式台湾麻将", tw: "港式台灣麻將", hk: "港式台灣牌", ja: "香港式台湾麻雀", en: "HK Style TW Maj." },
@@ -430,6 +431,8 @@ const loc_all = {
     sim_flower_none: { cn: "开牌无补花", tw: "開牌無補花", hk: "開牌無補花", ja: "配牌補花なし", en: "No Flowers Drawn" },
     sim_pool_jp4: { cn: "136 张 (标准牌山)", tw: "136 張 (標準牌山)", hk: "136 章 (標準牌山)", ja: "136 枚 (標準牌山)", en: "136 tiles (Standard Wall)" },
     sim_pool_jp3: { cn: "108 张 (无2~8万)", tw: "108 張 (無2~8萬)", hk: "108 章 (無2~8萬)", ja: "108 枚 (二〜八萬除外)", en: "108 tiles (No 2-8 Characters)" },
+    sim_pool_shura: { cn: "136 张 + 1 百搭", tw: "136 張 + 1 百搭", hk: "136 章 + 1 百搭", ja: "136 枚 + 1 百搭", en: "136 tiles + 1 Wildcard" },
+    sim_hand_shura: { cn: "14 张 (含百搭)", tw: "14 張 (含百搭)", hk: "14 章 (含百搭)", ja: "14 枚 (百搭含)", en: "14 tiles (Wildcard)" },
     sim_pool_gb: { cn: "144 张 (标准牌山)", tw: "144 張 (標準牌山)", hk: "144 章 (標準牌山)", ja: "144 枚 (標準牌山)", en: "144 tiles (Standard Wall)" },
     sim_pool_sc: { cn: "108 张 (纯序数牌)", tw: "108 張 (純序數牌)", hk: "108 章 (純序數牌)", ja: "108 枚 (数牌のみ)", en: "108 tiles (Suits Only)" },
     sim_pool_tw: { cn: "144 张 (标准牌山)", tw: "144 張 (標準牌山)", hk: "144 章 (標準牌山)", ja: "144 枚 (標準牌山)", en: "144 tiles (Standard Wall)" },
@@ -446,6 +449,13 @@ const loc_all = {
         hk: "拔除 2~8 萬，共 108 章牌山，起手 14 章自摸{GB_FANNAME_86}。字牌與清一色密度上升，支援{normal}、{pair7}與{kokushi}。全選時理論幾率約為 <strong>1 / 105,711</strong>（僅{normal}約為 <strong>1 / 130,308</strong>）。",
         ja: "二〜八萬を除外した108枚の牌山。字牌と染め手密度が上昇し、{normal}、{pair7}、{kokushi}に対応。全選択時の理論確率は約 <strong>1 / 105,711</strong>（{normal}のみは約 <strong>1 / 130,308</strong>）。",
         en: "2-8 of Characters removed, 108 tiles total. Hand size 14. Supports {normal}, {pair7}, and {kokushi}. Probability with all types: approx. <strong>1 / 105,711</strong> (only {normal} approx. <strong>1 / 130,308</strong>)."
+    },
+    sim_desc_shura: {
+        cn: "雀魂特色模式。庄家起手 13 张常规配牌并固定自带 1 张万能百搭牌（共 14 张）。由于百搭牌可充当任意牌，起手和牌充要等价于「13 张配牌已处于听牌（天听）」。支持{normal}、{pair7}与{kokushi}。全选时理论概率约为 <strong>1 / 12,319</strong>（仅{normal}约为 <strong>1 / 15,003</strong>）。",
+        tw: "雀魂特色模式。莊家起手 13 張常規配牌並固定自帶 1 張萬能百搭牌（共 14 張）。由於百搭牌可充當任意牌，起手胡牌充要等價於「13 張配牌已處於聽牌（天聽）」。支援{normal}、{pair7}與{kokushi}。全選時理論機率約為 <strong>1 / 12,319</strong>（僅{normal}約為 <strong>1 / 15,003</strong>）。",
+        hk: "雀魂特色模式。莊家起手 13 章常規配牌並固定自帶 1 章萬能百搭牌（共 14 章）。由於百搭牌可充當任意牌，起手食糊充要等價於「13 章配牌已處於叫糊（天聽）」。支援{normal}、{pair7}與{kokushi}。全選時理論幾率約為 <strong>1 / 12,319</strong>（僅{normal}約為 <strong>1 / 15,003</strong>）。",
+        ja: "雀魂の特殊モード。親の配牌13枚に加え、万能の百搭牌（ワイルドカード）を1枚所持（計14枚）。百搭牌が任意の牌になるため、配牌和了は「配牌13枚が既にテンパイ（天聴）」と数学的に等価。{normal}、{pair7}、{kokushi}に対応。全選択時の理論確率は約 <strong>1 / 12,319</strong>（{normal}のみは約 <strong>1 / 15,003</strong>）。",
+        en: "Mahjong Soul feature mode. 13 standard dealt tiles plus 1 permanent universal wildcard (14 tiles total). Equivalent to 13-tile initial Tenpai (0-shanten). Supports {normal}, {pair7}, and {kokushi}. Probability with all types: approx. <strong>1 / 12,319</strong> (only {normal} approx. <strong>1 / 15,003</strong>)."
     },
     sim_desc_gb: {
         cn: "国标麻将标准 144 张牌山，起手 14 张自摸。遇花自动补花，集齐 14 张正牌后判定。支持五大和牌型：{normal}、{pair7}（允许4张相同牌作两对）、{orphan13}、{quanbukaoxing}与{zuhelongxing}。全选时理论概率约为 <strong>1 / 320,590</strong>（仅{normal}约为 <strong>1 / 374,373</strong>）。",

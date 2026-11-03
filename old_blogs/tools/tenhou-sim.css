@@ -100,7 +100,7 @@ body.tenhou-body {
 
 .tenhou-mode-tabs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 6px;
   margin-bottom: 10px;
   width: 100%;
@@ -862,7 +862,7 @@ body.tenhou-body {
   }
 
   .tenhou-mode-tab:last-child {
-    grid-column: span 2;
+    grid-column: auto;
   }
 
   .tenhou-table-mat {

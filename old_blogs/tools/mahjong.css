@@ -995,7 +995,7 @@ html {
   border-radius: 12px;
   box-shadow: 0 10px 25px var(--shadow-soft);
   display: none;
-  z-index: 1001; /* 高於 .output-box-head 的 sticky z-index:1000 */
+  z-index: 1010; /* 高於 .output-box-head (1000) 與導航軌 (1002) */
   padding: 6px;
 }
 
@@ -1799,7 +1799,7 @@ a > .reference-sup {
    ============================================================ */
 .desktop-nav-rail {
   position: fixed;
-  left: max(16px, calc(50% - 512px - 72px));
+  left: max(16px, calc(50% - 512px - 32px));
   top: 76px;
   width: 56px;
   display: flex;
@@ -1811,7 +1811,7 @@ a > .reference-sup {
   border-radius: 16px;
   padding: 8px 4px;
   box-shadow: 0 4px 16px var(--shadow-soft, rgba(27, 122, 74, 0.08));
-  z-index: 1000;
+  z-index: 1002; /* 高於 .output-box-head 的 sticky z-index:1000 */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: opacity 0.2s ease;
@@ -1905,13 +1905,13 @@ html[data-theme="dark"] .desktop-nav-rail .rail-divider {
 .mobile-bottom-nav {
   display: none;
 }
-@media (min-width: 1025px) {
+@media (width > 512px) {
   .mobile-bottom-nav {
     display: none !important;
   }
 }
 
-@media (max-width: 1024px) {
+@media (width <= 512px) {
   .desktop-nav-rail {
     display: none !important;
   }
@@ -1926,7 +1926,7 @@ html[data-theme="dark"] .desktop-nav-rail .rail-divider {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1002; /* 高於 .output-box-head 的 sticky z-index:1000 */
     background: var(--bg-surface);
     border-top: 1px solid var(--border-soft);
     box-shadow: 0 -3px 12px var(--shadow-soft);

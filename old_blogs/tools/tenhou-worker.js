@@ -35,47 +35,20 @@ function nextRng() {
     return r >>> 0;
 }
 
+const guseSC = guseall.map((_, i) => (i >= 27 ? Infinity : 0));
+const MODE_CONFIG = {
+    jp4: { handSize: 14, guse: guseall, hasFlowers: false },
+    jp3: { handSize: 14, guse: guse3p,  hasFlowers: false },
+    gb:  { handSize: 14, guse: guseall, hasFlowers: true },
+    sc:  { handSize: 14, guse: guseSC,  hasFlowers: false },
+    tw:  { handSize: 17, guse: guseall, hasFlowers: true }
+};
+
 function initWall(mode) {
     currentMode = mode;
-    let tileTypes = [];
-    if (mode === "jp3") {
-        // 3-player Riichi: 1m, 9m, 1p-9p, 1s-9s, 1z-7z (108 tiles)
-        tileTypes = [0, 8];
-        for (let i = 9; i < 34; i++) tileTypes.push(i);
-        handSize = 14;
-    } else if (mode === "sc") {
-        // Sichuan: 1m-9m, 1p-9p, 1s-9s (108 tiles)
-        for (let i = 0; i < 27; i++) tileTypes.push(i);
-        handSize = 14;
-    } else if (mode === "tw") {
-        // Taiwan 16-tile: 144 tiles (136 regular + 8 flowers), 17 drawn regular tiles
-        for (let i = 0; i < 34; i++) tileTypes.push(i);
-        handSize = 17;
-    } else if (mode === "gb") {
-        // Chinese Official (GB): 144 tiles (136 regular + 8 flowers), 14 drawn regular tiles
-        for (let i = 0; i < 34; i++) tileTypes.push(i);
-        handSize = 14;
-    } else {
-        // jp4: 136 standard tiles, 14 drawn tiles
-        for (let i = 0; i < 34; i++) tileTypes.push(i);
-        handSize = 14;
-    }
-
-    const hasFlowers = (mode === "gb" || mode === "tw");
-    wall = new Int32Array(tileTypes.length * 4 + (hasFlowers ? 8 : 0));
-    let idx = 0;
-    for (let i = 0; i < tileTypes.length; i++) {
-        const id = tileTypes[i];
-        wall[idx++] = id;
-        wall[idx++] = id;
-        wall[idx++] = id;
-        wall[idx++] = id;
-    }
-    if (hasFlowers) {
-        for (let f = 34; f <= 41; f++) {
-            wall[idx++] = f;
-        }
-    }
+    const cfg = MODE_CONFIG[mode] || MODE_CONFIG.jp4;
+    handSize = cfg.handSize;
+    wall = getMahjongWall(cfg.guse, cfg.hasFlowers);
 }
 
 function runLoop(batchSize) {

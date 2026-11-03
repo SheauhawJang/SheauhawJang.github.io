@@ -787,7 +787,7 @@
 
         try {
             if (worker) worker.terminate();
-            worker = new Worker("tenhou-worker.js?v=20261103_v7");
+            worker = new Worker("tenhou-worker.js?v=202611031620");
             worker.onmessage = function (e) {
                 const data = e.data;
                 if (data.type === "progress") {

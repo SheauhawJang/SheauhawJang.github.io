@@ -28,8 +28,8 @@
 <meta property="og:site_name" content="孤星捧月堂">
 <meta property="og:description" content="專案開發與代理人行為準則 (GEMINI.md) 本文件定義此專案中所有 AI 代理人（Gemini、Antigravity、Claude 等）在閱讀、修改、擴充代碼與編寫文案時必須無條件遵守的架構規則。本專案包含高度專業且嚴謹的多語言麻將牌理與計算體系，任何違反此準則的行為均視為重大破壞。  規則一：嚴禁生造詞彙，以現有文件為唯一依據 (Zero AI Hallucination)">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-11-03T08:11:38.250Z">
-<meta property="article:modified_time" content="2026-11-03T08:11:38.250Z">
+<meta property="article:published_time" content="2026-11-03T08:18:23.754Z">
+<meta property="article:modified_time" content="2026-11-03T08:18:23.754Z">
 <meta property="article:author" content="Sheauhaw Jang">
 <meta name="twitter:card" content="summary">
     
@@ -325,6 +325,18 @@ Decoupling)</strong>：
 <li>特定規則的牌集定義、花牌配置、手牌長度及業務邏輯，必須由呼叫層（如
 <code>tenhou.js</code>、<code>tenhou-worker.js</code>、<code>mahjong-rule.js</code>、<code>MODE_META</code>
 等應用層模組）負責傳遞標準數組與布林參數，基礎設施層保持最高度的獨立與抽象。</li>
+</ul></li>
+<li><strong>靜態資源版本號全局統一規範 (Unified Cache-Busting
+Versioning)</strong>：
+<ul>
+<li>全專案麻將模組所有 CSS、JS、Web
+Worker（<code>new Worker(...)</code>）及 Worker
+內部腳本引用（<code>importScripts(...)</code>）之快取版本號（<code>?v=</code>）必須<strong>完全一致</strong>。</li>
+<li>統一遵循主計算機規範，採用純數字的日期+時間格式（<code>YYYYMMDDHHmm</code>，如
+<code>?v=202611031620</code>）。</li>
+<li>嚴禁在不同檔案或組件中使用相異或局部私有的版本尾碼（如
+<code>_v3</code>, <code>_v8</code> 等），確保版本發布時可全域一鍵 Find
+&amp; Replace 替換。</li>
 </ul></li>
 </ol>
 

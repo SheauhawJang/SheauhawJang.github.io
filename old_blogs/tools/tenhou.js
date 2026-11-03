@@ -733,6 +733,13 @@
     }
 
     // Reuses getCardImage from mahjong-document.js and cardName from mahjong.js
+    function renderSingleTile(tid) {
+        const tileObj = (typeof tid === "object") ? tid : { id: tid };
+        const name = typeof cardName === "function" ? cardName(tileObj) : `${tid}`;
+        const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tileObj) : "";
+        const imgHtml = typeof getCardImage === "function" ? getCardImage(tileObj) : "";
+        return `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
+    }
     function renderInitialTiles() {
         const container = document.getElementById("tenhou-tiles-display");
         if (!container) return;
@@ -744,11 +751,7 @@
         let html = "";
         if (meta.hasWildcard) {
             const jc = typeof JokerC !== "undefined" ? JokerC : 42;
-            const wildcardObj = { id: jc, sp: 1 };
-            const wildcardWord = currentLang === "ja" ? "萬象牌" : (currentLang === "en" ? "Wildcard" : "百搭牌");
-            const wHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(wildcardObj) : "";
-            const wImg = typeof getCardImage === "function" ? getCardImage(wildcardObj) : "";
-            html += `<div class="card-div" title="${wildcardWord}">${wHelper}${wImg}</div>`;
+            html += renderSingleTile({ id: jc, sp: 1 });
             for (let i = 0; i < handFront - 1; i++) html += backHtml;
             html += `<div class="tsumo-gap"></div>` + backHtml;
         } else {
@@ -837,46 +840,24 @@
             const tsumo = regularTiles[handFrontReg];
 
             // 1. Wildcard at far left, seamlessly part of the hand (no gap)
-            const wildcardObj = { id: jc, sp: 1 };
-            const wildcardWord = currentLang === "ja" ? "萬象牌" : (currentLang === "en" ? "Wildcard" : "百搭牌");
-            const wHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(wildcardObj) : "";
-            const wImg = typeof getCardImage === "function" ? getCardImage(wildcardObj) : "";
-            html += `<div class="card-div" title="${wildcardWord}">${wHelper}${wImg}</div>`;
+            html += renderSingleTile({ id: jc, sp: 1 });
 
             // 2. 12 sorted regular hand tiles
             for (let i = 0; i < regularFront.length; i++) {
-                const tid = regularFront[i];
-                const tileObj = (typeof tid === "object") ? tid : { id: tid };
-                const name = typeof cardName === "function" ? cardName(tileObj) : `${tid}`;
-                const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tileObj) : "";
-                const imgHtml = typeof getCardImage === "function" ? getCardImage(tileObj) : "";
-                html += `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
+                html += renderSingleTile(regularFront[i]);
             }
 
             // 3. Tsumo gap and 13th regular tile (drawn/winning tile)
-            const tsumoObj = (typeof tsumo === "object") ? tsumo : { id: tsumo };
-            const tsumoName = typeof cardName === "function" ? cardName(tsumoObj) : `${tsumo}`;
-            const tsumoHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tsumoObj) : "";
-            const tsumoImg = typeof getCardImage === "function" ? getCardImage(tsumoObj) : "";
-            html += `<div class="tsumo-gap"></div><div class="card-div" title="${tsumoName}">${tsumoHelper}${tsumoImg}</div>`;
+            html += `<div class="tsumo-gap"></div>` + renderSingleTile(tsumo);
         } else {
             const handFront = handArr.length - 1;
             const tilesFront = handArr.slice(0, handFront).sort((a, b) => a - b);
             const tsumo = handArr[handFront];
 
             for (let i = 0; i < handFront; i++) {
-                const tid = tilesFront[i];
-                const tileObj = (typeof tid === "object") ? tid : { id: tid };
-                const name = typeof cardName === "function" ? cardName(tileObj) : `${tid}`;
-                const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tileObj) : "";
-                const imgHtml = typeof getCardImage === "function" ? getCardImage(tileObj) : "";
-                html += `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
+                html += renderSingleTile(tilesFront[i]);
             }
-            const tsumoObj = (typeof tsumo === "object") ? tsumo : { id: tsumo };
-            const tsumoName = typeof cardName === "function" ? cardName(tsumoObj) : `${tsumo}`;
-            const tsumoHelper = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tsumoObj) : "";
-            const tsumoImg = typeof getCardImage === "function" ? getCardImage(tsumoObj) : "";
-            html += `<div class="tsumo-gap"></div><div class="card-div" title="${tsumoName}">${tsumoHelper}${tsumoImg}</div>`;
+            html += `<div class="tsumo-gap"></div>` + renderSingleTile(tsumo);
         }
 
         container.innerHTML = html;

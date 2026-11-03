@@ -28,8 +28,8 @@
 <meta property="og:site_name" content="孤星捧月堂">
 <meta property="og:description" content="專案開發與代理人行為準則 (GEMINI.md) 本文件定義此專案中所有 AI 代理人（Gemini、Antigravity、Claude 等）在閱讀、修改、擴充代碼與編寫文案時必須無條件遵守的架構規則。本專案包含高度專業且嚴謹的多語言麻將牌理與計算體系，任何違反此準則的行為均視為重大破壞。  規則一：嚴禁生造詞彙，以現有文件為唯一依據 (Zero AI Hallucination)">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-11-03T08:18:23.754Z">
-<meta property="article:modified_time" content="2026-11-03T08:18:23.754Z">
+<meta property="article:published_time" content="2026-11-03T16:03:58.591Z">
+<meta property="article:modified_time" content="2026-11-03T16:03:58.591Z">
 <meta property="article:author" content="Sheauhaw Jang">
 <meta name="twitter:card" content="summary">
     
@@ -229,7 +229,9 @@ id="規則二語系獨立純粹性嚴禁跨地域拼湊-locale-purity-isolation"
 <ul>
 <li>絕對禁止在任何語系的字串中，透過斜線（<code>/</code>）、括號（<code>（）</code>）等形式將不同地域的稱呼拼裝在同一處（例如：禁止在簡體出現「天和
 / 天胡」、禁止在繁體出現「天胡 /
-天和」、禁止出現「食糊/和牌」等混合詞）。</li>
+天和」、禁止出現「食糊/和牌」、禁止在粵語出現「叫糊（天聽）」等混合詞）。</li>
+<li>任何涉及多語系差異的麻將通用術語，必須依規則三採用
+<code>{key}</code> 變數語法動態引用，嚴禁手寫拼湊。</li>
 </ul></li>
 <li><strong>語系邊界嚴格隔離</strong>：
 <ul>
@@ -264,6 +266,19 @@ id="規則二語系獨立純粹性嚴禁跨地域拼湊-locale-purity-isolation"
 控制項詞條，新增的鍵值必須依照上述 5
 語系標準進行對齊，且用詞風格必須與對應的 <code>mahjong-*.html</code>
 頁面完全統一。</li>
+</ul></li>
+<li><strong>文案中術語動態變數引用規範（<code>{key}</code>
+插值語法）</strong>：
+<ul>
+<li>在編寫、修改 <code>loc_all</code>
+中的規則說明、提示字串或複合文本時，<strong>凡涉及既有字典已定義的麻將通用概念、規則與術語（如「和牌
+/ 食糊 / 胡牌 / 和了」、「聽牌 / 叫糊 / 聴牌」、「天和 /
+天胡」、役種/番種名、牌型等），嚴禁在各語系字串中手工硬編碼該術語文字</strong>（嚴禁手寫「叫糊」、「聽牌」或跨地域括號如「叫糊（天聽）」）。</li>
+<li><strong>必須一律透過 <code>{key}</code>
+插值語法引用對應的標準鍵值</strong>（例如
+<code>{win}</code>、<code>{ready}</code>、<code>{GB_FANNAME_86}</code>、<code>{normal}</code>、<code>{pair7}</code>、<code>{kokushi}</code>
+等），由 <code>setLoc</code>
+引擎自動解析為各語系唯一標準的正名，從架構層面確保術語全域一致並根絕地域混拼。</li>
 </ul></li>
 </ol>
 <hr />
@@ -315,7 +330,7 @@ CSS 控制 <code>.card-div</code> 的寬度（<code>width</code> /
 Decoupling)</strong>：
 <ul>
 <li><code>mahjong.js</code>
-是全專案的核心牌理、向聽數與底層演算法基礎設施，只提供純粹的數學計算、向聽/和牌判定與底層資料結構（如
+是全專案的核心牌理、向聽数與底層演算法基礎設施，只提供純粹的數學計算、向聽/和牌判定與底層資料結構（如
 <code>guse</code> 數組、<code>glmt</code>
 牌數限制等），<strong>絕對禁止耦合任何特定地域或規則模式</strong>（嚴禁在
 <code>mahjong.js</code> 內判斷或包含 "jp", "gb", "tw", "sc"

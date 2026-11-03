@@ -253,7 +253,7 @@ function JP3pStep(mask, rsubstep = Array(3).fill(Infinity), dvds = Array(3)) {
     let table = "";
     const updateTable = (l, r) => (table = updateTableGeneral(table, makeTableLineLR(l, r)));
     let substep = Array(3).fill(Infinity);
-    if (rsubstep[0] === Infinity) rsubstep[0] = searchDp(tiles, 0, 0, full_tcnt, Infinity, 4, guse3p);
+    if (rsubstep[0] === Infinity) rsubstep[0] = Step(tiles, tcnt, full_tcnt, 4, guse3p);
     if (mask && mask[0]) {
         substep[0] = rsubstep[0];
         updateTable(`${loc.normal}${loc.colon}`, `${getWaitingType(substep[0])}`);
@@ -638,12 +638,13 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
         return makeTable(fanopt.join(""));
     }
     let [infov, infof] = [0, []];
-    if (info.includes(46) && wt) ((infov += 8), infof.push((wt = 46)));
+    const updateInfo = (id) => ((infov += GBScoreArray[id]), infof.push(id));
+    if (info.includes(46) && wt) ((wt = 46), updateInfo(46));
     if (info.includes(44))
-        if (!wt) ((infov += 8), infof.push(45));
-        else if (setting[32] || wt !== 46) ((infov += 8), infof.push(44), (wt = 44));
-    if (info.includes(47) && !wt) ((infov += 8), infof.push(47));
-    else if (info.includes(58)) ((infov += 4), infof.push(58));
+        if (!wt) updateInfo(45);
+        else if (setting[32] || wt !== 46) ((wt = 44), updateInfo(44));
+    if (info.includes(47) && !wt) updateInfo(47);
+    else if (info.includes(58)) updateInfo(58);
     GBScoreArray[86] = [0, 88, 48, 8][setting[46]];
     if (setting[62]) GBScoreArray[87] = [0, 88, 24, 8, 16, 64][setting[50]];
     else setting[50] = 0;
@@ -656,17 +657,17 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
     if (info.includes(84)) ((infov += GBScoreArray[84] = setting[60]), infof.push(84));
     if (wt) {
         if (mw === 27 && setting[46] && (info.includes(86) || (setting[50] && info.includes(87)))) {
-            ((infov += GBScoreArray[86]), infof.push(86));
+            updateInfo(86);
             if (!setting[49]) wt = 86;
         } else if (setting[54] && info.includes(86)) {
-            ((infov += GBScoreArray[89]), infof.push(89));
+            updateInfo(89);
             if (!setting[58]) wt = 89;
         }
     } else {
         if (mw !== 27 && setting[50] && info.includes(87)) {
-            ((infov += GBScoreArray[87]), infof.push(87));
+            updateInfo(87);
         } else if (setting[52] && info.includes(86)) {
-            ((infov += GBScoreArray[88]), infof.push(88));
+            updateInfo(88);
         }
     }
     const bless = settingBless(infof, setting);
@@ -752,7 +753,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             if (wint !== undefined && !wt && !wintf && !bilisten && !inMelds(others, ota, otb, wint)) --cp;
             if (setting[25] && wint !== undefined && inMelds(others, ota, otb, wint)) wintf = 0;
             let info = { val: infov, fan: infof.slice() };
-            if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) (++info.val, info.fan.push(wintf));
+            if (!must_single_listen && (listen_cnt < 2 || setting[26]) && wintf) ((info.val += GBScoreArray[wintf]), info.fan.push(wintf));
             let ans = f([...ots, ...subots, ...others], gans.val, aids, ck, ek, cp, gw, mw, wt, info, tiles, setting, wint);
             if (ans.val > gans.val) gans = ans;
             ++cm;
@@ -767,15 +768,15 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             postDebugInfo();
         }
         if (substeps[2] === -1 && setting[67]) {
-            let pans = { val: 88 + infov, fan: [7, ...infof] };
+            let pans = { val: GBScoreArray[7] + infov, fan: [7, ...infof] };
             GBZimo(setting[42], wt, pans, bless);
             if (pans.val > gans.val) gans = pans;
             ++cm;
             postDebugInfo();
         }
         if (substeps[3] === -1 && setting[68]) {
-            let pans = { val: 12, fan: [34] };
-            let tcp = tiles.slice();
+            let pans = { val: GBScoreArray[34], fan: [34] };
+            let tcp = getTileBuf(tiles, 0);
             let seven_stars = true;
             for (let i = 27; i < 34; ++i) {
                 let rid = getRealId(tcp, i);
@@ -785,10 +786,10 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
                 }
                 --tcp[rid];
             }
-            if (seven_stars) pans = { val: 24, fan: [20] };
+            if (seven_stars) pans = { val: GBScoreArray[20], fan: [20] };
             else
                 for (let i = 0; i < 6; ++i) {
-                    let tcp = tiles.slice();
+                    let tcp = getTileBuf(tiles, 0);
                     let win = true;
                     for (let j = 0; j < 9; ++j) {
                         const id = KnitDragonSave[i][j];
@@ -800,7 +801,7 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
                         --tcp[rid];
                     }
                     if (win) {
-                        pans.val += 12;
+                        pans.val += GBScoreArray[35];
                         pans.fan.push(35);
                         break;
                     }
@@ -816,10 +817,10 @@ function GBScore(substeps, gw, mw, wt, info, setting) {
             const { err, itots, itsubots, ek, ck } = p[6];
             let addk = false;
             for (let i = 0; i < aids[1].length; ++i) if (getUnifiedType(aids[1][i]) > 4) addk = true;
-            if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) ((must_single_listen = true), (infov += 6), infof.push(52));
+            if (aids[0].length === 2 && ck === 0 && !wt && nmp >= 5 && !(setting[36] && addk)) ((must_single_listen = true), (infov += GBScoreArray[52]), infof.push(52));
             if (aids[0].length === 2 && aids[1].length === 4 && ck + ek === 4) must_single_listen = true;
             itots((ots, ota) => itsubots((subots) => cal(ots, ota, subots, ck, ek, GBKernel)));
-            if (gans.val === 0 && nmp >= 5) ((gans.val = 8), (gans.fan = [43]));
+            if (gans.val === 0 && nmp >= 5) ((gans.val = GBScoreArray[43]), (gans.fan = [43]));
             postDebugInfo();
         }
         if (substeps[4] === -1 && setting[69])
@@ -1027,7 +1028,7 @@ function JPScore(substeps, gw, mw, tsumo, info, setting) {
         function normalSearch(substeps, p, wint) {
             if (substeps[1] === -1) updateAns(JP7Pairs(aids[0], infoans, tsumo, doras, uras, nukis, setting));
             if (substeps[2] === -1 && !setting[58]) {
-                let tcp = tiles.slice();
+                let tcp = getTileBuf(tiles, 0);
                 if (wint !== undefined) --tcp[wint];
                 let listen_13 = setting[1];
                 for (let i = 0; listen_13 && i < Orphan13Array.length; ++i) {

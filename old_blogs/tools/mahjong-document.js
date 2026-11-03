@@ -279,8 +279,8 @@ function updateInput(s, auto = true) {
     if (auto) subkey_info = "";
     //e.dispatchEvent(new Event("change"));
 }
-function shuffle(array) {
-    for (let i = 0; i < array.length; ++i) {
+function shuffle(array, front = array.length) {
+    for (let i = 0; i < front; ++i) {
         const j = random(i, array.length);
         [array[i], array[j]] = [array[j], array[i]];
     }
@@ -428,6 +428,7 @@ function sakiSpecialInput() {
     return null;
 }
 function loadInput() {
+    try { localStorage.removeItem("inputText"); } catch (e) {}
     const t = sessionStorage.getItem("inputText");
     const e = document.getElementById("inputText");
     const s = sakiSpecialInput();
@@ -446,7 +447,9 @@ function getCardHelperFontSize(width, unit) {
     return fontSize;
 }
 function useHelper() {
-    return typeof card_helper !== "undefined" && card_helper;
+    if (typeof card_helper !== "undefined" && card_helper) return true;
+    if (typeof window !== "undefined" && window.card_helper) return true;
+    return false;
 }
 function useRightHelper(id) {
     if (typeof card_helper_right !== "undefined" && card_helper_right) return true;
@@ -465,12 +468,14 @@ function useRightHelper(id) {
 }
 function getCardHelperDiv(tile, width, unit = "%", t = "") {
     if (!useHelper()) return "";
-    const id = tile.id;
+    const id = typeof tile === "number" ? tile : tile?.id;
+    if (id === undefined) return "";
     const helper = HelperArray[id] ?? "";
-    const fontSize = getCardHelperFontSize(width, unit);
+    const fontSize = (width !== undefined && !isNaN(width)) ? getCardHelperFontSize(width, unit) : null;
     const rh = useRightHelper(id) ? " card-helper-right" : "";
-    if (t === "r") return `<span class="card-helper-r${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
-    return `<span class="card-helper${rh}" style="font-size: ${fontSize}px">${helper}</span>`;
+    const styleAttr = fontSize ? ` style="font-size: ${fontSize}px"` : "";
+    if (t === "r") return `<span class="card-helper-r${rh}"${styleAttr}>${helper}</span>`;
+    return `<span class="card-helper${rh}"${styleAttr}>${helper}</span>`;
 }
 let cardskin = "jp";
 function hasGBCard(id) {
@@ -1198,10 +1203,18 @@ function openRuleComparison() {
 }
 function replacei18n() {
     setLoc(lang);
+    const resolveI18nStr = (str) => {
+        if (typeof str !== "string" || (str.indexOf("{") === -1 && str.indexOf("$") === -1)) return str;
+        return str.replace(/(\$)?\{([A-Za-z0-9_]+)\}/g, (match, prefix, refKey) => {
+            return (typeof loc !== "undefined" && loc && loc[refKey] !== undefined) ? loc[refKey] : match;
+        });
+    };
+
     document.querySelectorAll("[data-i18n]").forEach((el) => {
         const key = el.getAttribute("data-i18n");
         let text = loc[key];
         if (!text) return;
+        text = resolveI18nStr(text);
         switch (el.getAttribute("data-i18n-case")) {
             case "lower":
                 text = text.toLowerCase();
@@ -1217,8 +1230,29 @@ function replacei18n() {
                     .split(" ")
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                     .join(" ");
+                break;
         }
         el.innerHTML = text;
+        if (el.tagName === "TITLE") {
+            document.title = text.replace(/<[^>]*>/g, "");
+        }
+    });
+
+    const stripHtml = (s) => (s || "").replace(/<[^>]*>/g, "");
+
+    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-title");
+        if (loc[key]) el.setAttribute("title", stripHtml(resolveI18nStr(loc[key])));
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (loc[key]) el.setAttribute("placeholder", stripHtml(resolveI18nStr(loc[key])));
+    });
+
+    document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-aria-label");
+        if (loc[key]) el.setAttribute("aria-label", stripHtml(resolveI18nStr(loc[key])));
     });
 }
 function initKeyboard() {
@@ -1453,6 +1487,9 @@ function loadStorage() {
     initThemeSwitcher();
     initCustomSelects();
     updateCardSkin(localStorage.getItem("cardskin"));
+    try {
+        if (typeof lang !== "undefined") localStorage.setItem("mahjong-lang", lang);
+    } catch (e) {}
     switchStepTab(Number(localStorage.getItem("steptab")));
     scoretab_usr = Number(localStorage.getItem("scoretab_usr") ?? -1);
     loadGBStorage();

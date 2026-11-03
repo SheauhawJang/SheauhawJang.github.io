@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    
+
+    
+
+    
+
+
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    
+    
+    
+    
+    <title>孤星捧月堂 | Sheauhaw Jang&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#fb8aa0">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="專案開發與代理人行為準則 (GEMINI.md) 本文件定義此專案中所有 AI 代理人（Gemini、Antigravity、Claude 等）在閱讀、修改、擴充代碼與編寫文案時必須無條件遵守的架構規則。本專案包含高度專業且嚴謹的多語言麻將牌理與計算體系，任何違反此準則的行為均視為重大破壞。  規則一：嚴禁生造詞彙，以現有文件為唯一依據 (Zero AI Hallucination)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="孤星捧月堂">
+<meta property="og:url" content="https://sheauhawjang.github.io/GEMINI.html">
+<meta property="og:site_name" content="孤星捧月堂">
+<meta property="og:description" content="專案開發與代理人行為準則 (GEMINI.md) 本文件定義此專案中所有 AI 代理人（Gemini、Antigravity、Claude 等）在閱讀、修改、擴充代碼與編寫文案時必須無條件遵守的架構規則。本專案包含高度專業且嚴謹的多語言麻將牌理與計算體系，任何違反此準則的行為均視為重大破壞。  規則一：嚴禁生造詞彙，以現有文件為唯一依據 (Zero AI Hallucination)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-11-03T03:33:54.247Z">
+<meta property="article:modified_time" content="2026-11-03T03:33:54.247Z">
+<meta property="article:author" content="Sheauhaw Jang">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="孤星捧月堂" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/img/head.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.2">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/sakura.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/usedhead.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Sheauhaw Jang</h5>
+          <a href="mailto:www.zhangxiaohao.cn@foxmail.com" title="www.zhangxiaohao.cn@foxmail.com" class="mail">www.zhangxiaohao.cn@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/links"  >
+                <i class="icon icon-lg icon-external-link"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/nos_blogs/index.html" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                旧站
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/old_blogs/tools/mahjong.html" target="_blank" >
+                <i class="icon icon-lg icon-calculator"></i>
+                牌理
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/SheauhawJang" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://weibo.com/u/7904109794" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                Weibo
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://x.com/sheauhaw" target="_blank" >
+                <i class="icon icon-lg icon-twitter"></i>
+                X(原 Twitter)
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis"></div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header page-header">
+
+    <div class="container fade-scale">
+        <h1 class="title"></h1>
+        <h5 class="subtitle">
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    <article class="page-article fade" itemprop="blogPage">
+        <div class="post-content page-content" id="page-content" itemprop="pageContent">
+            <h1 id="專案開發與代理人行為準則-gemini.md">專案開發與代理人行為準則
+(GEMINI.md)</h1>
+<p>本文件定義此專案中所有 AI 代理人（Gemini、Antigravity、Claude
+等）在閱讀、修改、擴充代碼與編寫文案時<strong>必須無條件遵守的架構規則</strong>。本專案包含高度專業且嚴謹的多語言麻將牌理與計算體系，任何違反此準則的行為均視為重大破壞。</p>
+<hr />
+<h2
+id="規則一嚴禁生造詞彙以現有文件為唯一依據-zero-ai-hallucination">規則一：嚴禁生造詞彙，以現有文件為唯一依據
+(Zero AI Hallucination)</h2>
+<ol type="1">
+<li><strong>嚴禁模型憑直覺自造術語與翻譯</strong>：
+<ul>
+<li>代理人<strong>絕對禁止</strong>根據日常語感、統計直覺或自創字典來撰寫麻將術語、役種/番種名稱、介面標籤或說明文案。</li>
+<li>禁止產生任何「看似正確，但實質上偏離專案標準」的自創詞彙。</li>
+</ul></li>
+<li><strong>已有文件即唯一事實來源（Single Source of Truth）</strong>：
+<ul>
+<li>專案在設計之初已將全部支援語系的標準用語、句式結構與正名完整實作於下列文件中：
+<ul>
+<li><strong>動態多語言字典</strong>：<code>old_blogs/tools/mahjong-worker-lang.js</code>（<code>loc_all</code>）</li>
+<li><strong>靜態語系主頁面</strong>：
+<ul>
+<li>簡體中文
+(<code>cn</code>)：<code>old_blogs/tools/mahjong.html</code></li>
+<li>台灣正體
+(<code>tw</code>)：<code>old_blogs/tools/mahjong-tw.html</code></li>
+<li>香港粵語
+(<code>hk</code>)：<code>old_blogs/tools/mahjong-hk.html</code></li>
+<li>日本日本語
+(<code>ja</code>)：<code>old_blogs/tools/mahjong-ja.html</code></li>
+<li>國際英語
+(<code>en</code>)：<code>old_blogs/tools/mahjong-en.html</code></li>
+</ul></li>
+</ul></li>
+<li><strong>檢索前置原則</strong>：任何涉及介面顯示、提示文字、役番名稱、規則說明的改動，代理人<strong>必須先檢索上述檔案</strong>，直接引用或完全對齊既有檔案中的用語，嚴禁脫離既有檔案自起爐灶。</li>
+</ul></li>
+</ol>
+<hr />
+<h2
+id="規則二語系獨立純粹性嚴禁跨地域拼湊-locale-purity-isolation">規則二：語系獨立純粹性，嚴禁跨地域拼湊
+(Locale Purity &amp; Isolation)</h2>
+<ol type="1">
+<li><strong>嚴禁多語言/多地域用語硬拼</strong>：
+<ul>
+<li>絕對禁止在任何語系的字串中，透過斜線（<code>/</code>）、括號（<code>（）</code>）等形式將不同地域的稱呼拼裝在同一處（例如：禁止在簡體出現「天和
+/ 天胡」、禁止在繁體出現「天胡 /
+天和」、禁止出現「食糊/和牌」等混合詞）。</li>
+</ul></li>
+<li><strong>語系邊界嚴格隔離</strong>：
+<ul>
+<li>每個語系（<code>cn</code>, <code>tw</code>, <code>hk</code>,
+<code>ja</code>, <code>en</code>）均具備獨立、自洽且唯一的規範語境：
+<ul>
+<li><code>cn</code>（簡體中文）：遵循中國大陸規範術語與正字。</li>
+<li><code>tw</code>（台灣正體）：遵循台灣麻將慣用語境與標準繁體正字。</li>
+<li><code>hk</code>（香港粵語）：遵循香港麻雀習慣用語（食糊、叫糊、麻雀等）。</li>
+<li><code>ja</code>（日本日語）：遵循日本麻雀（Riichi）官方與本土正字。</li>
+<li><code>en</code>（國際英語）：遵循國際標準麻將英譯規範。</li>
+</ul></li>
+<li>各語言環境下<strong>只允許出現該語系唯一的標準表達</strong>，禁止任何形式的跨語系混合。</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="規則三i18n-機制架構與複用規範-architecture-reuse">規則三：i18n
+機制架構與複用規範 (Architecture &amp; Reuse)</h2>
+<ol type="1">
+<li><strong>禁止另立孤立偽字典</strong>：
+<ul>
+<li>禁止在任何子頁面、子模組或新工具中宣告局部孤立的
+<code>xxx_loc_all</code> 來重新定義主系統已經存在的翻譯。</li>
+<li>所有通用的麻將概念、規則名詞、役番、拆解術語，<strong>必須直接複用
+<code>mahjong-worker-lang.js</code> 中的標準鍵值</strong>（例如
+<code>JP_YAKUNAME_*</code>、<code>GB_FANNAME_*</code>、<code>win</code>、<code>ready</code>
+等）。</li>
+</ul></li>
+<li><strong>新專屬詞條擴充規範</strong>：
+<ul>
+<li>若特定工具確實需要新增專屬於該工具的 UI
+控制項詞條，新增的鍵值必須依照上述 5
+語系標準進行對齊，且用詞風格必須與對應的 <code>mahjong-*.html</code>
+頁面完全統一。</li>
+</ul></li>
+</ol>
+<hr />
+<h2
+id="規則四多語系檔案同步維護原則-multi-file-synchronization">規則四：多語系檔案同步維護原則
+(Multi-File Synchronization)</h2>
+<ol type="1">
+<li><strong>多語系平行架構一致性</strong>：
+<ul>
+<li>本專案主體採用多個平行的獨立 HTML
+檔案架構。在修改、擴充介面結構、標籤邏輯或功能入口時，必須確保全套 5
+個語系檔案同步更新，嚴禁只更新單一語言而遺漏其餘語言。</li>
+</ul></li>
+<li><strong>靜態 HTML 與動態 i18n 語意一致</strong>：
+<ul>
+<li>靜態 HTML 中的初始佔位文字（<code>title</code>, <code>h1</code>,
+<code>meta</code>
+等）必須嚴格與該頁面預設語系的標準用語一致，禁止在靜態標籤中寫入語意不清的拼湊詞。</li>
+</ul></li>
+</ol>
+<hr />
+<h2
+id="規則五代碼結構與邏輯完整性-code-architecture-integrity">規則五：代碼結構與邏輯完整性
+(Code &amp; Architecture Integrity)</h2>
+<ol type="1">
+<li><strong>保留專案既有結構與註釋</strong>：
+<ul>
+<li>修改既有檔案時，必須完整保留與改動無關的既有邏輯、演算法結構與所有註釋。</li>
+</ul></li>
+<li><strong>演算法與 Worker 協議相容</strong>：
+<ul>
+<li>牌理向聽數計算、牌山抽樣、役種判定等涉及 Web Worker
+通訊的介面，必須嚴格相容現有 <code>mahjong-worker.js</code> /
+<code>mahjong-score.js</code> 的資料規格，禁止任意變更資料契約。</li>
+</ul></li>
+<li><strong>麻將牌面渲染統一規範 (Universal .card-div
+Standard)</strong>：
+<ul>
+<li>全專案所有模組（主計算機、各子頁面、模擬器、牌山展示等）的麻將牌渲染，<strong>一律嚴格複用標準
+<code>.card-div</code> 容器與 <code>getCardImage({ id })</code>
+方法</strong>。</li>
+<li>絕對禁止為特定組件或角落微縮視圖生造私有牌面標籤（例如自定義
+mini-card、自造 <code>&lt;img&gt;</code> 封裝等）。</li>
+<li>尺寸與佈局差異（如手牌、牌山、副露、花牌膠囊等）必須僅透過父層作用域
+CSS 控制 <code>.card-div</code> 的寬度（<code>width</code> /
+<code>aspect-ratio: 80 / 129</code>），以確保全站牌面皮膚（雀魂、騰訊、神來也等）、遮罩（mask）、陰影及高寬比例體系全局一致。</li>
+</ul></li>
+</ol>
+
+        </div>
+
+        
+        <div class="card page-about-me flex-row">
+            <a href="/" class="avatar waves-effect waves-circle waves-light"><img src="/img/usedhead.jpg"></a>
+            <div class="content flex-col">
+                <p><strong>Sheauhaw Jang</strong></p>
+                <p><em>Sheauhaw Jang's Blog</em></p>
+                <p>用户页面中作者相关的描述性文字，如不需要设为 false</p>
+            </div>
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/GEMINI.html&title=孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/GEMINI.html&title=孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/GEMINI.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=孤星捧月堂&url=https://sheauhawjang.github.io/GEMINI.html&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/GEMINI.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+        
+
+        
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </article>
+    
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Sheauhaw Jang &copy; 2019 - 2026</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://sheauhawjang.github.io/GEMINI.html&title=孤星捧月堂&pic=https://SheauhawJang.github.io/img/usedhead.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://sheauhawjang.github.io/GEMINI.html&title=孤星捧月堂&source=一个 ICPCer 的学习笔记" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://sheauhawjang.github.io/GEMINI.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=孤星捧月堂&url=https://sheauhawjang.github.io/GEMINI.html&via=https://SheauhawJang.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://sheauhawjang.github.io/GEMINI.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://sheauhawjang.github.io/GEMINI.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.2"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.2" async></script>
+
+
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+});
+</script>
+
+<script async src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+</body>
+</html>

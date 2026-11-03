@@ -1,8 +1,25 @@
 let loc;
 function setLoc(lang) {
     loc = Object.fromEntries(Object.entries(loc_all).map(([key, value]) => [key, value[lang] ?? value['en']]));
-    for (const [key, val] of Object.entries(loc)) if (val[0] === '#') loc[key] = loc_all[key][val.slice(1)] ?? loc_all[key]['en'];
-    for (const [key, val] of Object.entries(loc)) if (val[0] === '$') loc[key] = loc[val.slice(1)] ?? val;
+    for (const [key, val] of Object.entries(loc)) if (val && val[0] === '#') loc[key] = loc_all[key][val.slice(1)] ?? loc_all[key]['en'];
+    for (const [key, val] of Object.entries(loc)) if (val && val[0] === '$') loc[key] = loc[val.slice(1)] ?? val;
+    let changed = true, depth = 0;
+    while (changed && depth < 5) {
+        changed = false;
+        depth++;
+        for (const [key, val] of Object.entries(loc)) {
+            if (typeof val === 'string' && (val.indexOf('{') !== -1 || val.indexOf('$') !== -1)) {
+                const newVal = val.replace(/(\$)?\{([A-Za-z0-9_]+)\}/g, (match, prefix, refKey) => {
+                    if (loc[refKey] !== undefined) {
+                        changed = true;
+                        return loc[refKey];
+                    }
+                    return match;
+                });
+                if (newVal !== val) loc[key] = newVal;
+            }
+        }
+    }
 }
 const loc_all = {
     wait: { cn: "待", hk: "待", tw: "待", ja: "待", en: "Wait" },
@@ -308,4 +325,187 @@ const loc_all = {
     kb_extend_kong: { cn: "加杠", hk: "加槓", tw: "加槓", ja: "加槓", en: "Extend Kong" },
     kb_conceal_kong: { cn: "暗杠", hk: "暗槓", tw: "暗槓", ja: "暗槓", en: "Conceal Kong" },
     kb_bonus: { cn: "补花", hk: "補花", tw: "補花", ja: "抜き", en: "+Bonus" },
+
+    // --- Simulator & UI Extra Keys ---
+    skin_jp: { cn: "雀魂牌画", tw: "雀魂牌畫", hk: "雀魂牌畫", ja: "雀魂牌画", en: "Mahjong Soul Skin" },
+    skin_qq: { cn: "腾讯牌画", tw: "騰訊牌畫", hk: "騰訊牌畫", ja: "ＱＱ牌画", en: "Tencent Skin" },
+    skin_hk: { cn: "开台喇牌画", tw: "開枱喇牌畫", hk: "開枱喇牌畫", ja: "開台ラ牌画", en: "Let's Mahjong Skin" },
+    skin_tw: { cn: "神来也牌画", tw: "神來也牌畫", hk: "神來也牌畫", ja: "神来也牌画", en: "GodGame Skin" },
+    skin_op: { cn: "园研牌画", tw: "園研牌畫", hk: "園研牌畫", ja: "その研牌画", en: "Sonoken Skin" },
+    skin_gb: { cn: "雀渣牌画", tw: "雀渣牌畫", hk: "雀渣牌畫", ja: "雀渣牌画", en: "Tziakcha Skin" },
+    skin_qqold: { cn: "腾讯大众麻将", tw: "騰訊大眾麻將", hk: "騰訊大眾麻雀", ja: "ＱＱ古い牌画", en: "Tencent Classic" },
+    skin_nn: { cn: "暖暖牌画", tw: "暖暖牌畫", hk: "暖暖牌畫", ja: "ニキ牌畫", en: "Nikki Skin" },
+    skin_saki_zenkoku: { cn: "天才麻将少女全国篇", tw: "天才麻將少女全國篇", hk: "咲-Saki-全國篇", ja: "咲-Saki-全国編", en: "Saki: The Nationals" },
+    skin_saki_ver2: { cn: "天才麻将少女Ver.2.0", tw: "天才麻將少女Ver.2.0", hk: "咲-Saki-Ver.2.0", ja: "咲-Saki-Ver.2.0", en: "Saki Ver.2.0" },
+    skin_dm: { cn: "最终幻想XIV牌画", tw: "最終幻想XIV牌畫", hk: "最終幻想XIV牌畫", ja: "FF14牌画", en: "Final Fantasy XIV Skin" },
+
+    theme_green: { cn: "绿色", tw: "綠色", hk: "綠色", ja: "緑", en: "Green" },
+    theme_pink: { cn: "粉色", tw: "粉色", hk: "粉色", ja: "ピンク", en: "Pink" },
+    theme_blue: { cn: "蓝色", tw: "藍色", hk: "藍色", ja: "青", en: "Blue" },
+    theme_dark: { cn: "深色", tw: "深色", hk: "深色", ja: "ダーク", en: "Dark" },
+
+    sim_page_title: { cn: "{sim_title} - 麻将多功能计算器", tw: "{sim_title} - 麻將多功能計算機", hk: "{sim_title} - 麻雀多功能計算機", ja: "{sim_title} - 麻雀牌理・点数計算ツール", en: "{sim_title} - Mahjong Theory & Score Calculator" },
+    sim_title: { cn: "{JP_YAKUNAME_32}模拟器", tw: "{JP_YAKUNAME_32}模擬器", hk: "{JP_YAKUNAME_32}模擬器", ja: "{JP_YAKUNAME_32}シミュレーター", en: "{JP_YAKUNAME_32} Simulator" },
+    sim_badge: { cn: "蒙特卡洛模拟 · 牌山真实随机抽样", tw: "蒙特卡洛模擬 · 牌山真實隨機抽樣", hk: "蒙特卡洛模擬 · 牌山真實隨機抽樣", ja: "モンテカルロ法 · 純粋ランダム配牌シミュレーター", en: "Monte Carlo Simulation · True Random Wall Sampling" },
+    sim_desc: {
+        cn: "庄家起手配牌第一巡即自摸和了称为<strong>{JP_YAKUNAME_32}</strong>。<br />本页面基于牌山无放回随机抽样与本站标准麻将判定逻辑进行模拟测算，拒绝预设假数据。",
+        tw: "莊家起手配牌第一巡即自摸胡牌稱為<strong>{JP_YAKUNAME_32}</strong>。<br />本頁面基於牌山無放回隨機抽樣與本站標準麻將判定邏輯進行模擬測算，拒絕預設假數據。",
+        hk: "莊家起手配牌第一巡即自摸食糊稱為<strong>{JP_YAKUNAME_32}</strong>。<br />本頁面基於牌山無放回隨機抽樣與本站標準麻雀判定邏輯進行模擬測算，拒絕預設假數據。",
+        ja: "親の配牌時点で既に和了形が完成している役満を<strong>{JP_YAKUNAME_32}（テンホー）</strong>と呼びます。<br />本ツールは牌山の非復元抽出と標準判定ロジックによるモンテカルロ真シミュレーションです。",
+        en: "A complete winning hand dealt to the dealer on the initial deal is called <strong>{_fanname_format_left}{JP_YAKUNAME_32}{_fanname_format_right}</strong>.<br />Simulated via true random wall sampling and standard mahjong evaluation logic."
+    },
+    sim_back: { cn: "返回主计算器", tw: "返回主計算機", hk: "返回主計算機", ja: "計算ツールに戻る", en: "Back to Calculator" },
+    sim_card_pool: { cn: "牌山规模:", tw: "牌山規模:", hk: "牌山規模:", ja: "牌山規模:", en: "Wall Size:" },
+    sim_starting_hand: { cn: "起手配牌:", tw: "起手配牌:", hk: "起手配牌:", ja: "配牌枚数:", en: "Initial Hand:" },
+    sim_theo_prob: { cn: "理论概率:", tw: "理論概率:", hk: "理論概率:", ja: "理論確率:", en: "Theoretical Prob:" },
+    sim_counter_header: { cn: "尝试配牌总次数", tw: "嘗試配牌總次數", hk: "嘗試配牌總次數", ja: "試行配牌回数", en: "Total Hands Dealt" },
+    sim_speed: { cn: "模拟速度", tw: "模擬速度", hk: "模擬速度", ja: "シミュレーション速度", en: "Speed" },
+    sim_elapsed: { cn: "运行时间", tw: "運行時間", hk: "運行時間", ja: "経過時間", en: "Elapsed" },
+    sim_cdf: { cn: "理论达成率 (CDF)", tw: "理論達成率 (CDF)", hk: "理論達成率 (CDF)", ja: "理論達成率 (CDF)", en: "Cumulative Prob (CDF)" },
+    sim_expectation: { cn: "理论期望均值", tw: "理論期望均值", hk: "理論期望均值", ja: "理論期待値", en: "Expected Mean" },
+    sim_rack_deal_area: { cn: "配牌区", tw: "配牌區", hk: "配牌區", ja: "配牌エリア", en: "Hand Tiles" },
+    sim_rack_tsumo: { cn: "自摸和牌张", tw: "自摸胡牌張", hk: "自摸食糊章", ja: "和了牌 (ツモ)", en: "Winning Tile (Tsumo)" },
+    sim_btn_start: { cn: "开始模拟", tw: "開始模擬", hk: "開始模擬", ja: "開始", en: "Start Simulation" },
+    sim_btn_stop: { cn: "停止模拟", tw: "停止模擬", hk: "停止模擬", ja: "停止", en: "Stop" },
+    sim_btn_deal_one: { cn: "随机摸一手", tw: "隨機摸一手", hk: "隨機摸一手", ja: "1回配牌を引く", en: "Deal 1 Hand" },
+    sim_title_deal_one: { cn: "从牌山真实无放回抽取单手配牌并展示", tw: "從牌山真實無放回抽取單手配牌並展示", hk: "從牌山真實無放回抽取單手配牌並展示", ja: "牌山から実際に非復元抽出で配牌を引く", en: "Deal a single random hand from wall" },
+    sim_info_title: { cn: "支持规则与模拟说明", tw: "支援規則與模擬說明", hk: "支援規則與模擬說明", ja: "対応ルールと解説", en: "Supported Rules & Simulation Logic" },
+    sim_import_to_calc: { cn: "填入主计算器分析", tw: "填入主計算機分析", hk: "填入主計算機分析", ja: "計算ツールで点数・役を分析", en: "Analyze in Main Calculator" },
+    sim_copy_result: { cn: "复制结果", tw: "複製結果", hk: "複製結果", ja: "結果をコピー", en: "Copy Result" },
+    sim_restart: { cn: "重新开始", tw: "重新開始", hk: "重新開始", ja: "再挑戦", en: "Restart" },
+    sim_tiles_unit: { cn: "张", tw: "張", hk: "章", ja: "枚", en: "tiles" },
+    sim_unit_banzhuang: { cn: "半庄", tw: "半莊", hk: "半莊", ja: "半荘", en: "Hanchan" },
+    sim_unit_pan: { cn: "盘", tw: "盤", hk: "盤", ja: "局", en: "Rounds" },
+    sim_unit_ju: { cn: "局", tw: "局", hk: "局", ja: "局", en: "Hands" },
+    sim_unit_que: { cn: "雀", tw: "雀", hk: "雀", ja: "雀", en: "Games" },
+    sim_unit_ci: { cn: "次", tw: "次", hk: "次", ja: "回", en: "hands" },
+    sim_unit_second: { cn: "秒", tw: "秒", hk: "秒", ja: "秒", en: "s" },
+    sim_unit_hands_per_sec: { cn: "手/秒", tw: "手/秒", hk: "手/秒", ja: "回/秒", en: "hands/s" },
+    sim_copy_ok: { cn: "已复制模拟结果到剪贴板。", tw: "已複製模擬結果到剪貼簿。", hk: "已複製模擬結果到剪貼簿。", ja: "結果をクリップボードにコピーしました。", en: "Result copied to clipboard." },
+    sim_worker_unsupported: { cn: "当前浏览器环境不支持 Web Worker。", tw: "當前瀏覽器環境不支援 Web Worker。", hk: "當前瀏覽器環境不支援 Web Worker。", ja: "現在のブラウザ環境は Web Worker に対応していません。", en: "Web Workers not supported in current environment." },
+    sim_playtime_label: { cn: "连续对局耗时估算", tw: "連續對局耗時估算", hk: "連續對局耗時估算", ja: "連続対局時間の概算", en: "Equivalent Playtime" },
+    sim_match_label_prefix: { cn: "折算实战", tw: "折算實戰", hk: "折算實戰", ja: "実戦対戦換算", en: "Equivalent" },
+    sim_match_label_suffix: { cn: "数", tw: "數", hk: "數", ja: "数", en: "Count" },
+    sim_approx: { cn: "约", tw: "約", hk: "約", ja: "約", en: "approx." },
+    sim_nth_tile: { cn: "第{n}张", tw: "第{n}張", hk: "第{n}章", ja: "{n}枚目", en: "tile #{n}" },
+    sim_eval_ratio: { cn: "期望均值的 {r} 倍", tw: "期望均值的 {r} 倍", hk: "期望均值的 {r} 倍", ja: "期待値の {r} 倍", en: "{r}× expected mean" },
+    sim_exclaim: { cn: "！", tw: "！", hk: "！", ja: "！", en: "! " },
+
+    sim_hint_ready_badge: { cn: "待机", tw: "待機", hk: "待機", ja: "待機", en: "Ready" },
+    sim_hint_init: { cn: "等待开始", tw: "等待開始", hk: "等待開始", ja: "待機中", en: "Ready to start" },
+    sim_hint_simulating: { cn: "模拟中", tw: "模擬中", hk: "模擬中", ja: "計算中", en: "Running" },
+    sim_hint_sampling: { cn: "抽样中...", tw: "抽樣中...", hk: "抽樣中...", ja: "抽出中...", en: "Sampling..." },
+    sim_hint_paused: { cn: "已暂停", tw: "已暫停", hk: "已暫停", ja: "一時停止", en: "Paused" },
+    sim_hint_resume: { cn: "等待继续", tw: "等待繼續", hk: "等待繼續", ja: "再開待機", en: "Waiting" },
+    sim_hint_dealt: { cn: "单手配牌", tw: "單手配牌", hk: "單手配牌", ja: "配牌", en: "Hand Dealt" },
+    sim_hint_no_win: { cn: "未成{JP_YAKUNAME_32}", tw: "未成{JP_YAKUNAME_32}", hk: "未成{JP_YAKUNAME_32}", ja: "{JP_YAKUNAME_32}ならず", en: "No {JP_YAKUNAME_32}" },
+    sim_hint_no_win_gb: { cn: "未和牌", tw: "未胡牌", hk: "未食糊", ja: "和了ならず", en: "No Win" },
+    sim_hint_win_badge: { cn: "{JP_YAKUNAME_32}达成", tw: "{JP_YAKUNAME_32}達成", hk: "{JP_YAKUNAME_32}達成", ja: "{JP_YAKUNAME_32}達成", en: "{JP_YAKUNAME_32}" },
+    sim_hint_win_badge_gb: { cn: "和牌达成", tw: "胡牌達成", hk: "食糊達成", ja: "和了達成", en: "WIN" },
+    sim_opt_types_label: { cn: "和牌型：", tw: "胡牌型：", hk: "食糊型：", ja: "和了形：", en: "Winning Types:" },
+
+    mode_jp4_name: { cn: "立直麻将 (四人)", tw: "立直麻將 (四人)", hk: "立直麻雀 (四人)", ja: "立直麻雀 (四人)", en: "JP Riichi (4-Player)" },
+    mode_jp3_name: { cn: "立直麻将 (三人)", tw: "立直麻將 (三人)", hk: "立直麻雀 (三人)", ja: "立直麻雀 (三人)", en: "JP Riichi (3-Player)" },
+    mode_gb_name: { cn: "国标麻将标准型", tw: "國標麻將標準型", hk: "國標麻雀標準型", ja: "中国国標麻雀標準形", en: "CN Off. (MCR) Std-T" },
+    mode_sc_name: { cn: "四川麻将", tw: "四川麻將", hk: "四川麻雀", ja: "四川麻雀(赤血の戦)", en: "Sichuan Mahjong" },
+    mode_tw_name: { cn: "港式台湾麻将", tw: "港式台灣麻將", hk: "港式台灣牌", ja: "香港式台湾麻雀", en: "HK Style TW Maj." },
+
+    sim_flower_replacement_hint: { cn: "开牌补花", tw: "開牌補花", hk: "開牌補花", ja: "配牌補花", en: "Flower Replacement" },
+    sim_flower_none: { cn: "开牌无补花", tw: "開牌無補花", hk: "開牌無補花", ja: "配牌補花なし", en: "No Flowers Drawn" },
+    sim_pool_jp4: { cn: "136 张 (标准牌山)", tw: "136 張 (標準牌山)", hk: "136 章 (標準牌山)", ja: "136 枚 (標準牌山)", en: "136 tiles (Standard Wall)" },
+    sim_pool_jp3: { cn: "108 张 (无2~8万)", tw: "108 張 (無2~8萬)", hk: "108 章 (無2~8萬)", ja: "108 枚 (二〜八萬除外)", en: "108 tiles (No 2-8 Characters)" },
+    sim_pool_gb: { cn: "144 张 (标准牌山)", tw: "144 張 (標準牌山)", hk: "144 章 (標準牌山)", ja: "144 枚 (標準牌山)", en: "144 tiles (Standard Wall)" },
+    sim_pool_sc: { cn: "108 张 (纯序数牌)", tw: "108 張 (純序數牌)", hk: "108 章 (純序數牌)", ja: "108 枚 (数牌のみ)", en: "108 tiles (Suits Only)" },
+    sim_pool_tw: { cn: "144 张 (标准牌山)", tw: "144 張 (標準牌山)", hk: "144 章 (標準牌山)", ja: "144 枚 (標準牌山)", en: "144 tiles (Standard Wall)" },
+    sim_desc_jp4: {
+        cn: "标准 136 张序数与字牌牌山，起手 14 张自摸{JP_YAKUNAME_32}。支持{normal}、{pair7}以及{kokushi}。全选时理论概率约为 <strong>1 / 330,530</strong>（仅{normal}约为 <strong>1 / 374,373</strong>，勾选和牌型将即时动态重算）。",
+        tw: "標準 136 張序數與字牌牌山，起手 14 張自摸{JP_YAKUNAME_32}。支援{normal}、{pair7}以及{kokushi}。全選時理論概率約為 <strong>1 / 330,530</strong>（僅{normal}約為 <strong>1 / 374,373</strong>，勾選胡牌型將即時動態重算）。",
+        hk: "標準 136 章序數與字牌牌山，起手 14 章自摸{JP_YAKUNAME_32}。支援{normal}、{pair7}以及{kokushi}。全選時理論概率約為 <strong>1 / 330,530</strong>（僅{normal}約為 <strong>1 / 374,373</strong>，勾選食糊型將即時動態重算）。",
+        ja: "標準136枚の萬筒索字牌の牌山。親の配牌14枚による{JP_YAKUNAME_32}。{normal}、{pair7}、{kokushi}に対応。全選択時の理論確率は約 <strong>1 / 330,530</strong>（{normal}のみは約 <strong>1 / 374,373</strong>、和了形選択に応じて動的再計算）。",
+        en: "Standard 136-tile wall with suits and honors. Dealer's 14-tile initial winning deal. Supports {normal}, {pair7}, and {kokushi}. Probability with all types: approx. <strong>1 / 330,530</strong> (only {normal} approx. <strong>1 / 374,373</strong>; dynamically updated on selection)."
+    },
+    sim_desc_jp3: {
+        cn: "拔除 2~8 万，共 108 张牌山，起手 14 张自摸{JP_YAKUNAME_32}。字牌与清一色密度上升，支持{normal}、{pair7}与{kokushi}。全选时理论概率约为 <strong>1 / 105,711</strong>（仅{normal}约为 <strong>1 / 130,308</strong>）。",
+        tw: "拔除 2~8 萬，共 108 張牌山，起手 14 張自摸{JP_YAKUNAME_32}。字牌與清一色密度上升，支援{normal}、{pair7}與{kokushi}。全選時理論概率約為 <strong>1 / 105,711</strong>（僅{normal}約為 <strong>1 / 130,308</strong>）。",
+        hk: "拔除 2~8 萬，共 108 章牌山，起手 14 章自摸{JP_YAKUNAME_32}。字牌與清一色密度上升，支援{normal}、{pair7}與{kokushi}。全選時理論概率約為 <strong>1 / 105,711</strong>（僅{normal}約為 <strong>1 / 130,308</strong>）。",
+        ja: "二〜八萬を除外した108枚の牌山。字牌と染め手密度が上昇し、{normal}、{pair7}、{kokushi}に対応。全選択時の理論確率は約 <strong>1 / 105,711</strong>（{normal}のみは約 <strong>1 / 130,308</strong>）。",
+        en: "2-8 of Characters removed, 108 tiles total. Hand size 14. Supports {normal}, {pair7}, and {kokushi}. Probability with all types: approx. <strong>1 / 105,711</strong> (only {normal} approx. <strong>1 / 130,308</strong>)."
+    },
+    sim_desc_gb: {
+        cn: "国标麻将标准 144 张牌山，起手 14 张自摸。遇花自动补花，集齐 14 张正牌后判定。支持五大和牌型：{normal}、{pair7}（允许4张相同牌作两对）、{orphan13}、{quanbukaoxing}与{zuhelongxing}。全选时理论概率约为 <strong>1 / 320,590</strong>（仅{normal}约为 <strong>1 / 374,373</strong>）。",
+        tw: "國標麻將標準 144 張牌山，起手 14 張自摸。遇花自動補花，集齊 14 張正牌後判定。支援五大胡牌型：{normal}、{pair7}（允許4張相同牌作兩對）、{orphan13}、{quanbukaoxing}與{zuhelongxing}。全選時理論概率約為 <strong>1 / 320,590</strong>（僅{normal}約為 <strong>1 / 374,373</strong>）。",
+        hk: "國標麻雀標準 144 章牌山，起手 14 章自摸。遇花自動補花，集齊 14 章正牌後判定。支援五大食糊型：{normal}、{pair7}（允許4章相同牌作兩對）、{orphan13}、{quanbukaoxing}與{zuhelongxing}。全選時理論概率約為 <strong>1 / 320,590</strong>（僅{normal}約為 <strong>1 / 374,373</strong>）。",
+        ja: "中国国標麻雀標準の144枚牌山。親配牌14枚。花牌時は自動的に補花を行い、正牌14枚揃った時点で判定。五大和了形：{normal}、{pair7}（4枚使い可）、{orphan13}、{quanbukaoxing}、{zuhelongxing}に対応。全選択時の理論確率は約 <strong>1 / 320,590</strong>（{normal}のみは約 <strong>1 / 374,373</strong>）。",
+        en: "Chinese Official Mahjong standard 144-tile wall, hand size 14. Automatically draws replacement tiles for flowers. Supports all 5 winning types: {normal}, {pair7}, {orphan13}, {quanbukaoxing}, and {zuhelongxing}. Probability with all types: approx. <strong>1 / 320,590</strong> (only {normal} approx. <strong>1 / 374,373</strong>)."
+    },
+    sim_desc_sc: {
+        cn: "包含万、筒、条共 108 张序数牌，起手 14 张。先{JP_YAKUNAME_32}后定缺（起手自然缺一门）。支持{normal}与{pair7}。全选时理论概率约为 <strong>1 / 118,627</strong>（仅{normal}约为 <strong>1 / 121,316</strong>）。",
+        tw: "包含萬、餅、條共 108 張序數牌，起手 14 張。先{JP_YAKUNAME_32}後定缺（起手自然缺一門）。支援{normal}與{pair7}。全選時理論概率約為 <strong>1 / 118,627</strong>（僅{normal}約為 <strong>1 / 121,316</strong>）。",
+        hk: "包含萬、筒、索共 108 章序數牌，起手 14 章。先{JP_YAKUNAME_32}後定缺（起手自然缺一門）。支援{normal}與{pair7}。全選時理論概率約為 <strong>1 / 118,627</strong>（僅{normal}約為 <strong>1 / 121,316</strong>）。",
+        ja: "萬・筒・索の数牌108枚、親配牌14枚。配牌時に1色以上が欠如している自然定缺が必要。{normal}・{pair7}に対応。全選択時の理論確率は約 <strong>1 / 118,627</strong>（{normal}のみは約 <strong>1 / 121,316</strong>）。",
+        en: "Suited tiles only (108 tiles), hand size 14. Naturally voids at least 1 suit on deal. Supports {normal} and {pair7}. Probability with all types: approx. <strong>1 / 118,627</strong> (only {normal} approx. <strong>1 / 121,316</strong>)."
+    },
+    sim_desc_tw: {
+        cn: "标准 144 张牌山，庄家起手 17 张（16张配牌 + 1张摸牌）。遇花自动补花，集齐 17 张正牌后判定。支持{normal}、{niconico}、{orphan13}与{shiliubudaxing}。{normal}理论概率约为 <strong>1 / 1,187,130</strong>（全选特殊型时约为 <strong>1 / 1,009,113</strong>）。",
+        tw: "標準 144 張牌山，莊家起手 17 張（16張配牌 + 1張摸牌）。遇花自動補花，集齊 17 張正牌後判定。支援{normal}、{niconico}、{orphan13}與{shiliubudaxing}。{normal}理論概率約為 <strong>1 / 1,187,130</strong>（全選特殊型時約為 <strong>1 / 1,009,113</strong>）。",
+        hk: "標準 144 章牌山，莊家起手 17 章（16章配牌 + 1章摸牌）。遇花自動補花，集齊 17 章正牌後判定。支援{normal}、{niconico}、{orphan13}與{shiliubudaxing}。{normal}理論概率約為 <strong>1 / 1,187,130</strong>（全選特殊型時約為 <strong>1 / 1,009,113</strong>）。",
+        ja: "標準144枚牌山。親の配牌17枚（16枚配牌 + 1枚自摸）。花牌時は自動的に補花を行い、正牌17枚揃った時点で判定。{normal}、{niconico}、{orphan13}、{shiliubudaxing}に対応。{normal}の理論確率は約 <strong>1 / 1,187,130</strong>（特殊形全選択時は約 <strong>1 / 1,009,113</strong>）。",
+        en: "Standard 144-tile wall. Dealer's 17-tile initial deal (16 dealt + 1 drawn). Automatically draws replacement tiles for flowers. Supports {normal}, {niconico}, {orphan13}, and {shiliubudaxing}. Probability with normal type: approx. <strong>1 / 1,187,130</strong> (all special types approx. <strong>1 / 1,009,113</strong>)."
+    },
+    sim_link_title: { cn: "Web Worker 与主计算器联动", tw: "Web Worker 與主計算機聯動", hk: "Web Worker 與主計算機聯動", ja: "Web Worker と計算ツール連携", en: "Web Worker & Main Calculator Link" },
+    sim_desc_link: {
+        cn: "利用浏览器 Web Worker 与 Xoshiro128** 无偏抽样算法。达成{JP_YAKUNAME_32}后可一键将该手牌填入主页面计算器，定位至对应规则标签页展开详尽番数与听牌分析。",
+        tw: "利用瀏覽器 Web Worker 與 Xoshiro128** 無偏抽樣算法。達成{JP_YAKUNAME_32}後可一鍵將該手牌填入主頁面計算機，定位至對應規則標籤頁展開詳盡番數與聽牌分析。",
+        hk: "利用瀏覽器 Web Worker 與 Xoshiro128** 無偏抽樣算法。食{JP_YAKUNAME_32}後可一鍵將該手牌填入主計算機，定位至對應規則標籤頁展開詳盡番數與叫糊分析。",
+        ja: "Web WorkerとXoshiro128**アルゴリズム。{JP_YAKUNAME_32}達成時はワンクリックで計算ツールへ送り、翻数・点数・聴牌を分析可能。",
+        en: "Utilizes Web Worker and Xoshiro128** RNG. Winning hands can be loaded into the main calculator with one click for point and shanten analysis."
+    },
+    nav_calculator: { cn: "牌理", tw: "牌理", hk: "牌理", ja: "牌理", en: "Calc" },
+    nav_sim: { cn: "天和", tw: "天和", hk: "天和", ja: "天和", en: "Tenhou" },
+    nav_calc_title: { cn: "麻将多功能计算器", tw: "麻將多功能計算機", hk: "麻雀多功能計算機", ja: "麻雀牌理・点数計算ツール", en: "Mahjong Calculator" },
+    nav_sim_title: { cn: "全规则天和模拟器", tw: "全規則天和模擬器", hk: "全規則天和模擬器", ja: "天和シミュレーター", en: "Blessing of Heaven Simulator" },
+    nav_main_site: { cn: "主站", tw: "主站", hk: "主站", ja: "メイン", en: "Home" },
+    nav_main_site_title: { cn: "访问 sanbaiman.com 主站", tw: "造訪 sanbaiman.com 主站", hk: "前往 sanbaiman.com 主站", ja: "sanbaiman.com メインサイトへ", en: "Visit sanbaiman.com" },
+
+    main_footer_line1: {
+        cn: "v4.9.0 Ex · © 2026 Sheauhaw Jang · 麻将多功能计算器",
+        tw: "v4.9.0 · © 2026 Sheauhaw Jang · 麻將多功能計算機",
+        hk: "v4.9.0 · © 2026 Sheauhaw Jang · 麻雀多功能計算機",
+        ja: "v4.9.0 · © 2026 Sheauhaw Jang · 麻雀牌理・点数計算ツール",
+        en: "v4.9.0 · © 2026 Sheauhaw Jang · Mahjong Theory & Score Calculator"
+    },
+    main_footer_line2: {
+        cn: "功能建议/Bug反馈/交流QQ群 1021644248",
+        tw: "聯絡作者：<a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">三倍滿自動姬</a>",
+        hk: "聯絡作者：<a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">三倍滿自動姬</a>",
+        ja: "連絡先：<a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">三倍満自動姫</a>",
+        en: "Contact: <a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">Sanbaiman Automahime</a>"
+    },
+
+    sim_footer_line1: {
+        cn: "© 2026 Sheauhaw Jang · {sim_title}",
+        tw: "© 2026 Sheauhaw Jang · {sim_title}",
+        hk: "© 2026 Sheauhaw Jang · {sim_title}",
+        ja: "© 2026 Sheauhaw Jang · {sim_title}",
+        en: "© 2026 Sheauhaw Jang · {sim_title}"
+    },
+    sim_footer_line2: {
+        cn: "功能建议/Bug反馈/交流QQ群 1021644248",
+        tw: "聯絡作者：<a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">三倍滿自動姬</a>",
+        hk: "聯絡作者：<a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">三倍滿自動姬</a>",
+        ja: "連絡先：<a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">三倍満自動姫</a>",
+        en: "Contact: <a href=\"https://x.com/akiko36000\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color: inherit;\">Sanbaiman Automahime</a>"
+    },
+
+    eval_r1_title: { cn: "天眷之神", tw: "天眷之神", hk: "天眷之神", ja: "天に愛されし神", en: "God Loved by Heaven" },
+    eval_r2_title: { cn: "规格外运王", tw: "規格外運王", hk: "規格外運王", ja: "規格外の運王", en: "Outrageous Luck King" },
+    eval_r3_title: { cn: "踏入神域之人", tw: "踏入神域之人", hk: "踏入神域之人", ja: "神の領域に達せし者", en: "One Reaching the Realm of Gods" },
+    eval_r4_title: { cn: "雀神宠儿", tw: "雀神寵兒", hk: "雀神寵兒", ja: "雀神の申し子", en: "Child of the Mahjong God" },
+    eval_r5_title: { cn: "天选强运", tw: "天選強運", hk: "天選強運", ja: "選ばれし強運", en: "Chosen Strong Luck" },
+    eval_r6_title: { cn: "{JP_YAKUNAME_32}探求者", tw: "{JP_YAKUNAME_32}探求者", hk: "{JP_YAKUNAME_32}探求者", ja: "{JP_YAKUNAME_32}の探求者", en: "Seeker of {JP_YAKUNAME_32}" },
+    eval_r7_title: { cn: "不屈雀士", tw: "不屈雀士", hk: "不屈雀士", ja: "不屈の雀士", en: "Unyielding Mahjong Player" },
+    eval_r8_title: { cn: "跨越苦行之求道者", tw: "跨越苦行之求道者", hk: "跨越苦行之求道者", ja: "苦行を越えし求道者", en: "Seeker Beyond Hardship" },
+    eval_r9_title: { cn: "悟道之佛", tw: "悟道之佛", hk: "悟道之佛", ja: "悟りを開きし仏", en: "Enlightened Buddha" },
+    eval_first_desc: { cn: "第 1 手直接达成，理论概率约为", tw: "第 1 手直接達成，理論概率約為", hk: "第 1 手直接達成，理論概率約為", ja: "1回目で奇跡の達成！理論確率は約", en: "Direct hit on hand #1! Theoretical odds approx" },
 };
+

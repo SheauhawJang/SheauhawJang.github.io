@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Supports Mahjong Theory calculation for Normal Type Mahjong, Chinese Official Mahjong (MCR), Japanese Riichi Mahjong (RCR), 16-tile Mahjong, Hong Kong Style Taiwanese Mahjong, and any-tile-count Mahjong. Supports Joker (wild tile, universal tile, laizi, magic tile, etc.). Supports point or score calculation for Chinese Official Mahjong (MCR) and Japanese Riichi Mahjong (RCR).">
   <title>Mahjong Theory & Score Calculator</title>
-  <link rel="stylesheet" href="mahjong.css?v=202610292108" />
+  <link rel="stylesheet" href="mahjong.css?v=20261103_v3" />
   <script>
     try {
       const savedTheme = localStorage.getItem("mahjong-theme");
@@ -18,6 +18,22 @@
 </head>
 
 <body>
+	<!-- Desktop Navigation Rail (Fixed left side of container) -->
+	<aside class="desktop-nav-rail" aria-label="应用导航">
+		<a href="javascript:void(0)" class="rail-item active" data-app="calc">
+			<span class="rail-icon">🧮</span>
+			<span class="rail-label" data-i18n="nav_calculator">牌理</span>
+		</a>
+		<a href="tenhou.html" class="rail-item link-to-sim" data-app="sim">
+			<span class="rail-icon">🎲</span>
+			<span class="rail-label" data-i18n="nav_sim">天和</span>
+		</a>
+		<div class="rail-divider"></div>
+		<a href="https://sanbaiman.com/" target="_blank" rel="noopener noreferrer" class="rail-item link-to-main">
+			<span class="rail-icon">🏠</span>
+			<span class="rail-label" data-i18n="nav_main_site">主站</span>
+		</a>
+	</aside>
   <div class="language-bar">
     <div>
       <div class="custom-select">
@@ -1088,13 +1104,13 @@
     </div>
     </div>
   </div>
-  <div class="section title-button-container">
-    <div class="output-time">v4.9.0</div>
-    <div class="output-time">Contact: <a href="https://x.com/akiko36000" style="color: inherit;">Sanbaiman Automahime</a></div>
-  </div>
+  	<footer class="site-footer">
+		<div class="footer-line" data-i18n="main_footer_line1">v4.9.0 · © 2026 Sheauhaw Jang · Mahjong Theory & Score Calculator</div>
+		<div class="footer-line" data-i18n="main_footer_line2">Contact: <a href="https://x.com/akiko36000" target="_blank" rel="noopener noreferrer" style="color: inherit;">Sanbaiman Automahime</a></div>
+	</footer>
   <script src="mahjong.js?v=202610292108"></script>
-  <script src="mahjong-document.js?v=202610292108"></script>
-  <script src="mahjong-worker-lang.js?v=202610292108"></script>
+  <script src="mahjong-document.js?v=20261103_v9"></script>
+  <script src="mahjong-worker-lang.js?v=20261103_v3"></script>
   <script>
     function tilesInfo(tcnt) {
       const meld = Math.floor(tcnt / 3);
@@ -1142,6 +1158,17 @@
     const card_helper = true;
     const toggleOutputLang = ["Expand ▼", "Fold ▲"];
   </script>
+	<!-- Mobile Bottom Navigation Bar -->
+	<nav class="mobile-bottom-nav" aria-label="移动端应用导航">
+		<a href="javascript:void(0)" class="mobile-nav-item active" data-app="calc">
+			<span class="mobile-nav-icon">🧮</span>
+			<span class="mobile-nav-label" data-i18n="nav_calculator">牌理</span>
+		</a>
+		<a href="tenhou.html" class="mobile-nav-item link-to-sim" data-app="sim">
+			<span class="mobile-nav-icon">🎲</span>
+			<span class="mobile-nav-label" data-i18n="nav_sim">天和</span>
+		</a>
+	</nav>
 </body>
 
 </html>

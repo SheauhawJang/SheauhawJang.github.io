@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+	<meta name="description" content="全规则麻将天和模拟器：支持四人立直、三人立直、国标麻将标准型、四川麻将与港式台湾麻将的蒙特卡洛纯真模拟。" />
+	<title data-i18n="sim_page_title">天和模拟器 - 麻将多功能计算器</title>
+	<link rel="stylesheet" href="mahjong.css?v=20261103_v8" />
+	<link rel="stylesheet" href="tenhou-sim.css?v=20261103_v10" />
+	<script>
+		try {
+			const savedTheme = localStorage.getItem("mahjong-theme");
+			if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+		} catch (e) { }
+	</script>
+	<link rel="icon" href="head.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="head.ico" type="image/x-icon">
+</head>
+
+<body class="tenhou-body">
+	<!-- Desktop Navigation Rail (Fixed left side of container) -->
+	<aside class="desktop-nav-rail" aria-label="应用导航">
+		<a href="mahjong.html" class="rail-item link-to-calc" id="tenhou-rail-calc" data-app="calc">
+			<span class="rail-icon">🧮</span>
+			<span class="rail-label" data-i18n="nav_calculator">牌理</span>
+		</a>
+		<a href="javascript:void(0)" class="rail-item active" data-app="sim">
+			<span class="rail-icon">🎲</span>
+			<span class="rail-label" data-i18n="nav_sim">天和</span>
+		</a>
+		<div class="rail-divider"></div>
+		<a href="https://sanbaiman.com/" target="_blank" rel="noopener noreferrer" class="rail-item link-to-main">
+			<span class="rail-icon">🏠</span>
+			<span class="rail-label" data-i18n="nav_main_site">主站</span>
+		</a>
+	</aside>
+	<div class="tenhou-page-wrapper">
+		<!-- Top Navigation Bar (Unified with main site .language-bar) -->
+		<div class="language-bar">
+			<div>
+				<div class="custom-select">
+					<button class="select-trigger" id="tenhou-skin-trigger" type="button">雀魂牌画</button>
+					<div class="select-options">
+						<div class="select-option" data-value="jp" data-i18n="skin_jp">雀魂牌画</div>
+						<div class="select-option" data-value="qq" data-i18n="skin_qq">腾讯牌画</div>
+						<div class="select-option" data-value="hk" data-i18n="skin_hk">开台喇牌画</div>
+						<div class="select-option" data-value="tw" data-i18n="skin_tw">神来也牌画</div>
+						<div class="select-option" data-value="op" data-i18n="skin_op">园研牌画</div>
+						<div class="select-option" data-value="gb" data-i18n="skin_gb">雀渣牌画</div>
+						<div class="select-option" data-value="qqold" data-i18n="skin_qqold">腾讯大众麻将</div>
+						<div class="select-option" data-value="nn" data-i18n="skin_nn">暖暖牌画</div>
+						<div class="select-option" data-value="saki-zenkoku" data-i18n="skin_saki_zenkoku">天才麻将少女全国篇</div>
+						<div class="select-option" data-value="saki-ver2.0" data-i18n="skin_saki_ver2">天才麻将少女Ver.2.0</div>
+						<div class="select-option" data-value="dm" data-i18n="skin_dm">最终幻想XIV牌画</div>
+					</div>
+				</div>
+			</div>
+			<div class="theme-group">
+				<button class="theme-dot" data-theme="pink" aria-label="粉色" title="粉色" data-i18n-theme="pink"></button>
+				<button class="theme-dot" data-theme="green" aria-label="绿色" title="绿色" data-i18n-theme="green"></button>
+				<button class="theme-dot" data-theme="blue" aria-label="蓝色" title="蓝色" data-i18n-theme="blue"></button>
+				<button class="theme-dot" data-theme="dark" aria-label="深色" title="深色" data-i18n-theme="dark"></button>
+			</div>
+			<div class="lang-group">
+				<a href="javascript:void(0)" class="lang-btn active" data-lang="cn">简体中文</a>
+				<a href="javascript:void(0)" class="lang-btn" data-lang="tw">正體中文</a>
+				<a href="javascript:void(0)" class="lang-btn" data-lang="hk">粵語</a>
+				<a href="javascript:void(0)" class="lang-btn" data-lang="ja">日本語</a>
+				<a href="javascript:void(0)" class="lang-btn" data-lang="en">English</a>
+			</div>
+		</div>
+
+		<!-- Main Simulator Card -->
+		<main>
+			<section class="tenhou-sim-container" id="tenhou-simulator">
+				<!-- Hero Header -->
+				<div class="tenhou-sim-header">
+					<div class="tenhou-badge-pill">
+						<span class="badge-pulse-dot"></span>
+						<span data-i18n="sim_badge">蒙特卡洛模拟 · 牌山真实随机抽样</span>
+					</div>
+					<h1 class="tenhou-sim-title" data-i18n="sim_title">天和模拟器</h1>
+					<p class="tenhou-sim-desc" data-i18n="sim_desc">
+						庄家起手配牌第一巡即自摸和了称为<strong>天和</strong>。<br />
+						本页面基于牌山无放回随机抽样与本站标准麻将判定逻辑进行模拟测算，拒绝预设假数据。
+					</p>
+				</div>
+
+				<!-- Rule Mode Segmented Tabs -->
+				<div class="tenhou-mode-wrapper">
+					<div class="tenhou-mode-tabs" role="tablist" id="tenhou-mode-tabs">
+						<button class="tenhou-mode-tab active" data-mode="jp4" type="button" role="tab">
+							<span class="tab-title" data-i18n="mode_jp4_name">立直麻将 (四人)</span>
+							<span class="tab-badge" id="badge-jp4">14张</span>
+						</button>
+						<button class="tenhou-mode-tab" data-mode="jp3" type="button" role="tab">
+							<span class="tab-title" data-i18n="mode_jp3_name">立直麻将 (三人)</span>
+							<span class="tab-badge" id="badge-jp3">14张</span>
+						</button>
+						<button class="tenhou-mode-tab" data-mode="gb" type="button" role="tab">
+							<span class="tab-title" data-i18n="mode_gb_name">国标麻将标准型</span>
+							<span class="tab-badge" id="badge-gb">14张</span>
+						</button>
+						<button class="tenhou-mode-tab" data-mode="sc" type="button" role="tab">
+							<span class="tab-title" data-i18n="mode_sc_name">四川麻将</span>
+							<span class="tab-badge" id="badge-sc">14张</span>
+						</button>
+						<button class="tenhou-mode-tab" data-mode="tw" type="button" role="tab">
+							<span class="tab-title" data-i18n="mode_tw_name">港式台湾麻将</span>
+							<span class="tab-badge" id="badge-tw">17张</span>
+						</button>
+					</div>
+
+					<!-- Winning Hand Types Filter -->
+					<div class="tenhou-type-bar" id="tenhou-type-bar">
+						<span class="type-bar-label" data-i18n="sim_opt_types_label">和牌型：</span>
+						<div class="output-option-group" id="tenhou-type-options"></div>
+					</div>
+
+					<!-- Mode Live Specs Bar -->
+					<div class="tenhou-spec-bar">
+						<div class="spec-cell">
+							<span class="spec-label" data-i18n="sim_card_pool">牌山规模:</span>
+							<span class="spec-value" id="spec-pool">136 张 (标准牌山)</span>
+						</div>
+						<div class="spec-divider"></div>
+						<div class="spec-cell">
+							<span class="spec-label" data-i18n="sim_starting_hand">起手配牌:</span>
+							<span class="spec-value" id="spec-hand">14 张</span>
+						</div>
+						<div class="spec-divider"></div>
+						<div class="spec-cell">
+							<span class="spec-label" data-i18n="sim_theo_prob">理论概率:</span>
+							<span class="spec-value spec-highlight" id="spec-prob">约 3.0254 × 10<sup>-6</sup></span>
+						</div>
+											</div>
+				</div>
+
+				<!-- Live Counter & Statistics Dashboard -->
+				<div class="tenhou-dashboard">
+					<div class="tenhou-counter-block">
+						<div class="tenhou-counter-header">
+							<span class="counter-live-dot" id="tenhou-live-dot"></span>
+							<span class="counter-header-text" data-i18n="sim_counter_header">尝试配牌总次数</span>
+						</div>
+						<div class="tenhou-counter-number" id="tenhou-counter">0</div>
+					</div>
+
+					<div class="tenhou-stats-grid">
+						<div class="tenhou-stat-card">
+							<div class="stat-card-top">
+								<span class="stat-title" data-i18n="sim_speed">模拟速度</span>
+							</div>
+							<div class="stat-main-val" id="tenhou-speed">-</div>
+						</div>
+						<div class="tenhou-stat-card">
+							<div class="stat-card-top">
+								<span class="stat-title" data-i18n="sim_elapsed">运行时间</span>
+							</div>
+							<div class="stat-main-val" id="tenhou-time">0.0 秒</div>
+						</div>
+						<div class="tenhou-stat-card">
+							<div class="stat-card-top">
+								<span class="stat-title" data-i18n="sim_cdf">理论达成率 (CDF)</span>
+							</div>
+							<div class="stat-main-val" id="tenhou-prob">0.0%</div>
+						</div>
+						<div class="tenhou-stat-card">
+							<div class="stat-card-top">
+								<span class="stat-title" data-i18n="sim_expectation">理论期望均值</span>
+							</div>
+							<div class="stat-main-val" id="tenhou-mean">330,530 次</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Mahjong Tournament Table Felt Rack -->
+				<div class="tenhou-table-mat" id="tenhou-hand-wrapper">
+					<div class="table-mat-inner">
+						<div class="table-mat-header">
+							<div class="table-mat-status" id="tenhou-status-hint">
+								<span class="mat-status-badge" id="mat-status-badge" data-i18n="sim_hint_ready_badge">待机</span>
+								<span class="mat-status-text" id="mat-status-text" data-i18n="sim_hint_init">等待开始</span>
+							</div>
+							<div class="table-mat-flowers" id="tenhou-flowers-display" style="display: none;"></div>
+						</div>
+
+						<div class="table-mat-rack">
+							<div class="tenhou-tiles-rack" id="tenhou-tiles-display">
+								<!-- Rendered Tiles -->
+							</div>
+						</div>
+
+						<div class="table-mat-footer">
+							<span class="rack-foot-note left" id="rack-foot-left">配牌区 (13张)</span>
+							<span class="rack-foot-note right" id="rack-foot-right">自摸和牌张 (第14张)</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Simulation Control Actions -->
+				<div class="tenhou-controls-bar">
+					<button id="tenhou-btn-start" class="tenhou-btn tenhou-btn-primary" onclick="window.tenhouSim.start()" type="button">
+						<span data-i18n="sim_btn_start">开始模拟</span>
+					</button>
+
+					<button id="tenhou-btn-stop" class="tenhou-btn tenhou-btn-danger" style="display: none;" onclick="window.tenhouSim.stop()" type="button">
+						<span data-i18n="sim_btn_stop">停止模拟</span>
+					</button>
+
+					<button id="tenhou-btn-deal-one" class="tenhou-btn tenhou-btn-secondary" onclick="window.tenhouSim.dealOneHand()" type="button" title="从牌山真实无放回抽取单手配牌并展示" data-i18n-title="sim_title_deal_one">
+						<span data-i18n="sim_btn_deal_one">随机摸一手</span>
+					</button>
+				</div>
+
+				<!-- Success Celebration Card (Hidden until win) -->
+				<div id="tenhou-success-banner" class="tenhou-success-banner" style="display: none;"></div>
+			</section>
+
+			<!-- Knowledge & Rules Details Section -->
+			<section class="tenhou-info-card">
+				<div class="info-card-header">
+					<h3 class="info-title" data-i18n="sim_info_title">支持规则与模拟说明</h3>
+				</div>
+				<div class="info-grid">
+					<div class="info-item">
+						<div class="info-item-head">
+							<span class="rule-name" data-i18n="mode_jp4_name">立直麻将 (四人)</span>
+						</div>
+						<p class="rule-desc" data-i18n="sim_desc_jp4">
+							标准 136 张序数与字牌牌山，起手 14 张自摸天和。支持一般型、七对型以及国士无双型。全选时理论概率约为 <strong>1 / 330,530</strong>（仅一般型约为 <strong>1 / 374,373</strong>，勾选和牌型将即时动态重算）。
+						</p>
+					</div>
+
+					<div class="info-item">
+						<div class="info-item-head">
+							<span class="rule-name" data-i18n="mode_jp3_name">立直麻将 (三人)</span>
+						</div>
+						<p class="rule-desc" data-i18n="sim_desc_jp3">
+							拔除 2~8 万，共 108 张牌山，起手 14 张自摸天和。字牌与清一色密度上升，支持一般型、七对型与国士无双型。全选时理论概率约为 <strong>1 / 105,711</strong>（仅一般型约为 <strong>1 / 130,308</strong>）。
+						</p>
+					</div>
+
+					<div class="info-item">
+						<div class="info-item-head">
+							<span class="rule-name" data-i18n="mode_gb_name">国标麻将标准型</span>
+						</div>
+						<p class="rule-desc" data-i18n="sim_desc_gb">
+							国标麻将标准 144 张牌山，起手 14 张自摸。遇花自动补花，集齐 14 张正牌后判定。支持五大和牌型：一般型、七对型（允许4张相同牌作两对）、十三幺型、全不靠型以及组合龙型。全选时理论概率约为 <strong>1 / 320,590</strong>（仅一般型约为 <strong>1 / 374,373</strong>）。
+						</p>
+					</div>
+
+					<div class="info-item">
+						<div class="info-item-head">
+							<span class="rule-name" data-i18n="mode_sc_name">四川麻将</span>
+						</div>
+						<p class="rule-desc" data-i18n="sim_desc_sc">
+							包含万、筒、条共 108 张序数牌，起手 14 张。先天和后定缺（起手自然缺一门）。支持一般型与七对型。全选时理论概率约为 <strong>1 / 118,627</strong>（仅一般型约为 <strong>1 / 121,316</strong>）。
+						</p>
+					</div>
+
+					<div class="info-item">
+						<div class="info-item-head">
+							<span class="rule-name" data-i18n="mode_tw_name">港式台湾麻将</span>
+						</div>
+						<p class="rule-desc" data-i18n="sim_desc_tw">
+							标准 144 张牌山，庄家起手 17 张（16张配牌 + 1张摸牌）。遇花自动补花，集齐 17 张正牌后判定。支持一般型、呖咕呖咕型、十三幺型与十六不搭型。一般型理论概率约为 <strong>1 / 1,187,130</strong>（全选特殊型时约为 <strong>1 / 1,009,113</strong>）。
+						</p>
+					</div>
+
+					<div class="info-item">
+						<div class="info-item-head">
+							<span class="rule-name" data-i18n="sim_link_title">Web Worker 与主计算器联动</span>
+						</div>
+						<p class="rule-desc" data-i18n="sim_desc_link">
+							利用浏览器 Web Worker 与 Xoshiro128** 无偏抽样算法。达成天和后可一键将该手牌填入主页面计算器，定位至对应规则标签页展开详尽番数与听牌分析。
+						</p>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<!-- Footer -->
+		<footer class="site-footer tenhou-footer">
+			<div class="footer-line" data-i18n="sim_footer_line1">© 2026 Sheauhaw Jang · 天和模拟器</div>
+			<div class="footer-line" data-i18n="sim_footer_line2">功能建议/Bug反馈/交流QQ群 1021644248</div>
+		</footer>
+	</div>
+
+	<!-- Core Mahjong Logic, DOM Helpers and Simulator Controller -->
+	<script src="mahjong.js?v=202610292108"></script>
+	<script src="mahjong-document.js?v=20261103_v9"></script>
+	<script src="mahjong-worker-lang.js?v=20261103_v8"></script>
+	<script src="tenhou.js?v=20261103_v9"></script>
+	<!-- Mobile Bottom Navigation Bar -->
+	<nav class="mobile-bottom-nav" aria-label="移动端应用导航">
+		<a href="mahjong.html" class="mobile-nav-item link-to-calc" id="tenhou-mobile-calc" data-app="calc">
+			<span class="mobile-nav-icon">🧮</span>
+			<span class="mobile-nav-label" data-i18n="nav_calculator">牌理</span>
+		</a>
+		<a href="javascript:void(0)" class="mobile-nav-item active" data-app="sim">
+			<span class="mobile-nav-icon">🎲</span>
+			<span class="mobile-nav-label" data-i18n="nav_sim">天和</span>
+		</a>
+	</nav>
+</body>
+
+</html>

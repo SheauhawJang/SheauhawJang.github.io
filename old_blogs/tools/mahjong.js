@@ -177,6 +177,12 @@ let lastStep = {};
 let INF = Infinity;
 const EMPTY = -2;
 let vst = [];
+const tileBuf = [new Int32Array(sizeAT), new Int32Array(sizeAT), new Int32Array(sizeAT)];
+function getTileBuf(tiles, level = 0) {
+    const buf = tileBuf[level];
+    for (let i = 0; i < sizeAT; ++i) buf[i] = tiles[i];
+    return buf;
+}
 const JokerA = [43, 43, 43, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 45, 45, 45, 45, 45, 45, 45, 45, 45, 47, 47, 47, 47, 48, 48, 48, 50, 50, 50, 50, 50, 50, 50, 50, 42, 43, 44, 45, 46, 47, 48, 49, 50];
 const JokerB = [46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 46, 49, 49, 49, 49, 49, 49, 49, 50, 50, 50, 50, 50, 50, 50, 50, 42, 46, 46, 46, 46, 49, 49, 49, 50];
 const JokerC = 42;
@@ -308,8 +314,9 @@ function useStepMemory(nm, np, tiles, glmt, sup, guse) {
     vst = nvst;
     return true;
 }
+const lastStepTiles = new Int32Array(sizeAT);
 function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = guseall) {
-    tiles = tiles.slice();
+    tiles = getTileBuf(tiles, 1);
     let nm = (tcnt / 3) | 0;
     let np = +(nm * 3 !== tcnt);
     INF = nm * 3 + np * 2 - 1;
@@ -320,53 +327,71 @@ function searchDp(tiles, em, ep, tcnt, sup = Infinity, glmt = Infinity, guse = g
     }
     if (glmt !== Infinity) {
         if (!useStepMemory(nm, np, tiles, glmt, sup, guse)) prepareStep(nm, np, tiles);
-        lastStep = { nm, np, glmt, tiles, sup, guse };
+        for (let i = 0; i < sizeAT; ++i) lastStepTiles[i] = tiles[i];
+        lastStep = { nm, np, glmt, tiles: lastStepTiles, sup, guse };
         return kernelStep(tiles, em, ep, nm, np, sup, glmt, guse);
     }
     let ans = -tiles[JokerC];
     tiles[JokerC] = 0;
     if (!useStepMemory(nm, np, tiles, glmt, sup, guse)) prepareStep(nm, np, tiles);
-    lastStep = { nm, np, glmt, tiles, sup, guse };
+    for (let i = 0; i < sizeAT; ++i) lastStepTiles[i] = tiles[i];
+    lastStep = { nm, np, glmt, tiles: lastStepTiles, sup, guse };
     return kernelStep(tiles, em, ep, nm, np, sup - ans, glmt, guse) + ans;
 }
 // Check for winning
-function check(tiles, target) {
+const checkBuf = new Int32Array(sizeUT);
+function check(tiles, target, guse = guseall) {
     let meld = 0;
-    tiles = tiles.slice();
+    for (let i = 0; i < sizeUT; ++i) checkBuf[i] = tiles[i];
     for (let i = 0; i < sizeUT; ++i) {
-        if (tiles[i] >= 3) ((meld += Math.floor(tiles[i] / 3)), (tiles[i] %= 3));
-        if (SeqCheck(i) && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
-            const cnt = Math.min(tiles[i], tiles[i + 1], tiles[i + 2]);
+        if (checkBuf[i] >= 3) ((meld += Math.floor(checkBuf[i] / 3)), (checkBuf[i] %= 3));
+        if (SeqCheck(i) && guse[i + 1] !== Infinity && guse[i + 2] !== Infinity && checkBuf[i] && checkBuf[i + 1] && checkBuf[i + 2]) {
+            const cnt = Math.min(checkBuf[i], checkBuf[i + 1], checkBuf[i + 2]);
             meld += cnt;
-            tiles[i] -= cnt;
-            tiles[i + 1] -= cnt;
-            tiles[i + 2] -= cnt;
+            checkBuf[i] -= cnt;
+            checkBuf[i + 1] -= cnt;
+            checkBuf[i + 2] -= cnt;
         }
-        if (tiles[i]) break;
+        if (checkBuf[i]) break;
     }
     return meld === target;
 }
-function Win(tiles, tcnt, glmt = Infinity) {
-    const meld = Math.floor(tcnt / 3);
-    const head = tcnt % 3;
-    for (let i = 0; i < sizeUT; ++i) if (tiles[i] > glmt) return false;
-    if (head === 0) return check(tiles, meld);
-    for (let i = 0; i < sizeUT; ++i)
-        if (tiles[i] >= 2) {
-            tiles[i] -= 2;
-            const ans = check(tiles, meld);
-            tiles[i] += 2;
-            if (ans) return true;
+function Win(tiles, tcnt, glmt = Infinity, guse = guseall) {
+    const meld = Math.floor(tcnt / 3), head = tcnt % 3;
+    let [l, r] = [-1, -1];
+    for (let k = 0; k < 10; ++k) {
+        const cl = k < 3 ? k * 9 : k + 24, cr = k < 3 ? cl + 9 : cl + 1;
+        let sum = 0;
+        for (let i = cl; i < cr; ++i) {
+            if (tiles[i] > glmt || (tiles[i] && guse[i] === Infinity)) return false;
+            sum += tiles[i];
         }
-    return false;
+        if (sum % 3 === 1) return false;
+        if (sum % 3 === 2) {
+            if (l !== -1) return false;
+            [l, r] = [cl, cr];
+        }
+    }
+    if (head === 2) {
+        if (l === -1) return false;
+        for (let i = l; i < r; ++i)
+            if (tiles[i] >= 2) {
+                tiles[i] -= 2;
+                const ans = check(tiles, meld, guse);
+                tiles[i] += 2;
+                if (ans) return true;
+            }
+        return false;
+    }
+    return head === 0 && l === -1 && check(tiles, meld, guse);
 }
 // Listen function
-function Listen(tiles, tcnt, full_tcnt = tcnt, glmt = Infinity) {
+function Listen(tiles, tcnt, full_tcnt = tcnt, glmt = Infinity, guse = guseall) {
     if (tcnt + 1 === full_tcnt)
         for (let j = 0; j < sizeUT; ++j) {
-            if (tiles[j] >= glmt) continue;
+            if (tiles[j] >= glmt || guse[j] === Infinity) continue;
             ++tiles[j];
-            const ans = Win(tiles, tcnt + 1, glmt);
+            const ans = Win(tiles, tcnt + 1, glmt, guse);
             --tiles[j];
             if (ans) return true;
         }
@@ -376,9 +401,9 @@ function Listen(tiles, tcnt, full_tcnt = tcnt, glmt = Infinity) {
             --tiles[i];
             for (let j = 0; j < sizeUT; ++j) {
                 if (i === j) continue;
-                if (tiles[j] >= glmt) continue;
+                if (tiles[j] >= glmt || guse[j] === Infinity) continue;
                 ++tiles[j];
-                const ans = Win(tiles, tcnt, glmt);
+                const ans = Win(tiles, tcnt, glmt, guse);
                 --tiles[j];
                 if (ans) {
                     ++tiles[i];
@@ -390,23 +415,23 @@ function Listen(tiles, tcnt, full_tcnt = tcnt, glmt = Infinity) {
     return false;
 }
 // Step function
-function Step(tiles, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity) {
-    if (tcnt > full_tcnt) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt);
-    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt);
-    if (tcnt === full_tcnt && Win(tiles, full_tcnt, glmt)) return -1;
-    if (Listen(tiles, tcnt, full_tcnt, glmt)) return 0;
-    return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt);
+function Step(tiles, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity, guse = guseall) {
+    if (tcnt > full_tcnt) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
+    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
+    if (tcnt === full_tcnt && Win(tiles, full_tcnt, glmt, guse)) return -1;
+    if (Listen(tiles, tcnt, full_tcnt, glmt, guse)) return 0;
+    return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
 }
 // Check whether the step of new tiles decreased or not.
-function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity) {
-    if (tcnt > full_tcnt) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt) < maxstep;
-    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt) < maxstep;
+function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity, guse = guseall) {
+    if (tcnt > full_tcnt) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
+    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
     if (maxstep === -1) return false;
-    if (tcnt === full_tcnt && Win(tiles, full_tcnt, glmt)) return true;
+    if (tcnt === full_tcnt && Win(tiles, full_tcnt, glmt, guse)) return true;
     if (maxstep === 0) return false;
-    if (Listen(tiles, tcnt, full_tcnt, glmt)) return true;
+    if (Listen(tiles, tcnt, full_tcnt, glmt, guse)) return true;
     if (maxstep === 1) return false;
-    return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt) < maxstep;
+    return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
 }
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
 function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity) {
@@ -437,36 +462,40 @@ function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity) {
         if (ans > 7) ((sig += (ans - 7) * 2), (ans = 7));
         return 13 - ans * 2 - Math.min(sig, 7 - ans) - rc;
     } else {
-        let t = tiles.slice();
-        for (let i = 0; i < sizeUT; ++i) {
-            if (guse[i] === Infinity) continue;
-            if (t[i] !== 1) continue;
-            if (t[JokerA[i]]) (--t[JokerA[i]], ++t[i]);
-            else if (t[JokerB[i]]) (--t[JokerB[i]], ++t[i]);
-            else if (t[JokerC]) (--t[JokerC], ++t[i]);
-        }
-        for (let i = 0; i < sizeUT; ++i) {
-            if (guse[i] === Infinity) continue;
-            if (t[i] !== 0) continue;
-            const cnt = Math.min(t[JokerA[i]], 2);
-            ((t[i] = cnt), (t[JokerA[i]] -= cnt));
-            if (t[i] !== 1) continue;
-            if (t[JokerB[i]]) (--t[JokerB[i]], ++t[i]);
-            else if (t[JokerC]) (--t[JokerC], ++t[i]);
-        }
-        for (let i = 0; i < sizeUT; ++i) {
-            if (guse[i] === Infinity) continue;
-            if (t[i] !== 0) continue;
-            const cnt = Math.min(t[JokerB[i]], 2);
-            ((t[i] = cnt), (t[JokerB[i]] -= cnt));
-            if (t[i] !== 1) continue;
-            if (t[JokerC]) (--t[JokerC], ++t[i]);
-        }
-        for (let i = 0; i < sizeUT; ++i) {
-            if (guse[i] === Infinity) continue;
-            if (t[i] !== 0) continue;
-            const cnt = Math.min(t[JokerC], 2);
-            ((t[i] = cnt), (t[JokerC] -= cnt));
+        let noJoker = true;
+        for (let i = 42; i < 50; ++i)
+            if (tiles[i]) {
+                noJoker = false;
+                break;
+            }
+        let t = noJoker ? tiles : getTileBuf(tiles, 1);
+        if (!noJoker) {
+            for (let i = 0; i < sizeUT; ++i) {
+                if (guse[i] === Infinity || t[i] !== 1) continue;
+                if (t[JokerA[i]]) (--t[JokerA[i]], ++t[i]);
+                else if (t[JokerB[i]]) (--t[JokerB[i]], ++t[i]);
+                else if (t[JokerC]) (--t[JokerC], ++t[i]);
+            }
+            for (let i = 0; i < sizeUT; ++i) {
+                if (guse[i] === Infinity || t[i] !== 0 || !t[JokerA[i]]) continue;
+                const cnt = Math.min(t[JokerA[i]], 2);
+                ((t[i] = cnt), (t[JokerA[i]] -= cnt));
+                if (t[i] !== 1) continue;
+                if (t[JokerB[i]]) (--t[JokerB[i]], ++t[i]);
+                else if (t[JokerC]) (--t[JokerC], ++t[i]);
+            }
+            for (let i = 0; i < sizeUT; ++i) {
+                if (guse[i] === Infinity || t[i] !== 0 || !t[JokerB[i]]) continue;
+                const cnt = Math.min(t[JokerB[i]], 2);
+                ((t[i] = cnt), (t[JokerB[i]] -= cnt));
+                if (t[i] !== 1) continue;
+                if (t[JokerC]) (--t[JokerC], ++t[i]);
+            }
+            for (let i = 0; i < sizeUT; ++i) {
+                if (guse[i] === Infinity || t[i] !== 0 || !t[JokerC]) continue;
+                const cnt = Math.min(t[JokerC], 2);
+                ((t[i] = cnt), (t[JokerC] -= cnt));
+            }
         }
         let [ans, sig] = [0, 0];
         for (let i = 0; i < sizeUT; ++i)
@@ -480,7 +509,7 @@ function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity) {
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14
 const Orphan13Array = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
 function OrphanCount(tiles, jokerc = true) {
-    tiles = tiles.slice();
+    tiles = getTileBuf(tiles, 0);
     let ans = 13;
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
@@ -519,7 +548,7 @@ function Bukao16Count(tiles) {
     let ans = 0;
     for (let i = 0; i < 6; ++i) {
         let count = 0;
-        let tcp = tiles.slice();
+        let tcp = getTileBuf(tiles, 0);
         for (let j = 0; j < 9; ++j) {
             const id = KnitDragonSave[i][j];
             ++count;
@@ -544,7 +573,7 @@ function KnitDragonStep(tiles, tcnt) {
     let ans = Infinity;
     for (let i = 0; i < 6; ++i) {
         let miss = 0;
-        let tcp = tiles.slice();
+        let tcp = getTileBuf(tiles, 0);
         for (let j = 0; j < 9; ++j) {
             const id = KnitDragonSave[i][j];
             if (tcp[id]) --tcp[id];
@@ -553,7 +582,7 @@ function KnitDragonStep(tiles, tcnt) {
             else ++miss;
         }
         if (miss - 1 - tiles[JokerC] >= ans) continue;
-        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, ans - miss) + miss);
+        ans = Math.min(ans, Step(tcp, ans - miss, tcnt - 9, tcnt - 9) + miss);
     }
     return ans;
 }
@@ -561,7 +590,7 @@ function KnitDragonStepCheck(tiles, maxstep, tcnt) {
     let ans = Infinity;
     for (let i = 0; i < 6; ++i) {
         let miss = 0;
-        let tcp = tiles.slice();
+        let tcp = getTileBuf(tiles, 0);
         for (let j = 0; j < 9; ++j) {
             const id = KnitDragonSave[i][j];
             if (tcp[id]) --tcp[id];
@@ -571,7 +600,7 @@ function KnitDragonStepCheck(tiles, maxstep, tcnt) {
         }
         if (miss - 1 - tiles[JokerC] >= ans) continue;
         if (miss - 1 - tiles[JokerC] >= maxstep) continue;
-        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, maxstep - miss) + miss);
+        ans = Math.min(ans, StepCheck(tcp, maxstep - miss, tcnt - 9, tcnt - 9) + miss);
         if (ans < maxstep) return true;
     }
     return false;
@@ -599,8 +628,8 @@ function OrphanMeldStep(tiles) {
 // Special Check for niconico in taiwan, only avaliable when tcnt is 16 or 17
 function NiconicoStep(tiles) {
     let ans = Infinity;
+    let t = getTileBuf(tiles, 0);
     for (let i = 0; i < sizeUT; ++i) {
-        let t = tiles.slice();
         let miss = 3;
         const cnt0 = Math.min(t[i], miss);
         ((t[i] -= cnt0), (miss -= cnt0));
@@ -609,6 +638,9 @@ function NiconicoStep(tiles) {
         const cnt2 = Math.min(t[JokerB[i]], miss);
         ((t[JokerB[i]] -= cnt2), (miss -= cnt2));
         ans = Math.min(ans, PairStep(t, false) + miss);
+        t[i] += cnt0;
+        t[JokerA[i]] += cnt1;
+        t[JokerB[i]] += cnt2;
     }
     return ans;
 }
@@ -763,8 +795,8 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     if (step >= substep[0]) {
-        initDischecks(tiles, (i) => (dischecks[i][0] = searchDp(tiles, 0, 0, tcnt, step + 1, 4, guse3p) <= step));
-        initGetchecks(tiles, (i) => (getchecks[i][0] = searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step));
+        initDischecks(tiles, (i) => (dischecks[i][0] = StepCheck(tiles, step + 1, tcnt - 1, tcnt, 4, guse3p)));
+        initGetchecks(tiles, (i) => (getchecks[i][0] = StepCheck(tiles, step, tcnt + 1, tcnt, 4, guse3p)));
     }
     if (tcnt === 14 && step >= substep[1]) {
         initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, true, guse3p) <= step));
@@ -778,10 +810,10 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
 }
 function JP3pWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
     discheck ??= [step >= substep[0], tcnt === 14 && step >= substep[1], tcnt === 14 && step >= substep[2]];
-    function waiting(tiles, step, _, g) {
+    function waiting(tiles, step, d, g) {
         if (discheck[1] && (!g || g[1]) && PairStep(tiles, true, guse3p) < step) return true;
         else if (discheck[2] && (!g || g[2]) && OrphanStep(tiles) < step) return true;
-        else if (discheck[0] && (!g || g[0]) && searchDp(tiles, 0, 0, tcnt, step, 4, guse3p) < step) return true;
+        else if (discheck[0] && (!g || g[0]) && StepCheck(tiles, step, tcnt - d, tcnt, 4, guse3p)) return true;
     }
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };
@@ -988,7 +1020,7 @@ function windvd(tiles, full_tcnt) {
     return { cnt, dvd, ldDvd };
 }
 function replaceJoker(tiles, ot) {
-    tiles = tiles.slice();
+    tiles = getTileBuf(tiles, 1);
     for (let i = 0; i < ot.length; ++i)
         for (let j = 0; j < ot[i].length; ++j) {
             const id = ot[i][j];
@@ -1050,7 +1082,7 @@ function PairOutput(tiles) {
 const Orphan13GroupArray = [0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4];
 function OrphanOutput(tiles) {
     let ot = [[], [], [], [], [], []];
-    tiles = tiles.slice();
+    tiles = getTileBuf(tiles, 0);
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         let rid = getRealId(tiles, id);
@@ -1069,7 +1101,7 @@ function Bukao16Output(tiles) {
     let save = new Set();
     let ots = [];
     for (let i = 0; i < 6; ++i) {
-        let tcp = tiles.slice();
+        let tcp = getTileBuf(tiles, 0);
         let rot = [[], [], [], [], []];
         let count = 0;
         for (let j = 0; j < 9; ++j) {
@@ -1107,7 +1139,7 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
             if (dvds[i] === null) continue;
             ({ head, dvd, tcp } = dvds[i]);
         } else {
-            tcp = tiles.slice();
+            tcp = getTileBuf(tiles, 0);
             let win = true;
             for (let j = 0; j < 9; ++j) {
                 const id = KnitDragonSave[i][j];
@@ -1123,6 +1155,9 @@ function KnitDragonOutput(tiles, full_tcnt, opt_size, dvds) {
             const s = JSON.stringify(head);
             if (save.has(s)) continue;
             else save.add(s);
+            const savedTcp = new Int32Array(sizeAT);
+            for (let k = 0; k < sizeAT; ++k) savedTcp[k] = tcp[k];
+            tcp = savedTcp;
             dvd = windvd(tcp, full_tcnt - 9);
             dvds[i] = { head, dvd, tcp };
         }
@@ -1149,7 +1184,7 @@ function NiconicoOutput(tiles) {
     let ots = [];
     let save = new Set();
     for (let i = 0; i < sizeUT; ++i) {
-        let t = tiles.slice();
+        let t = getTileBuf(tiles, 0);
         let head = [];
         for (let j = 0; j < 3; ++j) {
             let rid = getRealId(t, i);
@@ -1169,7 +1204,7 @@ function NiconicoOutput(tiles) {
 function OrphanMeldOutput(tiles) {
     let head = [[], [], [], [], []];
     let ots = [];
-    tiles = tiles.slice();
+    tiles = getTileBuf(tiles, 0);
     for (let i = 0; i < Orphan13Array.length; ++i) {
         const id = Orphan13Array[i];
         let rid = getRealId(tiles, id);
@@ -1193,7 +1228,7 @@ function OrphanMeldOutput(tiles) {
 }
 function Buda16Output(tiles) {
     let ot = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1], [-1, -1, -1, -1], [-1, -1, -1], [-1]];
-    tiles = tiles.slice();
+    tiles = getTileBuf(tiles, 0);
     for (let i = 0; i < 27; ++i) if (tiles[i]) ((ot[Math.floor(i / 9)][Math.floor((i % 9) / 3)] = i), --tiles[i]);
     for (let i = 27; i <= 30; ++i) if (tiles[i]) ((ot[3][i - 27] = i), --tiles[i]);
     for (let i = 31; i <= 33; ++i) if (tiles[i]) ((ot[4][i - 31] = i), --tiles[i]);

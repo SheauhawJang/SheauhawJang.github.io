@@ -1,0 +1,926 @@
+/* ============================================================
+   Tenhou / Tianhu Simulator Styles (Clean, Professional & Human)
+   ============================================================ */
+
+:root {
+  --sim-max-w: 1024px;
+  --gold-accent: #f59e0b;
+  --gold-accent-soft: rgba(245, 158, 11, 0.15);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body.tenhou-body {
+  /* Inherit base typography, background-color, max-width (1024px), margins and paddings from mahjong.css */
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.tenhou-page-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------
+   Main Simulator Card
+   ------------------------------------------------------------ */
+.tenhou-sim-container {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  padding: 26px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px var(--shadow-card), 0 10px 32px var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Hero Header */
+.tenhou-sim-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.tenhou-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+  font-size: clamp(11px, 2.7vw, 12.5px);
+  font-weight: 700;
+  margin-bottom: 10px;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.badge-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  flex-shrink: 0;
+  animation: pulse-dot 1.4s infinite ease-in-out;
+}
+
+.tenhou-sim-title {
+  font-size: clamp(24px, 5vw, 34px);
+  font-weight: 900;
+  color: var(--text-strong);
+  margin: 0 0 10px 0;
+  letter-spacing: 0.02em;
+}
+
+.tenhou-sim-desc {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  max-width: 660px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ------------------------------------------------------------
+   Rule Mode Segmented Tab Bar
+   ------------------------------------------------------------ */
+.tenhou-mode-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 10px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.tenhou-mode-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.tenhou-mode-tab {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 9px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--text-normal);
+  transition: all 0.18s ease;
+  user-select: none;
+  outline: none;
+  min-width: 0;
+}
+
+.tenhou-mode-tab:hover {
+  background: var(--bg-soft);
+  border-color: var(--primary);
+  color: var(--primary-strong);
+}
+
+.tenhou-mode-tab.active {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+  box-shadow: 0 3px 10px var(--shadow-soft);
+  font-weight: 700;
+}
+
+.tab-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.tab-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tenhou-mode-tab.active .tab-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: var(--on-primary);
+}
+
+/* Winning Hand Types Option Bar */
+.tenhou-type-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 9px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.type-bar-label {
+  color: var(--text-strong);
+  font-weight: 700;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.tenhou-type-bar .output-option-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+
+.tenhou-type-bar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  color: var(--text-normal);
+  font-size: 12.5px;
+  transition: color 0.15s ease;
+}
+
+.tenhou-type-bar label:hover {
+  color: var(--primary-strong);
+}
+
+.tenhou-type-bar input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--primary);
+  margin: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.tenhou-type-bar.disabled-bar {
+  opacity: 0.6;
+}
+
+.tenhou-type-bar.disabled-bar label {
+  cursor: not-allowed;
+}
+
+.tenhou-type-bar.disabled-bar label:hover {
+  color: var(--text-normal);
+}
+
+.tenhou-type-bar input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+/* Mode Spec Ribbon */
+.tenhou-spec-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 9px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  gap: 8px 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.spec-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.spec-label {
+  color: var(--text-subtle);
+  font-size: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.spec-value {
+  color: var(--text-strong);
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.spec-highlight {
+  color: var(--primary-strong);
+}
+
+.spec-divider {
+  display: none;
+}
+
+
+/* ------------------------------------------------------------
+   Live Counter & Statistics Dashboard
+   ------------------------------------------------------------ */
+.tenhou-dashboard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 18px 16px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.tenhou-counter-block {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.tenhou-counter-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.counter-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9ca3af;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.counter-live-dot.active-live {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-dot 1s infinite ease-in-out;
+}
+
+.tenhou-counter-number {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Roboto Mono", monospace;
+  font-size: clamp(38px, 8vw, 64px);
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1.05;
+  text-shadow: 0 2px 10px var(--shadow-soft);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.tenhou-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tenhou-stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 11px;
+  padding: 10px 8px;
+  text-align: center;
+  box-shadow: 0 1px 3px var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.stat-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.stat-title {
+  font-weight: 600;
+}
+
+.stat-main-val {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--text-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------
+   Hand Tile Rack (Table Mat) - follows page theme, no dark felt
+   ------------------------------------------------------------ */
+.tenhou-table-mat {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  padding: 14px 10px 10px 10px;
+  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  width: 100%;
+}
+
+.tenhou-table-mat.active-win {
+  border-color: var(--gold-accent);
+  box-shadow: 0 0 0 1px var(--gold-accent), 0 6px 24px var(--gold-accent-soft);
+}
+
+.table-mat-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.table-mat-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  min-height: 34px;
+}
+
+/* Small Capsule for Flower Replacement Display (Top-Right of Mat) */
+.table-mat-flowers {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-normal);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  line-height: 1.45;
+  user-select: none;
+}
+
+.flower-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  color: #e11d48;
+}
+
+.flower-badge-pill.flower-zero {
+  color: var(--text-muted);
+}
+
+.flower-symbol {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.flower-count {
+  font-size: 12px;
+}
+
+.flower-tiles-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+
+/* Reusing standard .card-div from project with compact size matching the capsule */
+.table-mat-flowers .card-div {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 20px;
+  height: 32px;
+  aspect-ratio: 80 / 129;
+  filter: drop-shadow(0 1px 2px var(--shadow-soft));
+  margin: 0;
+  flex: 0 0 20px;
+  transition: transform 0.15s ease;
+  container-type: inline-size;
+}
+
+.table-mat-flowers .card-helper {
+  font-size: 7.5px;
+  font-size: 30cqw;
+}
+
+.table-mat-flowers .card-div:hover {
+  transform: translateY(-2px);
+  z-index: 2;
+}
+.table-mat-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  color: var(--text-normal);
+  font-size: 12px;
+  max-width: 100%;
+  line-height: 1.45;
+}
+
+.mat-status-badge {
+  font-weight: 700;
+  color: var(--primary-strong);
+  white-space: nowrap;
+}
+
+.mat-status-text {
+  font-weight: 500;
+}
+
+.mat-status-badge.mat-status-win {
+  color: var(--gold-accent);
+  font-weight: 800;
+}
+
+.mat-status-text.mat-status-win {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.table-mat-rack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 10px 0;
+  width: 100%;
+}
+
+/* Fluid Flexbox Rack for Mahjong Hand Tiles */
+.tenhou-tiles-rack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  padding: 2px 0;
+  box-sizing: border-box;
+}
+
+/* Individual Mahjong Tile inside Rack */
+.tenhou-tiles-rack .card-div {
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+  aspect-ratio: 80 / 129;
+  filter: drop-shadow(0 2px 3px var(--shadow-soft));
+  margin: 0 1px;
+  transition: transform 0.16s ease, filter 0.16s ease;
+  user-select: none;
+  flex: 0 1 42px;
+  width: 100%;
+  max-width: 44px;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.tenhou-tiles-rack .card-helper {
+  font-size: 13px;
+  font-size: 30cqw;
+}
+
+.tenhou-tiles-rack .card-div:hover {
+  transform: translateY(-4px);
+  filter: drop-shadow(0 6px 8px var(--shadow-soft));
+}
+
+/* Responsive Gap separating the draw tile */
+.tenhou-tiles-rack .tsumo-gap {
+  display: inline-block;
+  flex: 0 0 clamp(8px, 1.8vw, 16px);
+  height: 1px;
+  pointer-events: none;
+}
+
+.table-mat-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2px 12px;
+  padding: 6px 4px 0 4px;
+  border-top: 1px dashed var(--border-soft);
+  font-size: 11px;
+  color: var(--text-subtle);
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+
+.table-mat-footer .rack-foot-note.right {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------
+   Action Controls Bar
+   ------------------------------------------------------------ */
+.tenhou-controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.tenhou-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  outline: none;
+  transition: all 0.18s ease;
+  user-select: none;
+  box-shadow: 0 2px 6px var(--shadow-soft);
+  white-space: nowrap;
+}
+
+.tenhou-btn:active {
+  transform: translateY(1px);
+}
+
+.tenhou-btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px var(--shadow-soft);
+}
+
+.tenhou-btn-primary:hover {
+  background: var(--primary-strong);
+  border-color: var(--primary-strong);
+  box-shadow: 0 6px 18px var(--shadow-soft);
+  transform: translateY(-1px);
+}
+
+.tenhou-btn-danger {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+.tenhou-btn-danger:hover {
+  background: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+
+.tenhou-btn-secondary {
+  background: var(--button-white);
+  border: 1.5px solid var(--border-strong);
+  color: var(--text-normal);
+}
+
+.tenhou-btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary-strong);
+  background: var(--button-hover);
+  box-shadow: 0 0 0 1px var(--shadow-soft);
+  transform: translateY(-1px);
+}
+
+
+/* ------------------------------------------------------------
+   Success Celebration Banner
+   ------------------------------------------------------------ */
+.tenhou-success-banner {
+  margin-top: 24px;
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-surface) 100%);
+  border: 2px solid var(--gold-accent);
+  border-radius: 16px;
+  padding: 22px 18px;
+  box-shadow: 0 10px 30px var(--gold-accent-soft);
+  animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
+}
+
+.tenhou-success-badge {
+  display: inline-block;
+  padding: 5px 16px;
+  background: var(--gold-accent);
+  color: #1e1b1e;
+  font-weight: 800;
+  font-size: 13px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px var(--gold-accent-soft);
+}
+
+.tenhou-success-title {
+  font-size: clamp(20px, 4vw, 26px);
+  font-weight: 900;
+  color: var(--text-strong);
+  margin-bottom: 8px;
+}
+
+.tenhou-success-desc {
+  font-size: 14px;
+  color: var(--text-normal);
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto 16px auto;
+}
+
+.tenhou-realtime-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.tenhou-realtime-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.tenhou-realtime-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.tenhou-realtime-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
+.tenhou-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------
+   Knowledge & Rules Section
+   ------------------------------------------------------------ */
+.tenhou-info-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 10px var(--shadow-soft);
+  width: 100%;
+}
+
+.info-card-header {
+  margin-bottom: 14px;
+}
+
+.info-title {
+  font-size: 16.5px;
+  font-weight: 800;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.info-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.info-item-head {
+  margin-bottom: 6px;
+}
+
+.rule-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.rule-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------ */
+.tenhou-footer {
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  padding: 10px 0;
+}
+
+/* ------------------------------------------------------------
+   Animations & Responsive Breakpoints
+   ------------------------------------------------------------ */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Tablet & Medium Screens */
+@media (max-width: 768px) {
+
+  .tenhou-sim-container {
+    padding: 18px 12px;
+    border-radius: 14px;
+  }
+
+  .tenhou-mode-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tenhou-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tenhou-table-mat {
+    padding: 12px 6px 8px 6px;
+  }
+
+  .tenhou-tiles-rack .card-div {
+    margin: 0 0.5px;
+  }
+
+  .tenhou-controls-bar {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tenhou-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 540px) {
+
+  .tenhou-sim-container {
+    padding: 14px 8px;
+    border-radius: 12px;
+  }
+
+  .tenhou-mode-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tenhou-mode-tab:last-child {
+    grid-column: span 2;
+  }
+
+  .tenhou-table-mat {
+    padding: 10px 4px 6px 4px;
+  }
+
+  .table-mat-status {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .mat-status-badge {
+    font-size: 11px;
+  }
+
+  .mat-status-text {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 680px) {
+  .table-mat-header {
+    flex-direction: column;
+    gap: 8px;
+    min-height: auto;
+  }
+
+  .table-mat-flowers {
+    position: static;
+    transform: none;
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .table-mat-flowers .card-div {
+    width: 17px;
+    height: 27px;
+    flex: 0 0 17px;
+    margin: 0;
+  }
+
+  .tenhou-spec-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 12px;
+  }
+
+  .spec-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .spec-value {
+    white-space: normal;
+    text-align: right;
+  }
+}

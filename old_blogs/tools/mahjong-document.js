@@ -566,7 +566,8 @@ function outputCardImageRotated(id, width) {
     return `<div class="card-div rotated-tile" style="width: ${w}%;">${getCardHelperDiv(singleId, width, undefined, "r")}${getCardImage(singleId, "r")}</div>`;
 }
 function outputCardImageBack(width) {
-    return `<div class="card-div" style="width: ${width}%;"><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
+    const styleAttr = (width !== undefined && !isNaN(width)) ? ` style="width: ${width}%;"` : "";
+    return `<div class="card-div"${styleAttr}><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
 }
 function outputCardImageEmpty(width) {
     return `<div class="card-div" style="width: ${width / 5}%;"></div>`;

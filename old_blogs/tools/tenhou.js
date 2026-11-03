@@ -15,24 +15,15 @@
     let currentLang = "cn";
 
         // Mode configuration & metadata
-        // dealerFreq: Average dealer hands per unit (GB: strict 4 deals/match no-repeat; SC: 0.25 deal/hand deal-by-deal)
-        // matchMinutes: Average duration (minutes) based on online platform data (Quezha/Majsoul/Tenhou/Tencent/JJ)
-        const FLOWER_NAMES = {
-        34: { cn: "春", tw: "春", hk: "春", ja: "春", en: "Spring" },
-        35: { cn: "夏", tw: "夏", hk: "夏", ja: "夏", en: "Summer" },
-        36: { cn: "秋", tw: "秋", hk: "秋", ja: "秋", en: "Autumn" },
-        37: { cn: "冬", tw: "冬", hk: "冬", ja: "冬", en: "Winter" },
-        38: { cn: "梅", tw: "梅", hk: "梅", ja: "梅", en: "Plum" },
-        39: { cn: "兰", tw: "蘭", hk: "蘭", ja: "蘭", en: "Orchid" },
-        40: { cn: "菊", tw: "菊", hk: "菊", ja: "菊", en: "Chrysanthemum" },
-        41: { cn: "竹", tw: "竹", hk: "竹", ja: "竹", en: "Bamboo" }
-    };
+    // dealerFreq: Average dealer hands per unit (GB: strict 4 deals/match no-repeat; SC: 0.25 deal/hand deal-by-deal)
+    // matchMinutes: Average duration (minutes) based on online platform data (Quezha/Majsoul/Tenhou/Tencent/JJ)
+    const guseSC = guseall.map((_, i) => (i >= 27 ? Infinity : 0));
     const MODE_META = {
-        jp4: { nameKey: "mode_jp4_name", handSize: 14, poolKey: "sim_pool_jp4", calcTab: 2, dealerFreq: 2.7, matchMinutes: 40, unitKey: "sim_unit_banzhuang", hasFlowers: false },
-        jp3: { nameKey: "mode_jp3_name", handSize: 14, poolKey: "sim_pool_jp3", calcTab: 2, dealerFreq: 3.5, matchMinutes: 25, unitKey: "sim_unit_banzhuang", hasFlowers: false },
-        gb:  { nameKey: "mode_gb_name", handSize: 14, poolKey: "sim_pool_gb", calcTab: 1, dealerFreq: 4.0, matchMinutes: 70, unitKey: "sim_unit_pan", hasFlowers: true },
-        sc:  { nameKey: "mode_sc_name", handSize: 14, poolKey: "sim_pool_sc", calcTab: 4, dealerFreq: 0.25, matchMinutes: 4, unitKey: "sim_unit_ju", hasFlowers: false },
-        tw:  { nameKey: "mode_tw_name", handSize: 17, poolKey: "sim_pool_tw", calcTab: 3, dealerFreq: 4.5, matchMinutes: 90, unitKey: "sim_unit_que", hasFlowers: true }
+        jp4: { nameKey: "mode_jp4_name", handSize: 14, poolKey: "sim_pool_jp4", calcTab: 2, dealerFreq: 2.7, matchMinutes: 40, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false },
+        jp3: { nameKey: "mode_jp3_name", handSize: 14, poolKey: "sim_pool_jp3", calcTab: 2, dealerFreq: 3.5, matchMinutes: 25, unitKey: "sim_unit_banzhuang", guse: guse3p,  hasFlowers: false },
+        gb:  { nameKey: "mode_gb_name", handSize: 14, poolKey: "sim_pool_gb", calcTab: 1, dealerFreq: 4.0, matchMinutes: 70, unitKey: "sim_unit_pan",       guse: guseall, hasFlowers: true },
+        sc:  { nameKey: "mode_sc_name", handSize: 14, poolKey: "sim_pool_sc", calcTab: 4, dealerFreq: 0.25, matchMinutes: 4, unitKey: "sim_unit_ju",        guse: guseSC,  hasFlowers: false },
+        tw:  { nameKey: "mode_tw_name", handSize: 17, poolKey: "sim_pool_tw", calcTab: 3, dealerFreq: 4.5, matchMinutes: 90, unitKey: "sim_unit_zhuang",    guse: guseall, hasFlowers: true }
     };
 
     // Rigorous Combinatorial Models for exact Tenhou probability calculations per hand type selection
@@ -161,23 +152,15 @@
         return s;
     }
     function getHandsPerSecUnit() {
-        if (currentLang === "en") return " hands/s";
-        if (loc && loc.sim_unit_hands_per_sec) return " " + loc.sim_unit_hands_per_sec;
-        if (currentLang === "ja") return " 回/秒";
-        return " 手/秒";
+        return " " + ((loc && loc.sim_unit_hands_per_sec) || "hands/s");
     }
 
     function getSecondUnit() {
-        if (currentLang === "en") return "s";
-        if (loc && loc.sim_unit_second) return loc.sim_unit_second;
-        return "秒";
+        return (loc && loc.sim_unit_second) || "s";
     }
 
     function getAttemptsUnit() {
-        if (currentLang === "en") return " hands";
-        if (loc && loc.sim_unit_ci) return " " + loc.sim_unit_ci;
-        if (currentLang === "ja") return " 回";
-        return " 次";
+        return " " + ((loc && loc.sim_unit_ci) || "hands");
     }
 
     function refreshStatsDisplay() {
@@ -228,7 +211,7 @@
 
     function getTianhuTerm(mode) {
         if (mode === "sc" && loc.SC_FAN_NAME_12) return loc.SC_FAN_NAME_12;
-        return loc.JP_YAKUNAME_32 || "天和";
+        return loc.GB_FANNAME_86 || loc.JP_YAKUNAME_32 || "天和";
     }
 
     function getWinBadgeText(mode) {
@@ -348,10 +331,12 @@
         const days = Math.floor(totalMinutes / (24 * 60));
         const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
         const mins = totalMinutes % 60;
-        const u = currentLang === "en" ? { y: " years", d: " days", h: " hrs", m: " mins" }
-                : currentLang === "ja" ? { y: " 年", d: " 日", h: " 時間", m: " 分" }
-                : (currentLang === "tw" || currentLang === "hk") ? { y: " 年", d: " 天", h: " 小時", m: " 分鐘" }
-                : { y: " 年", d: " 天", h: " 小时", m: " 分钟" };
+        const u = {
+            y: (loc && loc.sim_unit_year) || " 年",
+            d: (loc && loc.sim_unit_day) || " 天",
+            h: (loc && loc.sim_unit_hour) || " 小时",
+            m: (loc && loc.sim_unit_minute) || " 分钟"
+        };
         if (days >= 365) return `${loc.sim_approx || "约"} ${(days / 365.25).toFixed(1)}${u.y} (${days.toLocaleString()}${u.d})`;
         if (days > 0) return `${days}${u.d} ${hours}${u.h}`;
         if (hours > 0) return `${hours}${u.h} ${mins}${u.m}`;
@@ -663,7 +648,7 @@
 
         const meta = MODE_META[currentMode] || MODE_META.jp4;
         const handFront = meta.handSize - 1;
-        const backHtml = `<div class="card-div"><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
+        const backHtml = typeof outputCardImageBack === "function" ? outputCardImageBack() : `<div class="card-div"><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
 
         let html = "";
         for (let i = 0; i < handFront; i++) html += backHtml;
@@ -687,7 +672,7 @@
         }
 
         if (!flowersArr || flowersArr.length === 0) {
-            const zeroTitle = loc.sim_flower_none || (currentLang === "en" ? "No Flowers Drawn" : (currentLang === "ja" ? "配牌補花なし" : "开牌无补花"));
+            const zeroTitle = loc.sim_flower_none || "No Flowers Drawn";
             el.innerHTML = `
                 <span class="flower-badge-pill flower-zero" title="${zeroTitle}">
                     <span class="flower-symbol">❀</span>
@@ -700,8 +685,7 @@
 
         const count = flowersArr.length;
         const flowerNames = flowersArr.map(f => {
-            const dict = FLOWER_NAMES[f];
-            const name = dict ? (dict[currentLang] || dict.cn) : `${f}`;
+            const name = loc[`card_flower_${f}`] || `${f}`;
             const cName = typeof cardName === "function" ? cardName(f) : "";
             return cName ? `${name}(${cName})` : name;
         }).join(" ");
@@ -712,8 +696,7 @@
         for (let i = 0; i < flowersArr.length; i++) {
             const fid = flowersArr[i];
             const name = typeof cardName === "function" ? cardName(fid) : `${fid}`;
-            const dict = FLOWER_NAMES[fid];
-            const fName = dict ? (dict[currentLang] || dict.cn) : "";
+            const fName = loc[`card_flower_${fid}`] || "";
             const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv({ id: fid }) : "";
             const imgHtml = typeof getCardImage === "function" ? getCardImage({ id: fid }) : "";
             tilesHtml += `<div class="card-div" title="${fName ? `${fName} (${name})` : name}">${helperHtml}${imgHtml}</div>`;
@@ -874,37 +857,12 @@
         }
     }
 
-    // Deal 1 single random starting hand (reuses shuffle(wall, front) from mahjong-document.js)
+    // Deal 1 single random starting hand (reuses getMahjongWall and shuffle(wall, front))
     function dealOneHand() {
         if (isRunning) stopSimulation();
 
         const meta = MODE_META[currentMode] || MODE_META.jp4;
-        const hasFlowers = !!meta.hasFlowers;
-        const wall = [];
-
-        if (currentMode === "jp3") {
-            const tilePool = [0, 8];
-            for (let i = 9; i < 34; i++) tilePool.push(i);
-            for (let i = 0; i < tilePool.length; i++) {
-                const id = tilePool[i];
-                wall.push(id, id, id, id);
-            }
-        } else if (currentMode === "sc") {
-            for (let i = 0; i < 27; i++) {
-                wall.push(i, i, i, i);
-            }
-        } else {
-            // jp4, gb, tw: 136 standard tiles
-            for (let i = 0; i < 34; i++) {
-                wall.push(i, i, i, i);
-            }
-            // gb, tw: 8 flowers
-            if (hasFlowers) {
-                for (let f = 34; f <= 41; f++) {
-                    wall.push(f);
-                }
-            }
-        }
+        const wall = Array.from(getMahjongWall(meta.guse, meta.hasFlowers));
 
         // Full shuffle for accurate flower distribution
         shuffle(wall, wall.length);
@@ -1004,8 +962,8 @@
         const handStr = formatHandString(lastResultHand, lastResultFlowers);
         let flowerLine = "";
         if (lastResultFlowers && lastResultFlowers.length > 0) {
-            const flowerNames = lastResultFlowers.map(f => FLOWER_NAMES[f] ? (FLOWER_NAMES[f][currentLang] || FLOWER_NAMES[f].cn) : `${f}`).join(" ");
-            const flLabel = currentLang === "en" ? "Flowers" : (currentLang === "ja" ? "花牌" : "花牌");
+            const flowerNames = lastResultFlowers.map(f => loc[`card_flower_${f}`] || `${f}`).join(" ");
+            const flLabel = loc.sim_copy_flowers || "Flowers";
             flowerLine = `\n${flLabel}: ${flowerNames} (❀×${lastResultFlowers.length})`;
         }
         const stripHtml = (s) => (s || "").replace(/<[^>]*>/g, "").trim();
@@ -1013,11 +971,12 @@
         const cleanYakuName = stripHtml(yakuName);
         const cleanEvalTitle = stripHtml(evalInfo.title);
 
-        const labels = currentLang === "en" ? { rule: "Mode", win: "Win", att: "Attempts", exp: "Expected" }
-                     : currentLang === "ja" ? { rule: "ルール", win: "役", att: "試行回数", exp: "理論期待値" }
-                     : currentLang === "tw" ? { rule: "規則", win: "達成", att: "嘗試次數", exp: "理論期望均值" }
-                     : currentLang === "hk" ? { rule: "規則", win: "食糊", att: "嘗試次數", exp: "理論期望均值" }
-                     : { rule: "模式", win: "和牌", att: "尝试次数", exp: "理论期望均值" };
+        const labels = {
+            rule: loc.sim_copy_mode || "Mode",
+            win: loc.win || "Win",
+            att: loc.sim_copy_attempts || "Attempts",
+            exp: loc.sim_copy_expected || "Expected"
+        };
 
         const text = `【${simTitle}】\n${labels.rule}: ${modeName}\n${labels.win}: ${cleanYakuName}\n${labels.att}: ${totalAttempts.toLocaleString()} (${cleanEvalTitle})\n${labels.exp}: ${getSelectedProbData(currentMode).meanStr}${flowerLine}\nHand: ${handStr}\nURL: ${window.location.href}`;
 

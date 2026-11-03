@@ -228,6 +228,23 @@ function indexStep(em, ep, i, ui, uj, aj, bj, cj) {
 const guseall = Array(sizeAT).fill(0);
 const guse3p = guseall.map((_, i) => (i > 0 && i < 8 ? Infinity : 0));
 const guseque = ArrayMap(3, (_, i) => guseall.map((_, j) => (j < 27 && ColorArray[j] !== i ? 0 : Infinity)));
+function getMahjongWall(guse = guseall, hasFlowers = false, glmt = 4) {
+    let count = 0;
+    for (let i = 0; i < sizeUT; ++i) {
+        const rem = Math.max(0, glmt - (guse[i] || 0));
+        count += rem;
+    }
+    const wall = new Int32Array(count + (hasFlowers ? 8 : 0));
+    let idx = 0;
+    for (let i = 0; i < sizeUT; ++i) {
+        const rem = Math.max(0, glmt - (guse[i] || 0));
+        for (let c = 0; c < rem; ++c) wall[idx++] = i;
+    }
+    if (hasFlowers) {
+        for (let f = 34; f <= 41; ++f) wall[idx++] = f;
+    }
+    return wall;
+}
 const default_seqs = ArrayMap(21, (_, i) => ColorFirstArray[Math.floor(i / 7)] + (i % 7));
 const default_tris = ArrayMap(sizeUT, (_, i) => i);
 function kernelStep(tiles, em, ep, nm, np, sup, glmt, guse, i = 0, ui = 0, uj = 0, aj = 0, bj = 0, cj = 0) {
@@ -582,7 +599,7 @@ function KnitDragonStep(tiles, tcnt) {
             else ++miss;
         }
         if (miss - 1 - tiles[JokerC] >= ans) continue;
-        ans = Math.min(ans, Step(tcp, ans - miss, tcnt - 9, tcnt - 9) + miss);
+        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, ans - miss) + miss);
     }
     return ans;
 }
@@ -600,7 +617,7 @@ function KnitDragonStepCheck(tiles, maxstep, tcnt) {
         }
         if (miss - 1 - tiles[JokerC] >= ans) continue;
         if (miss - 1 - tiles[JokerC] >= maxstep) continue;
-        ans = Math.min(ans, StepCheck(tcp, maxstep - miss, tcnt - 9, tcnt - 9) + miss);
+        ans = Math.min(ans, searchDp(tcp, 3, 0, tcnt, maxstep - miss) + miss);
         if (ans < maxstep) return true;
     }
     return false;

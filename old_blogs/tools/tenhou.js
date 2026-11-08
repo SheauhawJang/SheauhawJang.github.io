@@ -337,7 +337,7 @@
             const regular = handArr.filter(id => (typeof id === "number" ? id : (id && id.id)) !== jc);
             const handFrontReg = regular.length - 1;
             const regFront = regular.slice(0, handFrontReg).sort((a, b) => a - b);
-            sorted = [{ id: jc, sp: 1 }, ...regFront, regular[handFrontReg]];
+            sorted = [jc, ...regFront, regular[handFrontReg]];
         } else {
             const handFront = handArr.length - 1;
             sorted = handArr.slice(0, handFront).sort((a, b) => a - b);
@@ -348,6 +348,7 @@
             const flowerStr = flowersArr.map(id => typeof cardName === "function" ? cardName(id) : `${id}`).join("");
             res += `(${flowerStr})`;
         }
+        res += "-E~F~A=3^X";
         return res;
     }
 
@@ -751,7 +752,7 @@
         let html = "";
         if (meta.hasWildcard) {
             const jc = typeof JokerC !== "undefined" ? JokerC : 42;
-            html += renderSingleTile({ id: jc, sp: 1 });
+            html += renderSingleTile(jc);
             for (let i = 0; i < handFront - 1; i++) html += backHtml;
             html += `<div class="tsumo-gap"></div>` + backHtml;
         } else {
@@ -840,7 +841,7 @@
             const tsumo = regularTiles[handFrontReg];
 
             // 1. Wildcard at far left, seamlessly part of the hand (no gap)
-            html += renderSingleTile({ id: jc, sp: 1 });
+            html += renderSingleTile(jc);
 
             // 2. 12 sorted regular hand tiles
             for (let i = 0; i < regularFront.length; i++) {
@@ -914,7 +915,7 @@
 
         try {
             if (worker) worker.terminate();
-            worker = new Worker("tenhou-worker.js?v=202611032240");
+            worker = new Worker("tenhou-worker.js?v=202611080115");
             worker.onmessage = function (e) {
                 const data = e.data;
                 if (data.type === "progress") {
@@ -1193,3 +1194,5 @@
         initDOM();
     }
 })();
+
+

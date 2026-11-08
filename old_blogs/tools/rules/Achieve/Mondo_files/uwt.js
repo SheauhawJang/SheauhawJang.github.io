@@ -1,1 +1,3 @@
-// Local stub for ad scripts (offline archive - no live network requests)
+﻿// Local stub for ad scripts (offline archive - no live network requests)
+
+

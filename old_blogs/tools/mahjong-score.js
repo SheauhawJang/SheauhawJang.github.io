@@ -1,4 +1,4 @@
-function realdvd(tiles, full_tcnt, guse) {
+﻿function realdvd(tiles, full_tcnt, guse) {
     const nm = Math.floor(full_tcnt / 3);
     const np = full_tcnt % 3 ? 1 : 0;
     const { dvd, ldDvd } = prepareDvd(nm, np, tiles);
@@ -1849,3 +1849,5 @@ function SichuanKernel(melds, sp, aids, infoans, ck, ek, setting) {
     return ans;
 }
 const SCScoreArray = [];
+
+

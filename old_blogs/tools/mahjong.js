@@ -118,7 +118,7 @@ function getTiles(ids) {
     for (let i = 0; i < ids.length; ++i) ++tiles[ids[i].id];
     return tiles;
 }
-function splitKernel(s) {
+function splitKernel(s, withRot = false) {
     s = Array.from(s);
     let ids = [];
     for (let i = 0; i < s.length; ++i) {
@@ -131,34 +131,108 @@ function splitKernel(s) {
             continue;
         }
         if (s[i] === "W" && i + 1 < s.length && s[i + 1] === "h") (ids.push(id("Wh")), (i = i + 1));
-        else ids.push(id(s[i]));
+        else if (withRot && s[i] === "*") {
+            if (ids.length > 0 && "id" in ids[ids.length - 1]) ids[ids.length - 1].rot = true;
+        } else ids.push(id(s[i]));
     }
     let valid_ids = [];
-    for (let i = 0; i < ids.length; ++i) if ("id" in ids[i]) valid_ids.push(ids[i]);
+    for (let i = 0; i < ids.length; ++i) {
+        if ("id" in ids[i]) {
+            if (withRot && ids[i].rot === undefined) ids[i].rot = false;
+            valid_ids.push(ids[i]);
+        }
+    }
     return valid_ids;
 }
+const RIICHI_CODES = "RWOI";       // R: 0, W: 1, O: 2, I: 3
+const FLAG_CODES   = "FABLKRSQEC"; // F: 0, A: 1, B: 2, L: 3, K: 4, R: 5, S: 6, Q: 7, E: 8, C: 9
+
+const WIND_MAP   = { E: 27, S: 28, W: 29, N: 30, "0": 0, O: 0 };
+const WIND_REV   = { 27: "E", 28: "S", 29: "W", 30: "N", 0: "0" };
+const WINTYPE_MAP = { "0": 0, R: 0, "1": 1, "2": 2, "3": 3 };
+const WINPOS_MAP = { R: 0, X: 1, N: 2, L: 3 };
+const WINPOS_REV = { 0: "R", 1: "X", 2: "N", 3: "L" };
+
+const CMD_PARSERS = {
+    "+": (cmd, code) => { if (code in WIND_MAP) cmd.gw = WIND_MAP[code]; },
+    "-": (cmd, code) => { if (code in WIND_MAP && code !== "0" && code !== "O") cmd.mw = WIND_MAP[code]; },
+    "=": (cmd, code, isUpper) => {
+        if (code === "E") cmd.dealer = isUpper;
+        else if (code in WINTYPE_MAP) cmd.wintype = WINTYPE_MAP[code];
+    },
+    "^": (cmd, code) => { if (code in WINPOS_MAP) cmd.winpos = WINPOS_MAP[code]; },
+    "!": (cmd, code, isUpper) => {
+        const idx = RIICHI_CODES.indexOf(code);
+        if (idx !== -1) cmd.riichi[idx] = isUpper;
+    },
+    "~": (cmd, code, isUpper) => {
+        const idx = FLAG_CODES.indexOf(code);
+        if (idx !== -1) cmd.flags[idx] = isUpper;
+    }
+};
+
+function parseMahjongCmd(s) {
+    const cmd = {
+        gw: undefined,
+        mw: undefined,
+        wintype: undefined,
+        winpos: undefined,
+        dealer: undefined,
+        riichi: Array(RIICHI_CODES.length).fill(undefined),
+        flags: Array(FLAG_CODES.length).fill(undefined)
+    };
+    const regex = /[+\-!=^~][A-Za-z0-9]/g;
+    const cleaned = s.replace(regex, (match) => {
+        const parser = CMD_PARSERS[match[0]];
+        if (parser) {
+            const rawCode = match[1];
+            const code = rawCode.toUpperCase();
+            parser(cmd, code, rawCode === code);
+        }
+        return " ";
+    });
+    return { cmd, cleaned };
+}
 function splitTiles(s) {
-    const regex = /(\(([^)]+)\)|\[([^\]]+)\]|<([^>]+)>)/g;
-    const [subtiles, bonus, dora, ura] = [[], [], [], []];
-    for (const match of s.matchAll(regex)) {
-        const [, , round, square, angle] = match;
-        if (round) {
-            bonus.push(round);
-            continue;
-        } else if (square) {
-            const parts = square.split(",");
-            const ans = splitKernel(parts[0]);
-            if (!ans.length) continue;
-            ans.type = Number(parts[1]) || 0;
-            subtiles.push(ans);
-        } else {
+    const { cmd, cleaned } = parseMahjongCmd(s);
+    const regex = /(\(([^)]+)\)|\[([^\]]+)\]|<([^>]+)>|\{([^}]+)\})/g;
+    const players = Array.from({ length: 4 }, () => ({
+        kawa: [], riichiIndex: -1, subtiles: [], bonus: []
+    }));
+    const [subtiles, bonus, dora, ura] = [players[0].subtiles, players[0].bonus, [], []];
+
+    function parseMeld(str, isSquare, target) {
+        if (!isSquare) return target.bonus.push(...splitKernel(str));
+        const parts = str.split(",");
+        const ans = splitKernel(parts[0]);
+        if (ans.length) (ans.type = Number(parts[1]) || 0, target.subtiles.push(ans));
+    }
+
+    for (const [, , round, square, angle, brace] of cleaned.matchAll(regex)) {
+        if (square) parseMeld(square, true, players[0]);
+        else if (round) parseMeld(round, false, players[0]);
+        else if (angle) {
             const parts = angle.split(",");
             dora.push(parts[0]);
             if (parts.length > 1) ura.push(parts[1]);
+        } else if (brace) {
+            const m = brace.match(/^\s*(?:p?([0-3])\s*:)?\s*([\s\S]*)$/i);
+            const p = players[Number(m && m[1] !== undefined ? m[1] : 0)];
+            const pureKawa = (m ? m[2] : brace).replace(/\[([^\]]+)\]|\(([^)]+)\)/g, (_, sq, rd) => {
+                if (sq) parseMeld(sq, true, p);
+                if (rd) parseMeld(rd, false, p);
+                return " ";
+            });
+            const kawa = splitKernel(pureKawa, true);
+            const rIdx = kawa.findIndex((t) => t.rot);
+            if (rIdx !== -1 && p.riichiIndex === -1) p.riichiIndex = p.kawa.length + rIdx;
+            p.kawa.push(...kawa);
         }
     }
-    s = s.replace(regex, " ");
-    return [splitKernel(s), subtiles, splitKernel(bonus.join(" ")), splitKernel(dora.join(" ")), splitKernel(ura.join(" "))];
+
+    const hand = splitKernel(cleaned.replace(regex, " "));
+    const aids = [hand, subtiles, bonus, splitKernel(dora.join(" ")), splitKernel(ura.join(" ")), players, cmd];
+    return Object.assign(aids, { hand, subtiles, bonus, dora: aids[3], ura: aids[4], players, cmd });
 }
 function getUnifiedType(s) {
     let t = s.type;
@@ -194,6 +268,15 @@ const NumberArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 1,
 const HelperArray = [...NumberArray.slice(0, 27).map((x) => x + 1), "E", "S", "W", "N", "Wh", "G", "R", 1, 2, 3, 4, 1, 2, 3, 4, "J", "Ch", "Cir", "B", "Su", "Wi", "D", "H", "Fl"];
 const JokerColor = { 43: 0, 44: 1, 45: 2, 47: 3, 48: 4 };
 const JokerRange = { 42: [0, sizeUT], 43: [0, 9], 44: [9, 18], 45: [18, 27], 46: [0, 27], 47: [27, 31], 48: [31, 34], 49: [27, 34] };
+
+function isNoJoker(tiles) {
+    for (let i = 42; i < 50; ++i) if (tiles[i]) return false;
+    return true;
+}
+function hasJoker(tiles) {
+    for (let i = 42; i < 50; ++i) if (tiles[i]) return true;
+    return false;
+}
 function prepareStep(nm, np, tiles) {
     ldStep = Array(sizeUT * 7);
     let sizeStep = 0;
@@ -432,17 +515,19 @@ function Listen(tiles, tcnt, full_tcnt = tcnt, glmt = Infinity, guse = guseall) 
     return false;
 }
 // Step function
-function Step(tiles, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity, guse = guseall) {
+function Step(tiles, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity, guse = guseall, noJoker = undefined) {
     if (tcnt > full_tcnt) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
-    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
+    if (!noJoker) return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
     if (tcnt === full_tcnt && Win(tiles, full_tcnt, glmt, guse)) return -1;
     if (Listen(tiles, tcnt, full_tcnt, glmt, guse)) return 0;
     return searchDp(tiles, 0, 0, full_tcnt, Infinity, glmt, guse);
 }
 // Check whether the step of new tiles decreased or not.
-function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity, guse = guseall) {
+function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt + 1 : tcnt, glmt = Infinity, guse = guseall, noJoker = undefined) {
     if (tcnt > full_tcnt) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
-    for (let i = 42; i < 50; ++i) if (tiles[i]) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
+    if (!noJoker) return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
     if (maxstep === -1) return false;
     if (tcnt === full_tcnt && Win(tiles, full_tcnt, glmt, guse)) return true;
     if (maxstep === 0) return false;
@@ -451,7 +536,7 @@ function StepCheck(tiles, maxstep, tcnt = 14, full_tcnt = tcnt % 3 === 1 ? tcnt 
     return searchDp(tiles, 0, 0, full_tcnt, maxstep, glmt, guse) < maxstep;
 }
 // Step of 7 pairs, only avaliable when tcnt is 13 or 14
-function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity) {
+function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity, noJoker = undefined) {
     if (!disjoint) {
         let [ans, sig] = [0, 0];
         let ra, rb;
@@ -479,12 +564,7 @@ function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity) {
         if (ans > 7) ((sig += (ans - 7) * 2), (ans = 7));
         return 13 - ans * 2 - Math.min(sig, 7 - ans) - rc;
     } else {
-        let noJoker = true;
-        for (let i = 42; i < 50; ++i)
-            if (tiles[i]) {
-                noJoker = false;
-                break;
-            }
+        if (noJoker === undefined) noJoker = isNoJoker(tiles);
         let t = noJoker ? tiles : getTileBuf(tiles, 1);
         if (!noJoker) {
             for (let i = 0; i < sizeUT; ++i) {
@@ -585,8 +665,27 @@ function Bukao16Count(tiles) {
     }
     return ans + tiles[JokerC];
 }
+// Special Win Check for Knitted Dragon
+function WinKnitDragon(tiles, tcnt = 14, glmt = Infinity, guse = guseall) {
+    if (tcnt < 9) return false;
+    for (let p = 0; p < 6; ++p) {
+        let full = true;
+        const seq = KnitDragonSave[p];
+        for (let s = 0; s < 9; ++s) {
+            if (!tiles[seq[s]]) { full = false; break; }
+        }
+        if (!full) continue;
+        for (let s = 0; s < 9; ++s) --tiles[seq[s]];
+        const ok = Win(tiles, tcnt - 9, glmt, guse);
+        for (let s = 0; s < 9; ++s) ++tiles[seq[s]];
+        if (ok) return true;
+    }
+    return false;
+}
 // Special Check for Knitted Dragon
-function KnitDragonStep(tiles, tcnt) {
+function KnitDragonStep(tiles, tcnt = 14, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
+    if (noJoker && tcnt === 14 && WinKnitDragon(tiles, tcnt)) return -1;
     let ans = Infinity;
     for (let i = 0; i < 6; ++i) {
         let miss = 0;
@@ -603,6 +702,7 @@ function KnitDragonStep(tiles, tcnt) {
     }
     return ans;
 }
+
 function KnitDragonStepCheck(tiles, maxstep, tcnt) {
     let ans = Infinity;
     for (let i = 0; i < 6; ++i) {
@@ -642,8 +742,22 @@ function OrphanMeldStep(tiles) {
     ans = Math.min(ans, searchDp(tcp, 4, 1, 17) + miss + 1);
     return ans;
 }
+// Special Win Check for niconico in taiwan (fast path without wildcards)
+function WinNiconico(tiles) {
+    for (let i = 0; i < sizeUT; ++i) {
+        if (tiles[i] >= 3) {
+            tiles[i] -= 3;
+            const ok = PairStep(tiles, false) === -1;
+            tiles[i] += 3;
+            if (ok) return true;
+        }
+    }
+    return false;
+}
 // Special Check for niconico in taiwan, only avaliable when tcnt is 16 or 17
-function NiconicoStep(tiles) {
+function NiconicoStep(tiles, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
+    if (noJoker && WinNiconico(tiles)) return -1;
     let ans = Infinity;
     let t = getTileBuf(tiles, 0);
     for (let i = 0; i < sizeUT; ++i) {
@@ -661,6 +775,7 @@ function NiconicoStep(tiles) {
     }
     return ans;
 }
+
 // Special Check for 16 Buda in taiwan, only avaliable when tcnt is 16 or 17
 function Buda16Step(tiles) {
     let miss = Array(5).fill(Infinity);
@@ -781,7 +896,8 @@ function NormalWaiting(tiles, step, tcnt, discheck, getchecks) {
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck };
 }
-function JPPrecheck(tiles, step, substep, tcnt) {
+function JPPrecheck(tiles, step, substep, tcnt, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     if (step >= substep[0]) {
@@ -789,8 +905,8 @@ function JPPrecheck(tiles, step, substep, tcnt) {
         initGetchecks(tiles, (i) => (getchecks[i][0] = StepCheck(tiles, step, tcnt + 1, tcnt, 4)));
     }
     if (tcnt === 14 && step >= substep[1]) {
-        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, true) <= step));
-        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, true) < step));
+        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, true, guseall, Infinity, noJoker) <= step));
+        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, true, guseall, Infinity, noJoker) < step));
     }
     if (tcnt === 14 && step >= substep[2]) {
         initDischecks(tiles, (i) => (dischecks[i][2] = OrphanStep(tiles) <= step));
@@ -808,7 +924,8 @@ function JPWaiting(tiles, step, substep, tcnt, discheck, getchecks) {
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };
 }
-function JP3pPrecheck(tiles, step, substep, tcnt) {
+function JP3pPrecheck(tiles, step, substep, tcnt, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
     const dischecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(3).fill(false));
     if (step >= substep[0]) {
@@ -816,8 +933,8 @@ function JP3pPrecheck(tiles, step, substep, tcnt) {
         initGetchecks(tiles, (i) => (getchecks[i][0] = StepCheck(tiles, step, tcnt + 1, tcnt, 4, guse3p)));
     }
     if (tcnt === 14 && step >= substep[1]) {
-        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, true, guse3p) <= step));
-        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, true, guse3p) < step));
+        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, true, guse3p, Infinity, noJoker) <= step));
+        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, true, guse3p, Infinity, noJoker) < step));
     }
     if (tcnt === 14 && step >= substep[2]) {
         initDischecks(tiles, (i) => (dischecks[i][2] = OrphanStep(tiles) <= step));
@@ -857,7 +974,8 @@ function SCWaiting(tiles, step, substep, tcnt, subcnt, discheck, getchecks) {
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };
 }
-function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
+function GBPrecheck(tiles, step, substep, tcnt, savecheck, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
     const dischecks = ArrayMap(sizeAT, () => Array(5).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(5).fill(false));
     if (step >= substep[0]) {
@@ -865,8 +983,8 @@ function GBPrecheck(tiles, step, substep, tcnt, savecheck) {
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck ? savecheck.getchecks[i] : StepCheck(tiles, step, tcnt + 1, tcnt);
     }
     if (tcnt === 14 && step >= substep[1]) {
-        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, false) <= step));
-        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, false) < step));
+        initDischecks(tiles, (i) => (dischecks[i][1] = PairStep(tiles, false, guseall, Infinity, noJoker) <= step));
+        initGetchecks(tiles, (i) => (getchecks[i][1] = PairStep(tiles, false, guseall, Infinity, noJoker) < step));
     }
     if (tcnt === 14 && step >= substep[2]) {
         initDischecks(tiles, (i) => (dischecks[i][2] = OrphanStep(tiles) <= step));
@@ -900,7 +1018,8 @@ function GBWaiting(tiles, step, substep, tcnt, saveans, discheck, getchecks) {
     const { ans, gans } = makeAns(step, tiles, waiting, (i) => waiting(tiles, step, 0, getchecks?.[i], saveWaiting?.[i]));
     return { ans, gans, checked: discheck.some(Boolean) };
 }
-function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
+function TWPrecheck(tiles, step, substep, tcnt, savecheck, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
     const dischecks = ArrayMap(sizeAT, () => Array(4).fill(false));
     const getchecks = ArrayMap(sizeAT, () => Array(4).fill(false));
     if (step >= substep[0]) {
@@ -908,8 +1027,8 @@ function TWPrecheck(tiles, step, substep, tcnt, savecheck) {
         for (let i = 0; i < sizeUT; ++i) getchecks[i][0] = savecheck ? savecheck.getchecks[i] : StepCheck(tiles, step, tcnt + 1, tcnt);
     }
     if (tcnt === 17 && step >= substep[1]) {
-        initDischecks(tiles, (i) => (dischecks[i][1] = NiconicoStep(tiles) <= step));
-        initGetchecks(tiles, (i) => (getchecks[i][1] = NiconicoStep(tiles) < step));
+        initDischecks(tiles, (i) => (dischecks[i][1] = NiconicoStep(tiles, noJoker) <= step));
+        initGetchecks(tiles, (i) => (getchecks[i][1] = NiconicoStep(tiles, noJoker) < step));
     }
     if (tcnt === 17 && step >= substep[2]) {
         initDischecks(tiles, (i) => (dischecks[i][2] = OrphanMeldStep(tiles) <= step));
@@ -1312,3 +1431,5 @@ function canBeReal(i, tids) {
 function isFlower(id) {
     return (id >= 34 && id < 42) || id == 50;
 }
+
+

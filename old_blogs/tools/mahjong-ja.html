@@ -6,7 +6,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1" />
  <meta name="description" content="立直麻雀、一般形麻雀、中国国標麻雀、十六枚麻雀、香港式台湾麻雀、及び任意枚数の麻雀の向聴数計算に対応。万能牌（オールマイティ牌、百搭牌、ジョーカーなど）に対応。立直麻雀、中国国標麻雀の点数計算に対応。" />
  <title>麻雀牌理・点数計算ツール</title>
- <link rel="stylesheet" href="mahjong.css?v=202611032240" />
+ <link rel="stylesheet" href="mahjong.css?v=202611080115" />
  <script>
   try {
    const savedTheme = localStorage.getItem("mahjong-theme");
@@ -116,6 +116,23 @@
      </ul>
      <p>補花／抜きドラについて：一部の牌を半角の丸括弧<b>()</b>で囲むことで、これらの牌が補花または抜きドラであることが表示されます。<br /></p>
      <p>ドラについて：一部の牌を半角の山括弧<b>&lt;&gt;</b>で囲むことで、これらの牌がドラであることが表示されます。括弧内に半角カンマがある場合、カンマの左側の牌が表ドラ表示牌、右側の牌が裏ドラ表示牌であることが表示されます。<br /></p>
+      河について：
+      <ul style="margin-top: 0">
+       <li>牌を半角の中括弧<b>{}</b>で囲むことで、河（捨て牌の並び）であることが表示されます。</li>
+       <li>牌の後ろに半角アスタリスク<b>*</b>を追記すると、横向き（リーチ宣言牌など、例：<b>5p*</b>）として表示されます。</li>
+       <li>四家の区別：中括弧内の先頭に<b>0:</b>（自家）、<b>1:</b>（下家）、<b>2:</b>（対面）、<b>3:</b>（上家）を入力することで、対応するプレイヤーの河を指定できます。省略時は自家となります。<b>p0:</b>〜<b>p3:</b>も対応しています。</li>
+       <li>中括弧内には、そのプレイヤーの副露<b>[]</b>や補花／抜きドラ<b>()</b>を含めることもできます。</li>
+      </ul>
+      <span data-i18n="ui_control_commands">制御コマンド</span>について：
+      <ul style="margin-top: 0">
+       <li>半角プレフィックス記号＋半角1文字を使用することで、計算時の環境や状態を強制指定できます。空白は不要で、手牌と混在可能です。チェックボックスに対応する項目（<b>!</b> や <b>~</b> で始まるコマンド）は、大文字でオン、小文字で強制オフ（チェック解除）となり、未入力の場合は現在の設定を維持します。</li>
+       <li><span data-i18n="jp_prevailing_wind">場風</span>・<span data-i18n="gb_prevalent_wind">圏風</span>は半角プラス<b>+</b>で表します：<b>+E／+S／+W／+N</b>で順に<b>東・南・西・北</b>、<b>+0</b>で場風なしを表します。</li>
+       <li><span data-i18n="jp_seat_wind">自風</span>・<span data-i18n="gb_seat_wind">門風</span>は半角マイナス<b>-</b>で表します：<b>-E／-S／-W／-N</b>で順に<b>東・南・西・北</b>を表します。</li>
+       <li><span data-i18n="JP_YAKUNAME_1">立直</span>・<span data-i18n="ready">聴牌</span>は半角感嘆符<b>!</b>で表します（大文字でオン・小文字で強制オフ）：<b>!R/!r</b>で<span data-i18n="JP_YAKUNAME_1">立直</span>・<span data-i18n="GB_FANNAME_84">報聴</span>（<b>!r</b>は立直なし）、<b>!W/!w</b>で<span data-i18n="JP_YAKUNAME_16">ダブル立直</span>、<b>!O/!o</b>で<span data-i18n="JP_YAKUNAME_71">オープン立直</span>、<b>!I/!i</b>で<span data-i18n="JP_YAKUNAME_3">一発</span>を表します。</li>
+       <li><span data-i18n="ui_win_way">和了種類</span>および<span data-i18n="ui_dealer_claim">東からアガリ</span>は半角イコール<b>=</b>で表します：<b>=0／=R</b>で<span data-i18n="ui_claim">出アガリ</span>・<span data-i18n="ui_ron">ロン</span>、<b>=1／=2／=3</b>で1家・2家・3家<span data-i18n="ui_draw">ツモ</span>、<b>=E／=e</b>で<span data-i18n="ui_dealer_claim">東からアガリ</span>（大文字でオン・小文字で強制オフ、和了種類と併記可能：例：<b>=E=0</b>）を表します。</li>
+       <li><span data-i18n="ui_win_tile_judge">アガリ牌判定</span>は半角カレット<b>^</b>で表します：<b>^R</b>で<span data-i18n="ui_rightmost">右端</span>、<b>^L</b>で<span data-i18n="ui_leftmost">左端</span>、<b>^X</b>で<span data-i18n="ui_maximum">最大値</span>、<b>^N</b>で<span data-i18n="ui_minimum">最小値</span>を表します。</li>
+       <li><span data-i18n="ui_win_status">和了状態</span>は半角チルダ<b>~</b>で表します（大文字でオン・小文字で強制オフ）：<b>~F/~f</b>で<span data-i18n="ui_first_turn">第一巡目</span>、<b>~A/~a</b>で四川麻雀の<span data-i18n="SC_FAN_NAME_12">天和</span>、<b>~B/~b</b>で四川麻雀の<span data-i18n="SC_FAN_NAME_13">地和</span>、<b>~L/~l</b>で<span data-i18n="ui_last_tile">最後の牌</span>（<span data-i18n="JP_YAKUNAME_13">海底摸月</span>・<span data-i18n="JP_YAKUNAME_14">河底撈魚</span>）、<b>~K/~k</b>で<span data-i18n="GB_FANNAME_46">槓上開花</span>・<span data-i18n="JP_YAKUNAME_12">嶺上開花</span>（青雀の開槓関連も本項目に対応）、<b>~R/~r</b>で<span data-i18n="JP_YAKUNAME_15">槍槓</span>、<b>~S/~s</b>で<span data-i18n="SC_FAN_NAME_9">嶺上放銃</span>・<span data-i18n="JP_YAKUNAME_61">槓振り</span>、<b>~Q/~q</b>で<span data-i18n="GB_FANNAME_58">和絶張</span>、<b>~E/~e</b>で<span data-i18n="ui_earth_win">地牌和</span>、<b>~C/~c</b>で<span data-i18n="JP_YAKUNAME_60">燕返し</span>を表します。</li>
+      </ul>
     </div>
    </div>
   </div>
@@ -551,9 +568,9 @@
       </div>
       <span>和了種類</span>
       <div class="output-option-group">
-       <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" checked />出アガリ</label>
-       <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" />東からアガリ</label>
-       <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true])" />ツモ</label>
+       <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true); SwitchOption(this, 'gb-dealer-sub', [true])" checked />出アガリ</label>
+       <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true]); SwitchOption(this, 'gb-dealer-sub', [true], true)" />ツモ</label>
+       <label id="gb-dealer" style="display: none;"><span id="gb-dealer-sub"><input type="checkbox" name="score-gb-dealer" value="-1" />東からアガリ</span></label>
        <details id="gb-wint-details" style="display: none;">
          <summary>アガリ牌判定</summary>
          <label><input type="radio" name="score-gb-setting-16" value="0" checked />右端</label>
@@ -1105,9 +1122,9 @@
 		<div class="footer-line" data-i18n="main_footer_line1">v4.9.0 · © 2026 Sheauhaw Jang · 麻雀牌理・点数計算ツール</div>
 		<div class="footer-line" data-i18n="main_footer_line2">連絡先：<a href="https://x.com/akiko36000" target="_blank" rel="noopener noreferrer" style="color: inherit;">三倍満自動姫</a></div>
 	</footer>
- <script src="mahjong.js?v=202611032240"></script>
- <script src="mahjong-document.js?v=202611032240"></script>
- <script src="mahjong-worker-lang.js?v=202611032240"></script>
+ <script src="mahjong.js?v=202611080115"></script>
+ <script src="mahjong-document.js?v=202611080115"></script>
+ <script src="mahjong-worker-lang.js?v=202611080115"></script>
  <script>
   function tilesInfo(tcnt) {
    const meld = Math.floor(tcnt / 3);
@@ -1168,3 +1185,4 @@
 </body>
 
 </html>
+

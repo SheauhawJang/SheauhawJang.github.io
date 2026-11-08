@@ -1,4 +1,4 @@
-let loc;
+﻿let loc;
 function setLoc(lang) {
     loc = Object.fromEntries(Object.entries(loc_all).map(([key, value]) => [key, value[lang] ?? value['en']]));
     for (const [key, val] of Object.entries(loc)) if (val && val[0] === '#') loc[key] = loc_all[key][val.slice(1)] ?? loc_all[key]['en'];
@@ -227,7 +227,7 @@ const loc_all = {
     JP_YAKUNAME_58: { cn: "小竹林", hk: "小竹林", tw: "小竹林", ja: "小竹林", en: "Little Bamboo Forest" },
     JP_YAKUNAME_59: { cn: "小数邻", hk: "小數鄰", tw: "小數鄰", ja: "小数隣", en: "Little Numerous Neighbours" },
     JP_YAKUNAME_60: { cn: "燕返", hk: "燕返", tw: "燕返", ja: "燕返し", en: "Swallow Counter" },
-    JP_YAKUNAME_61: { cn: "杠振", hk: "槓振", tw: "槓振", ja: "槓振り", en: "Discard After a Kong" },
+    JP_YAKUNAME_61: { cn: "杠振", hk: "槓振", tw: "槓振", ja: "槓振り", en: "Shoot After a Kong" },
     JP_YAKUNAME_62: { cn: "一筒摸月", hk: "一筒摸月", tw: "一筒摸月", ja: "一筒摸月", en: "1 Circles Under the Sea" },
     JP_YAKUNAME_63: { cn: "九筒捞鱼", hk: "九筒撈魚", tw: "九筒撈魚", ja: "九筒撈魚", en: "9 Circles Under the River" },
     JP_YAKUNAME_64: { cn: "五筒开花", hk: "五筒開花", tw: "五筒開花", ja: "五筒開花", en: "5 Circles Blossoming" },
@@ -326,6 +326,26 @@ const loc_all = {
     kb_extend_kong: { cn: "加杠", hk: "加槓", tw: "加槓", ja: "加槓", en: "Extend Kong" },
     kb_conceal_kong: { cn: "暗杠", hk: "暗槓", tw: "暗槓", ja: "暗槓", en: "Conceal Kong" },
     kb_bonus: { cn: "补花", hk: "補花", tw: "補花", ja: "抜き", en: "+Bonus" },
+
+    ui_control_commands: { cn: "控制命令", hk: "控制命令", tw: "控制命令", ja: "制御コマンド", en: "Control Commands" },
+    gb_prevalent_wind: { cn: "圈风", hk: "圈風", tw: "圈風", ja: "圏風", en: "Prevalent Wind" },
+    gb_seat_wind: { cn: "门风", hk: "門風", tw: "門風", ja: "門風", en: "Seat Wind" },
+    jp_prevailing_wind: { cn: "场风", hk: "場風", tw: "場風", ja: "場風", en: "Prevailing Wind" },
+    jp_seat_wind: { cn: "自风", hk: "自風", tw: "自風", ja: "自風", en: "Seat Wind" },
+    ui_win_way: { cn: "和牌方式", hk: "食糊方式", tw: "和牌方式", ja: "和了種類", en: "Winning Way" },
+    ui_claim: { cn: "点和", hk: "食出", tw: "點和", ja: "出アガリ", en: "Claim" },
+    ui_ron: { cn: "荣和", hk: "榮和", tw: "榮和", ja: "ロン", en: "Claim" },
+    ui_draw: { cn: "自摸", hk: "自摸", tw: "自摸", ja: "ツモ", en: "Draw" },
+    ui_dealer_claim: { cn: "东家点和", hk: "東家出銃", tw: "東家點和", ja: "東からアガリ", en: "East Claim" },
+    ui_win_tile_judge: { cn: "和牌张判定", hk: "和牌張判定", tw: "和牌張判定", ja: "アガリ牌判定", en: "Winning Tile" },
+    ui_rightmost: { cn: "最右侧", hk: "最右側", tw: "最右側", ja: "右端", en: "Rightmost" },
+    ui_leftmost: { cn: "最左侧", hk: "最左側", tw: "最左側", ja: "左端", en: "Leftmost" },
+    ui_maximum: { cn: "最大值", hk: "最大值", tw: "最大值", ja: "最大値", en: "Maximum" },
+    ui_minimum: { cn: "最小值", hk: "最小值", tw: "最小值", ja: "最小値", en: "Minimum" },
+    ui_win_status: { cn: "和牌状态", hk: "食糊狀態", tw: "和牌狀態", ja: "和了状態", en: "Winning Status" },
+    ui_first_turn: { cn: "第一巡目", hk: "第一巡目", tw: "第一巡目", ja: "第一巡目", en: "First Turn" },
+    ui_last_tile: { cn: "最后一张", hk: "最後一張", tw: "最後一張", ja: "最後の牌", en: "Last Tile" },
+    ui_earth_win: { cn: "地牌和", hk: "地牌和", tw: "地牌和", ja: "地牌和", en: "Claim of Earth Tile" },
 
     // --- Simulator & UI Extra Keys ---
     skin_jp: { cn: "雀魂牌画", tw: "雀魂牌畫", hk: "雀魂牌畫", ja: "雀魂牌画", en: "Mahjong Soul Skin" },
@@ -535,4 +555,6 @@ const loc_all = {
     eval_r9_title: { cn: "悟道之佛", tw: "悟道之佛", hk: "悟道之佛", ja: "悟りを開きし仏", en: "Enlightened Buddha" },
     eval_first_desc: { cn: "第 1 手直接达成，理论概率约为", tw: "第 1 手直接達成，理論機率約為", hk: "第 1 手直接達成，理論幾率約為", ja: "1回目で奇跡の達成！理論確率は約", en: "Direct hit on hand #1! Theoretical odds approx" },
 };
+
+
 

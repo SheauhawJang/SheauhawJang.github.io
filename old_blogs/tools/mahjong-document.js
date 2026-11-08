@@ -98,6 +98,75 @@ function updateScoreVisiable(id, visiable = "none") {
         updateScoreVisiableUI(visiable);
     }
 }
+const RIICHI_UI_TARGETS = [
+    { jp: "1", gb: "84" }, // R: 立直 / 報聽
+    { jp: "16" },          // W: 雙立直
+    { jp: "71" },          // O: 開立直
+    { jp: "3" }            // I: 一發
+];
+
+const FLAG_UI_TARGETS = [
+    { jp: "32", gb: "86", qingque: "*" }, // F: 第一巡目
+    { sc: "12" },                         // A: 川麻天和
+    { sc: "13" },                         // B: 川麻地和
+    { jp: "13", gb: "44", sc: "11", qingque: "&" }, // L: 最後一張
+    { jp: "12", gb: "46", sc: "8", qingque: "^" },  // K: 槓上開花
+    { jp: "15", gb: "47", sc: "10" },     // R: 搶槓
+    { jp: "61", sc: "9" },                // S: 槓上炮 / 槓振
+    { gb: "58" },                         // Q: 和絕張
+    { gb: "87" },                         // E: 地牌和
+    { jp: "60" }                          // C: 燕返
+];
+
+const QINGQUE_WINDS = { 27: "!", 28: "@", 29: "#", 30: "$" };
+
+function syncCmdToUI(cmd, players) {
+    if (typeof document === "undefined" || !cmd) return;
+
+    function setInput(name, val, checked = true) {
+        const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+        if (el && el.checked !== checked) {
+            el.checked = checked;
+            el.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+    }
+
+    if (cmd.gw !== undefined) {
+        ["score-gb-global-wind", "score-jp-global-wind"].forEach((n) => setInput(n, cmd.gw));
+    }
+    if (cmd.mw !== undefined) {
+        ["score-gb-local-wind", "score-jp-local-wind"].forEach((n) => setInput(n, cmd.mw));
+        if (QINGQUE_WINDS[cmd.mw]) setInput("score-qingque-local-wind", QINGQUE_WINDS[cmd.mw]);
+    }
+    if (cmd.dealer !== undefined) setInput("score-gb-dealer", "-1", cmd.dealer);
+
+    if (cmd.wintype !== undefined) {
+        const claim = cmd.wintype <= 0;
+        setInput("score-gb-wintype", claim ? 0 : 80);
+        setInput("score-jp-wintype", claim ? 0 : 1);
+        setInput("score-sc-wintype", claim ? 0 : cmd.wintype);
+        setInput("score-qingque-wintype", claim ? "" : "%");
+    }
+
+    if (cmd.winpos !== undefined) {
+        const p = cmd.winpos;
+        setInput("score-gb-setting-16", p === 0 ? "0" : `75,${p}`);
+        setInput("score-jp-setting-25", p === 0 ? "0" : `61,${p}`);
+    }
+
+    const syncWininfo = (arr, targets) => {
+        (arr || []).forEach((v, i) => {
+            if (v !== undefined && targets[i]) {
+                for (const mode in targets[i]) setInput(`score-${mode}-wininfo`, targets[i][mode], v);
+            }
+        });
+    };
+
+    const riichi = [...(cmd.riichi || [])];
+    if (riichi[0] === undefined && players && players[0] && players[0].riichiIndex !== -1) riichi[0] = true;
+    syncWininfo(riichi, RIICHI_UI_TARGETS);
+    syncWininfo(cmd.flags, FLAG_UI_TARGETS);
+}
 function processInput() {
     if (worker) {
         worker.terminate();
@@ -117,6 +186,7 @@ function processInput() {
     const input = document.getElementById("inputText").value;
     sessionStorage.setItem("inputText", input);
     aids = splitTiles(input);
+    syncCmdToUI(aids.cmd || aids[6], aids.players || aids[5]);
     const tids = aids[0];
     const bids = aids[2];
     tiles = getTiles(tids);
@@ -133,7 +203,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202611032240");
+    worker = new Worker("mahjong-worker.js?v=202611080115");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -262,7 +332,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202611032240");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202611080115");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -575,8 +645,16 @@ function outputCardImageEmpty(width) {
 function joinHand(ids) {
     let handname = [];
     for (let i = 0; i < ids.length; ++i) {
-        handname.push(typeof ids[i] === "string" ? ids[i] : cardName(ids[i]));
-        if (handname.length >= 2) if (handname[i][1] === handname[i - 1][1]) handname[i - 1] = handname[i - 1][0];
+        let name = typeof ids[i] === "string" ? ids[i] : cardName(ids[i]);
+        if (ids[i] && ids[i].rot) name += "*";
+        handname.push(name);
+        if (handname.length >= 2) {
+            const pSuit = handname[i - 1][1];
+            const cSuit = handname[i][1];
+            if (!(ids[i - 1] && ids[i - 1].rot) && pSuit && cSuit && pSuit === cSuit) {
+                handname[i - 1] = handname[i - 1][0];
+            }
+        }
     }
     return handname.join("");
 }
@@ -749,15 +827,48 @@ function drawInputCards() {
     const noempty = document.getElementsByClassName("enable-no-empty");
     for (let i = 0; i < noempty.length; ++i) noempty[i].disabled = tids.length === 0;
 }
-function remakeInput(ipids, prefix, sep = "|") {
-    let newInput = joinHand(ipids[0]);
-    for (let i = 0; i < ipids[1].length; ++i) {
-        const partInput = joinHand(ipids[1][i]);
-        if (ipids[1][i].type) newInput += `[${partInput},${ipids[1][i].type}]`;
-        else newInput += `[${partInput}]`;
+function joinCmd(cmd) {
+    if (!cmd) return "";
+    let s = "";
+    if (cmd.gw !== undefined && WIND_REV[cmd.gw]) s += "+" + WIND_REV[cmd.gw];
+    if (cmd.mw !== undefined && WIND_REV[cmd.mw]) s += "-" + WIND_REV[cmd.mw];
+    if (Array.isArray(cmd.riichi)) cmd.riichi.forEach((v, i) => { if (v !== undefined) s += "!" + (v ? RIICHI_CODES[i] : RIICHI_CODES[i].toLowerCase()); });
+    if (cmd.dealer !== undefined) s += "=" + (cmd.dealer ? "E" : "e");
+    if (cmd.wintype !== undefined) s += "=" + cmd.wintype;
+    if (cmd.winpos !== undefined && WINPOS_REV[cmd.winpos]) s += "^" + WINPOS_REV[cmd.winpos];
+    if (Array.isArray(cmd.flags)) cmd.flags.forEach((v, i) => { if (v !== undefined) s += "~" + (v ? FLAG_CODES[i] : FLAG_CODES[i].toLowerCase()); });
+    return s;
+}
+function joinSubtiles(subtiles) {
+    return (subtiles || []).map((st) => `[${joinHand(st)}${st.type ? `,${st.type}` : ""}]`).join("");
+}
+function joinPlayers(players) {
+    if (!players || players.length === 0) return "";
+    let s = "";
+    if (players[0] && players[0].kawa && players[0].kawa.length > 0) {
+        s += `{${joinHand(players[0].kawa)}}`;
     }
+    for (let p = 1; p < 4; ++p) {
+        const pl = players[p];
+        if (!pl) continue;
+        let pContent = joinHand(pl.kawa || []) + joinSubtiles(pl.subtiles);
+        if (pl.bonus && pl.bonus.length > 0) {
+            pContent += `(${joinHand(pl.bonus)})`;
+        }
+        if (pContent.length > 0) {
+            s += `{p${p}:${pContent}}`;
+        }
+    }
+    return s;
+}
+function remakeInput(ipids, prefix, sep = "|") {
+    let newInput = joinHand(ipids[0]) + joinSubtiles(ipids[1]);
     if (ipids[2].length > 0) newInput += `(${joinHand(ipids[2])})`;
     if (ipids[3].length > 0 || ipids[4].length > 0) newInput += `<${joinHand(ipids[3])},${joinHand(ipids[4])}>`;
+    const cmdStr = joinCmd(ipids.cmd || ipids[6]);
+    if (cmdStr.length > 0) newInput += `${cmdStr}`;
+    const playersStr = joinPlayers(ipids.players || ipids[5]);
+    if (playersStr.length > 0) newInput += `${playersStr}`;
     if (prefix === undefined) prefix = subkey_info = "";
     updateInput(`${prefix}${Math.min(prefix.length, newInput.length) === 0 ? "" : sep}${newInput}`, false);
 }
@@ -974,10 +1085,9 @@ function processGBScore() {
     document.getElementById("time-output-score-gb").textContent = "Calculating......";
     const gw = Number(document.querySelector('input[name="score-gb-global-wind"]:checked').value);
     const mw = Number(document.querySelector('input[name="score-gb-local-wind"]:checked').value);
-    let wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked').value);
-    let info = document.querySelectorAll('input[name="score-gb-wininfo"]:checked');
-    info = Array.from(info).map((x) => Number(x.value));
-    if (wt === -1) ((wt = 0), info.push(-1));
+    let wt = Number(document.querySelector('input[name="score-gb-wintype"]:checked')?.value ?? 0);
+    let info = Array.from(document.querySelectorAll('input[name="score-gb-wininfo"]:checked')).map((x) => Number(x.value));
+    if (document.querySelector('input[name="score-gb-dealer"]:checked')) info.push(-1);
     let sq = Array.from(document.querySelectorAll('input[name="score-gb-setting"]:checked'));
     for (let i = 0; i <= GB_RADIO_MAX; ++i) sq.push(...Array.from(document.querySelectorAll(`input[name="score-gb-setting-${i}"]:checked`)));
     let setting = Array(GB_SETTING_SIZE).fill(0);
@@ -989,7 +1099,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202611032240");
+    gb_worker = new Worker("mahjong-worker.js?v=202611080115");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -1035,7 +1145,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202611032240");
+    jp_worker = new Worker("mahjong-worker.js?v=202611080115");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -1083,7 +1193,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202611032240");
+    sc_worker = new Worker("mahjong-worker.js?v=202611080115");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
@@ -1406,7 +1516,8 @@ function loadGBStorage() {
 
     loadRadio("score-gb-global-wind", sessionStorage);
     loadRadio("score-gb-local-wind", sessionStorage);
-    loadCheckbox("score-gb-wintype", sessionStorage);
+    loadRadio("score-gb-wintype", sessionStorage);
+    loadCheckbox("score-gb-dealer", sessionStorage);
     loadCheckbox("score-gb-wininfo", sessionStorage);
 }
 function loadJPStorage() {
@@ -1842,3 +1953,5 @@ function bindListener() {
         })
     }
 }
+
+

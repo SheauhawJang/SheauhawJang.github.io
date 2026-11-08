@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Supports Mahjong Theory calculation for Normal Type Mahjong, Chinese Official Mahjong (MCR), Japanese Riichi Mahjong (RCR), 16-tile Mahjong, Hong Kong Style Taiwanese Mahjong, and any-tile-count Mahjong. Supports Joker (wild tile, universal tile, laizi, magic tile, etc.). Supports point or score calculation for Chinese Official Mahjong (MCR) and Japanese Riichi Mahjong (RCR).">
   <title>Mahjong Theory & Score Calculator</title>
-  <link rel="stylesheet" href="mahjong.css?v=202611032240" />
+  <link rel="stylesheet" href="mahjong.css?v=202611080115" />
   <script>
     try {
       const savedTheme = localStorage.getItem("mahjong-theme");
@@ -116,6 +116,23 @@
           </ul>
           <p>About Replacement Bonus<span data-i18n="slash"></span><span data-i18n="JP_YAKUNAME_99"></span>: Enclose some tiles with half-width parentheses <b>()</b> to indicate tiles that are replacement bonus or <span data-i18n="JP_YAKUNAME_99" data-i18n-case="lower"></span>.<br /></p>
           <p>About <span data-i18n="JP_YAKUNAME_96"></span>: Enclose some tiles with half-width angle brackets <b>&lt;&gt;</b> to indicate that these tiles are <span data-i18n="JP_YAKUNAME_96" data-i18n-case="lower"></span> indicators. If there is a half-width comma inside the brackets, the tiles on the left of the comma are the <span data-i18n="JP_YAKUNAME_96_EX" data-i18n-case="lower"></span> indicators, and the tiles on the right are the <span data-i18n="JP_YAKUNAME_97" data-i18n-case="lower"></span> indicators.<br /></p>
+          About Rivers (Discards):
+          <ul style="margin-top: 0">
+            <li>Enclose tiles with half-width curly braces <b>{}</b> to indicate a discard river sequence.</li>
+            <li>Append a half-width asterisk <b>*</b> after a tile to mark it as rotated horizontally (e.g., <b>5p*</b> for Riichi declaration).</li>
+            <li>Player Designation: Enter <b>0:</b> (self), <b>1:</b> (right), <b>2:</b> (cross), or <b>3:</b> (left) at the beginning inside the braces to specify the player's river; defaults to self if omitted. Prefixes like <b>p0:</b>~<b>p3:</b> are also supported.</li>
+            <li>The braces can also contain that player's melds <b>[]</b> or replacement bonus <b>()</b>.</li>
+          </ul>
+          About <span data-i18n="ui_control_commands">Control Commands</span>:
+          <ul style="margin-top: 0">
+            <li>Use a half-width prefix symbol + single character to specify calculation environment and winning conditions. No whitespace is needed and commands can be mixed anywhere with hand tiles. For checkbox options (commands starting with <b>!</b> or <b>~</b>), uppercase letters check/enable the option, lowercase letters forcibly uncheck/disable it, and omitting them preserves current UI settings.</li>
+            <li><span data-i18n="gb_prevalent_wind">Prevalent Wind</span><span data-i18n="slash"> / </span><span data-i18n="jp_prevailing_wind">Prevailing Wind</span> is represented by half-width plus <b>+</b>: <b>+E/+S/+W/+N</b> for East/South/West/North, and <b>+0</b> for none.</li>
+            <li><span data-i18n="gb_seat_wind">Seat Wind</span> is represented by half-width minus <b>-</b>: <b>-E/-S/-W/-N</b> for East/South/West/North.</li>
+            <li><span data-i18n="JP_YAKUNAME_1">Riichi</span><span data-i18n="slash"> / </span><span data-i18n="ready">Ready</span> is represented by half-width exclamation mark <b>!</b> (uppercase to check, lowercase to forcibly uncheck): <b>!R/!r</b> for <span data-i18n="JP_YAKUNAME_1">Riichi</span><span data-i18n="slash"> / </span><span data-i18n="GB_FANNAME_84">Declare Ready</span> (<b>!r</b> for no Riichi), <b>!W/!w</b> for <span data-i18n="JP_YAKUNAME_16">Double Riichi</span>, <b>!O/!o</b> for <span data-i18n="JP_YAKUNAME_71">Open Riichi</span>, and <b>!I/!i</b> for <span data-i18n="JP_YAKUNAME_3">Ippatsu</span>.</li>
+            <li><span data-i18n="ui_win_way">Winning Way</span> and <span data-i18n="ui_dealer_claim">East Claim</span> are represented by half-width equal sign <b>=</b>: <b>=0/=R</b> for <span data-i18n="ui_claim">Claim</span>, <b>=1/=2/=3</b> for <span data-i18n="ui_draw">Draw</span> (from 1, 2, or 3 players), and <b>=E/=e</b> for <span data-i18n="ui_dealer_claim">East Claim</span> (uppercase to check, lowercase to forcibly uncheck; can be chained with winning way e.g. <b>=E=0</b>).</li>
+            <li><span data-i18n="ui_win_tile_judge">Winning Tile</span> Selection is represented by half-width caret <b>^</b>: <b>^R</b> for <span data-i18n="ui_rightmost">Rightmost</span>, <b>^L</b> for <span data-i18n="ui_leftmost">Leftmost</span>, <b>^X</b> for <span data-i18n="ui_maximum">Maximum</span>, and <b>^N</b> for <span data-i18n="ui_minimum">Minimum</span>.</li>
+            <li><span data-i18n="ui_win_status">Winning Status</span> and Situational Yakus are represented by half-width tilde <b>~</b> (uppercase to check, lowercase to forcibly uncheck): <b>~F/~f</b> for <span data-i18n="ui_first_turn">First Turn</span>, <b>~A/~a</b> for Sichuan <span data-i18n="SC_FAN_NAME_12">Blessing of Heaven</span>, <b>~B/~b</b> for Sichuan <span data-i18n="SC_FAN_NAME_13">Blessing of Earth</span>, <b>~L/~l</b> for <span data-i18n="ui_last_tile">Last Tile</span> (<span data-i18n="JP_YAKUNAME_13">Under the Sea</span><span data-i18n="slash"> / </span><span data-i18n="JP_YAKUNAME_14">Under the River</span>), <b>~K/~k</b> for <span data-i18n="GB_FANNAME_46">Out with Replacement Tile</span><span data-i18n="slash"> / </span><span data-i18n="JP_YAKUNAME_12">After a Kong</span> (also bound to Qingque Kong), <b>~R/~r</b> for <span data-i18n="JP_YAKUNAME_15">Robbing the Kong</span>, <b>~S/~s</b> for <span data-i18n="SC_FAN_NAME_9">Shoot after Kong</span><span data-i18n="slash"> / </span><span data-i18n="JP_YAKUNAME_61">Shoot After a Kong</span>, <b>~Q/~q</b> for <span data-i18n="GB_FANNAME_58">Last of its Kind</span>, <b>~E/~e</b> for <span data-i18n="ui_earth_win">Claim of Earth Tile</span>, and <b>~C/~c</b> for <span data-i18n="JP_YAKUNAME_60">Swallow Counter</span>.</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -254,9 +271,9 @@
             </div>
             <span>Winning Way</span>
             <div class="output-option-group">
-              <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" checked />Claim</label>
-              <label id="gb-dealer" style="display: none;"><input type="radio" name="score-gb-wintype" value="-1" onchange="SwitchOption(this, 'gb-wint-details', [true], true)" />East Claim</label>
-              <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true])" />Draw</label>
+              <label><input type="radio" name="score-gb-wintype" value="0" onchange="SwitchOption(this, 'gb-wint-details', [true], true); SwitchOption(this, 'gb-dealer-sub', [true])" checked />Claim</label>
+              <label><input type="radio" name="score-gb-wintype" value="80" onchange="SwitchOption(this, 'gb-wint-details', [true]); SwitchOption(this, 'gb-dealer-sub', [true], true)" />Draw</label>
+              <label id="gb-dealer" style="display: none;"><span id="gb-dealer-sub"><input type="checkbox" name="score-gb-dealer" value="-1" />East Claim</span></label>
               <details id="gb-wint-details" style="display: none;">
                 <summary>Winning Tile</summary>
                 <label><input type="radio" name="score-gb-setting-16" value="0" checked />Rightmost</label>
@@ -1108,9 +1125,9 @@
 		<div class="footer-line" data-i18n="main_footer_line1">v4.9.0 · © 2026 Sheauhaw Jang · Mahjong Theory & Score Calculator</div>
 		<div class="footer-line" data-i18n="main_footer_line2">Contact: <a href="https://x.com/akiko36000" target="_blank" rel="noopener noreferrer" style="color: inherit;">Sanbaiman Automahime</a></div>
 	</footer>
-  <script src="mahjong.js?v=202611032240"></script>
-  <script src="mahjong-document.js?v=202611032240"></script>
-  <script src="mahjong-worker-lang.js?v=202611032240"></script>
+  <script src="mahjong.js?v=202611080115"></script>
+  <script src="mahjong-document.js?v=202611080115"></script>
+  <script src="mahjong-worker-lang.js?v=202611080115"></script>
   <script>
     function tilesInfo(tcnt) {
       const meld = Math.floor(tcnt / 3);
@@ -1172,3 +1189,4 @@
 </body>
 
 </html>
+

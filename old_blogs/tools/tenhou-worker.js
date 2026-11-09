@@ -1,6 +1,6 @@
 ﻿// Multi-rule Tenhou / Tianhu Simulator Web Worker (Optimized & Mathematically Unbiased)
 // Uses existing mahjong.js functions without modifying Win.
-importScripts("mahjong.js?v=202611080115");
+importScripts("mahjong.js?v=202611090105");
 
 let isRunning = false;
 let currentMode = "jp4";

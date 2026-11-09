@@ -195,6 +195,16 @@ function processInput() {
         const ids = aids[1][i];
         for (let j = 0; j < ids.length; ++j) ++subtiles[ids[j].id];
     }
+    const players = aids.players || aids[5];
+    if (players) {
+        players.forEach((pl, i) => {
+            pl.kawa.forEach((t) => ++subtiles[t.id]);
+            if (i > 0) {
+                pl.bonus.forEach((t) => ++subtiles[t.id]);
+                pl.subtiles.forEach((st) => st.forEach((t) => ++subtiles[t.id]));
+            }
+        });
+    }
     const tcnt = tids.length;
     const full_tcnt = tcnt + (tcnt % 3 === 1 ? 1 : 0);
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
@@ -203,7 +213,7 @@ function processInput() {
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202611080115");
+    worker = new Worker("mahjong-worker.js?v=202611090105");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -332,7 +342,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202611080115");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202611090105");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -1099,7 +1109,7 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202611080115");
+    gb_worker = new Worker("mahjong-worker.js?v=202611090105");
     gb_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
@@ -1145,7 +1155,7 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202611080115");
+    jp_worker = new Worker("mahjong-worker.js?v=202611090105");
     jp_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
@@ -1193,7 +1203,7 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202611080115");
+    sc_worker = new Worker("mahjong-worker.js?v=202611090105");
     sc_worker.onmessage = function (e) {
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;

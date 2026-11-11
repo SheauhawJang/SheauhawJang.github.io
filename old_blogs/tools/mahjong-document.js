@@ -376,20 +376,14 @@ function randomInputText(n = parseInt(document.getElementById("randomCardCount")
     hand.sort((a, b) => a - b);
     updateInput(joinHand(hand));
 }
-function getMeld(seqs = default_seqs, tris = default_tris) {
-    const seqrate = 64;
-    const seq = seqs.length * seqrate;
-    const tri = tris.length;
-    const r = random(seq + tri);
-    if (r >= seq) return Array(3).fill(tris[r - seq]);
-    else return ArrayMap(3, (_, i) => seqs[Math.floor(r / seqrate)] + i);
+function isInputListening() {
+    return (typeof aids !== "undefined" && aids && aids[0]) ? aids[0].length % 3 === 1 : false;
 }
+
 function randomWinning(local, seqs = default_seqs, tris = default_tris) {
-    const n = local ?? parseInt(document.getElementById("randomWinningCardCount").value);
-    const [melds, head] = [Math.floor(n / 3), n % 3 ? 1 : 0];
-    let tiles = Array(sizeUT).fill(0);
-    for (let i = 0; i < melds; ++i) getMeld(seqs, tris).forEach((x) => ++tiles[x]);
-    for (let i = 0; i < head; ++i) tiles[tris[random(tris.length)]] += 2;
+    const el = typeof document !== "undefined" ? document.getElementById("randomWinningCardCount") : null;
+    const n = local !== undefined ? local : (el ? parseInt(el.value, 10) : 14);
+    const tiles = generateWinningTiles(n, seqs, tris);
     if (local !== undefined) return tiles;
     submitjokerhand(tiles, n % 3 == 1);
 }
@@ -420,71 +414,38 @@ function submithand(hand, listen) {
     processInput();
 }
 function randomWinningPairs(disjoint = 0, guse = guseall) {
-    if (disjoint === true) disjoint = 1;
-    const listen = aids[0].length % 3 === 1;
-    let arr = [];
-    for (let i = 0; i < sizeUT; ++i) if (guse[i] !== Infinity) arr.push(i);
-    let hand = [];
-    if (disjoint) {
-        let plot = arr.flatMap((x) => Array(disjoint).fill(x));
-        shuffle(plot);
-        for (let i = 0; i < 7; ++i) hand.push(plot[i], plot[i]);
-    } else for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(arr[random(arr.length)]));
-    submithand(hand, listen);
+    submithand(generateWinningPairs(disjoint, guse), isInputListening());
 }
 function randomWinningOrphan() {
-    const listen = aids[0].length % 3 === 1;
-    let hand = Orphan13Array.slice();
-    hand.push(hand[random(13)]);
-    submithand(hand, listen);
+    submithand(generateWinningOrphan(), isInputListening());
 }
 function randomWinningBukao() {
-    const listen = aids[0].length % 3 === 1;
-    let hand = [...KnitDragonSave[random(6)], ...ArraySeq(27, sizeUT)];
-    shuffle(hand);
-    hand = [...hand.slice(0, 13).sort((a, b) => a - b), hand[13]];
-    if (listen) hand.pop();
+    let hand = generateWinningBukao();
+    if (isInputListening()) hand.pop();
     updateInput(joinHand(hand));
     drawInputCards();
     processInput();
 }
 function randomWinningKDragon() {
-    const n = Math.max(aids[0].length + aids[1].length * 3, 9);
-    let tiles = randomWinning(n - 9);
-    KnitDragonSave[random(6)].forEach((x) => ++tiles[x]);
-    let hand = [];
-    tiles.forEach((x, i) => hand.push(...Array(x).fill(i)));
-    submithand(hand, n % 3 === 1);
+    const n = (typeof aids !== "undefined" && aids && aids[0] && aids[1]) ? Math.max(aids[0].length + aids[1].length * 3, 9) : 14;
+    submithand(generateWinningKDragon(n), isInputListening());
 }
 function randomWinningNiconico() {
-    const listen = aids[0].length % 3 === 1;
-    let hand = [];
-    for (let i = 0; i < 7; ++i) hand.push(...Array(2).fill(random(sizeUT)));
-    hand.push(...Array(3).fill(random(sizeUT)));
-    submithand(hand, listen);
+    submithand(generateWinningNiconico(), isInputListening());
 }
 function randomWinningOrphanMeld() {
-    const listen = aids[0].length % 3 === 1;
-    let hand = Orphan13Array.slice();
-    hand.push(hand[random(13)], ...getMeld());
-    submithand(hand, listen);
+    submithand(generateWinningOrphanMeld(), isInputListening());
 }
 function randomWinningBuda() {
-    const listen = aids[0].length % 3 === 1;
-    let buda = [];
-    for (let a = 0; a < 3; ++a) for (let b = a + 3; b < 6; ++b) for (let c = b + 3; c < 9; ++c) buda.push([a, b, c]);
-    let hand = ArraySeq(27, sizeUT);
-    for (let i = 0; i < 3; ++i) hand.push(...buda[random(buda.length)].map((x) => x + ColorFirstArray[i]));
-    hand.push(hand[random(hand.length)]);
-    submithand(hand, listen);
+    submithand(generateWinningBuda(), isInputListening());
 }
 function randomWinningSC(i) {
     if (Math.random() < 0.1) return randomWinningPairs(2, guseque[i]);
-    const seqs = default_seqs.toSpliced(i * 7, 7);
-    const tris = ArraySeq(0, 27).toSpliced(i * 9, 9);
-    const n = aids[0].length + aids[1].length * 3;
-    const tiles = randomWinning(n, seqs, tris);
-    submitjokerhand(tiles, n % 3 === 1);
+    const seqs = default_seqs.filter((_, idx) => idx < i * 7 || idx >= (i + 1) * 7);
+    const tris = ArraySeq(0, 27).filter((_, idx) => idx < i * 9 || idx >= (i + 1) * 9);
+    const n = (typeof aids !== "undefined" && aids && aids[0] && aids[1]) ? (aids[0].length + aids[1].length * 3) : 14;
+    const tiles = generateWinningTiles(n, seqs, tris);
+    submitjokerhand(tiles, isInputListening());
 }
 function randomInput(n = parseInt(document.getElementById("randomCardCount").value), m = 136) {
     randomInputText(n, m);
@@ -507,13 +468,48 @@ function sakiSpecialInput() {
     }
     return null;
 }
+function getUrlHandInput() {
+    try {
+        if (typeof window === "undefined" || !window.location || !window.location.search) return null;
+        let search = window.location.search;
+        if (!search || search.length <= 1) return null;
+        search = search.slice(1).split("#")[0];
+
+        const safeDecode = (str) => {
+            try {
+                return decodeURIComponent(str.replace(/\+/g, "%20"));
+            } catch (err) {
+                return str;
+            }
+        };
+
+        const keys = ["hand", "input", "q", "tiles", "cards", "h"];
+        for (const key of keys) {
+            const regex = new RegExp("(?:^|&)" + key + "=([^&]*)", "i");
+            const match = search.match(regex);
+            if (match && match[1] !== undefined) {
+                const val = safeDecode(match[1]).trim();
+                if (val !== "") return val;
+            }
+        }
+
+        if (!search.includes("=")) {
+            const raw = search.split("&")[0];
+            const val = safeDecode(raw).trim();
+            if (val !== "") return val;
+        }
+    } catch (e) {}
+    return null;
+}
 function loadInput() {
     try { localStorage.removeItem("inputText"); } catch (e) {}
+    const u = getUrlHandInput();
     const t = sessionStorage.getItem("inputText");
     const e = document.getElementById("inputText");
     const s = sakiSpecialInput();
     //e.addEventListener("change", () => sessionStorage.setItem("inputText", e.value));
-    if (t !== null) subkey_info = e.value = t;
+    if (u !== null) subkey_info = e.value = u;
+    else if (t !== null) subkey_info = e.value = t;
     else if (s !== null) subkey_info = e.value = s;
     else randomInputText();
 
@@ -548,9 +544,9 @@ function useRightHelper(id) {
 }
 function getCardHelperDiv(tile, width, unit = "%", t = "") {
     if (!useHelper()) return "";
-    const id = typeof tile === "number" ? tile : tile?.id;
+    const id = typeof tile === "number" ? tile : (tile && tile.id);
     if (id === undefined) return "";
-    const helper = HelperArray[id] ?? "";
+    const helper = (HelperArray[id] !== undefined) ? HelperArray[id] : "";
     const fontSize = (width !== undefined && !isNaN(width)) ? getCardHelperFontSize(width, unit) : null;
     const rh = useRightHelper(id) ? " card-helper-right" : "";
     const styleAttr = fontSize ? ` style="font-size: ${fontSize}px"` : "";
@@ -670,15 +666,12 @@ function joinHand(ids) {
 }
 function discard(i) {
     let tids = aids[0];
-    let bids = aids[2];
-    let tiles = getTiles([...tids, ...bids]);
-    for (let i = 0; i < aids[1].length; ++i) {
-        const ids = aids[1][i];
-        for (let j = 0; j < ids.length; ++j) ++tiles[ids[i].id];
-    }
+    console.log(tids[i]);
+    let river = aids[5][0].kawa;
     let mount = [];
-    for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i]; ++j) mount.push(i);
+    for (let i = 0; i < sizeUT; ++i) for (let j = 0; j < 4 - tiles[i] - subtiles[i]; ++j) mount.push(i);
     if (mount.length === 0) return;
+    river.push(tids[i]);
     tids.splice(i, 1);
     tids.sort((a, b) => a.id - b.id);
     tids.push({ id: mount[random(mount.length)] });
@@ -1963,5 +1956,4 @@ function bindListener() {
         })
     }
 }
-
 

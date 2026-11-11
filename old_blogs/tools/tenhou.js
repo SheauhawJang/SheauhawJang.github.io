@@ -19,12 +19,12 @@
     // matchMinutes: Average duration (minutes) based on online platform data (Quezha/Majsoul/Tenhou/Tencent/JJ)
     const guseSC = guseall.map((_, i) => (i >= 27 ? Infinity : 0));
     const MODE_META = {
-        jp4: { nameKey: "mode_jp4_name", handSize: 14, poolKey: "sim_pool_jp4", calcTab: 2, dealerFreq: 2.7, matchMinutes: 40, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false },
-        jp3: { nameKey: "mode_jp3_name", handSize: 14, poolKey: "sim_pool_jp3", calcTab: 2, dealerFreq: 3.5, matchMinutes: 25, unitKey: "sim_unit_banzhuang", guse: guse3p,  hasFlowers: false },
-        shura: { nameKey: "mode_shura_name", handSize: 14, drawSize: 13, poolKey: "sim_pool_shura", handKey: "sim_hand_shura", calcTab: 2, dealerFreq: 2.7, matchMinutes: 15, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false, hasWildcard: true },
-        gb:  { nameKey: "mode_gb_name", handSize: 14, poolKey: "sim_pool_gb", calcTab: 1, dealerFreq: 4.0, matchMinutes: 70, unitKey: "sim_unit_pan",       guse: guseall, hasFlowers: true },
-        sc:  { nameKey: "mode_sc_name", handSize: 14, poolKey: "sim_pool_sc", calcTab: 4, dealerFreq: 0.25, matchMinutes: 4, unitKey: "sim_unit_ju",        guse: guseSC,  hasFlowers: false },
-        tw:  { nameKey: "mode_tw_name", handSize: 17, poolKey: "sim_pool_tw", calcTab: 3, dealerFreq: 4.5, matchMinutes: 90, unitKey: "sim_unit_zhuang",    guse: guseall, hasFlowers: true }
+        jp4: { nameKey: "mode_jp4_name", handSize: 14, poolKey: "sim_pool_jp4", calcTab: 2, dealerFreq: 2.7, matchMinutes: 40, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false, isYaku: true,  tianhuKey: "JP_YAKUNAME_32", winBadgeKey: "sim_hint_win_badge" },
+        jp3: { nameKey: "mode_jp3_name", handSize: 14, poolKey: "sim_pool_jp3", calcTab: 2, dealerFreq: 3.5, matchMinutes: 25, unitKey: "sim_unit_banzhuang", guse: guse3p,  hasFlowers: false, isYaku: true,  tianhuKey: "JP_YAKUNAME_32", winBadgeKey: "sim_hint_win_badge" },
+        shura: { nameKey: "mode_shura_name", handSize: 14, drawSize: 13, poolKey: "sim_pool_shura", handKey: "sim_hand_shura", calcTab: 2, dealerFreq: 2.7, matchMinutes: 15, unitKey: "sim_unit_banzhuang", guse: guseall, hasFlowers: false, hasWildcard: true, isYaku: true, tianhuKey: "JP_YAKUNAME_32", winBadgeKey: "sim_hint_win_badge" },
+        gb:  { nameKey: "mode_gb_name", handSize: 14, poolKey: "sim_pool_gb", calcTab: 1, dealerFreq: 4.0, matchMinutes: 70, unitKey: "sim_unit_pan",       guse: guseall, hasFlowers: true,  isYaku: false, tianhuKey: "GB_FANNAME_86", winBadgeKey: "sim_hint_win_badge_gb" },
+        sc:  { nameKey: "mode_sc_name", handSize: 14, poolKey: "sim_pool_sc", calcTab: 4, dealerFreq: 0.25, matchMinutes: 4, unitKey: "sim_unit_ju",        guse: guseSC,  hasFlowers: false, isYaku: true,  tianhuKey: "SC_FAN_NAME_12", winBadgeKey: "sim_hint_win_badge" },
+        tw:  { nameKey: "mode_tw_name", handSize: 17, poolKey: "sim_pool_tw", calcTab: 3, dealerFreq: 4.5, matchMinutes: 90, unitKey: "sim_unit_zhuang",    guse: guseall, hasFlowers: true,  isYaku: true,  tianhuKey: "GB_FANNAME_86", winBadgeKey: "sim_hint_win_badge" }
     };
 
     // Rigorous Combinatorial Models for exact Tenhou probability calculations per hand type selection
@@ -99,24 +99,32 @@
         }
     };
 
+    function parseSciExp(prob) {
+        if (!prob || prob <= 0) return null;
+        const [coeff, exp] = prob.toExponential(4).split("e");
+        return { coeff, expNum: parseInt(exp, 10) };
+    }
+
     function formatProbSciHtml(prob) {
-        if (!prob || prob <= 0) return "0";
-        const expStr = prob.toExponential(4);
-        const [coeff, exp] = expStr.split("e");
-        return `${coeff} × 10<sup>${parseInt(exp, 10)}</sup>`;
+        const parts = parseSciExp(prob);
+        if (!parts) return "0";
+        return `${parts.coeff} × 10<sup>${parts.expNum}</sup>`;
     }
 
     function formatProbSciText(prob) {
-        if (!prob || prob <= 0) return "0";
-        const expStr = prob.toExponential(4);
-        const [coeff, exp] = expStr.split("e");
-        const expNum = parseInt(exp, 10);
+        const parts = parseSciExp(prob);
+        if (!parts) return "0";
         const supMap = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
-        const supExp = String(expNum).split("").map(c => supMap[c] || c).join("");
-        return `${coeff} × 10${supExp}`;
+        const supExp = String(parts.expNum).split("").map(c => supMap[c] || c).join("");
+        return `${parts.coeff} × 10${supExp}`;
     }
 
-    function getSelectedProbData(mode) {
+    let cachedProbData = null;
+
+    function getSelectedProbData(mode = currentMode, forceRefresh = false) {
+        if (mode === currentMode && cachedProbData && !forceRefresh) {
+            return cachedProbData;
+        }
         const comb = COMBINATORICS[mode] || COMBINATORICS.jp4;
         const set = selectedTypes[mode] || new Set();
         let totalWays = 0;
@@ -134,7 +142,9 @@
         const meanStr = mean.toLocaleString();
         const probHtml = formatProbSciHtml(prob);
         const probStr = formatProbSciText(prob);
-        return { prob, mean, probHtml, probStr, meanStr, totalWays, totalSpace: comb.totalSpace };
+        const res = { prob, mean, probHtml, probStr, meanStr, totalWays, totalSpace: comb.totalSpace };
+        if (mode === currentMode) cachedProbData = res;
+        return res;
     };
 
     const MODE_HAND_TYPES = {
@@ -156,7 +166,7 @@
     };
 
     function fmtTiles(n) {
-        const u = loc.sim_tiles_unit || "张";
+        const u = loc.sim_tiles_unit || loc.unit || loc.counts || "枚";
         return currentLang === "en" ? `${n} ${u}` : `${n}${u}`;
     }
 
@@ -212,25 +222,22 @@
         }
 
         const meanEl = document.getElementById("tenhou-mean");
-        if (meanEl) {
+        if (meanEl && meanEl.dataset.mean !== probData.meanStr) {
+            meanEl.dataset.mean = probData.meanStr;
             meanEl.textContent = `${probData.meanStr}${getAttemptsUnit()}`;
             meanEl.title = `${probData.totalWays.toLocaleString()} / ${probData.totalSpace.toLocaleString()}`;
         }
     }
 
 
-    function makeFanName(x) {
-        return `${loc._fanname_format_left || ""}${x}${loc._fanname_format_right || ""}`;
-    }
-
     function getTianhuTerm(mode) {
-        if (mode === "sc" && loc.SC_FAN_NAME_12) return loc.SC_FAN_NAME_12;
-        return loc.GB_FANNAME_86 || loc.JP_YAKUNAME_32 || "天和";
+        const meta = MODE_META[mode] || MODE_META.jp4;
+        return loc[meta.tianhuKey] || loc.GB_FANNAME_86 || loc.JP_YAKUNAME_32 || "天和";
     }
 
     function getWinBadgeText(mode) {
-        if (mode === "gb") return loc.sim_hint_win_badge_gb || "WIN";
-        return loc.sim_hint_win_badge || "TENHOU";
+        const meta = MODE_META[mode] || MODE_META.jp4;
+        return loc[meta.winBadgeKey] || "TENHOU";
     }
 
     // Winning capsule shape name directly using loc[yakuType] preserving fan html
@@ -244,8 +251,9 @@
         const modeName = loc[meta.nameKey] || meta.nameKey;
         const shapeHtml = loc[yakuType] || yakuType;
         let tianhu = getTianhuTerm(mode);
+        // Direct bare call to yaku name -> wrap in class="fan" in English
         if (currentLang === "en") {
-            tianhu = makeFanName(tianhu);
+            tianhu = `<span class="fan">${tianhu}</span>`;
         }
         return `${modeName} · ${tianhu} · ${shapeHtml}`;
     }
@@ -293,9 +301,14 @@
                     }
                                         currentSet.delete(val);
                 }
+                cachedProbData = null;
                 updateModeSpecUI();
             });
         });
+    }
+
+    function stripHtml(s) {
+        return (s || "").replace(/<[^>]*>/g, "").trim();
     }
 
     function getEvaluation(count, mode) {
@@ -316,33 +329,54 @@
         const t7 = Math.round(1000000 * scale);
         const t8 = Math.round(3300000 * scale);
 
-        if (count === 1) return { title: loc.eval_r1_title || "天に愛されし神", desc: (loc.eval_first_desc || "Direct hit on hand #1! Odds approx") + ` 1 / ${mean.toLocaleString()}` };
-        if (count <= t2) return { title: loc.eval_r2_title || "規格外の運王", desc: descOf(3) };
-        if (count <= t3) return { title: loc.eval_r3_title || "神の領域に達せし者", desc: descOf(3) };
-        if (count <= t4) return { title: loc.eval_r4_title || "雀神の申し子", desc: descOf(3) };
-        if (count <= t5) return { title: loc.eval_r5_title || "選ばれし強運", desc: descOf(2) };
-        if (count <= t6) return { title: loc.eval_r6_title || "天和の探求者", desc: descOf(2) };
-        if (count <= t7) return { title: loc.eval_r7_title || "不屈の雀士", desc: descOf(1) };
-        if (count <= t8) return { title: loc.eval_r8_title || "苦行を越えし求道者", desc: descOf(1) };
-        return { title: loc.eval_r9_title || "悟りを開きし仏", desc: descOf(1) };
+        if (count === 1) {
+            const firstDesc = loc.eval_first_desc || "1 /";
+            return {
+                title: loc.eval_r1_title || "",
+                desc: `${firstDesc} ${mean.toLocaleString()}`
+            };
+        }
+        let rank = 9;
+        let digits = 1;
+        if (count <= t2) { rank = 2; digits = 3; }
+        else if (count <= t3) { rank = 3; digits = 3; }
+        else if (count <= t4) { rank = 4; digits = 3; }
+        else if (count <= t5) { rank = 5; digits = 2; }
+        else if (count <= t6) { rank = 6; digits = 2; }
+        else if (count <= t7) { rank = 7; digits = 1; }
+        else if (count <= t8) { rank = 8; digits = 1; }
+
+        return {
+            title: loc[`eval_r${rank}_title`] || "",
+            desc: descOf(digits)
+        };
+    }
+
+    function splitAndSortHand(handArr, hasWildcard) {
+        const toId = (t) => (typeof t === "number" ? t : (t && t.id));
+        let leadTile = null;
+        let regularTiles = handArr;
+
+        if (hasWildcard) {
+            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
+            leadTile = jc;
+            regularTiles = handArr.filter(t => toId(t) !== jc);
+        }
+
+        const handFront = regularTiles.length - 1;
+        const sortedFront = regularTiles.slice(0, handFront).sort((a, b) => toId(a) - toId(b));
+        const tsumo = regularTiles[handFront];
+
+        return { leadTile, sortedFront, tsumo };
     }
 
     // Reuses joinHand from mahjong-document.js to format hand in standard MPSZ notation
     function formatHandString(handArr, flowersArr) {
         if (!handArr || handArr.length === 0) return "";
         const meta = MODE_META[currentMode] || MODE_META.jp4;
-        let sorted;
-        if (meta.hasWildcard) {
-            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
-            const regular = handArr.filter(id => (typeof id === "number" ? id : (id && id.id)) !== jc);
-            const handFrontReg = regular.length - 1;
-            const regFront = regular.slice(0, handFrontReg).sort((a, b) => a - b);
-            sorted = [jc, ...regFront, regular[handFrontReg]];
-        } else {
-            const handFront = handArr.length - 1;
-            sorted = handArr.slice(0, handFront).sort((a, b) => a - b);
-            sorted.push(handArr[handFront]);
-        }
+        const { leadTile, sortedFront, tsumo } = splitAndSortHand(handArr, meta.hasWildcard);
+        const sorted = leadTile !== null ? [leadTile, ...sortedFront, tsumo] : [...sortedFront, tsumo];
+
         let res = typeof joinHand === "function" ? joinHand(sorted) : sorted.join(",");
         if (flowersArr && flowersArr.length > 0) {
             const flowerStr = flowersArr.map(id => typeof cardName === "function" ? cardName(id) : `${id}`).join("");
@@ -357,12 +391,13 @@
         const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
         const mins = totalMinutes % 60;
         const u = {
-            y: (loc && loc.sim_unit_year) || " 年",
-            d: (loc && loc.sim_unit_day) || " 天",
-            h: (loc && loc.sim_unit_hour) || " 小时",
-            m: (loc && loc.sim_unit_minute) || " 分钟"
+            y: (loc && loc.sim_unit_year) || " y",
+            d: (loc && loc.sim_unit_day) || " d",
+            h: (loc && loc.sim_unit_hour) || " h",
+            m: (loc && loc.sim_unit_minute) || " m"
         };
-        if (days >= 365) return `${loc.sim_approx || "约"} ${(days / 365.25).toFixed(1)}${u.y} (${days.toLocaleString()}${u.d})`;
+        const approxWord = (loc && loc.sim_approx) || "~";
+        if (days >= 365) return `${approxWord} ${(days / 365.25).toFixed(1)}${u.y} (${days.toLocaleString()}${u.d})`;
         if (days > 0) return `${days}${u.d} ${hours}${u.h}`;
         if (hours > 0) return `${hours}${u.h} ${mins}${u.m}`;
         return `${mins}${u.m}`;
@@ -420,19 +455,18 @@
 
     function refreshStatusUI() {
         const statusHint = document.getElementById("tenhou-status-hint");
+        const meta = MODE_META[currentMode] || MODE_META.jp4;
         if (lastResultHand && lastResultYaku) {
             if (statusHint) {
                 const winBadge = getWinBadgeText(currentMode);
                 const winText = getWinCapsuleHtml(lastResultYaku);
-                const isYakuBadge = (currentMode !== "gb");
-                const formattedBadge = (currentLang === "en" && isYakuBadge) ? makeFanName(winBadge) : winBadge;
-                statusHint.innerHTML = `<span class="mat-status-badge mat-status-win">★ ${formattedBadge}</span><span class="mat-status-text mat-status-win">${winText}</span>`;
+                statusHint.innerHTML = `<span class="mat-status-badge mat-status-win">★ ${winBadge}</span><span class="mat-status-text mat-status-win">${winText}</span>`;
             }
             renderSuccessBanner();
         } else if (lastResultHand && !lastResultYaku) {
             if (statusHint) {
                 const dealBadge = loc.sim_hint_dealt || "Hand Dealt";
-                const dealText = (currentMode === "gb" || currentMode === "sc") ? (loc.sim_hint_no_win_gb || "No Win") : (loc.sim_hint_no_win || "No Tenhou");
+                const dealText = (!meta.isYaku) ? (loc.sim_hint_no_win_gb || "No Win") : (loc.sim_hint_no_win || "No Tenhou");
                 statusHint.innerHTML = `<span class="mat-status-badge">${dealBadge}</span><span class="mat-status-text">${dealText}</span>`;
             }
         } else if (isRunning) {
@@ -523,7 +557,7 @@
         if (typeof setLoc === "function") setLoc(lang);
         if (typeof replacei18n === "function") replacei18n();
 
-        if (loc.sim_page_title) document.title = loc.sim_page_title.replace(/<[^>]*>/g, "");
+        if (loc.sim_page_title) document.title = stripHtml(loc.sim_page_title);
 
         document.querySelectorAll("[data-i18n-title]").forEach((el) => {
             const key = el.getAttribute("data-i18n-title");
@@ -572,8 +606,9 @@
     function initDOM() {
         let detectedLang = "cn";
         let hasUrlLang = false;
+        let urlParams = null;
         try {
-            const urlParams = new URLSearchParams(window.location.search);
+            urlParams = new URLSearchParams(window.location.search);
             const rawLang = urlParams.get("lang");
             const pLang = normalizeLang(rawLang);
             if (pLang) {
@@ -619,32 +654,31 @@
         }
 
         // URL parameters check
-        try {
-            const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams) {
             const paramMode = urlParams.get("mode");
             if (paramMode && MODE_META[paramMode]) currentMode = paramMode;
 
             const paramTheme = urlParams.get("theme");
             if (paramTheme && typeof setTheme === "function") setTheme(paramTheme);
-        } catch (e) {}
+        }
 
         renderTypeOptions();
         updateModeSpecUI();
         renderInitialTiles();
 
-        try {
-            const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams) {
             if (urlParams.get("deal") === "1") {
                 dealOneHand();
             } else if (urlParams.get("demoWin") === "1") {
                 triggerDemoWin();
             }
-        } catch (e) {}
+        }
     }
 
     function switchMode(mode) {
         if (isRunning) stopSimulation();
         currentMode = mode;
+        cachedProbData = null;
         updateUrlParams({ mode: mode });
 
         totalAttempts = 0;
@@ -711,13 +745,6 @@
             probEl.title = `${probData.probStr} (${probData.totalWays.toLocaleString()} / ${probData.totalSpace.toLocaleString()})`;
         }
 
-        const meanEl = document.getElementById("tenhou-mean");
-        if (meanEl) {
-            const ciWord = loc.sim_unit_ci ? (" " + loc.sim_unit_ci) : " hands";
-            meanEl.textContent = `${probData.meanStr}${ciWord}`;
-            meanEl.title = `${probData.totalWays.toLocaleString()} / ${probData.totalSpace.toLocaleString()}`;
-        }
-
         const footLeft = document.getElementById("rack-foot-left");
         if (footLeft) {
             const dealAreaWord = loc.sim_rack_deal_area || "配牌区";
@@ -734,9 +761,9 @@
     }
 
     // Reuses getCardImage from mahjong-document.js and cardName from mahjong.js
-    function renderSingleTile(tid) {
+    function renderSingleTile(tid, customTitle) {
         const tileObj = (typeof tid === "object") ? tid : { id: tid };
-        const name = typeof cardName === "function" ? cardName(tileObj) : `${tid}`;
+        const name = customTitle || (typeof cardName === "function" ? cardName(tileObj) : `${tid}`);
         const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv(tileObj) : "";
         const imgHtml = typeof getCardImage === "function" ? getCardImage(tileObj) : "";
         return `<div class="card-div" title="${name}">${helperHtml}${imgHtml}</div>`;
@@ -750,21 +777,20 @@
         const backHtml = typeof outputCardImageBack === "function" ? outputCardImageBack() : `<div class="card-div"><img src="./cards/fb.png" class="card-tile-mask"><img src="./cards/b.png"></div>`;
 
         let html = "";
+        const normalCount = meta.hasWildcard ? handFront - 1 : handFront;
         if (meta.hasWildcard) {
             const jc = typeof JokerC !== "undefined" ? JokerC : 42;
             html += renderSingleTile(jc);
-            for (let i = 0; i < handFront - 1; i++) html += backHtml;
-            html += `<div class="tsumo-gap"></div>` + backHtml;
-        } else {
-            for (let i = 0; i < handFront; i++) html += backHtml;
-            html += `<div class="tsumo-gap"></div>` + backHtml;
         }
+        for (let i = 0; i < normalCount; i++) {
+            html += backHtml;
+        }
+        html += `<div class="tsumo-gap"></div>` + backHtml;
 
         container.innerHTML = html;
         renderFlowersDisplay([]);
     }
 
-    // Render bonus (flower) tiles using the existing tilesImage format
     // Render bonus (flower) tiles using capsule container and standard .card-div tiles
     function renderFlowersDisplay(flowersArr) {
         const el = document.getElementById("tenhou-flowers-display");
@@ -803,9 +829,7 @@
             const fid = flowersArr[i];
             const name = typeof cardName === "function" ? cardName(fid) : `${fid}`;
             const fName = loc[`card_flower_${fid}`] || "";
-            const helperHtml = typeof getCardHelperDiv === "function" ? getCardHelperDiv({ id: fid }) : "";
-            const imgHtml = typeof getCardImage === "function" ? getCardImage({ id: fid }) : "";
-            tilesHtml += `<div class="card-div" title="${fName ? `${fName} (${name})` : name}">${helperHtml}${imgHtml}</div>`;
+            tilesHtml += renderSingleTile(fid, fName ? `${fName} (${name})` : name);
         }
 
         el.innerHTML = `
@@ -823,43 +847,16 @@
         if (!container || !handArr || handArr.length < 14) return;
 
         const meta = MODE_META[currentMode] || MODE_META.jp4;
+        const { leadTile, sortedFront, tsumo } = splitAndSortHand(handArr, meta.hasWildcard);
+
         let html = "";
-
-        if (meta.hasWildcard) {
-            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
-            const regularTiles = [];
-            for (let i = 0; i < handArr.length; i++) {
-                const tid = handArr[i];
-                const id = typeof tid === "number" ? tid : (tid && tid.id);
-                if (id !== jc) {
-                    regularTiles.push(tid);
-                }
-            }
-
-            const handFrontReg = regularTiles.length - 1;
-            const regularFront = regularTiles.slice(0, handFrontReg).sort((a, b) => (typeof a === "number" ? a : a.id) - (typeof b === "number" ? b : b.id));
-            const tsumo = regularTiles[handFrontReg];
-
-            // 1. Wildcard at far left, seamlessly part of the hand (no gap)
-            html += renderSingleTile(jc);
-
-            // 2. 12 sorted regular hand tiles
-            for (let i = 0; i < regularFront.length; i++) {
-                html += renderSingleTile(regularFront[i]);
-            }
-
-            // 3. Tsumo gap and 13th regular tile (drawn/winning tile)
-            html += `<div class="tsumo-gap"></div>` + renderSingleTile(tsumo);
-        } else {
-            const handFront = handArr.length - 1;
-            const tilesFront = handArr.slice(0, handFront).sort((a, b) => a - b);
-            const tsumo = handArr[handFront];
-
-            for (let i = 0; i < handFront; i++) {
-                html += renderSingleTile(tilesFront[i]);
-            }
-            html += `<div class="tsumo-gap"></div>` + renderSingleTile(tsumo);
+        if (leadTile !== null) {
+            html += renderSingleTile(leadTile);
         }
+        for (let i = 0; i < sortedFront.length; i++) {
+            html += renderSingleTile(sortedFront[i]);
+        }
+        html += `<div class="tsumo-gap"></div>` + renderSingleTile(tsumo);
 
         container.innerHTML = html;
         renderFlowersDisplay(flowersArr || []);
@@ -976,13 +973,7 @@
         if (liveDot) liveDot.classList.remove("active-live");
 
         setOptionsDisabled(false);
-
-        const statusHint = document.getElementById("tenhou-status-hint");
-        if (statusHint && !lastResultHand) {
-            const pauseBadge = loc.sim_hint_paused || "Paused";
-            const pauseText = loc.sim_hint_resume || "Waiting";
-            statusHint.innerHTML = `<span class="mat-status-badge">${pauseBadge}</span><span class="mat-status-text">${pauseText}</span>`;
-        }
+        if (!lastResultHand) refreshStatusUI();
     }
 
     // Deal 1 single random starting hand (reuses getMahjongWall and shuffle(wall, front))
@@ -998,9 +989,11 @@
 
         const hand = [];
         const flowers = [];
+        const flowerStart = typeof sizeUT !== "undefined" ? sizeUT : 34;
+        const flowerEnd = typeof sizeAT !== "undefined" ? sizeAT : 42;
         for (let i = 0; i < wall.length; i++) {
             const id = wall[i];
-            if (id >= 34 && id <= 41) {
+            if (id >= flowerStart && id < flowerEnd) {
                 flowers.push(id);
             } else {
                 hand.push(id);
@@ -1020,12 +1013,7 @@
         const handWrapper = document.getElementById("tenhou-hand-wrapper");
         if (handWrapper) handWrapper.classList.remove("active-win");
 
-        const statusHint = document.getElementById("tenhou-status-hint");
-        if (statusHint) {
-            const dealBadge = loc.sim_hint_dealt || "Hand Dealt";
-            const dealText = (currentMode === "gb" || currentMode === "sc") ? (loc.sim_hint_no_win_gb || "No Win") : (loc.sim_hint_no_win || "No Tenhou");
-            statusHint.innerHTML = `<span class="mat-status-badge">${dealBadge}</span><span class="mat-status-text">${dealText}</span>`;
-        }
+        refreshStatusUI();
 
         const banner = document.getElementById("tenhou-success-banner");
         if (banner) banner.style.display = "none";
@@ -1043,17 +1031,8 @@
         const handWrapper = document.getElementById("tenhou-hand-wrapper");
         if (handWrapper) handWrapper.classList.add("active-win");
 
-        const statusHint = document.getElementById("tenhou-status-hint");
-        if (statusHint) {
-            const winBadge = getWinBadgeText(mode);
-            const winText = getWinCapsuleHtml(yakuType);
-            const isYakuBadge = (mode !== "gb");
-            const formattedBadge = (currentLang === "en" && isYakuBadge) ? makeFanName(winBadge) : winBadge;
-            statusHint.innerHTML = `<span class="mat-status-badge mat-status-win">★ ${formattedBadge}</span><span class="mat-status-text mat-status-win">${winText}</span>`;
-        }
-
+        refreshStatusUI();
         renderHandTiles(handArr, lastResultFlowers);
-        renderSuccessBanner();
 
         // Automatically store the winning hand and matching rule tab so switching directly to the calculator analyzes it
         try {
@@ -1095,10 +1074,9 @@
         let flowerLine = "";
         if (lastResultFlowers && lastResultFlowers.length > 0) {
             const flowerNames = lastResultFlowers.map(f => loc[`card_flower_${f}`] || `${f}`).join(" ");
-            const flLabel = loc.sim_copy_flowers || "Flowers";
+            const flLabel = loc.flowers || "Flowers";
             flowerLine = `\n${flLabel}: ${flowerNames} (❀×${lastResultFlowers.length})`;
         }
-        const stripHtml = (s) => (s || "").replace(/<[^>]*>/g, "").trim();
         const simTitle = stripHtml(loc.sim_title || "Blessing of Heaven Simulator");
         const cleanYakuName = stripHtml(yakuName);
         const cleanEvalTitle = stripHtml(evalInfo.title);
@@ -1113,7 +1091,7 @@
         const shareUrl = getShareUrl();
         const text = `【${simTitle}】\n${labels.rule}: ${modeName}\n${labels.win}: ${cleanYakuName}\n${labels.att}: ${totalAttempts.toLocaleString()} (${cleanEvalTitle})\n${labels.exp}: ${getSelectedProbData(currentMode).meanStr}${flowerLine}\nHand: ${handStr}\nURL: ${shareUrl}`;
 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
                 alert(loc.sim_copy_ok || "Result copied to clipboard.");
             }).catch(() => { alert(text); });
@@ -1122,53 +1100,62 @@
         }
     }
 
+    const DEMO_GENERATORS = {
+        tw: {
+            niconico: () => generateWinningNiconico(),
+            orphan13: () => generateWinningOrphanMeld(),
+            shiliubudaxing: () => generateWinningBuda(),
+            normal: () => generateWinningHand(17)
+        },
+        shura: {
+            pair7: () => [typeof JokerC !== "undefined" ? JokerC : 42, ...generateWinningPairs(true).slice(0, 13)],
+            kokushi: () => [typeof JokerC !== "undefined" ? JokerC : 42, ...generateWinningOrphan().slice(0, 13)],
+            normal: () => [typeof JokerC !== "undefined" ? JokerC : 42, ...generateWinningHand(13)]
+        },
+        gb: {
+            pair7: () => generateWinningPairs(0),
+            orphan13: () => generateWinningOrphan(),
+            quanbukaoxing: () => generateWinningBukao(),
+            zuhelongxing: () => generateWinningKDragon(14),
+            normal: () => generateWinningHand(14)
+        },
+        sc: {
+            pair7: () => generateWinningPairs(2, guseSC),
+            normal: () => generateWinningSC()
+        },
+        jp3: {
+            pair7: () => generateWinningPairs(true, guse3p),
+            kokushi: () => generateWinningOrphan(),
+            normal: () => {
+                const seqs = default_seqs.filter(s => s >= 9);
+                const tris = ArraySeq(0, sizeUT).filter(t => guse3p[t] !== Infinity);
+                return generateWinningHand(14, seqs, tris);
+            }
+        },
+        jp4: {
+            kokushi: () => generateWinningOrphan(),
+            pair7: () => generateWinningPairs(true),
+            normal: () => generateWinningHand(14)
+        }
+    };
+
     function triggerDemoWin(forcedType) {
         const type = forcedType || (MODE_HAND_TYPES[currentMode] ? MODE_HAND_TYPES[currentMode][0] : "normal");
-        let demoTiles;
-        let demoFlowers = [];
         const meta = MODE_META[currentMode] || MODE_META.jp4;
-        if (meta.hasFlowers) {
-            demoFlowers = [34, 38]; // Sample drawn flowers: 春(34), 梅(38)
-        }
+        const demoFlowers = meta.hasFlowers ? [34, 38] : [];
 
-        if (currentMode === "tw") {
-            if (type === "niconico") {
-                demoTiles = [0, 0, 1, 1, 9, 9, 10, 10, 18, 18, 19, 19, 27, 27, 30, 30, 33];
-            } else if (type === "orphan13") {
-                demoTiles = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 1, 2, 3, 0];
-            } else if (type === "shiliubudaxing") {
-                demoTiles = [0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 28, 29, 30, 31, 32, 33, 0];
-            } else {
-                demoTiles = [0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 30, 30, 30, 33, 33];
-            }
-        } else if (currentMode === "shura") {
-            const jc = typeof JokerC !== "undefined" ? JokerC : 42;
-            if (type === "pair7") {
-                demoTiles = [jc, 0, 0, 9, 9, 18, 18, 27, 27, 28, 28, 29, 29, 30];
-            } else if (type === "kokushi") {
-                demoTiles = [jc, 0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
-            } else {
-                demoTiles = [jc, 0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 33];
-            }
-        } else if (currentMode === "gb") {
-            if (type === "pair7") {
-                demoTiles = [0, 0, 9, 9, 18, 18, 27, 27, 28, 28, 29, 29, 30, 30];
-            } else if (type === "orphan13") {
-                demoTiles = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 0];
-            } else if (type === "quanbukaoxing") {
-                demoTiles = [0, 3, 6, 10, 13, 16, 20, 23, 26, 27, 28, 29, 30, 31];
-            } else if (type === "zuhelongxing") {
-                demoTiles = [0, 3, 6, 10, 13, 16, 20, 23, 26, 27, 27, 27, 33, 33];
-            } else {
-                demoTiles = [0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 33, 33];
-            }
-        } else if (type === "kokushi") {
-            demoTiles = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33, 0];
-        } else if (type === "pair7") {
-            demoTiles = [0, 0, 9, 9, 18, 18, 27, 27, 28, 28, 29, 29, 30, 30];
-        } else {
+        let demoTiles = null;
+        try {
+            const genMap = DEMO_GENERATORS[currentMode] || DEMO_GENERATORS.jp4;
+            const gen = genMap[type] || genMap.normal;
+            if (typeof gen === "function") demoTiles = gen();
+        } catch (e) {
+            console.warn("Demo generator fallback:", e);
+        }
+        if (!demoTiles || !demoTiles.length) {
             demoTiles = [0, 1, 2, 9, 10, 11, 18, 19, 20, 27, 27, 27, 33, 33];
         }
+
         totalAttempts = 32890;
         lastElapsedSec = 0.1;
         lastSpeed = 1644500;

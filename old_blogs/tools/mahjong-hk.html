@@ -6,7 +6,7 @@
  <meta name="viewport" content="width=device-width, initial-scale=1" />
  <meta name="description" content="支援一般型麻雀、港式台灣牌、立直麻雀、國標麻雀、十六張麻雀同埋任意多張麻雀嘅牌理向聽數計算。支援百搭牌（萬能牌／賴子／混子）。支援國標麻雀番數計算、立直麻雀分數計算。">
  <title>麻雀多功能計算機</title>
- <link rel="stylesheet" href="mahjong.css?v=202611090105" />
+ <link rel="stylesheet" href="mahjong.css?v=202611121110" />
  <script>
   try {
    const savedTheme = localStorage.getItem("mahjong-theme");
@@ -1124,10 +1124,11 @@
 		<div class="footer-line" data-i18n="main_footer_line1">v4.9.0 · © 2026 Sheauhaw Jang · 麻雀多功能計算機</div>
 		<div class="footer-line" data-i18n="main_footer_line2">聯絡作者：<a href="https://x.com/akiko36000" target="_blank" rel="noopener noreferrer" style="color: inherit;">三倍滿自動姬</a></div>
 	</footer>
- <script src="mahjong.js?v=202611090105"></script>
- <script src="mahjong-generator.js?v=202611090105"></script>
- <script src="mahjong-document.js?v=202611090105"></script>
- <script src="mahjong-worker-lang.js?v=202611090105"></script>
+ <script>var lang = "hk";</script>
+ <script src="mahjong.js?v=202611121110"></script>
+ <script src="mahjong-generator.js?v=202611121110"></script>
+ <script src="mahjong-document.js?v=202611121110"></script>
+ <script src="mahjong-worker-lang.js?v=202611121110"></script>
  <script>
  function tilesInfo(tcnt) {
   const meld = Math.floor(tcnt / 3);
@@ -1171,8 +1172,6 @@
   replacei18n();
   loadInput();
  };
- const lang = "hk";
- const toggleOutputLang = ["展開 ▼", "收埋 ▲"];
  </script>
 	<!-- Mobile Bottom Navigation Bar -->
 	<nav class="mobile-bottom-nav" aria-label="流動端應用導航">

@@ -1,6 +1,6 @@
-﻿importScripts("mahjong.js?v=202611090105");
-importScripts("mahjong-score.js?v=202611090105");
-importScripts("mahjong-worker-lang.js?v=202611090105");
+importScripts("mahjong.js?v=202611121110");
+importScripts("mahjong-score.js?v=202611121110");
+importScripts("mahjong-worker-lang.js?v=202611121110");
 //console.log(JPPrintSeq.map((i) => loc_all[`JP_YAKUNAME_${i}`].ja).join("\n"));
 //console.log(Array(69).fill(0).map((_,i)=>cn_loc[`JP_YAKUNAME_${i}`]).join('\n'));
 const MAX_OUTPUT_LENGTH = 12;
@@ -9,7 +9,15 @@ const makeTableLineLR = (l, r) => `<tr><td style="padding-left: 0px;">${l}</td><
 const makeTableLineLRs = (l, rs) => `<tr><td style="padding-left: 0px;">${l}</td>${rs.map((r) => `<td>${r}</td>`).join("")}</tr>`;
 const makeGridDiv = (i) => `<div class="output-grid-div">${i}</div>`;
 const makeTableFanLineLR = (l, r, n, s = "") => `<tr style="${s}"><td class="waiting-brief">${l}</td><td style="text-align: right; padding-left: 10px">${r}</td>${n !== undefined ? `<td>${n}</td>` : ""}</tr>`;
-const makeFanName = (x) => `${loc._fanname_format_left}${x}${loc._fanname_format_right}`;
+let currentWorkerLang = "cn";
+const makeFanName = (x) => `<span class="${currentWorkerLang === 'en' ? 'fan' : 'fan-normal'}">${x}</span>`;
+const _rawPostMessage = self.postMessage.bind(self);
+self.postMessage = function (data, transfer) {
+    if (data && typeof data === "object" && !("lang" in data)) {
+        data.lang = currentWorkerLang;
+    }
+    return transfer !== undefined ? _rawPostMessage(data, transfer) : _rawPostMessage(data);
+};
 let aids = undefined;
 let tiles, subtiles;
 let tcnt, full_tcnt, subcnt;
@@ -1303,6 +1311,7 @@ function ListenScore(f, sf, fake = true) {
 self.onmessage = function (e) {
     const st = new Date();
     if (e.data.lang) {
+        currentWorkerLang = e.data.lang;
         setLoc(e.data.lang);
         for (const [key, val] of Object.entries(loc)) if (key[0] !== "_") loc[key] = `<span data-i18n="${key}">${val}</span>`;
     }

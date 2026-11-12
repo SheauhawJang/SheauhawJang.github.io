@@ -403,8 +403,22 @@ const loc_all = {
     mode_jp_name: { cn: "立直麻将标准型", tw: "立直麻將標準型", hk: "立直麻雀標準型", ja: "立直麻雀標準形", en: "JP Riichi Std-T" },
     mode_gb_name: { cn: "国标麻将标准型", tw: "國標麻將標準型", hk: "國標麻雀標準型", ja: "中国国標麻雀標準形", en: "CN Off. (MCR) Std-T" },
     mode_sc_name: { cn: "四川麻将", tw: "四川麻將", hk: "四川麻雀", ja: "四川麻雀(赤血の戦)", en: "Sichuan Mahjong" },
-    mode_tw_name: { cn: "港式台湾麻将", tw: "港式台灣麻將", hk: "港式台灣牌", ja: "香港式台湾麻雀", en: "HK Style TW Maj." }
+    mode_tw_name: { cn: "港式台湾麻将", tw: "港式台灣麻將", hk: "港式台灣牌", ja: "香港式台湾麻雀", en: "HK Style TW Maj." },
+
+    // --- Language Features & Formatting Flags ---
+    card_helper: { cn: false, hk: false, tw: false, ja: false, en: true },
+    fan_css: { cn: false, hk: false, tw: false, ja: false, en: true },
+
+    // --- Panel & Box Toggle Texts ---
+    toggle_in_open: { cn: "打开输入面板 ▼", tw: "打開輸入面板 ▼", hk: "打開輸入面板 ▼", ja: "入力パネルを開く ▼", en: "Open Input Panel ▼" },
+    toggle_in_close: { cn: "关闭输入面板 ▲", tw: "關閉輸入面板 ▲", hk: "關閉輸入面板 ▲", ja: "入力パネルを閉じる ▲", en: "Close Input Panel ▲" },
+    toggle_nt_show: { cn: "显示输入说明 ▼", tw: "顯示輸入說明 ▼", hk: "顯示輸入說明 ▼", ja: "入力説明を表示 ▼", en: "Show input instructions ▼" },
+    toggle_nt_hide: { cn: "隐藏输入说明 ▲", tw: "隱藏輸入說明 ▲", hk: "隱藏輸入說明 ▲", ja: "入力説明を非表示 ▲", en: "Hide input instructions ▲" },
+    toggle_expand: { cn: "展开 ▼", tw: "展開 ▼", hk: "展開 ▼", ja: "展開 ▼", en: "Expand ▼" },
+    toggle_fold: { cn: "折叠 ▲", tw: "摺疊 ▲", hk: "收埋 ▲", ja: "収納 ▲", en: "Fold ▲" }
 };
+
+if (typeof lang !== "undefined") setLoc(lang);
 
 
 

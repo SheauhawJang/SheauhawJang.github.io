@@ -24,23 +24,36 @@ function random(l, r) {
 }
 const ui_debounce_delay = 500;
 let updateTaskOutput = ArrayMap(TASK_NUM, (_, i) =>
-    debounce((text) => {
-        sf(() => (document.getElementById(document_element_ids[i]).innerHTML = text));
+    debounce((text, needFixLang) => {
+        const el = document.getElementById(document_element_ids[i]);
+        sf(() => {
+            el.innerHTML = text;
+            if (needFixLang) replacei18n(el);
+        });
         if (useHelper()) addWorkerCardHelper();
         updateCardSkin();
     }, ui_debounce_delay),
 );
-let updateTaskBrief = ArrayMap(TASK_NUM, (_, i) => debounce((text) => sf(() => (document.getElementById("brief-" + document_element_ids[i]).innerHTML = text)), ui_debounce_delay));
+let updateTaskBrief = ArrayMap(TASK_NUM, (_, i) =>
+    debounce((text, needFixLang) => {
+        const el = document.getElementById("brief-" + document_element_ids[i]);
+        sf(() => {
+            el.innerHTML = text;
+            if (needFixLang) replacei18n(el);
+        });
+    }, ui_debounce_delay),
+);
 function putWorkerResult(e, task) {
+    const needFixLang = Boolean(e.data?.lang && e.data.lang !== lang);
     // partial result
-    if ("brief" in e.data) updateTaskBrief[task].immediate(e.data.brief);
+    if ("brief" in e.data) updateTaskBrief[task].immediate(e.data.brief, needFixLang);
     if ("output" in e.data) {
-        updateTaskOutput[task](e.data.output);
+        updateTaskOutput[task](e.data.output, needFixLang);
         return true; // all known results has been put
     }
     // full result
     const { result, time } = e.data;
-    updateTaskOutput[task].immediate(result.output);
+    updateTaskOutput[task].immediate(result.output, needFixLang);
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Used ${time} ms`));
     return false; // remain results need to be put
 }
@@ -72,27 +85,26 @@ const updateScoreVisiableUI = debounce(function (visiable) {
         if (se && score_enabled[i] && te) vid.push([i, se, te]);
     }
     vid.sort((a, b) => (a[2] === b[2] ? 0 : a[2].compareDocumentPosition(b[2]) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
-    if (visiable === "none") {
-        if (vid.length === 0) ((document.getElementById("score-global").style.display = "none"), switchScoreTab(-1, true));
-        else switchScoreTab(vid[0][0], true);
+    if (vid.length === 0) {
+        document.getElementById("score-global").style.display = "none";
+        switchScoreTab(-1, true);
     } else {
-        document.getElementById("score-global").style.display = visiable;
+        document.getElementById("score-global").style.display = "block";
         if (vid.some((e) => e[0] === scoretab_usr)) switchScoreTab(scoretab_usr, true);
         else switchScoreTab(vid[0][0], true);
     }
 }, ui_debounce_delay);
-function updateScoreVisiable(id, visiable = "none") {
+function updateScoreVisiable(id, visiable = "none", immediate = false) {
     score_enabled[id] = visiable !== "none";
     const b = document.getElementById(`${document_scores_ids[id]}-button`);
     if (b) b.disabled = visiable === "none";
-    else console.log(`${document_scores_ids[id]}-button`);
     const utab = document.querySelector(`.tab[data-scoretabid="${id}"]`);
-    if (utab && utab.style.display === "none" && visiable !== "none") {
+    if (immediate || (utab && utab.style.display === "none" && visiable !== "none")) {
         updateScoreVisiableBar[id].immediate(visiable);
     } else {
         updateScoreVisiableBar[id](visiable);
     }
-    if (score_enabled[scoretab_usr] && visiable !== "none") {
+    if (immediate || (score_enabled[scoretab_usr] && visiable !== "none")) {
         updateScoreVisiableUI.immediate(visiable);
     } else {
         updateScoreVisiableUI(visiable);
@@ -167,23 +179,7 @@ function syncCmdToUI(cmd, players) {
     syncWininfo(riichi, RIICHI_UI_TARGETS);
     syncWininfo(cmd.flags, FLAG_UI_TARGETS);
 }
-function processInput() {
-    if (worker) {
-        worker.terminate();
-        worker = null;
-    }
-    for (let i = 0; i < TASK_NUM; ++i) {
-        updateTaskOutput[i]("");
-        updateTaskBrief[i]("");
-        sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
-        getStepMask(i, true);
-    }
-    const workers_scores = [gb_worker, jp_worker, null, sc_worker];
-    for (let i = 0; i < workers_scores.length; ++i) {
-        updateScoreVisiable(i);
-        if (workers_scores[i]) workers_scores[i].terminate();
-    }
-    const input = document.getElementById("inputText").value;
+function prepareInputUI(input = document.getElementById("inputText").value) {
     sessionStorage.setItem("inputText", input);
     aids = splitTiles(input);
     syncCmdToUI(aids.cmd || aids[6], aids.players || aids[5]);
@@ -206,14 +202,35 @@ function processInput() {
         });
     }
     const tcnt = tids.length;
-    const full_tcnt = tcnt + (tcnt % 3 === 1 ? 1 : 0);
     document.getElementById("output-cnt").textContent = tilesInfo(tcnt);
     document.getElementById("output-pic").innerHTML = tilesImage(tids) + subtilesImage(aids[1], tcnt);
     document.getElementById("output-pic-bonus").innerHTML = tilesImage(bids, 1);
     document.getElementById("output-pic-doras").innerHTML = tilesImage(aids[3], 2);
     document.getElementById("output-pic-uras").innerHTML = tilesImage(aids[4], 2);
     document.getElementsByClassName("output-box-head")[0].style.display = "block";
-    worker = new Worker("mahjong-worker.js?v=202611090105");
+    drawInputCards();
+}
+function startWorkerCalculation() {
+    if (worker) {
+        worker.terminate();
+        worker = null;
+    }
+    for (let i = 0; i < TASK_NUM; ++i) {
+        updateTaskOutput[i]("");
+        updateTaskBrief[i]("");
+        sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Waiting......`));
+        getStepMask(i, true);
+    }
+    const workers_scores = [gb_worker, jp_worker, null, sc_worker];
+    for (let i = 0; i < workers_scores.length; ++i) {
+        updateScoreVisiable(i);
+        if (workers_scores[i]) workers_scores[i].terminate();
+    }
+    if (!aids) prepareInputUI();
+    const tids = aids[0];
+    const tcnt = tids.length;
+    const full_tcnt = tcnt + (tcnt % 3 === 1 ? 1 : 0);
+    worker = new Worker("mahjong-worker.js?v=202611121110");
     let task = 0;
     save_normal = undefined;
     worker_substeps = Array(TASK_NUM);
@@ -315,6 +332,10 @@ function processInput() {
     sf(() => (document.getElementById("time-" + document_element_ids[task]).textContent = `Calculating......`));
     worker.postMessage({ task, aids, tiles, subtiles, lang });
 }
+function processInput() {
+    prepareInputUI();
+    startWorkerCalculation();
+}
 let reworkers = Array(TASK_NUM).fill(null);
 function getStepMask(task, lock) {
     const size = [undefined, 3, 5, 4, 3, 3];
@@ -342,7 +363,7 @@ function restartInput(i) {
     updateTaskOutput[i]("");
     updateTaskBrief[i]("");
     sf(() => (document.getElementById("time-" + document_element_ids[i]).textContent = `Re-Calculating......`));
-    reworkers[i] = new Worker("mahjong-worker.js?v=202611090105");
+    reworkers[i] = new Worker("mahjong-worker.js?v=202611121110");
     reworkers[i].onmessage = function (e) {
         if (putWorkerResult(e, i)) return;
         const result = e.data.result;
@@ -377,11 +398,11 @@ function randomInputText(n = parseInt(document.getElementById("randomCardCount")
     updateInput(joinHand(hand));
 }
 function isInputListening() {
-    return (typeof aids !== "undefined" && aids && aids[0]) ? aids[0].length % 3 === 1 : false;
+    return aids?.[0] ? aids[0].length % 3 === 1 : false;
 }
 
 function randomWinning(local, seqs = default_seqs, tris = default_tris) {
-    const el = typeof document !== "undefined" ? document.getElementById("randomWinningCardCount") : null;
+    const el = document.getElementById("randomWinningCardCount");
     const n = local !== undefined ? local : (el ? parseInt(el.value, 10) : 14);
     const tiles = generateWinningTiles(n, seqs, tris);
     if (local !== undefined) return tiles;
@@ -470,10 +491,8 @@ function sakiSpecialInput() {
 }
 function getUrlHandInput() {
     try {
-        if (typeof window === "undefined" || !window.location || !window.location.search) return null;
-        let search = window.location.search;
-        if (!search || search.length <= 1) return null;
-        search = search.slice(1).split("#")[0];
+        const search = window.location.search ? window.location.search.slice(1).split("#")[0] : "";
+        if (!search) return null;
 
         const safeDecode = (str) => {
             try {
@@ -523,9 +542,7 @@ function getCardHelperFontSize(width, unit) {
     return fontSize;
 }
 function useHelper() {
-    if (typeof card_helper !== "undefined" && card_helper) return true;
-    if (typeof window !== "undefined" && window.card_helper) return true;
-    return false;
+    return Boolean(loc?.card_helper);
 }
 function useRightHelper(id) {
     if (typeof card_helper_right !== "undefined" && card_helper_right) return true;
@@ -1075,8 +1092,14 @@ let gb_worker = null;
 let gb_worker_info;
 const GB_RADIO_MAX = 16;
 const GB_SETTING_SIZE = 76;
-const updateGBOutput = debounce((text) => (document.getElementById("output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
-const updateGBBrief = debounce((text) => (document.getElementById("brief-output-score-gb").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+const updateScoreDiv = (id, text, needFixLang) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = text;
+    if (needFixLang) replacei18n(el);
+};
+const updateGBOutput = debounce((text, needFix) => updateScoreDiv("output-score-gb", text, needFix), ui_debounce_delay, ui_debounce_delay);
+const updateGBBrief = debounce((text, needFix) => updateScoreDiv("brief-output-score-gb", text, needFix), ui_debounce_delay, ui_debounce_delay);
 function processGBScore() {
     updateScoreTabUser(0);
     if (gb_worker) {
@@ -1102,17 +1125,18 @@ function processGBScore() {
     setting[0] = Number(document.getElementById("score-gb-setting-fan")?.value ?? 8);
     setting[37] = Number(document.getElementById("score-gb-setting-blind")?.value ?? 8);
     setting[38] = setting[38] ? Number(document.getElementById("score-gb-setting-maxfan")?.value ?? 88) : -1;
-    gb_worker = new Worker("mahjong-worker.js?v=202611090105");
+    gb_worker = new Worker("mahjong-worker.js?v=202611121110");
     gb_worker.onmessage = function (e) {
+        const needFix = Boolean(e.data?.lang && e.data.lang !== lang);
         if ("debug" in e.data) {
             document.getElementById("time-output-score-gb").textContent = e.data.debug;
-            updateGBOutput(e.data.output);
+            updateGBOutput(e.data.output, needFix);
             return;
         }
         gb_worker.terminate();
         gb_worker = null;
-        updateGBOutput.immediate(e.data.result.output);
-        updateGBBrief.immediate(e.data.result.brief);
+        updateGBOutput.immediate(e.data.result.output, needFix);
+        updateGBBrief.immediate(e.data.result.brief, needFix);
         document.getElementById("time-output-score-gb").textContent = `Used ${e.data.time} ms`;
     };
     gb_worker.postMessage({ task: "gb-score", aids, tiles, substeps: gb_worker_info, gw, mw, wt, info, lang, setting });
@@ -1121,8 +1145,8 @@ let jp_worker = null;
 let jp_worker_info;
 const JP_RADIO_MAX = 25;
 const JP_SETTING_SIZE = 63;
-const updateJPOutput = debounce((text) => (document.getElementById("output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
-const updateJPBrief = debounce((text) => (document.getElementById("brief-output-score-jp").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+const updateJPOutput = debounce((text, needFix) => updateScoreDiv("output-score-jp", text, needFix), ui_debounce_delay, ui_debounce_delay);
+const updateJPBrief = debounce((text, needFix) => updateScoreDiv("brief-output-score-jp", text, needFix), ui_debounce_delay, ui_debounce_delay);
 let JPResult = [];
 function processJPScore() {
     updateScoreTabUser(1);
@@ -1148,17 +1172,18 @@ function processJPScore() {
         setting[a] = Number(b ?? 1);
     }
     setting[0] = Number(document.getElementById("score-jp-setting-fan").value);
-    jp_worker = new Worker("mahjong-worker.js?v=202611090105");
+    jp_worker = new Worker("mahjong-worker.js?v=202611121110");
     jp_worker.onmessage = function (e) {
+        const needFix = Boolean(e.data?.lang && e.data.lang !== lang);
         if ("debug" in e.data) {
             document.getElementById("time-output-score-jp").textContent = e.data.debug;
-            updateJPOutput(e.data.output);
+            updateJPOutput(e.data.output, needFix);
             return;
         }
         jp_worker.terminate();
         jp_worker = null;
-        updateJPOutput.immediate(e.data.result.output);
-        updateJPBrief.immediate(e.data.result.brief);
+        updateJPOutput.immediate(e.data.result.output, needFix);
+        updateJPBrief.immediate(e.data.result.brief, needFix);
         JPResult = e.data.result.audio;
         if (JPResult) sf(() => (document.getElementById("voice-button-jp").disabled = false));
         document.getElementById("time-output-score-jp").textContent = `Used ${e.data.time} ms`;
@@ -1169,8 +1194,8 @@ let sc_worker = null;
 let sc_worker_info;
 const SC_RADIO_MAX = 7;
 const SC_SETTING_SIZE = 15;
-const updateSCOutput = debounce((text) => (document.getElementById("output-score-sc").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
-const updateSCBrief = debounce((text) => (document.getElementById("brief-output-score-sc").innerHTML = text), ui_debounce_delay, ui_debounce_delay);
+const updateSCOutput = debounce((text, needFix) => updateScoreDiv("output-score-sc", text, needFix), ui_debounce_delay, ui_debounce_delay);
+const updateSCBrief = debounce((text, needFix) => updateScoreDiv("brief-output-score-sc", text, needFix), ui_debounce_delay, ui_debounce_delay);
 function processSCScore() {
     updateScoreTabUser(3);
     if (sc_worker) {
@@ -1196,17 +1221,18 @@ function processSCScore() {
     }
     setting[0] = Number(document.getElementById("score-sc-setting-maxfan")?.value ?? -1);
     setting[15] = Number(document.getElementById("score-sc-setting-fan-linear")?.value ?? 0);
-    sc_worker = new Worker("mahjong-worker.js?v=202611090105");
+    sc_worker = new Worker("mahjong-worker.js?v=202611121110");
     sc_worker.onmessage = function (e) {
+        const needFix = Boolean(e.data?.lang && e.data.lang !== lang);
         if ("debug" in e.data) {
             document.getElementById("time-output-score-sc").textContent = e.data.debug;
-            updateSCOutput(e.data.output);
+            updateSCOutput(e.data.output, needFix);
             return;
         }
         sc_worker.terminate();
         sc_worker = null;
-        updateSCOutput.immediate(e.data.result.output);
-        updateSCBrief.immediate(e.data.result.brief);
+        updateSCOutput.immediate(e.data.result.output, needFix);
+        updateSCBrief.immediate(e.data.result.brief, needFix);
         document.getElementById("time-output-score-sc").textContent = `Used ${e.data.time} ms`;
     };
     sc_worker.postMessage({ task: "sc-score", aids, tiles, substeps: sc_worker_info, wt, info, lang, setting });
@@ -1315,58 +1341,60 @@ function openRuleComparison() {
     const d = document.getElementById("rule-comparison-title")?.closest("details");
     if (d) d.open = true;
 }
-function replacei18n() {
-    setLoc(lang);
-    const resolveI18nStr = (str) => {
-        if (typeof str !== "string" || (str.indexOf("{") === -1 && str.indexOf("$") === -1)) return str;
-        return str.replace(/(\$)?\{([A-Za-z0-9_]+)\}/g, (match, prefix, refKey) => {
-            return (typeof loc !== "undefined" && loc && loc[refKey] !== undefined) ? loc[refKey] : match;
+const resolveI18nStr = (str) => {
+    if (typeof str !== "string" || (str.indexOf("{") === -1 && str.indexOf("$") === -1)) return str;
+    return str.replace(/(\$)?\{([A-Za-z0-9_]+)\}/g, (match, prefix, refKey) => loc[refKey] ?? match);
+};
+const stripHtml = (s) => (s || "").replace(/<[^>]*>/g, "");
+
+function translateNode(el) {
+    const key = el.getAttribute("data-i18n");
+    let text = loc[key];
+    if (!text) return;
+    text = resolveI18nStr(text);
+    switch (el.getAttribute("data-i18n-case")) {
+        case "lower":
+            text = text.toLowerCase();
+            break;
+        case "upper":
+            text = text.toUpperCase();
+            break;
+        case "capitalize":
+            text = text.charAt(0).toUpperCase() + text.slice(1);
+            break;
+        case "title":
+            text = text
+                .split(" ")
+                .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                .join(" ");
+            break;
+    }
+    el.innerHTML = text;
+    if (el.tagName === "TITLE") {
+        document.title = stripHtml(text);
+    }
+}
+
+function replacei18n(root = document, targetLang = lang) {
+    if (root === document) {
+        setLoc(targetLang);
+    }
+
+    if (root !== document && root.hasAttribute && root.hasAttribute("data-i18n")) {
+        translateNode(root);
+    }
+    root.querySelectorAll("[data-i18n]").forEach(translateNode);
+
+    const useFanCss = Boolean(loc?.fan_css);
+    root.querySelectorAll(".fan, .fan-normal").forEach((el) => {
+        el.className = useFanCss ? "fan" : "fan-normal";
+    });
+
+    ["title", "placeholder", "aria-label"].forEach((attr) => {
+        root.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => {
+            const key = el.getAttribute(`data-i18n-${attr}`);
+            if (loc[key]) el.setAttribute(attr, stripHtml(resolveI18nStr(loc[key])));
         });
-    };
-
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-        const key = el.getAttribute("data-i18n");
-        let text = loc[key];
-        if (!text) return;
-        text = resolveI18nStr(text);
-        switch (el.getAttribute("data-i18n-case")) {
-            case "lower":
-                text = text.toLowerCase();
-                break;
-            case "upper":
-                text = text.toUpperCase();
-                break;
-            case "capitalize":
-                text = text.charAt(0).toUpperCase() + text.slice(1);
-                break;
-            case "title":
-                text = text
-                    .split(" ")
-                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                    .join(" ");
-                break;
-        }
-        el.innerHTML = text;
-        if (el.tagName === "TITLE") {
-            document.title = text.replace(/<[^>]*>/g, "");
-        }
-    });
-
-    const stripHtml = (s) => (s || "").replace(/<[^>]*>/g, "");
-
-    document.querySelectorAll("[data-i18n-title]").forEach((el) => {
-        const key = el.getAttribute("data-i18n-title");
-        if (loc[key]) el.setAttribute("title", stripHtml(resolveI18nStr(loc[key])));
-    });
-
-    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-        const key = el.getAttribute("data-i18n-placeholder");
-        if (loc[key]) el.setAttribute("placeholder", stripHtml(resolveI18nStr(loc[key])));
-    });
-
-    document.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
-        const key = el.getAttribute("data-i18n-aria-label");
-        if (loc[key]) el.setAttribute("aria-label", stripHtml(resolveI18nStr(loc[key])));
     });
 }
 function initKeyboard() {
@@ -1547,6 +1575,7 @@ function loadSCStorage() {
     loadCheckbox("score-sc-wintype", sessionStorage);
     loadCheckbox("score-sc-wininfo", sessionStorage);
 }
+let customSelectDocBound = false;
 function initCustomSelects() {
     const customSelects = document.querySelectorAll(".custom-select");
     customSelects.forEach((select) => {
@@ -1571,11 +1600,14 @@ function initCustomSelects() {
         });
     });
 
-    document.addEventListener("click", () => {
-        document.querySelectorAll(".custom-select").forEach((select) => {
-            select.classList.remove("open");
+    if (!customSelectDocBound) {
+        customSelectDocBound = true;
+        document.addEventListener("click", () => {
+            document.querySelectorAll(".custom-select").forEach((select) => {
+                select.classList.remove("open");
+            });
         });
-    });
+    }
 }
 
 const theme_colors = { green: "#f4faf6", pink: "#fff8fa", blue: "#f6f9fc", dark: "#151826" };
@@ -1603,7 +1635,7 @@ function loadStorage() {
     initCustomSelects();
     updateCardSkin(localStorage.getItem("cardskin"));
     try {
-        if (typeof lang !== "undefined") localStorage.setItem("mahjong-lang", lang);
+        localStorage.setItem("mahjong-lang", lang);
     } catch (e) {}
     switchStepTab(Number(localStorage.getItem("steptab")));
     scoretab_usr = Number(localStorage.getItem("scoretab_usr") ?? -1);
@@ -1760,15 +1792,12 @@ function processSCSetting(id) {
     }
 }
 function toggleOutput(id) {
-    const d = document.getElementById(id);
-    const b = document.getElementById("toggle-" + id);
-    const s = document.getElementById("brief-" + id);
-    const o = document.getElementById("options-" + id);
+    const d = document.getElementById(id), b = document.getElementById("toggle-" + id), s = document.getElementById("brief-" + id), o = document.getElementById("options-" + id);
     const v = d.style.display !== "none";
     d.style.display = v ? "none" : "block";
     s.style.display = v ? "block" : "none";
     if (o) o.style.display = v ? "none" : "block";
-    b.textContent = v ? toggleOutputLang[0] : toggleOutputLang[1];
+    if (b) b.textContent = v ? loc.toggle_expand : loc.toggle_fold;
 }
 function toggleSwitch(e, on, off, f = () => {}) {
     const btn = e.currentTarget;
@@ -1953,7 +1982,123 @@ function bindListener() {
         });
         inputText.addEventListener("input", () => {
             subkey_info = inputText.value;
-        })
+        });
+        initCalculatorSpaRouter();
     }
 }
+
+function toggleBox(boxId, textId, btnId, openKey, closeKey, onOpen) {
+    const box = document.getElementById(boxId), btn = document.getElementById(btnId);
+    if (!box || !btn) return;
+    const isVis = box.style.display !== "none";
+    box.style.display = isVis ? "none" : "block";
+    if (textId) {
+        const text = document.getElementById(textId);
+        if (text) text.style.display = isVis ? "block" : "none";
+    }
+    btn.textContent = isVis ? loc[openKey] : loc[closeKey];
+    if (!isVis && onOpen) onOpen();
+}
+window.toggleInput = () => toggleBox("boardInput", "textInput", "inputButton", "toggle_in_open", "toggle_in_close", () => { drawInputCards(); adjustButtonsFontSize(); });
+window.toggleNote = () => toggleBox("inputNote", null, "inputNoteButton", "toggle_nt_show", "toggle_nt_hide");
+
+function snapshotCalculatorState() {
+    const outputCache = {};
+    document.querySelectorAll('[id^="output-"], [id^="brief-output-"], [id^="time-"]').forEach((el) => (outputCache[el.id] = el.innerHTML));
+    return {
+        outputCache,
+        inputText: document.getElementById("inputText").value,
+        isBoardVis: document.getElementById("boardInput").style.display !== "none",
+    };
+}
+
+async function fetchAndSwapPageDOM(targetUrl, targetLang, push) {
+    const doc = new DOMParser().parseFromString(await fetch(targetUrl).then((r) => r.text()), "text/html");
+
+    doc.querySelectorAll("script").forEach((s) => s.remove());
+    document.body.innerHTML = doc.body.innerHTML;
+
+    document.title = doc.title;
+    document.documentElement.lang = doc.documentElement.lang;
+    if (push) history.pushState(null, "", targetUrl);
+
+    lang = targetLang;
+    try { localStorage.setItem("mahjong-lang", lang); } catch (e) {}
+    setLoc(lang);
+}
+
+function restoreCalculatorState(snapshot, targetLang) {
+    initKeyboard();
+
+    for (const [id, html] of Object.entries(snapshot.outputCache)) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    }
+    replacei18n(document, targetLang);
+
+    document.getElementById("inputText").value = snapshot.inputText;
+    bindListener();
+    loadStorage();
+    prepareInputUI(snapshot.inputText);
+
+    for (let i = 0; i < document_scores_ids.length; ++i) {
+        updateScoreVisiable(i, score_enabled[i] ? "block" : "none", true);
+    }
+    if (snapshot.isBoardVis) {
+        document.getElementById("boardInput").style.display = "block";
+        document.getElementById("textInput").style.display = "none";
+    }
+
+    const inBox = document.getElementById("boardInput");
+    document.getElementById("inputButton").textContent = (inBox.style.display !== "none") ? loc.toggle_in_close : loc.toggle_in_open;
+    const ntBox = document.getElementById("inputNote");
+    document.getElementById("inputNoteButton").textContent = (ntBox.style.display !== "none") ? loc.toggle_nt_hide : loc.toggle_nt_show;
+
+    if (!useHelper()) document.querySelectorAll(".card-helper").forEach((e) => e.remove());
+    document.querySelectorAll(".reference-sup").forEach((e) => e.remove());
+    addReferenceMark();
+    adjustButtonsFontSize();
+}
+
+async function switchLanguage(targetLang, targetUrl, push = true) {
+    if (targetLang === lang && !push) return;
+
+    const snapshot = snapshotCalculatorState();
+    try {
+        await fetchAndSwapPageDOM(targetUrl, targetLang, push);
+        restoreCalculatorState(snapshot, targetLang);
+    } catch (err) {
+        console.error("Language switch fallback:", err);
+        window.location.href = targetUrl;
+    }
+}
+
+let spaRouterInitialized = false;
+function initCalculatorSpaRouter() {
+    if (spaRouterInitialized) return;
+    spaRouterInitialized = true;
+
+    const LANG_MAP = { "mahjong.html": "cn", "mahjong-tw.html": "tw", "mahjong-hk.html": "hk", "mahjong-ja.html": "ja", "mahjong-en.html": "en" };
+
+    document.addEventListener("click", function (e) {
+        const a = e.target.closest(".lang-group a");
+        if (!a || a.classList.contains("lang-btn")) return;
+        const href = a.getAttribute("href");
+        if (!href || href.startsWith("javascript:")) return;
+
+        const targetLang = LANG_MAP[href.split(/[?#]/)[0]];
+        if (!targetLang) return;
+
+        e.preventDefault();
+        switchLanguage(targetLang, href);
+    });
+
+    window.addEventListener("popstate", function () {
+        const path = window.location.pathname.split("/").pop() || "mahjong.html";
+        const targetLang = LANG_MAP[path];
+        if (targetLang) switchLanguage(targetLang, path, false);
+    });
+}
+window.initCalculatorSpaRouter = initCalculatorSpaRouter;
+
 

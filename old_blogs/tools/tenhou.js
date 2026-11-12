@@ -251,8 +251,8 @@
         const modeName = loc[meta.nameKey] || meta.nameKey;
         const shapeHtml = loc[yakuType] || yakuType;
         let tianhu = getTianhuTerm(mode);
-        // Direct bare call to yaku name -> wrap in class="fan" in English
-        if (currentLang === "en") {
+        // Direct bare call to yaku name -> wrap in class="fan" if fan_css enabled
+        if (loc?.fan_css) {
             tianhu = `<span class="fan">${tianhu}</span>`;
         }
         return `${modeName} · ${tianhu} · ${shapeHtml}`;
@@ -547,7 +547,6 @@
         const lang = normalizeLang(rawLang) || "cn";
         currentLang = lang;
         window.lang = lang;
-        window.card_helper = (lang === "en");
         try { localStorage.setItem("mahjong-lang", lang); } catch (e) {}
 
         if (updateUrl) {
@@ -912,7 +911,7 @@
 
         try {
             if (worker) worker.terminate();
-            worker = new Worker("tenhou-worker.js?v=202611090105");
+            worker = new Worker("tenhou-worker.js?v=202611121110");
             worker.onmessage = function (e) {
                 const data = e.data;
                 if (data.type === "progress") {

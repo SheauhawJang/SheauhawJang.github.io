@@ -605,7 +605,7 @@ function PairStep(tiles, disjoint = false, guse = guseall, glimit = Infinity, no
 }
 // Special Check for 13 orphans, only avaliable when tcnt is 13 or 14
 const Orphan13Array = [0, 8, 9, 17, 18, 26, 27, 28, 29, 30, 31, 32, 33];
-function OrphanCount(tiles, jokerc = true) {
+function OrphanCount(tiles) {
     tiles = getTileBuf(tiles, 0);
     let ans = 13;
     for (let i = 0; i < Orphan13Array.length; ++i) {
@@ -613,13 +613,13 @@ function OrphanCount(tiles, jokerc = true) {
         if (tiles[id]) --tiles[id];
         else if (tiles[JokerA[id]]) --tiles[JokerA[id]];
         else if (tiles[JokerB[id]]) --tiles[JokerB[id]];
-        else if (jokerc && tiles[JokerC]) --tiles[JokerC];
+        else if (tiles[JokerC]) --tiles[JokerC];
         else --ans;
     }
     return { tiles, count: ans };
 }
 function OrphanStep(tiles) {
-    let main = OrphanCount(tiles, false);
+    let main = OrphanCount(tiles);
     tiles = main.tiles;
     let ans = 13 - main.count;
     for (let i = 0; i < Orphan13Array.length; ++i) {
@@ -641,24 +641,27 @@ for (let i = 0; i < 6; ++i)
         KnitDragonSave[i][j] = id;
     }
 // Special Check for Bukao
-function Bukao16Count(tiles) {
+function Bukao16Count(tiles, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
     let ans = 0;
+    let honor = 0;
+    let tcp = noJoker || getTileBuf(tiles, 0);
+    for (let i = 27; i < 34; ++i) {
+        ++honor;
+        if (tiles[i]) continue;
+        else if (!noJoker && tcp[JokerA[i]]) --tcp[JokerA[i]];
+        else if (!noJoker && tcp[JokerB[i]]) --tcp[JokerB[i]];
+        else --honor;
+    }
     for (let i = 0; i < 6; ++i) {
-        let count = 0;
-        let tcp = getTileBuf(tiles, 0);
+        let count = honor;
+        let tdragon = noJoker || getTileBuf(tcp, 1);
         for (let j = 0; j < 9; ++j) {
             const id = KnitDragonSave[i][j];
             ++count;
             if (tiles[id]) continue;
-            else if (tcp[JokerA[id]]) --tcp[JokerA[id]];
-            else if (tcp[JokerB[id]]) --tcp[JokerB[id]];
-            else --count;
-        }
-        for (let i = 27; i < 34; ++i) {
-            ++count;
-            if (tiles[i]) continue;
-            else if (tcp[JokerA[i]]) --tcp[JokerA[i]];
-            else if (tcp[JokerB[i]]) --tcp[JokerB[i]];
+            else if (!noJoker && tdragon[JokerA[id]]) --tdragon[JokerA[id]];
+            else if (!noJoker && tdragon[JokerB[id]]) --tdragon[JokerB[id]];
             else --count;
         }
         ans = Math.max(ans, count);
@@ -722,9 +725,32 @@ function KnitDragonStepCheck(tiles, maxstep, tcnt) {
     }
     return false;
 }
+function WinOrphanMeld(tiles) {
+    for (let i = 0; i < sizeUT; ++i) {
+        if (tiles[i] >= 3) {
+            tiles[i] -= 3;
+            const ok = OrphanStep(tiles) === -1;
+            tiles[i] += 3;
+            if (ok) return true;
+        }
+        if (SeqCheck[i] && tiles[i] && tiles[i + 1] && tiles[i + 2]) {
+            --tiles[i];
+            --tiles[i + 1];
+            --tiles[i + 2];
+            const ok = OrphanStep(tiles) === -1;
+            ++tiles[i];
+            ++tiles[i + 1];
+            ++tiles[i + 2];
+            if (ok) return true;
+        }
+    }
+    return false;
+}
 // Special Check for 13 orphans in taiwan, only avaliable when tcnt is 16 or 17
-function OrphanMeldStep(tiles) {
-    let main = OrphanCount(tiles, false);
+function OrphanMeldStep(tiles, noJoker = undefined) {
+    if (noJoker === undefined) noJoker = isNoJoker(tiles);
+    if (noJoker && WinOrphanMeld(tiles)) return -1;
+    let main = OrphanCount(tiles);
     let tcp = main.tiles;
     let miss = 13 - main.count;
     let ans = Infinity;
@@ -1031,8 +1057,8 @@ function TWPrecheck(tiles, step, substep, tcnt, savecheck, noJoker = undefined) 
         initGetchecks(tiles, (i) => (getchecks[i][1] = NiconicoStep(tiles, noJoker) < step));
     }
     if (tcnt === 17 && step >= substep[2]) {
-        initDischecks(tiles, (i) => (dischecks[i][2] = OrphanMeldStep(tiles) <= step));
-        initGetchecks(tiles, (i) => (getchecks[i][2] = OrphanMeldStep(tiles) < step));
+        initDischecks(tiles, (i) => (dischecks[i][2] = OrphanMeldStep(tiles, noJoker) <= step));
+        initGetchecks(tiles, (i) => (getchecks[i][2] = OrphanMeldStep(tiles, noJoker) < step));
     }
     if (tcnt === 17 && step >= substep[3]) {
         initDischecks(tiles, (i) => (dischecks[i][3] = Buda16Step(tiles) <= step));

@@ -1,6 +1,6 @@
 ﻿// Multi-rule Tenhou / Tianhu Simulator Web Worker (Optimized & Mathematically Unbiased)
 // Uses existing mahjong.js functions without modifying Win.
-importScripts("mahjong.js?v=202611090105");
+importScripts("mahjong.js?v=202611121110");
 
 let isRunning = false;
 let currentMode = "jp4";
@@ -129,9 +129,9 @@ function runLoop(batchSize) {
                 yakuType = "pair7";
             } else if (allowedTypesSet.has("orphan13") && OrphanStep(t, false) === -1) {
                 yakuType = "orphan13";
-            } else if (allowedTypesSet.has("quanbukaoxing") && typeof Bukao16Count === "function" && Bukao16Count(t) === 14) {
+            } else if (allowedTypesSet.has("quanbukaoxing") && typeof Bukao16Count === "function" && Bukao16Count(t, true) === 14) {
                 yakuType = "quanbukaoxing";
-            } else if (allowedTypesSet.has("zuhelongxing") && typeof KnitDragonStep === "function" && KnitDragonStep(t, 14, true) === -1) {
+            } else if (allowedTypesSet.has("zuhelongxing") && typeof WinKnitDragon === "function" && WinKnitDragon(t, 14)) {
                 yakuType = "zuhelongxing";
             }
         } else if (mode === "sc") {
@@ -151,11 +151,11 @@ function runLoop(batchSize) {
             // Taiwan 16-tile: 17 tiles, standard 5 melds + 1 pair, or special hands (no wildcards)
             if (allowedTypesSet.has("normal") && Win(t, 17)) {
                 yakuType = "normal";
-            } else if (allowedTypesSet.has("niconico") && typeof NiconicoStep === "function" && NiconicoStep(t, true) === -1) {
+            } else if (allowedTypesSet.has("niconico") && typeof WinNiconico === "function" && WinNiconico(t)) {
                 yakuType = "niconico";
             } else if (allowedTypesSet.has("shiliubudaxing") && typeof Buda16Step === "function" && Buda16Step(t) === -1) {
                 yakuType = "shiliubudaxing";
-            } else if (allowedTypesSet.has("orphan13") && typeof OrphanMeldStep === "function" && OrphanMeldStep(t) === -1) {
+            } else if (allowedTypesSet.has("orphan13") && typeof WinOrphanMeld === "function" && WinOrphanMeld(t)) {
                 yakuType = "orphan13";
             }
         }

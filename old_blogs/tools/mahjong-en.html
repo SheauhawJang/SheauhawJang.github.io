@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Supports Mahjong Theory calculation for Normal Type Mahjong, Chinese Official Mahjong (MCR), Japanese Riichi Mahjong (RCR), 16-tile Mahjong, Hong Kong Style Taiwanese Mahjong, and any-tile-count Mahjong. Supports Joker (wild tile, universal tile, laizi, magic tile, etc.). Supports point or score calculation for Chinese Official Mahjong (MCR) and Japanese Riichi Mahjong (RCR).">
   <title>Mahjong Theory & Score Calculator</title>
-  <link rel="stylesheet" href="mahjong.css?v=202611090105" />
+  <link rel="stylesheet" href="mahjong.css?v=202611121110" />
   <script>
     try {
       const savedTheme = localStorage.getItem("mahjong-theme");
@@ -1125,10 +1125,11 @@
 		<div class="footer-line" data-i18n="main_footer_line1">v4.9.0 · © 2026 Sheauhaw Jang · Mahjong Theory & Score Calculator</div>
 		<div class="footer-line" data-i18n="main_footer_line2">Contact: <a href="https://x.com/akiko36000" target="_blank" rel="noopener noreferrer" style="color: inherit;">Sanbaiman Automahime</a></div>
 	</footer>
-  <script src="mahjong.js?v=202611090105"></script>
-  <script src="mahjong-generator.js?v=202611090105"></script>
-  <script src="mahjong-document.js?v=202611090105"></script>
-  <script src="mahjong-worker-lang.js?v=202611090105"></script>
+  <script>var lang = "en";</script>
+  <script src="mahjong.js?v=202611121110"></script>
+  <script src="mahjong-generator.js?v=202611121110"></script>
+  <script src="mahjong-document.js?v=202611121110"></script>
+  <script src="mahjong-worker-lang.js?v=202611121110"></script>
   <script>
     function tilesInfo(tcnt) {
       const meld = Math.floor(tcnt / 3);
@@ -1172,9 +1173,6 @@
       replacei18n();
       loadInput();
     };
-    const lang = "en";
-    const card_helper = true;
-    const toggleOutputLang = ["Expand ▼", "Fold ▲"];
   </script>
 	<!-- Mobile Bottom Navigation Bar -->
 	<nav class="mobile-bottom-nav" aria-label="Mobile Navigation">

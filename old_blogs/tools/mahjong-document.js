@@ -179,6 +179,16 @@ function syncCmdToUI(cmd, players) {
     syncWininfo(riichi, RIICHI_UI_TARGETS);
     syncWininfo(cmd.flags, FLAG_UI_TARGETS);
 }
+function tilesInfo(tcnt) {
+    const meld = Math.floor(tcnt / 3);
+    const mod = tcnt % 3;
+    const pair = mod === 0 ? 0 : 1;
+    const countLine = loc.tiles_info_count.replace("{cnt}", tcnt);
+    const typeLabel = (mod === 0 ? "3n" : `3n+${mod}`) + " " + loc.tiles_info_type;
+    const reqLine = loc.tiles_info_req.replace("{meld}", meld).replace("{pair}", pair);
+    return `${countLine}\n${typeLabel}: ${reqLine}`;
+}
+window.tilesInfo = tilesInfo;
 function prepareInputUI(input = document.getElementById("inputText").value) {
     sessionStorage.setItem("inputText", input);
     aids = splitTiles(input);
@@ -2012,19 +2022,24 @@ function snapshotCalculatorState() {
     };
 }
 
-async function fetchAndSwapPageDOM(targetUrl, targetLang, push) {
-    const doc = new DOMParser().parseFromString(await fetch(targetUrl).then((r) => r.text()), "text/html");
+async function fetchAndSwapPageDOM(targetUrl, push) {
+    const res = await fetch(targetUrl);
+    const doc = new DOMParser().parseFromString(await res.text(), "text/html");
+
+    const langScript = Array.from(doc.querySelectorAll("script")).find((s) => s.textContent.includes("var lang"));
+    const targetLang = langScript ? eval(`(() => { ${langScript.textContent}; return lang; })()`) : lang;
 
     doc.querySelectorAll("script").forEach((s) => s.remove());
     document.body.innerHTML = doc.body.innerHTML;
 
     document.title = doc.title;
     document.documentElement.lang = doc.documentElement.lang;
-    if (push) history.pushState(null, "", targetUrl);
+    if (push) history.pushState(null, "", res.url);
 
     lang = targetLang;
     try { localStorage.setItem("mahjong-lang", lang); } catch (e) {}
     setLoc(lang);
+    return targetLang;
 }
 
 function restoreCalculatorState(snapshot, targetLang) {
@@ -2060,12 +2075,11 @@ function restoreCalculatorState(snapshot, targetLang) {
     adjustButtonsFontSize();
 }
 
-async function switchLanguage(targetLang, targetUrl, push = true) {
-    if (targetLang === lang && !push) return;
-
+async function switchLanguage(targetUrl, push = true) {
     const snapshot = snapshotCalculatorState();
     try {
-        await fetchAndSwapPageDOM(targetUrl, targetLang, push);
+        const targetLang = await fetchAndSwapPageDOM(targetUrl, push);
+        if (targetLang === lang && !push) return;
         restoreCalculatorState(snapshot, targetLang);
     } catch (err) {
         console.error("Language switch fallback:", err);
@@ -2078,25 +2092,18 @@ function initCalculatorSpaRouter() {
     if (spaRouterInitialized) return;
     spaRouterInitialized = true;
 
-    const LANG_MAP = { "mahjong.html": "cn", "mahjong-tw.html": "tw", "mahjong-hk.html": "hk", "mahjong-ja.html": "ja", "mahjong-en.html": "en" };
-
     document.addEventListener("click", function (e) {
         const a = e.target.closest(".lang-group a");
-        if (!a || a.classList.contains("lang-btn")) return;
+        if (!a || a.classList.contains("lang-btn") || a.classList.contains("active")) return;
         const href = a.getAttribute("href");
         if (!href || href.startsWith("javascript:")) return;
 
-        const targetLang = LANG_MAP[href.split(/[?#]/)[0]];
-        if (!targetLang) return;
-
         e.preventDefault();
-        switchLanguage(targetLang, href);
+        switchLanguage(href);
     });
 
     window.addEventListener("popstate", function () {
-        const path = window.location.pathname.split("/").pop() || "mahjong.html";
-        const targetLang = LANG_MAP[path];
-        if (targetLang) switchLanguage(targetLang, path, false);
+        switchLanguage(window.location.href, false);
     });
 }
 window.initCalculatorSpaRouter = initCalculatorSpaRouter;

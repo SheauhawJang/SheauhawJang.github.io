@@ -1174,40 +1174,6 @@
 	<script src="mahjong-document.js?v=202611121110"></script>
 	<script src="mahjong-worker-lang.js?v=202611121110"></script>
 	<script>
-		function tilesInfo(tcnt) {
-			const meld = Math.floor(tcnt / 3);
-			let output = `${tcnt} 张手牌\n`;
-			switch (tcnt % 3) {
-				case 1:
-					output += `3n+1 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
-					break;
-				case 2:
-					output += `3n+2 型: 和牌需要 ${meld} 个面子和 ${1} 个雀头`;
-					break;
-				case 0:
-					output += `3n 型: 和牌需要 ${meld} 个面子和 ${0} 个雀头`;
-					break;
-			}
-			return output;
-		}
-		function toggleInput() {
-			const board = document.getElementById("boardInput");
-			const button = document.getElementById("inputButton");
-			const text = document.getElementById("textInput");
-			const isVisible = board.style.display !== "none";
-			board.style.display = isVisible ? "none" : "block";
-			text.style.display = isVisible ? "block" : "none";
-			button.textContent = isVisible ? "打开输入面板 ▼" : "关闭输入面板 ▲";
-			if (!isVisible) drawInputCards();
-			if (!isVisible) adjustButtonsFontSize();
-		}
-		function toggleNote() {
-			const note = document.getElementById("inputNote");
-			const button = document.getElementById("inputNoteButton");
-			const isVisible = note.style.display !== "none";
-			note.style.display = isVisible ? "none" : "block";
-			button.textContent = isVisible ? "显示输入说明 ▼" : "隐藏输入说明 ▲";
-		}
 		window.onload = function () {
 			bindListener();
 			loadStorage();

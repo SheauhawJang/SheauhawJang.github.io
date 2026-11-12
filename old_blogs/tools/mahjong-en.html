@@ -1131,40 +1131,6 @@
   <script src="mahjong-document.js?v=202611121110"></script>
   <script src="mahjong-worker-lang.js?v=202611121110"></script>
   <script>
-    function tilesInfo(tcnt) {
-      const meld = Math.floor(tcnt / 3);
-      let output = `${tcnt} tiles\n`;
-      switch (tcnt % 3) {
-        case 1:
-          output += `3n+1 Type: Winning needs ${meld} melds and ${1} pairs`;
-          break;
-        case 2:
-          output += `3n+2 Type: Winning needs ${meld} melds and ${1} pairs`;
-          break;
-        case 0:
-          output += `3n Type: Winning needs ${meld} melds and ${0} pairs`;
-          break;
-      }
-      return output;
-    }
-    function toggleInput() {
-      const board = document.getElementById("boardInput");
-      const button = document.getElementById("inputButton");
-      const text = document.getElementById("textInput");
-      const isVisible = board.style.display !== "none";
-      board.style.display = isVisible ? "none" : "block";
-      text.style.display = isVisible ? "block" : "none";
-      button.textContent = isVisible ? "Open Input Panel ▼" : "Close Input Panel ▲";
-      if (!isVisible) drawInputCards();
-      if (!isVisible) adjustButtonsFontSize();
-    }
-    function toggleNote() {
-      const note = document.getElementById("inputNote");
-      const button = document.getElementById("inputNoteButton");
-      const isVisible = note.style.display !== "none";
-      note.style.display = isVisible ? "none" : "block";
-      button.textContent = isVisible ? "Show input instructions ▼" : "Hide input instructions ▲";
-    }
     window.onload = function () {
       bindListener();
       loadStorage();

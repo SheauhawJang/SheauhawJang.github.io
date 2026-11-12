@@ -1128,40 +1128,6 @@
  <script src="mahjong-document.js?v=202611121110"></script>
  <script src="mahjong-worker-lang.js?v=202611121110"></script>
  <script>
-  function tilesInfo(tcnt) {
-   const meld = Math.floor(tcnt / 3);
-   let output = `${tcnt} 枚手牌\n`;
-   switch (tcnt % 3) {
-    case 1:
-     output += `3n+1 形: 和了には ${meld} 個の面子と ${1} 個の雀頭が必要です`;
-     break;
-    case 2:
-     output += `3n+2 形: 和了には ${meld} 個の面子と ${1} 個の雀頭が必要です`;
-     break;
-    case 0:
-     output += `3n 形: 和了には ${meld} 個の面子と ${0} 個の雀頭が必要です`;
-     break;
-   }
-   return output;
-  }
-  function toggleInput() {
-   const board = document.getElementById("boardInput");
-   const button = document.getElementById("inputButton");
-   const text = document.getElementById("textInput");
-   const isVisible = board.style.display !== "none";
-   board.style.display = isVisible ? "none" : "block";
-   text.style.display = isVisible ? "block" : "none";
-   button.textContent = isVisible ? "入力パネルを開く ▼" : "入力パネルを隠す ▲";
-   if (!isVisible) drawInputCards();
-   if (!isVisible) adjustButtonsFontSize();
-  }
-  function toggleNote() {
-   const note = document.getElementById("inputNote");
-   const button = document.getElementById("inputNoteButton");
-   const isVisible = note.style.display !== "none";
-   note.style.display = isVisible ? "none" : "block";
-   button.textContent = isVisible ? "入力説明を表示する ▼" : "入力説明を非表示にする ▲";
-  }
   window.onload = function () {
    bindListener();
    loadStorage();

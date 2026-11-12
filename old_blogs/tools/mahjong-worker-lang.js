@@ -415,7 +415,18 @@ const loc_all = {
     toggle_nt_show: { cn: "显示输入说明 ▼", tw: "顯示輸入說明 ▼", hk: "顯示輸入說明 ▼", ja: "入力説明を表示 ▼", en: "Show input instructions ▼" },
     toggle_nt_hide: { cn: "隐藏输入说明 ▲", tw: "隱藏輸入說明 ▲", hk: "隱藏輸入說明 ▲", ja: "入力説明を非表示 ▲", en: "Hide input instructions ▲" },
     toggle_expand: { cn: "展开 ▼", tw: "展開 ▼", hk: "展開 ▼", ja: "展開 ▼", en: "Expand ▼" },
-    toggle_fold: { cn: "折叠 ▲", tw: "摺疊 ▲", hk: "收埋 ▲", ja: "収納 ▲", en: "Fold ▲" }
+    toggle_fold: { cn: "折叠 ▲", tw: "摺疊 ▲", hk: "收埋 ▲", ja: "収納 ▲", en: "Fold ▲" },
+
+    // --- Hand Tiles Info Texts ---
+    tiles_info_count: { cn: "{cnt} 张手牌", tw: "{cnt} 張手牌", hk: "{cnt} 張手牌", ja: "{cnt} 枚手牌", en: "{cnt} tiles" },
+    tiles_info_type: { cn: "型", tw: "型", hk: "型", ja: "形", en: "Type" },
+    tiles_info_req: {
+        cn: "{win}需要 {meld} 个面子和 {pair} 个雀头",
+        tw: "和牌需要 {meld} 個面子和 {pair} 個雀頭",
+        hk: "{win}需要 {meld} 個面子同埋 {pair} 對眼",
+        ja: "{win}には {meld} 個の面子と {pair} 個の雀頭が必要です",
+        en: "Winning needs {meld} melds and {pair} pairs"
+    }
 };
 
 if (typeof lang !== "undefined") setLoc(lang);

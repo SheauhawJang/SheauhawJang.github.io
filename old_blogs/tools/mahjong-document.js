@@ -135,42 +135,59 @@ const QINGQUE_WINDS = { 27: "!", 28: "@", 29: "#", 30: "$" };
 function syncCmdToUI(cmd, players) {
     if (typeof document === "undefined" || !cmd) return;
 
-    function setInput(name, val, checked = true) {
+    const setLock = (el, locked) => {
+        el.disabled = locked;
+        el.closest("label")?.classList.toggle("disabled", locked);
+    };
+
+    function setCheckbox(name, val, checked) {
         const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
-        if (el && el.checked !== checked) {
+        if (!el) return;
+        const locked = checked !== undefined;
+        if (locked && el.checked !== checked) {
             el.checked = checked;
             el.dispatchEvent(new Event("change", { bubbles: true }));
         }
+        setLock(el, locked);
     }
 
-    if (cmd.gw !== undefined) {
-        ["score-gb-global-wind", "score-jp-global-wind"].forEach((n) => setInput(n, cmd.gw));
-    }
-    if (cmd.mw !== undefined) {
-        ["score-gb-local-wind", "score-jp-local-wind"].forEach((n) => setInput(n, cmd.mw));
-        if (QINGQUE_WINDS[cmd.mw]) setInput("score-qingque-local-wind", QINGQUE_WINDS[cmd.mw]);
-    }
-    if (cmd.dealer !== undefined) setInput("score-gb-dealer", "-1", cmd.dealer);
-
-    if (cmd.wintype !== undefined) {
-        const claim = cmd.wintype <= 0;
-        setInput("score-gb-wintype", claim ? 0 : 80);
-        setInput("score-jp-wintype", claim ? 0 : 1);
-        setInput("score-sc-wintype", claim ? 0 : cmd.wintype);
-        setInput("score-qingque-wintype", claim ? "" : "%");
+    function setRadioGroup(name, val, locked) {
+        document.querySelectorAll(`input[name="${name}"]`).forEach((el) => {
+            if (locked && val !== undefined) {
+                const shouldCheck = String(el.value) === String(val);
+                if (el.checked !== shouldCheck) {
+                    el.checked = shouldCheck;
+                    if (shouldCheck) el.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            }
+            setLock(el, Boolean(locked));
+        });
     }
 
-    if (cmd.winpos !== undefined) {
-        const p = cmd.winpos;
-        setInput("score-gb-setting-16", p === 0 ? "0" : `75,${p}`);
-        setInput("score-jp-setting-25", p === 0 ? "0" : `61,${p}`);
-    }
+    const hasGW = cmd.gw !== undefined;
+    ["score-gb-global-wind", "score-jp-global-wind"].forEach((n) => setRadioGroup(n, cmd.gw, hasGW));
+
+    const hasMW = cmd.mw !== undefined;
+    ["score-gb-local-wind", "score-jp-local-wind"].forEach((n) => setRadioGroup(n, cmd.mw, hasMW));
+    setRadioGroup("score-qingque-local-wind", QINGQUE_WINDS[cmd.mw], hasMW);
+
+    setCheckbox("score-gb-dealer", "-1", cmd.dealer);
+
+    const hasWintype = cmd.wintype !== undefined;
+    const claim = cmd.wintype <= 0;
+    setRadioGroup("score-gb-wintype", claim ? 0 : 80, hasWintype);
+    setRadioGroup("score-jp-wintype", claim ? 0 : 1, hasWintype);
+    setRadioGroup("score-sc-wintype", claim ? 0 : cmd.wintype, hasWintype);
+    setRadioGroup("score-qingque-wintype", claim ? "" : "%", hasWintype);
+
+    const hasWinpos = cmd.winpos !== undefined;
+    const p = cmd.winpos;
+    setRadioGroup("score-gb-setting-16", p === 0 ? "0" : `75,${p}`, hasWinpos);
+    setRadioGroup("score-jp-setting-25", p === 0 ? "0" : `61,${p}`, hasWinpos);
 
     const syncWininfo = (arr, targets) => {
-        (arr || []).forEach((v, i) => {
-            if (v !== undefined && targets[i]) {
-                for (const mode in targets[i]) setInput(`score-${mode}-wininfo`, targets[i][mode], v);
-            }
+        targets.forEach((target, i) => {
+            for (const mode in target) setCheckbox(`score-${mode}-wininfo`, target[mode], arr?.[i]);
         });
     };
 

@@ -1161,6 +1161,20 @@ input[type="checkbox"] {
   margin: 3px 3px 3px 3px;
 }
 
+input[type="radio"]:disabled,
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+.output-option-group label:has(input:disabled),
+.output-option-group label.disabled,
+.output-grid-div label:has(input:disabled),
+.output-grid-div label.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  color: var(--disabled-text);
+}
+
 .score-button {
   margin-top: 10px;
   margin-bottom: 10px;

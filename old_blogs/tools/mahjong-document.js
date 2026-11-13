@@ -132,69 +132,132 @@ const FLAG_UI_TARGETS = [
 
 const QINGQUE_WINDS = { 27: "!", 28: "@", 29: "#", 30: "$" };
 
-function syncCmdToUI(cmd, players) {
-    if (typeof document === "undefined" || !cmd) return;
+const QINGQUE_REV = { "!": 27, "@": 28, "#": 29, "$": 30 };
+const EQUIV_WININFO_TARGETS = [...RIICHI_UI_TARGETS, ...FLAG_UI_TARGETS];
 
-    const setLock = (el, locked) => {
-        el.disabled = locked;
-        el.closest("label")?.classList.toggle("disabled", locked);
-    };
+let isSyncingEquivalentUI = false;
 
-    function setCheckbox(name, val, checked) {
-        const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
-        if (!el) return;
-        const locked = checked !== undefined;
-        if (locked && el.checked !== checked) {
-            el.checked = checked;
-            el.dispatchEvent(new Event("change", { bubbles: true }));
+function setLock(el, locked) {
+    el.disabled = locked;
+    el.closest("label")?.classList.toggle("disabled", locked);
+}
+
+function setCheckbox(name, val, checked, locked) {
+    const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+    if (!el) return;
+    if (checked !== undefined && el.checked !== checked && !(locked === undefined && el.disabled)) {
+        el.checked = checked;
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (locked !== undefined) setLock(el, locked);
+}
+
+function setRadio(name, val, locked) {
+    const inputs = document.querySelectorAll(`input[name="${name}"]`);
+    if (!inputs.length) return;
+    let target = null;
+    if (val !== undefined) {
+        for (const el of inputs) {
+            if (String(el.value) === String(val)) { target = el; break; }
         }
-        setLock(el, locked);
     }
+    if (target) {
+        if (!target.checked && !(locked === undefined && target.disabled)) {
+            for (const el of inputs) if (el !== target) el.checked = false;
+            target.checked = true;
+            target.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        if (locked !== undefined) for (const el of inputs) setLock(el, locked);
+    } else if (locked !== undefined) {
+        for (const el of inputs) setLock(el, false);
+    }
+}
 
-    function setRadioGroup(name, val, locked) {
+// 统一跨规则联动：表目标 (wininfo) 与单选组 (gw, mw, wintype, winpos)
+function setEquiv(target, checked, locked) {
+    for (const mode in target) setCheckbox(`score-${mode}-wininfo`, target[mode], checked, locked);
+}
+
+function syncGroup(type, val, locked) {
+    if (type === "gw" || type === "mw") {
+        const isGlobal = type === "gw";
+        for (const m of ["gb", "jp"]) setRadio(`score-${m}-${isGlobal ? "global" : "local"}-wind`, val, locked);
+        if (!isGlobal) setRadio("score-qingque-local-wind", val !== undefined ? QINGQUE_WINDS[val] : undefined, locked);
+    } else if (type === "wintype") {
+        const claim = val !== undefined ? val <= 0 : undefined;
+        setRadio("score-gb-wintype", claim === undefined ? undefined : claim ? 0 : 80, locked);
+        setRadio("score-jp-wintype", claim === undefined ? undefined : claim ? 0 : 1, locked);
+        let scVal = claim === undefined ? undefined : claim ? 0 : (val || 1);
+        if (locked === undefined && claim === false) {
+            const curSC = document.querySelector('input[name="score-sc-wintype"]:checked');
+            if (curSC && curSC.value !== "0") scVal = curSC.value;
+        }
+        setRadio("score-sc-wintype", scVal, locked);
+        setRadio("score-qingque-wintype", claim === undefined ? undefined : claim ? "" : "%", locked);
+    } else if (type === "winpos") {
+        for (const [name, prefix] of [["score-gb-setting-16", 75], ["score-jp-setting-25", 61]]) {
+            setRadio(name, val === undefined ? undefined : val === 0 ? "0" : `${prefix},${val}`, locked);
+        }
+    }
+}
+
+// 函数 1: Command -> UI（解析指令并锁定对应控件）
+function syncCmdToUI(cmd) {
+    if (typeof document === "undefined" || !cmd) return;
+    isSyncingEquivalentUI = true;
+    try {
+        for (const k of ["gw", "mw", "wintype", "winpos"]) syncGroup(k, cmd[k], cmd[k] !== undefined);
+        setCheckbox("score-gb-dealer", "-1", cmd.dealer, cmd.dealer !== undefined);
+
+        for (const [arr, targets] of [[cmd.riichi, RIICHI_UI_TARGETS], [cmd.flags, FLAG_UI_TARGETS]]) {
+            for (let i = 0; i < targets.length; ++i) setEquiv(targets[i], arr?.[i], arr?.[i] !== undefined);
+        }
+    } finally {
+        isSyncingEquivalentUI = false;
+    }
+}
+
+// 函数 2: UI Click -> UI（人工点击选项时查表联动同步其他规则）
+function syncUIEquivalent(el) {
+    if (isSyncingEquivalentUI || !el || (el.type === "radio" && !el.checked)) return;
+    isSyncingEquivalentUI = true;
+    try {
+        const name = el.name;
+        if (name.endsWith("-wininfo")) {
+            const mode = name.split("-")[1];
+            const target = EQUIV_WININFO_TARGETS.find((t) => t[mode] === el.value);
+            if (target) setEquiv(target, el.checked);
+        } else if (name.endsWith("-global-wind") && el.value !== "0") {
+            syncGroup("gw", el.value);
+        } else if (name.endsWith("-local-wind")) {
+            syncGroup("mw", QINGQUE_REV[el.value] || el.value);
+        } else if (name.endsWith("-wintype")) {
+            const isTsumo = el.value === "1" || el.value === "80" || el.value === "%" || (name === "score-sc-wintype" && el.value !== "0");
+            syncGroup("wintype", !isTsumo ? 0 : name === "score-sc-wintype" ? Number(el.value) : 1);
+        } else if (name === "score-gb-setting-16" || name === "score-jp-setting-25") {
+            syncGroup("winpos", el.value === "0" ? 0 : Number(el.value.split(",")[1]));
+        }
+    } finally {
+        isSyncingEquivalentUI = false;
+    }
+}
+
+function bindCrossRuleSyncListener() {
+    if (typeof document === "undefined") return;
+    const names = [
+        ...["jp", "gb", "sc", "qingque"].map((m) => `score-${m}-wininfo`),
+        ...["gb", "jp"].map((m) => `score-${m}-global-wind`),
+        ...["gb", "jp", "qingque"].map((m) => `score-${m}-local-wind`),
+        ...["gb", "jp", "sc", "qingque"].map((m) => `score-${m}-wintype`),
+        "score-gb-setting-16", "score-jp-setting-25"
+    ];
+    for (const name of names) {
         document.querySelectorAll(`input[name="${name}"]`).forEach((el) => {
-            if (locked && val !== undefined) {
-                const shouldCheck = String(el.value) === String(val);
-                if (el.checked !== shouldCheck) {
-                    el.checked = shouldCheck;
-                    if (shouldCheck) el.dispatchEvent(new Event("change", { bubbles: true }));
-                }
-            }
-            setLock(el, Boolean(locked));
+            if (el._crossRuleBound) return;
+            el._crossRuleBound = true;
+            el.addEventListener("change", () => syncUIEquivalent(el));
         });
     }
-
-    const hasGW = cmd.gw !== undefined;
-    ["score-gb-global-wind", "score-jp-global-wind"].forEach((n) => setRadioGroup(n, cmd.gw, hasGW));
-
-    const hasMW = cmd.mw !== undefined;
-    ["score-gb-local-wind", "score-jp-local-wind"].forEach((n) => setRadioGroup(n, cmd.mw, hasMW));
-    setRadioGroup("score-qingque-local-wind", QINGQUE_WINDS[cmd.mw], hasMW);
-
-    setCheckbox("score-gb-dealer", "-1", cmd.dealer);
-
-    const hasWintype = cmd.wintype !== undefined;
-    const claim = cmd.wintype <= 0;
-    setRadioGroup("score-gb-wintype", claim ? 0 : 80, hasWintype);
-    setRadioGroup("score-jp-wintype", claim ? 0 : 1, hasWintype);
-    setRadioGroup("score-sc-wintype", claim ? 0 : cmd.wintype, hasWintype);
-    setRadioGroup("score-qingque-wintype", claim ? "" : "%", hasWintype);
-
-    const hasWinpos = cmd.winpos !== undefined;
-    const p = cmd.winpos;
-    setRadioGroup("score-gb-setting-16", p === 0 ? "0" : `75,${p}`, hasWinpos);
-    setRadioGroup("score-jp-setting-25", p === 0 ? "0" : `61,${p}`, hasWinpos);
-
-    const syncWininfo = (arr, targets) => {
-        targets.forEach((target, i) => {
-            for (const mode in target) setCheckbox(`score-${mode}-wininfo`, target[mode], arr?.[i]);
-        });
-    };
-
-    const riichi = [...(cmd.riichi || [])];
-    if (riichi[0] === undefined && players && players[0] && players[0].riichiIndex !== -1) riichi[0] = true;
-    syncWininfo(riichi, RIICHI_UI_TARGETS);
-    syncWininfo(cmd.flags, FLAG_UI_TARGETS);
 }
 function tilesInfo(tcnt) {
     const meld = Math.floor(tcnt / 3);
@@ -209,7 +272,7 @@ window.tilesInfo = tilesInfo;
 function prepareInputUI(input = document.getElementById("inputText").value) {
     sessionStorage.setItem("inputText", input);
     aids = splitTiles(input);
-    syncCmdToUI(aids.cmd || aids[6], aids.players || aids[5]);
+    syncCmdToUI(aids.cmd || aids[6]);
     const tids = aids[0];
     const bids = aids[2];
     tiles = getTiles(tids);
@@ -1538,7 +1601,7 @@ function loadCheckbox(key, st = localStorage) {
         st.setItem(key, JSON.stringify(cvstorage));
     });
     cbs.forEach((cb) => cb.addEventListener("change", cf));
-    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) cbs.forEach((cb) => cb.addEventListener("change", () => updateScoreTabUser(i)));
+    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) cbs.forEach((cb) => cb.addEventListener("change", (e) => { if (e.isTrusted) updateScoreTabUser(i); }));
 }
 function loadRadio(key, st = localStorage) {
     const rds = document.querySelectorAll(`input[name="${key}"]`);
@@ -1551,7 +1614,7 @@ function loadRadio(key, st = localStorage) {
         else st.removeItem(key);
     });
     rds.forEach((r) => r.addEventListener("change", rf));
-    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) rds.forEach((r) => r.addEventListener("change", () => updateScoreTabUser(i)));
+    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) rds.forEach((r) => r.addEventListener("change", (e) => { if (e.isTrusted) updateScoreTabUser(i); }));
 }
 function loadInputbox(key, st = localStorage) {
     const e = document.getElementById(key);
@@ -1560,7 +1623,7 @@ function loadInputbox(key, st = localStorage) {
     if (s !== null) e.value = s;
 
     e.addEventListener("change", () => st.setItem(key, e.value));
-    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) e.addEventListener("change", () => updateScoreTabUser(i));
+    for (let i = 0; i < document_scores_ids.length; ++i) if (key.startsWith(document_scores_ids[i])) e.addEventListener("change", (ev) => { if (ev.isTrusted) updateScoreTabUser(i); });
 }
 function loadGBStorage() {
     if (localStorage.getItem("max-score-gb-setting") === null) localStorage.setItem("max-score-gb-setting", 45);
@@ -2012,6 +2075,7 @@ function bindListener() {
         });
         initCalculatorSpaRouter();
     }
+    bindCrossRuleSyncListener();
 }
 
 function toggleBox(boxId, textId, btnId, openKey, closeKey, onOpen) {
@@ -2069,8 +2133,8 @@ function restoreCalculatorState(snapshot, targetLang) {
     replacei18n(document, targetLang);
 
     document.getElementById("inputText").value = snapshot.inputText;
-    bindListener();
     loadStorage();
+    bindListener();
     prepareInputUI(snapshot.inputText);
 
     for (let i = 0; i < document_scores_ids.length; ++i) {
